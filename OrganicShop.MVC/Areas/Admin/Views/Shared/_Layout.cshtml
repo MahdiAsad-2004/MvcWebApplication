@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+
+<html lang="fa" dir="rtl">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="Fastkart admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
+    <meta name="keywords"
+          content="admin template, Fastkart admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="pixelstrap">
+   @*  <link rel="icon" href="~/media/images/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="~/media/images/favicon.png" type="image/x-icon"> *@
+    <title>OrganicShop Management - مدیریت ارگانیک شاپ</title>
+
+    <partial name="_AdminStyles" />
+
+     @await RenderSectionAsync("Styles", false)
+
+</head>
+<body>
+
+    <!-- tap on top start -->
+    <div class="tap-top">
+        <span class="lnr lnr-chevron-up"></span>
+    </div>
+    <!-- tap on tap end -->
+
+ 
+    <img src="~/media/images/loading/Chunk-4s-1px.png" id="loading-background" style="width: 100%; height: 120%; opacity: 0.4; z-index: 9999; display: none;  position: absolute;" />
+    <img src="~/media//images/loading/Chunk-1.6s-100px.svg" id="loading-svg" style="width: 16%; height: 16%; margin-top: 300px; margin-right: 650px; z-index: 99999; display: none;  position: fixed;" />
+
+
+    <div class="page-wrapper compact-wrapper" id="pageWrapper">
+
+        @await Component.InvokeAsync("AdminHeader")
+
+        <div class="page-body-wrapper">
+
+            @await Component.InvokeAsync("AdminSideBar")
+
+            <!-- index body start -->
+            <div class="page-body" id="view-container">
+                @RenderBody()
+            </div>
+            <!-- index body end -->
+
+        </div>
+    </div>
+
+    @await RenderSectionAsync("Modals", false)
+
+    <partial name="_AdminScripts" />
+
+    @if (TempData["Toast"] != null)
+    {
+        var toast = Toast.GetToastFromTempData(TempData["Toast"]);
+        <partial name="_ToastPartial" model="toast" />
+    }
+
+    @await RenderSectionAsync("Scripts", false)
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

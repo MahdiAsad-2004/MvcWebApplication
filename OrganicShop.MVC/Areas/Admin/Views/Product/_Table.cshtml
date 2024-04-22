@@ -1,0 +1,103 @@
+﻿@using OrganicShop.Domain.Dtos.ProductDtos
+@model PageDto<Product,ProductListDto,long>
+
+
+<div class="card-body">
+    <div class="title-header option-title">
+        <h5>لیست محصولات</h5>
+        <form class="d-inline-flex">
+            <a href="/Admin/Product/Create"
+               class="align-items-center btn btn-theme d-flex">
+                <i data-feather="plus-square"></i>افزودن محصول جدید
+            </a>
+        </form>
+    </div>
+
+    <div class="table-responsive category-table">
+        <div>
+            <table class="table all-package theme-table" id="table_id">
+                <thead>
+                    <tr>
+                        <th>تصویر محصول</th>
+                        <th>نام محصول</th>
+                        <th>دسته</th>
+                        <th>تعداد فعلی</th>
+                        <th>قیمت</th>
+                        <th>وضعیت</th>
+                        <th>تنظیمات</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model.List)
+                    {
+                        <tr>
+                            <td>
+                                <div class="table-image">
+                                    <img src="~/media/images/product/@item.MainImageName" class="img-fluid"
+                                         alt="">
+                                </div>
+                            </td>
+
+                            <td>@item.Title</td>
+
+                            <td>@item.CategoryTitle</td>
+
+                            <td>@item.Stock</td>
+
+                            <td class="td-price">@item.Price.ToToman()</td>
+
+                            <td class="@(item.IsActive == true ? "status-close" : "status-danger")">
+                                <span>@(item.IsActive == true ? "تأیید شد" : "در انتظار")</span>
+                            </td>
+
+                            <td>
+                                <ul>
+                                    <li>
+                                        <a href="">
+                                            <i class="ri-eye-line"></i>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="/Admin/Product/Edit/@item.Id">
+                                            <i class="ri-pencil-line"></i>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="SetProductOnModal(@item.Id,'@item.Title')" data-bs-toggle="modal"
+                                           data-bs-target="#exampleModalToggle">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="card-footer d-flex justify-content-center pb-0">
+
+    <partial name="_PagerPartial" model="Model.Pager" view-data="ViewData" view-data-formId="@("filter-form")" />
+
+</div>
+
+
+
+
+
+
+
+
+
+
+

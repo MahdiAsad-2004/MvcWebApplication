@@ -1,0 +1,78 @@
+﻿@using OrganicShop.Domain.Dtos.PictureDtos;
+@using OrganicShop.BLL.Extensions;
+@model PageDto<Picture,PictureListDto,long>
+
+@{
+    string pictureType = string.Empty;
+    long index = 1;
+}
+
+<div class="card-body">
+    <div class="title-header option-title">
+        <h5>لیست تصاویر</h5>
+    </div>
+
+    <div class="table-responsive table-product">
+
+        <div class="table-responsive category-table">
+            <table class="table all-package theme-table" id="table_id">
+                <thead>
+                    <tr>
+                        @*                         <th></th>
+                        *@
+                        <th>تصویر</th>
+                        <th>نام</th>
+                        <th>حجم</th>
+                        <th>نوع</th>
+                        <th>تنظیمات</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.List)
+                    {
+                        <tr>
+                            @* <td>@index</td> *@
+                            <td>
+                                <img src="@item.GetPictureUrl()" width="100px" height="80px" class="img-fluid" alt="@item.Name">
+                            </td>
+                            <td>@item.Name</td>
+                            <td>@item.SizeMB.ToSize()</td>
+                            <td>@item.Type.ToStringValue()</td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="PictureModalOpen('@item.GetPictureUrl()')" data-bs-toggle="modal" data-bs-target="#pictureModal">
+                                            <i class="ri-eye-line"></i>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="SetPictureOnModal(@item.Id,'@item.Name')" data-bs-toggle="modal"
+                                           data-bs-target="#exampleModalToggle">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+
+                        index++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-footer d-flex justify-content-center pb-0">
+
+        <partial name="_PagerPartial" model="Model.Pager" view-data="ViewData" view-data-formId="@("filter-form")" />
+
+    </div>
+</div>
+
+
+
+
+
+

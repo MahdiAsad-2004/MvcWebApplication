@@ -1,0 +1,63 @@
+﻿@using OrganicShop.Domain.Dtos.PropertyDtos
+@model PageDto<Property,PropertyListDto,int>
+
+<div class="card-body">
+    <div class="title-header option-title">
+        <h5>لیست ویژگی ها</h5>
+        <form class="d-inline-flex">
+            <a href="/Admin/Property/Create" class="align-items-center btn btn-theme d-flex">
+                <i data-feather="plus"></i>افزودن ویژگی جدید
+            </a>
+        </form>
+    </div>
+
+    <div class="table-responsive table-product">
+
+        <div class="table-responsive category-table">
+            <table class="table all-package theme-table" id="table_id">
+                <thead>
+                    <tr>
+                        <th>عنوان</th>
+                        <th>الویت</th>
+                        <th>تنظیمات</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.List)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Priority</td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        <a href="/Admin/Property/Edit/@item.Id">
+                                            <i class="ri-pencil-line"></i>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0)" data-bs-toggle="modal"
+                                           data-bs-target="#exampleModalToggle" onclick="SetValueOnModal('@item.Id' , '@item.Title')">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-footer d-flex justify-content-center pb-0">
+
+        <partial name="_PagerPartial" model="Model.Pager" view-data="ViewData" view-data-formId="@("filter-form")"/>
+
+    </div>
+
+
+
+

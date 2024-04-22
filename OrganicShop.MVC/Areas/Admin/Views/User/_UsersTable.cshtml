@@ -1,0 +1,133 @@
+﻿@using OrganicShop.Domain.Dtos.UserDtos
+@model PageDto<User,UserListDto,long>
+
+<div class="card-body">
+    <div class="title-header option-title">
+        <h5>لیست کاربران</h5>
+        <form class="d-inline-flex">
+            <a href="/Admin/User/Create" class="align-items-center btn btn-theme d-flex">
+                <i data-feather="plus"></i>افزودن کاربر جدید
+            </a>
+        </form>
+    </div>
+
+    <div class="table-responsive table-product">
+        <table class="table all-package theme-table" id="table_id">
+            <thead>
+                <tr>
+                    <th>تصویر</th>
+                    <th>نام</th>
+                    <th>شماره همراه</th>
+                    <th>ایمیل</th>
+                    <th>تنظیمات</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model.List)
+                {
+                    <tr>
+                        <td>
+                            <div class="table-image">
+                                <img src="~/media/images/user/@item.ProfileImage" class="img-fluid"
+                                     alt="@item.Name">
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="user-name">
+                                <span>@item.Name</span>
+                                <span>@item.Role.ToStringValue()</span>
+                            </div>
+                        </td>
+
+                        <td>@item.PhoneNumber</td>
+
+                        <td>@item.Email</td>
+
+                        <td>
+                            <ul>
+                                <li>
+                                    <a href="order-detail.html">
+                                        <i class="ri-eye-line"></i>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="/Admin/User/@item.Id/Permissions">
+                                        <i class="ri-pencil-line"></i>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="javascript:void(0)" data-bs-toggle="modal"
+                                       data-bs-target="#exampleModalToggle" onclick="SetUser('@item.Id','@item.Name')">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                }
+
+
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+
+<div class="card-footer d-flex justify-content-center pb-0">
+
+    <partial name="_PagerPartial" model="Model.Pager" view-data="ViewData" view-data-formId="@("filter-form")" />
+
+</div>
+
+
+
+
+
+
+
+@*  <div class="card-footer d-flex justify-content-center pb-0">
+        <div class="pagination">
+            <a class="pagination-arrow" onclick="GoPage('@(Model.Pager.CurrentPage-1 < 1 ? 0 : Model.Pager.CurrentPage-1)')"><i class="fa-solid fa-arrow-left"></i></a>
+
+            <a class="@(Model.Pager.CurrentPage == 1 ? "pagination-item-active" : "")" onclick="GoPage('1')">1</a>
+            @if (Model.Pager.CurrentPage - Model.Pager.PageShowAfterAndBeforeCurrent > 2)
+            {
+                <p><i style="padding-top: 5px;" class="fa-solid fa-ellipsis"></i></p>
+            }
+            @for (int i = Model.Pager.CurrentPage - 1; i >= Model.Pager.CurrentPage - Model.Pager.PageShowAfterAndBeforeCurrent; i--)
+            {
+                if (i > 1 && i < Model.Pager.LastPageNumber)
+                {
+                    <a onclick="GoPage('@i')">@i</a>
+                }
+            }
+            @if(Model.Pager.CurrentPage > 1 && Model.Pager.CurrentPage < Model.Pager.LastPageNumber)
+            {
+                <a class="pagination-item-active" onclick="GoPage('@Model.Pager.CurrentPage')">@Model.Pager.CurrentPage</a>
+            }
+            @for (int i = Model.Pager.CurrentPage + 1; i <= Model.Pager.CurrentPage + Model.Pager.PageShowAfterAndBeforeCurrent; i++)
+            {
+                if (i < Model.Pager.LastPageNumber)
+                {
+                    <a onclick="GoPage('@i')">@i</a>
+                }
+            }
+            @if (Model.Pager.CurrentPage + Model.Pager.PageShowAfterAndBeforeCurrent <= Model.Pager.LastPageNumber - 2)
+            {
+                <p><i style="padding-top: 5px;" class="fa-solid fa-ellipsis"></i></p>
+            }
+            @if (Model.Pager.LastPageNumber > 1)
+            {
+                <a class="@(Model.Pager.CurrentPage == Model.Pager.LastPageNumber ? "pagination-item-active" : "")" onclick="GoPage('@(Model.Pager.LastPageNumber)')">@Model.Pager.LastPageNumber</a>
+            }
+
+            <a class="pagination-arrow" onclick="GoPage('@(Model.Pager.CurrentPage+1 > Model.Pager.LastPageNumber ? 0 : Model.Pager.CurrentPage+1)')"><i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </div> *@

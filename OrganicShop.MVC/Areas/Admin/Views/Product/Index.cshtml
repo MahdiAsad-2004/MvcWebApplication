@@ -1,0 +1,231 @@
+﻿@using OrganicShop.Domain.Dtos.ProductDtos
+@model PageDto<Product,ProductListDto,long>
+@{
+    Layout = "_LayoutIndex";
+}
+@{
+    var categoryCombos = ViewData["CategoryCombos"] as List<ComboDto<Category>>;
+    var TagCombos = ViewData["TagCombos"] as List<ComboDto<Tag>>;
+}
+
+@section Styles {
+    <!-- Data Table css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/datatables.css">
+}
+
+
+@section FilterForm {
+    <form id="filter-form" class="filter-menu-form row col-12" method="post" action="/Admin/Product/Table" data-container-id="table-container" onsubmit="FetchRequest(event)">
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">عنوان</label>
+            <input name="filter.Title" class="form-control filter-menu-input" type="text" />
+        </div>
+        <div class="form-group col-3 mb-1">
+            <label class="form-label filter-menu-label">حداقل قیمت</label>
+            <input value="0" name="filter.MinPrice" class="form-control filter-menu-input" type="number" min="0" />
+        </div>
+        <div class="form-group col-3 mb-1">
+            <label class="form-label filter-menu-label">حداکثر قیمت</label>
+            <input name="filter.MaxPrice" class="form-control filter-menu-input" type="number" min="0" />
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">دسته بندی</label>
+            <select name="filter.CategoryId" class="form-control filter-menu-input">
+                <option value="" selected>همه</option>
+                @foreach (var categoryCombo in categoryCombos)
+                {
+                    <option value="@categoryCombo.Value">@categoryCombo.Text</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">برچسب</label>
+            <select name="filter.CategoryId" class="form-control filter-menu-input">
+                <option value="" selected>همه</option>
+                @foreach (var tagCombo in TagCombos)
+                {
+                    <option value="@tagCombo.Value">@tagCombo.Text</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">مرتب سازی</label>
+            <select name="filter.SortBy" class="form-control filter-menu-input">
+                @foreach (var categorySortType in EnumExtension.GetArray<CategorySortType>())
+                {
+                    <option value="@((byte)categorySortType)">@categorySortType.ToStringValue()</option>
+                }
+            </select>
+        </div>
+
+        <partial name="_FilterDefaults" />
+
+    </form>
+}
+
+<div >
+
+</div>
+<partial name="_Table" model="Model" />
+
+
+@section Modals {
+    <div class="modal fade theme-modal remove-coupon" id="exampleModalToggle" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header d-block text-center">
+                    <h5 class="modal-title w-100" id="exampleModalLabel22">آیا اطمینان دارید ؟</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="remove-box">
+                        <p>محصول با عنوان  ' <i id="product-name"></i> ' حذف شود</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal" id="modal-close-button">خیر</button>
+                    <button type="button" class="btn btn-animation btn-md fw-bold" onclick="DeleteProduct()">بله</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form hidden method="delete" action="/Admin/Product/Delete" data-container-id="table-container" id="delete-product-form" onsubmit="FetchRequest(event)">
+        <input name="Id" id="product-id" value="0" />
+        <button id="delete-product-submit" hidden></button>
+    </form>
+
+}
+
+
+
+
+
+
+@section Scripts {
+
+    <!-- Data table js -->
+    <script src="~/admin/assets/js/jquery.dataTables.js"></script>
+    <script src="~/admin/assets/js/custom-data-table.js"></script>
+
+
+
+    <script>
+
+        document.getElementsByName('filter.MinPrice')[0].onchange = (e) => {
+            document.getElementsByName('filter.MaxPrice')[0].min = e.target.value;  
+        } 
+
+        let ProductIdInput = document.getElementById('product-id');
+        let ProductNameElem = document.getElementById('product-name');
+        let ModalCloseButton = document.getElementById('modal-close-button');
+        let DeleteProductSubmit = document.getElementById('delete-product-submit');
+
+        function SetProductOnModal(id, name) {
+            ProductIdInput.value = id; 
+            ProductNameElem.innerHTML = name;
+        }
+
+        function DeleteProduct() {
+            ModalCloseButton.click();
+            DeleteProductSubmit.click();
+            ProductIdInput.value = '0';
+            ProductNameElem.innerHTML = 'NULL';
+        }
+
+    </script>
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* @using OrganicShop.Domain.Dtos.ProductDtos
+@model PageDto<Product,ProductListDto,long>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card card-table">
+                <div class="card-body">
+                    <div class="title-header option-title d-sm-flex d-block">
+                        <h5>لیست محصولات</h5>
+                        <div class="right-options">
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0)">درون ریزی</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)">برون بری</a>
+                                </li>
+                                <li>
+                                    <a class="btn btn-solid" href="/admin/product/create">افزودن محصول جدید</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="table-responsive">
+                            <div id="table_id_filter" class="dataTables_filter"><label>جستجو : <input type="search" class="" placeholder="" aria-controls="table_id"></label></div>
+                            <table class="table all-package theme-table table-product" id="table_id">
+                                <thead>
+                                    <tr>
+                                        <th>تصویر محصول</th>
+                                        <th>نام محصول</th>
+                                        <th>دسته</th>
+                                        <th>تعداد فعلی</th>
+                                        <th>قیمت</th>
+                                        <th>وضعیت</th>
+                                        <th>تنظیمات</th>
+                                    </tr>
+                                </thead>
+
+
+                                
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+
+    <!-- slick slider js -->
+    <script src="~/admin/assets/js/slick.min.js"></script>
+    <script src="~/admin/assets/js/custom-slick.js"></script>
+
+
+    <!-- ratio js -->
+    <script src="~/admin/assets/js/ratio.js"></script>
+
+
+    <!-- Apexchar js -->
+    <script src="~/admin/assets/js/chart/apex-chart/apex-chart1.js"></script>
+    <script src="~/admin/assets/js/chart/apex-chart/moment.min.js"></script>
+    <script src="~/admin/assets/js/chart/apex-chart/apex-chart.js"></script>
+    <script src="~/admin/assets/js/chart/apex-chart/stock-prices.js"></script>
+    <script src="~/admin/assets/js/chart/apex-chart/chart-custom1.js"></script>
+
+
+    <!-- tooltip init js -->
+    <script src="~/admin/assets/js/tooltip-init.js"></script>
+} *@

@@ -1,0 +1,105 @@
+﻿@using OrganicShop.Domain.Dtos.CategoryDtos
+@model CreateCategoryDto
+@{
+    List<ComboDto<Category>> categoryCombos = ViewData["Categories"] as List<ComboDto<Category>>;
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/chartist.css">
+
+    <!-- Bootstrap-tag input css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/bootstrap-tagsinput.css">
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-sm-8 m-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header-2">
+                                <h5>دسته بندی جدید</h5>
+                            </div>
+
+                            <form class="theme-form theme-form-2 mega-form" action="/Admin/Category/Create" method="post" enctype="multipart/form-data" >
+                                <div class="mb-4 row align-items-center">
+                                    <label class="form-label-title col-sm-3 mb-0">عنوان دسته</label>
+                                    <div class="col-sm-9">
+                                        <input asp-for="Title" class="form-control" type="text" placeholder="نام دسته بندی جدید">
+                                        <span class="text-danger mt-1" asp-validation-for="Title"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 row align-items-center">
+                                    <label asp-for="ParentId" class="form-label-title col-sm-3 mb-0">نوع دسته</label>
+                                    <div class="col-sm-9">
+                                        <select asp-for="Type" class="form-control">
+                                            @foreach (var item in EnumExtension.GetArray<CategoryType>())
+                                            {
+                                                <option value="@((byte)item)">@item.ToStringValue()</option>
+                                            }
+                                        </select>
+                                        <span class="text-danger mt-1" asp-validation-for="Type"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 row align-items-center">
+                                    <label asp-for="ParentId" class="form-label-title col-sm-3 mb-0">سر دسته</label>
+                                    <div class="col-sm-9">
+                                        <select asp-for="ParentId" class="form-control select-2" >
+                                            <option value="">بدون سر دسته</option>
+                                            @foreach (var item in categoryCombos)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                        <span class="text-danger mt-1" asp-validation-for="ParentId"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 row align-items-center">
+                                    <label class="col-sm-3 col-form-label form-label-title">تصویر دسته</label>
+                                    <div class="col-sm-9">
+                                        <input asp-for="ImageFile" type="file" class="form-control">
+                                        <span class="text-danger mt-1" asp-validation-for="ImageFile"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 row align-items-center">
+                                    <label class="form-label-title col-sm-3 mb-0">کلاس آیکن</label>
+                                    <div class="col-sm-6">
+                                        <input asp-for="IconClass" class="form-control" type="text" placeholder="مانند 'fa-regular fa-flask' ">
+                                        <span class="text-danger mt-1" asp-validation-for="IconClass"></span>
+                                    </div>
+                                    <a class="col-sm-3" href="https://fontawesome.com/v6/search">لیست آیکن ها</a>
+                                </div>
+
+                                <div class="mb-4 row align-items-center">
+                                    <label class="form-label-title col-sm-3 mb-0">رنگ آیکن</label>
+                                    <div class="col-sm-9">
+                                        <input asp-for="IconColor" class="form-control" type="color">
+                                        <span class="text-danger mt-1" asp-validation-for="IconColor"></span>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn ms-auto theme-bg-color text-white">افزودن دسته</button>
+                                
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <!-- bootstrap tag-input js -->
+    <script src="~/admin/assets/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/admin/assets/js/sidebar-menu.js"></script>
+
+    <partial name="_ValidationScriptsPartial"/>
+}

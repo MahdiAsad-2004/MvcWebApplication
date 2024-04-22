@@ -1,0 +1,83 @@
+﻿@using OrganicShop.Domain.Dtos.CategoryDtos
+@model PageDto<Category,CategoryListDto,int>
+
+<div class="card-body">
+    <div class="title-header option-title">
+        <h5>لیست دسته ها</h5>
+        <form class="d-inline-flex">
+            <a href="/Admin/Category/Create"
+               class="align-items-center btn btn-theme d-flex">
+                <i data-feather="plus-square"></i>افزودن دسته جدید
+            </a>
+        </form>
+    </div>
+
+    <div class="table-responsive category-table">
+        <div>
+            <table class="table all-package theme-table" id="table_id">
+                <thead>
+                    <tr>
+                        <th>عنوان</th>
+                        <th>عنوان سر دسته</th>
+                        <th>تاریخ</th>
+                        <th>تصویر</th>
+                        <th>آیکن</th>
+                        <th>تنظیمات</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model.List)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+
+                            <td>@(item.ParentTitle ?? "_")</td>
+
+                            <td>@item.CreateDate.ToString("yyyy/MM/dd")</td>
+
+                            <td>
+                                <div class="table-image">
+                                    <img src="~/media/images/category/@item.ImageName" class="img-fluid"
+                                         alt="@item.Title">
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="category-icon">
+                                    <i class="@item.IconClass" style="color:@item.IconColor; font-size:30px;"></i>
+                                </div>
+                            </td>
+
+                            <td>
+                                <ul>
+                                    <li>
+                                        <a href="/Admin/Category/Edit/@item.Id">
+                                            <i class="ri-pencil-line"></i>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="SetCategoryOnModal(@item.Id,'@item.Title')" data-bs-toggle="modal"
+                                           data-bs-target="#exampleModalToggle">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="card-footer d-flex justify-content-center pb-0">
+   
+    <partial name="_PagerPartial" model="Model.Pager" view-data="ViewData" view-data-formId="@("filter-form")"/>
+    
+</div>

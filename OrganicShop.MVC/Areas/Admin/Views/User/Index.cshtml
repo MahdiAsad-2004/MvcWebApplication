@@ -1,0 +1,133 @@
+﻿@using OrganicShop.Domain.Dtos.UserDtos
+@model PageDto<User,UserListDto,long>
+@{
+    Layout = "_LayoutIndex";
+}
+@section Styles {
+    <!-- Data Table css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/datatables.css">
+}
+
+
+
+@section FilterForm{
+
+    <form id="filter-form" class="filter-menu-form row col-12" method="post" action="/Admin/User/UsersTable" data-container-id="table-container" onsubmit="FetchRequest(event)">
+        <input name="paging.PageNumber" id="filter-pageNumber" hidden value="1" />
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">نام کاربر</label>
+            <input name="filter.Name" class="form-control filter-menu-input" type="text" />
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">ایمیل</label>
+            <input name="filter.Email" class="form-control filter-menu-input" type="text" />
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">شماره همراه</label>
+            <input name="filter.PhoneNumber" class="form-control filter-menu-input" type="text" />
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">نقش</label>
+            <select name="filter.Role" class="form-control filter-menu-input">
+                <option value=" ">---------- همه ----------</option>
+                @foreach (var role in EnumExtension.GetArray<Role>())
+                {
+                    <option value="@((byte)role)">@role.ToStringValue()</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">مرتب سازی</label>
+            <select name="filter.SortBy" class="form-control filter-menu-input">
+                @foreach (var sortType in EnumExtension.GetArray<UserSortType>())
+                {
+                    <option value="@((byte)sortType)">@sortType.ToStringValue()</option>
+                }
+            </select>
+        </div>
+      
+        <partial name="_FilterDefaults"/>
+
+    </form>
+}
+
+
+<partial name="_UsersTable" model="Model" />
+
+
+
+@section Modals {
+    <!-- Delete Modal Box Start -->
+    <div class="modal fade theme-modal remove-coupon" id="exampleModalToggle" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header d-block text-center">
+                    <h5 class="modal-title w-100" id="exampleModalLabel22">آیا اطمینان دارید ؟</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="remove-box">
+                        <p>کاربر با نام  <i id="user-name"></i> حذف شود</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="delete-modal-close" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">خیر</button>
+                    <button type="button" class="btn btn-animation btn-md fw-bold" onclick="DeleteUser()">بله</button>
+                    <button id="success-delete-message" hidden type="button" class="btn btn-animation btn-md fw-bold" data-bs-target="#exampleModalToggle2"
+                            data-bs-toggle="modal" data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete Modal Box End -->
+
+    <form action="/Admin/User/Delete" method="delete" onsubmit="FetchRequest(event)">
+        <input id="input-id" hidden value="0" name="Id" />
+        <button type="submit" hidden id="delete-from-submit"></button>
+    </form>
+
+}
+
+
+
+
+@section Scripts {
+
+    <!-- all checkbox select js -->
+    <script src="~/admin/assets/js/checkbox-all-check.js"></script>
+
+    <!-- Data table js -->
+    <script src="~/admin/assets/js/jquery.dataTables.js"></script>
+    <script src="~/admin/assets/js/custom-data-table.js"></script>
+
+
+    <script>
+        let userId = 0;
+        let userName = " ";
+        let deleteModalClose = document.getElementById('delete-modal-close');
+        let deleteFormSubmit = document.getElementById('delete-from-submit');
+        let UserIdInput = document.getElementById('input-id');
+        let UserNameLi = document.getElementById('user-name');
+
+        function SetUser(id, name) {
+            userName = name;
+            userId = id;
+            UserNameLi.innerHTML = `' ${userName} '`;
+            UserIdInput.setAttribute('value', `${id}`);
+        }
+
+        function DeleteUser() {
+            deleteModalClose.click();
+            deleteFormSubmit.click();
+            UserNameLi.innerHTML = 'NULL';
+            UserIdInput.setAttribute('value', '0');
+        }
+    
+
+    </script>
+
+
+
+}

@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="C:\Users\go\.nuget\packages\dryioc\5.4.3\contentFiles\cs\netstandard2.0\DryIoc\Container.cs" />
+    <Compile Remove="C:\Users\go\.nuget\packages\dryioc\5.4.3\contentFiles\cs\netstandard2.0\DryIoc\Expression.cs" />
+    <Compile Remove="C:\Users\go\.nuget\packages\dryioc\5.4.3\contentFiles\cs\netstandard2.0\DryIoc\FastExpressionCompiler.cs" />
+    <Compile Remove="C:\Users\go\.nuget\packages\dryioc\5.4.3\contentFiles\cs\netstandard2.0\DryIoc\ImTools.cs" />
+    <Compile Remove="C:\Users\Mahdi\.nuget\packages\dryioc\5.4.3\contentFiles\cs\netstandard2.0\DryIoc\Container.cs" />
+    <Compile Remove="C:\Users\Mahdi\.nuget\packages\dryioc\5.4.3\contentFiles\cs\netstandard2.0\DryIoc\Expression.cs" />
+    <Compile Remove="C:\Users\Mahdi\.nuget\packages\dryioc\5.4.3\contentFiles\cs\netstandard2.0\DryIoc\FastExpressionCompiler.cs" />
+    <Compile Remove="C:\Users\Mahdi\.nuget\packages\dryioc\5.4.3\contentFiles\cs\netstandard2.0\DryIoc\ImTools.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="6.2.0" />
+    <PackageReference Include="StructureMap" Version="4.7.1" />
+    <PackageReference Include="System.Reflection" Version="4.3.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\OrganicShop.BLL\OrganicShop.BLL.csproj" />
+    <ProjectReference Include="..\OrganicShop.DAL\OrganicShop.DAL.csproj" />
+    <ProjectReference Include="..\OrganicShop.Domain\OrganicShop.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

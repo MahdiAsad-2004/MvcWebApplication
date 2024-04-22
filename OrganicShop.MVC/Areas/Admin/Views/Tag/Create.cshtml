@@ -1,0 +1,96 @@
+﻿@using OrganicShop.Domain.Dtos.TagDtos
+@model CreateTagDto
+
+@section Styles{
+    <!-- Bootstrap-tag input css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/bootstrap-tagsinput.css">
+
+    <!-- Plugins css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/chartist.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/date-picker.css">
+
+    <!--Dropzon css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/dropzone.css">
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-xxl-8 col-lg-10 m-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header-2">
+                                <h5>افزودن برچسب جدید</h5>
+                            </div>
+
+                            <form class="theme-form theme-form-2 mega-form" onsubmit="FetchRequest(event)" method="post" action="/Admin/Tag/Create">
+                                <div class="mb-4 row align-items-center">
+                                    <label class="form-label-title col-sm-3 mb-0" asp-for="Title"></label>
+                                    <div class="col-sm-9">
+                                        <input asp-for="Title" class="form-control" type="text" placeholder="عنوان برچسب را وارد کنید">
+                                        <span class="text-danger mt-1" asp-validation-for="Title"></span>
+                                    </div>
+                                </div>
+                               @*  <div class="mb-4 row align-items-center">
+                                    <label class="form-label-title col-sm-3 mb-0" asp-for="IsActive"></label>
+                                    <div class="col-sm-9">
+                                        <div class="col-sm-9 form-check form-switch">
+                                            <input class="form-check-input" asp-for="IsActive" type="checkbox" id="flexSwitchCheckChecked">
+                                            <label class="form-check-label" for="defaultCheck1">فعال</label>
+                                            <span class="text-danger mt-1" asp-validation-for="IsActive"></span>
+                                        </div>
+                                    </div>
+                                </div> *@
+                                <div class="mb-4 row align-items-center">
+                                    <label class="form-label-title col-sm-3 mb-0" asp-for="IsActive"></label>
+                                    <div class="col-sm-9 row"> 
+                                            <div class="form-check col-sm-2">
+                                                <input asp-for="IsActive" class="form-check-input" type="radio" value="false" id="defaultCheck1" checked>
+                                                <label class="form-check-label" for="defaultCheck1">فعال</label>
+                                            </div>  
+                                            <div class="form-check col-sm-10">
+                                                <input asp-for="IsActive" class="form-check-input" type="radio" value="true" id="defaultCheck2">
+                                                <label class="form-check-label" for="defaultCheck2">غیر فعال</label>
+                                            </div>
+                                    </div>
+                                    <span class="text-danger mt-1" asp-validation-for="IsActive"></span>
+                                </div>
+                                @* <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                                    <label class="form-check-label" for="exampleRadios1">
+                                        Default radio
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+                                    <label class="form-check-label" for="exampleRadios2">
+                                        Second default radio
+                                    </label>
+                                </div> *@
+                                <button type="submit" class="btn ms-auto theme-bg-color text-white">افزودن برچسب</button>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <!--Dropzon js -->
+    <script src="~/admin/assets/js/dropzone/dropzone.js"></script>
+    <script src="~/admin/assets/js/dropzone/dropzone-script.js"></script>
+
+    <!-- bootstrap tag-input js -->
+    <script src="~/admin/assets/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/admin/assets/js/sidebar-menu.js"></script>
+
+    <partial name="_ValidationScriptsPartial" /> 
+}

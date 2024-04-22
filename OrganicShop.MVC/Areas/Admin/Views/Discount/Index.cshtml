@@ -1,0 +1,123 @@
+﻿@using OrganicShop.Domain.Dtos.PropertyDtos
+@model PageDto<Property,PropertyListDto,int>
+@{
+    Layout = "_LayoutIndex";
+}
+@section Styles {
+    <!-- Data Table css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/datatables.css">
+}
+
+
+@section FilterForm {
+
+    <form id="filter-form" class="filter-menu-form row col-12" method="post" href="/Admin/Property/PropertiesTable" data-container-id="table-container" onsubmit="FetchRequest(event)">
+        <input name="paging.PageNumber" id="filter-pageNumber" hidden value="1" />
+
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">نوع تخفیف</label>
+            <select name="filter.IsFixValue" class="form-control filter-menu-input">
+                <option>---------- همه ----------</option>
+                <option value="true">ثابت</option>
+                <option value="false">درصد</option>
+            </select>
+        </div>
+
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">اعمال پیشفرض</label>
+            <select name="filter.IsDefault" class="form-control filter-menu-input">
+                <option>---------- همه ----------</option>
+                <option value="true">بله</option>
+                <option value="false">خیر</option>
+            </select>
+        </div>
+
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">مرتب سازی</label>
+            <select name="filter.SortBy" class="form-control filter-menu-input">
+                @foreach (var sortType in EnumExtension.GetArray<BaseSortType>())
+                {
+                    <option value="@((byte)sortType)">@sortType.ToStringValue()</option>
+                }
+            </select>
+        </div>
+
+        <partial name="_FilterDefaults" />
+
+    </form>
+}
+
+<partial name="_DiscountTable" model="Model" />
+
+
+@section Modals {
+    <!-- Delete Modal Box Start -->
+    <div class="modal fade theme-modal remove-coupon" id="exampleModalToggle" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header d-block text-center">
+                    <h5 class="modal-title w-100" id="exampleModalLabel22">آیا اطمینان دارید ؟</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="remove-box">
+                        <p>ویژگی با نام  <i id="discount-title"></i> حذف شود</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="modal-button-close" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">خیر</button>
+                    <button type="button" class="btn btn-animation btn-md fw-bold" onclick="DeleteDiscount()">بله</button>
+                    <button id="success-delete-message" hidden type="button" class="btn btn-animation btn-md fw-bold" data-bs-target="#exampleModalToggle2"
+                            data-bs-toggle="modal" data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form hidden onsubmit="FetchRequest(event)" id="delete-discount-form" data-container-id="table-container" action="/Admin/Discount/Delete" method="delete">
+        <input hidden name="Id" id="discount-id" value="0" />
+        <button type="submit" id="delete-discount-submit"></button>
+    </form>
+}
+
+
+
+
+@section Scripts {
+
+    <!-- Data table js -->
+    <script src="~/admin/assets/js/jquery.dataTables.js"></script>
+    <script src="~/admin/assets/js/custom-data-table.js"></script>
+
+
+    <script>
+
+
+        let DiscountTitleElem = document.getElementById('discount-id');
+        let DiscountTitleElem = document.getElementById('discount-title');
+        let ModalButtonClose = document.getElementById('modal-button-close');
+        let DeleteDiscountForm = document.getElementById('delete-discount-form');
+        let DeleteDiscountSubmit = document.getElementById('delete-discount-submit');
+
+
+        function SetDiscountOnModal(id, title) {
+            DiscountTitleElem.innerHTML = title;
+            DiscountIdInput.setAttribute('value', id);
+        }
+
+        function DeleteDiscount() {
+            ModalButtonClose.click();
+            DeleteDiscountSubmit.click();
+            DiscountTitleElem.innerHTML = 'NULL';
+            DiscountTitleElem.setAttribute('value', 0);
+        }
+
+
+    </script>
+
+
+}
+
+

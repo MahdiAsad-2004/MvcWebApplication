@@ -1,0 +1,140 @@
+﻿@using OrganicShop.Domain.Dtos.PictureDtos;
+@model PageDto<Picture,PictureListDto,long>
+@{
+    Layout = "_LayoutIndex";
+}
+@section Styles {
+    <!-- Data Table css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/datatables.css">
+}
+
+
+@section FilterForm{
+
+    <form id="filter-form" class="filter-menu-form row col-12" method="post" href="/Admin/Picture/Table" data-container-id="table-container" onsubmit="FetchRequest(event)">
+        <input name="paging.PageNumber" id="filter-pageNumber" hidden value="1" />
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">نام</label>
+            <input name="filter.Name" class="form-control filter-menu-input" />
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">حداقل حجم (MB)</label>
+            <input name="filter.MinSize" type="number" min="0" step="0.05" class="form-control filter-menu-input" />
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">حداکثر حجم (MB)</label>
+            <input name="filter.MaxSize" type="number" min="0" step="0.05" class="form-control filter-menu-input" />
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">مرتب سازی</label>
+            <select name="filter.SortBy" class="form-control filter-menu-input">
+                @foreach (var sortType in EnumExtension.GetArray<PictureSortType>())
+                {
+                    <option value="@((byte)sortType)">@sortType.ToStringValue()</option>
+                }
+            </select>
+        </div>
+
+        <partial name="_FilterDefaults" />
+
+    </form>
+}
+
+<partial name="_Table" model="Model"/>
+
+
+@section Modals {
+    <!-- Delete Modal Box Start -->
+    <div class="modal fade theme-modal remove-coupon" id="exampleModalToggle" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header d-block text-center">
+                    <h5 class="modal-title w-100" id="exampleModalLabel22">آیا اطمینان دارید ؟</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="remove-box">
+                        <p>تصویر با نام  ' <i id="picture-name"></i> ' حذف شود</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="modal-button-close" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">خیر</button>
+                    <button type="button" class="btn btn-animation btn-md fw-bold" onclick="DeletePicture()">بله</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form hidden onsubmit="FetchRequest(event)" id="delete-picture-form" data-container-id="table-container" action="/Admin/Picture/Delete" method="delete">
+        <input hidden name="Id" id="picture-id-input" value="0"/>
+        <button type="submit" id="delete-picture-form-submit"></button>
+    </form>
+
+    <!-- Picture View Modal -->
+    <div class="modal fade" id="pictureModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="picture-img" class="rounded-2" style="width:100%; height:100%;"  />
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
+
+@section Scripts {
+
+    <!-- Data table js -->
+    <script src="~/admin/assets/js/jquery.dataTables.js"></script>
+    <script src="~/admin/assets/js/custom-data-table.js"></script>
+
+
+    <script>
+
+       
+        let PictureIdInput = document.getElementById('picture-id-input');
+        let PictureNameElem = document.getElementById('picture-name');
+        let ModalButtonClose = document.getElementById('modal-button-close');
+        let DeletePictureForm = document.getElementById('delete-picture-form');
+        let DeletePictureFormSubmit = document.getElementById('delete-picture-form-submit');
+
+
+        function SetPictureOnModal(id, name) {
+            PictureIdInput.setAttribute('value', id);
+            PictureNameElem.innerHTML = name;
+        }
+
+        function DeletePicture() {
+            ModalButtonClose.click();
+            DeletePictureFormSubmit.click();
+            PictureIdInput.setAttribute('value', 0);
+            PictureNameElem.innerHTML = 'NULL';
+        }
+
+        function PictureModalOpen(imgUrl){
+            document.getElementById('picture-img').src = imgUrl;
+        }
+
+        // document.getElementById('12345').onload = () => {
+        //     SubmitForm(document.getElementById('filter-form'));
+        //     console.log('filter submited');
+        // }
+
+       
+
+
+    </script>
+
+
+}
+
+

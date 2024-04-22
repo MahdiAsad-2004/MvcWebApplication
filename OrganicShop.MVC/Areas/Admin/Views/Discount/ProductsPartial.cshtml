@@ -1,0 +1,112 @@
+﻿@using OrganicShop.Domain.Dtos.ProductDtos
+@model PageDto<Product,ProductListDto,long>
+
+
+<div class="table-responsive table-product">
+    <div class="table-responsive ">
+        <table class="table all-package theme-table" id="table_id">
+            <thead>
+                <tr>
+                    <th>انتخاب</th>
+                    <th>عنوان</th>
+                    <th>عکس</th>
+                    <th>قیمت</th>
+                    <th>موجودی</th>
+                    <th>دسته بندی</th>
+                    <th>وضعیت</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="form-check user-checkbox ps-0">
+                            <input class="checkbox_animated check-it product-checkBox" type="checkbox" value="1" data-title="testProduct-1" onclick="CheckProduct(event)">
+                        </div>
+                        @* <input type="checkbox" class="form-check-input product-checkBox" value="1" data-title="testProduct-1" onclick="CheckProduct(event)" /> *@
+                    </td>
+
+                    <td>testProduct-1</td>
+
+                    <td>
+                        <img src="/media/images/product/" class="img-fluid" />
+                    </td>
+
+                    <td class="td-price">5465465465</td>
+
+                    <td>100</td>
+
+                    <td class="status-warning">
+                        <span>تأیید شد</span>
+                    </td>
+
+                    <td class="status-close">
+                        <span>تأیید شد</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="form-check-input product-checkBox" value="2" data-title="testProduct-2" onclick="CheckProduct(event)" />
+                    </td>
+
+                    <td>testProduct-2</td>
+
+                    <td>
+                        <img src="/media/images/product/" class="img-fluid" />
+                    </td>
+
+                    <td class="td-price">2131365</td>
+
+                    <td>200</td>
+
+                    <td class="menu-status">
+                        <span class="danger">منقضی شده</span>
+                    </td>
+
+                    <td class="status-danger">
+                        <span>تأیید شد</span>
+                    </td>
+                </tr>
+            
+                @foreach (var product in Model.List)
+                {
+                    <tr>
+                        <td>
+                            <input class="form-check-input product-checkBox" type="checkbox"
+                            value="@product.Id" data-title="@product.Title" onclick="CheckProduct(event)">                           
+                        </td>
+
+                        <td>@product.Title</td>
+
+                        <td>
+                            <img src="/media/images/product/@product.MainImageName" class="img-fluid" />
+                        </td>
+
+                        <td class="td-price">@product.Price</td>
+
+                        <td>@product.Stock</td>
+
+                        <td>@product.CategoryTitle</td>
+
+                        @if (product.IsActive)
+                        {
+                            <td class="status-close">فعال</td>
+                        }
+                        else
+                        {
+                            <td class="status-danger">غیر فعال</td>
+                        }
+
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card-footer d-flex justify-content-center pb-0">
+
+    <partial name="_PagerPartial" model="Model.Pager" view-data="ViewData" view-data-FormId="@("filter-products-form")"/>
+
+</div>
+

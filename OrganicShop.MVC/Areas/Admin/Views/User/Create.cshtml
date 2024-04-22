@@ -1,0 +1,161 @@
+﻿@using OrganicShop.Domain.Dtos.UserDtos
+@model CreateUserDto
+
+@{
+    List<ComboDto<Permission>> permissions = ViewData["Permissions"] as List<ComboDto<Permission>>;
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-sm-8 m-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="title-header option-title">
+                                <h5>افزودن کاربر جدید</h5>
+                            </div>
+                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="pills-home-tab"
+                                            data-bs-toggle="pill" data-bs-target="#pills-home"
+                                            type="button">
+                                        حساب کاربری
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="pills-profile-tab"
+                                            data-bs-toggle="pill" data-bs-target="#pills-profile"
+                                            type="button">
+                                        دسترسی ها
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <form class="tab-content" id="pills-tabContent" method="post" action="/Admin/User/Create">
+                                <div class="tab-pane fade show active" id="pills-home" role="tabpanel">
+                                    <div class="theme-form theme-form-2 mega-form">
+                                        <div class="card-header-1">
+                                            <h5>اطلاعات کاربر</h5>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="mb-4 row align-items-center">
+                                                <label asp-for="Name" class="form-label-title col-lg-2 col-md-3 mb-0"></label>
+                                                <div class="col-md-9 col-lg-10">
+                                                    <input class="form-control" asp-for="Name" type="text">
+                                                    <span asp-validation-for="Name" class="mt-1 text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4 row align-items-center">
+                                                <label asp-for="Email" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                <div class="col-md-9 col-lg-10">
+                                                    <input class="form-control" asp-for="Email">
+                                                    <span asp-validation-for="Email" class="mt-1 text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4 row align-items-center">
+                                                <label asp-for="PhoneNumber" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                <div class="col-md-9 col-lg-10">
+                                                    <input class="form-control" asp-for="PhoneNumber">
+                                                    <span asp-validation-for="PhoneNumber" class="mt-1 text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4 row align-items-center">
+                                                <label asp-for="Role" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                <div class="col-md-9 col-lg-10">
+                                                    <select class="form-control" asp-for="Role">
+                                                        @foreach (var role in EnumExtension.GetArray<Role>())
+                                                        {
+                                                            <option value="@role">@role.ToStringValue()</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4 row align-items-center">
+                                                <label asp-for="ProfileImage" class="col-sm-3 col-form-label form-label-title"></label>
+                                                <div class="col-sm-9">
+                                                    <input asp-for="ProfileImage" class="form-control form-choose" type="file">
+                                                    <span asp-validation-for="ProfileImage" class="mt-1 text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4 row align-items-center">
+                                                <label asp-for="Password" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                <div class="col-md-9 col-lg-10">
+                                                    <input class="form-control" asp-for="Password" type="password">
+                                                    <span asp-validation-for="Password" class="mt-1 text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4 row align-items-center">
+                                                <label asp-for="Password" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                <div class="col-md-9 col-lg-10">
+                                                    <input class="form-control" asp-for="PasswordRepeat" type="password">
+                                                    <span asp-validation-for="PasswordRepeat" class="mt-1 text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-3 row align-items-center">
+                                                <div class="col-md-10 col-lg-12">
+                                                    <button type="submit" class="form-control btn btn-primary">ثبت</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                @if (User.GetAppUser().HasPermission(a => a.Giving_Permission))
+                                {
+                                    foreach (var item in permissions)
+                                    {
+                                        <div class="tab-pane fade" id="pills-profile" role="tabpanel">
+                                            <div class="card-header-1">
+                                                <h5>تعیین دسترسی های کاربر</h5>
+                                            </div>
+
+                                            <div class="mb-3 row align-items-center">
+                                                <label class="col-md-4 mb-0">@item.Text</label>
+                                                <div class="col-md-8">
+                                                    <div class="radio-section">
+                                                        <label>
+                                                            <input type="checkbox" class="form-control" name="Permissions" value="@item.Value">
+                                                            <i></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                }
+
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+
+    <!--Dropzon js -->
+    <script src="~/admin/assets/js/dropzone/dropzone.js"></script>
+    <script src="~/admin/assets/js/dropzone/dropzone-script.js"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

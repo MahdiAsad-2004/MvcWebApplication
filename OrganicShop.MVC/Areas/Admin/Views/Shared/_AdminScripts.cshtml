@@ -1,0 +1,171 @@
+﻿<!-- latest js -->
+<script src="~/admin/assets/js/jquery-3.6.0.min.js"></script>
+@* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+
+
+<!-- Bootstrap js -->
+<script src="~/admin/assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+
+<!-- feather icon js -->
+<script src="~/admin/assets/js/icons/feather-icon/feather.min.js"></script>
+<script src="~/admin/assets/js/icons/feather-icon/feather-icon.js"></script>
+
+<!-- scrollbar simplebar js -->
+<script src="~/admin/assets/js/scrollbar/simplebar.js"></script>
+<script src="~/admin/assets/js/scrollbar/custom.js"></script>
+
+<!-- Sidebar Js -->
+<script src="~/admin/assets/js/config.js"></script>
+
+<!-- Plugins JS -->
+<script src="~/admin/assets/js/sidebar-menu.js"></script>
+<script src="~/admin/assets/js/notify/bootstrap-notify.min.js"></script>
+<script src="~/admin/assets/js/notify/index.js"></script>
+
+
+<!-- customizer js -->
+<script src="~/admin/assets/js/customizer.js"></script>
+
+
+<!-- sidebar effect -->
+<script src="~/admin/assets/js/sidebareffect.js"></script>
+
+<!-- Theme js -->
+<script src="~/admin/assets/js/script.js"></script>
+
+
+<!-- select2 js -->
+<script src="~/admin/assets/js/select2.min.js"></script>
+<script src="~/admin/assets/js/select2-custom.js"></script>
+
+
+<!-- ck editor js -->
+<script src="~/admin/assets/js/ckeditor.js"></script>
+
+
+
+<script src="~/lib/SlimSelect-2.8.2/slimselect.min.js"></script>
+
+
+<script>
+    
+    new SlimSelect({
+        select: '.slim-select',
+        settings: {
+            placeholderText: 'لطفا انتخاب کنید ', 
+            searchText: 'موردی یافت نشد',
+            searchPlaceholder: 'جست و جو کنید',
+        }
+    });
+
+
+    let CkEditor;
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .then(editorr => { 
+            CkEditor = editorr; 
+        })
+        .catch(eee => {
+            //console.error(eee);
+        });
+
+    let IsfilterMenuOpen = false;
+    let filterMenuHeader = document.getElementsByClassName('filter-menu-header')[0];
+    let filterMenuForm = document.getElementsByClassName('filter-menu-form');
+    let filterMenuSubmit = document.getElementById('filter-menu-submit');
+
+    function ToggleFilterMenu() {
+        //console.log('toggle');
+        //console.log(filterMenuForm);
+        //console.log(IsfilterMenuOpen);
+        //e.target.parentElement.('filter-menu-form')[0].style.display = IsfilterMenuOpen ? 'none' : 'flex';
+        document.getElementsByClassName('filter-menu-form')[0].style.display = IsfilterMenuOpen ? 'none' : 'flex';
+        //filterMenuForm.style.display = IsfilterMenuOpen ? 'none' : 'flex';
+        IsfilterMenuOpen = !IsfilterMenuOpen;
+    }
+
+    let filterMenuInputs = document.getElementsByClassName('filter-menu-input');
+
+    for (var input of filterMenuInputs) {
+        input.onfocus = (e) => {
+            e.target.style.border = '#0da487 3px solid';
+            e.target.previousElementSibling.style.fontWeight = '900';
+        };
+        input.onblur = (e) => {
+            e.target.style.border = '#0da487 1px solid';
+            e.target.previousElementSibling.style.fontWeight = '500';
+        };
+    }
+
+    function GoPage(pageNumber,formId) {
+        if (pageNumber && pageNumber > 0) {
+            document.getElementById('filter-pageNumber').value = pageNumber;            
+            SubmitForm(document.getElementById(formId));
+            //document.getElementById('filter-pageNumber').setAttribute('value', '1')
+        }
+    }
+
+    function SubmitForm(form) {
+        //console.log(form.querySelector(`[type='submit']`));
+        form.querySelector(`[type='submit']`).click();
+    }
+
+    function PreviewImage(event, imgId) {
+        var output = document.getElementById(imgId);
+        if (event.target.files[0]) {
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.classList.remove('d-none');
+            output.onload = function () {
+                URL.revokeObjectURL(output.src); // free memory
+            }
+        }
+        else { 
+            output.classList.add('d-none');
+        }
+    }
+
+    // console.log(filterMenuForm.querySelector("button[type='submit']"));
+
+</script>
+
+@* ------------------------------------------------------------ 9 Scripts --------------------------------------------------------- *@
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+
+<script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+
+<script src="~/lib/sweetAlert2/sweetalert2.min.js"></script>
+
+<script src="~/lib/custom/ajaxRequest.js"></script>
+
+<script src="~/lib/custom/ajaxResponseHanler.js"></script>
+
+@* <script src="~/lib/datePicker/jalali-datePicker/jalalidatepicker.min.js"></script> *@
+
+<script src="~/lib/datePicker/behzadi-persianDatepicker/js/persianDatepicker.min.js"></script>
+
+
+<script>
+
+
+    $(document).ready(function () {
+        $('.select-2').select2();
+    });
+
+
+    $(`.p-date-picker`).persianDatepicker({
+        formatDate: "YYYY/MM/DD",
+        cellWidth: 35,
+        cellHeight: 30,
+        fontSize: 15,
+        onSelect: function () {
+            for (var input of document.getElementsByClassName('p-date-picker')){
+                console.log(`${input.getAttribute('name')}: ${$(input).valid()}`);
+            }
+        },
+        onRender: function () {
+            console.log('render');
+        }
+    });
+
+</script>

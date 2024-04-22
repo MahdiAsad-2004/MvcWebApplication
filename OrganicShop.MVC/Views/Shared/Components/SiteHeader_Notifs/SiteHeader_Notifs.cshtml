@@ -1,0 +1,42 @@
+﻿@using OrganicShop.Domain.Dtos.NotificationDtos
+@model List<NotificationListDto>
+    
+
+<div class="header-top">
+    <div class="container-fluid-lg">
+        <div class="row">
+
+            <div class="col-xxl-12 col-lg-12 d-lg-block d-none">
+                <div class="header-offer">
+                    <div class="notification-slider>
+                        <div>
+                            <div class="timer-notification">
+                                <h6><strong class="me-1">به فست کارت خوش آمدید !</strong>خرید لذت بخشی را آرزو میکنیم<strong class="ms-1">کد تخفیف جدید: Fast024</strong></h6>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="timer-notification">
+                                <h6>
+                                    پیشنهادات ویژه را فراموش نکنید !
+                                    <a href="shop-left-sidebar.html" class="text-white">خرید آنلاین</a>
+                                </h6>
+                            </div>
+                        </div>
+                        
+                        @foreach (var item in Model)
+                        {
+                            <div>
+                                <div class="timer-notification">
+                                   @Html.Raw(item.TextHtml)
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

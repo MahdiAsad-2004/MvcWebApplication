@@ -1,0 +1,381 @@
+﻿@using OrganicShop.Domain.Dtos.ProductDtos
+@model CreateProductDto
+
+@section Styles {
+    <!-- Bootstrap-tag input css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/bootstrap-tagsinput.css">
+
+    <!-- Plugins css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/chartist.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/date-picker.css">
+
+    <!--Dropzon css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/dropzone.css">
+}
+
+@{
+    var categoryCombos = ViewData["CategoryCombos"] as List<ComboDto<Category>>;
+    var propertyCombos = ViewData["PropertyCombos"] as List<ComboDto<Property>>;
+    var tagCombos = ViewData["TagCombos"] as List<ComboDto<Tag>>;
+}
+
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <form class="row" action="/Admin/Product/Create" method="post" enctype="multipart/form-data">
+
+                <div class="col-sm-12 m-auto">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header-2">
+                                <h5>ایجاد محصول جدید</h5>
+                            </div>
+                            <div class="theme-form theme-form-2 mega-form">
+                                <div class="mb-3 row align-items-center">
+                                    <label asp-for="Title" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <input asp-for="Title" class="form-control" type="text">
+                                        <span asp-validation-for="Title" class="mt-1 text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row align-items-center">
+                                    <label asp-for="CategoryId" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <select class="form-select select-2" asp-for="CategoryId">
+                                            <option disabled>منو دسته ها</option>
+                                            @foreach (var categoryCombo in categoryCombos)
+                                            {
+                                                <option value="@categoryCombo.Value">@categoryCombo.Text</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="CategoryId" class="mt-1 text-danger"></span>
+
+                                    </div>
+                                </div>
+
+                                <div class="mb-5 row align-items-center">
+                                    <label asp-for="UnitType" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                    <div class="col-md-7 col-lg-9">
+                                        <select id="unit-type-select" asp-for="UnitType" class="form-select">
+                                            @foreach (var unitType in EnumExtension.GetArray<UnitType>())
+                                            {
+                                                <option value="@((byte)unitType)">@unitType.ToStringValue()</option>
+                                            }
+                                        </select>
+                                        <span class="mt-1 text-danger"></span>
+                                    </div>
+                                    <button type="button" id="add-unit-value-button" class="col-md-2 col-lg-1 btn btn-primary mb-3">افزودن مقدار</button>
+                                    <div class="row align-items-center col-12 mt-1" id="units-container">
+                                       
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row align-items-center">
+                                    <label asp-for="TagIds" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <select class="slim-select" asp-for="TagIds" multiple>
+                                            @foreach (var tagCombo in tagCombos)
+                                            {
+                                                <option value="@tagCombo.Value">@tagCombo.Text</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="TagIds" class="mt-1 text-danger"></span>
+                                    </div>
+                                </div>
+                                <a href="/Admin/Tag/Create" class="add-option"><i class="ri-add-line me-2"></i> افزودن برچسب جدید</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header-2">
+                                <h5>توضیحات</h5>
+                            </div>
+
+                            <div class="theme-form theme-form-2 mega-form">
+                                <div class="mb-3 row align-items-center">
+                                    <label asp-for="ShortDescription" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <textarea asp-for="ShortDescription" rows="3" class="form-control"></textarea>
+                                        <span asp-validation-for="ShortDescription" class="mt-1 text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row align-items-center">
+                                    <label asp-for="Description" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <textarea onchange="console.log(event.target.value)" oninput="" class="p-4" id="editor" asp-for="Description"></textarea>
+                                        <span asp-validation-for="Description" class="mt-1 text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header-2">
+                                <h5>تصویر محصول</h5>
+                            </div>
+
+                            <div class="theme-form theme-form-2 mega-form">
+                                <div class="mb-3 row align-items-center">
+                                    <label asp-for="MainImageFile" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                    <div class="col-md-6 col-lg-7">
+                                        <input onchange="PreviewImage(event,'product-main-image')" asp-for="MainImageFile" class="form-control" type="file">
+                                        <span asp-validation-for="MainImageFile" class="mt-1 text-danger"></span>
+                                    </div>
+                                    <img id="product-main-image" class="col-md-3 image-fluid rounded-2"
+                                         alt="" />
+                                </div>
+
+
+                                <div class="mb-3 row align-items-center">
+                                    <label asp-for="PictureFiles" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <input asp-for="PictureFiles" onchange="PreviewImages(event)" class="form-control" type="file" multiple>
+                                        <span asp-validation-for="PictureFiles" class="mt-1 text-danger"></span>
+                                    </div>
+                                </div>
+                                <div id="images-container" style="display:flex; flex-direction:row; justify-content:flex-start; align-items:center; flex-wrap:wrap;">
+
+                                    @*   <img id="img-${ImageCounter}" class="col-sm-2 image-fluid rounded-2"
+                                    style="border:solid 2px black; margin:8px; margin-right:8px; margin-top:15px; " /> *@
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header-2">
+                                <h5>ویژگی محصول</h5>
+                            </div>
+
+                            <div class="theme-form theme-form-2 mega-form">
+                                <label class="col-lg-2 col-md-3 col-form-label form-label-title">نوع ویژگی</label>
+                                <div class="col-md-9 col-lg-10">
+                                    <select class="form-select" id="select-properties">
+                                        <option selected value="">--- اتخاب کنید ---</option>
+                                        @foreach (var propertyCombo in propertyCombos)
+                                        {
+                                            <option value="@propertyCombo.Value">@propertyCombo.Text</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="row align-items-center" id="properties-container">
+
+                                    @foreach (var propertyCombo in propertyCombos)
+                                    {
+                                        <div class="mt-3 d-none" id="property-row-@(propertyCombo.Value)">
+                                            <div class="input-group">
+                                                <span class="input-group-text">@(propertyCombo.Text)</span>
+                                                <input disabled data-val="true" data-val-required="@(propertyCombo.Text) ضروری است" name="PropertiesDictionary[@(propertyCombo.Value)]" type="text" class="form-control" />
+                                                <button onclick="DeletePropertyGroup(@(propertyCombo.Value))" type="button" style="background-color:#dd0000;" class="btn btn-sm"><i class="fa-solid fa-xmark" style="color: white; font-size:22px;"></i></button>
+                                            </div>
+                                            <span class="mt-1 text-danger field-validation-error" data-valmsg-for="PropertiesDictionary[@(propertyCombo.Value)]" data-valmsg-replace="true"></span>
+                                        </div>
+                                    }
+
+                                    @*
+                                    <div class="mt-4" id="property-row-">
+                                    <div class="input-group mt-4" id="property-group-${selectedOption.value}">
+                                    <span class="input-group-text">${selectedOption.text}</span>
+                                    <input data-val="true" data-val-required="${selectedOption.text} ضروری است" name="Properties[asd]" type="text" class="form-control" />
+                                    <button onclick="DeletePropertyGroup(${selectedOption.value})" type="button" style="background-color:#dd0000;" class="btn btn-sm"><i class="fa-solid fa-xmark" style="color: white; font-size:22px;"></i></button>
+                                    </div>
+                                    <span class="mt-1 text-danger field-validation-error" data-valmsg-for="Properties[asd]" data-valmsg-replace="true"></span>
+                                    </div>
+
+                                    <div class="mt-4">
+                                    <div class="input-group" id="property-group-${selectedOption.value}">
+                                    <span class="input-group-text">${selectedOption.text}</span>
+                                    <input disabled data-val="true" data-val-required="${selectedOption.text} ضروری است" name="Properties[a]" type="text" class="form-control" />
+                                    <button onclick="DeletePropertyGroup(${selectedOption.value})" type="button" style="background-color:#dd0000;" class="btn btn-sm"><i class="fa-solid fa-xmark" style="color: white; font-size:22px;"></i></button>
+                                    </div>
+                                    <span class="mt-1 text-danger field-validation-error" data-valmsg-for="Properties[a]" data-valmsg-replace="true"></span>
+                                    </div>
+                                    *@
+
+                                </div>
+                            </div>
+
+                            <a href="/Admin/Property/Create" class="add-option"><i class="ri-add-line me-2"></i> افزودن ویژگی جدید</a>
+                        </div>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header-2">
+                                <h5>قیمت محصول</h5>
+                            </div>
+
+                            <div class="theme-form theme-form-2 mega-form">
+                                <div class="mb-5 row align-items-center">
+                                    <label asp-for="Price" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <input asp-for="Price" class="form-control" type="number">
+                                        <span asp-validation-for="Price" class="mt-1 text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row mt-1">
+                                    <div class="col-md-6  row ">
+                                        <label asp-for="UpdatedPrice" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                        <div class="col-md-9 col-lg-10">
+                                            <input asp-for="UpdatedPrice" class="form-control" type="number">
+                                            <span asp-validation-for="UpdatedPrice" class="mt-1 text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6  row ">
+                                        <label asp-for="DiscountCount" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                        <div class="col-md-9 col-lg-10">
+                                            <input asp-for="DiscountCount" class="form-control" type="number">
+                                            <span asp-validation-for="DiscountCount" class="mt-1 text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header-2">
+                                <h5>موجودی انبار</h5>
+                            </div>
+                            <div class="theme-form theme-form-2 mega-form">
+                                <div class="row align-items-center">
+                                    <label asp-for="Stock" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <input asp-for="Stock" class="form-control" type="number">
+                                        <span asp-validation-for="Stock" class="mt-1 text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12" style="display:flex; justify-content:center; align-items:center;">
+                        <button id="submit-create-product" type="submit" class="btn btn-primary col-9 mt-5" style="height:40px; text-align:center; bottom:3px; position:fixed; display:block;">افزودن محصول</button>
+                    </div>
+
+                </div>
+
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@section Scripts {
+
+    <!-- bootstrap tag-input js -->
+    <script src="~/admin/assets/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/admin/assets/js/sidebar-menu.js"></script>
+
+    <!--Dropzon js -->
+    <script src="~/admin/assets/js/dropzone/dropzone.js"></script>
+    <script src="~/admin/assets/js/dropzone/dropzone-script.js"></script>
+
+
+    <partial name="_ValidationScriptsPartial" />
+
+
+    <script src="~/admin/views/product/create.js"></script>
+
+
+    @*  <script>
+        // let SubmitCreateProduct = document.getElementById('submit-create-product');
+        // SubmitCreateProduct.onclick = (e) => {
+        //     e.preventDefault();
+        //     console.log(document.getElementById('editor').value);
+        // }
+
+
+        let SelectPropertiesElem = document.getElementById('select-properties');
+        let PropertiesContainerDiv = document.getElementById('properties-container');
+        let PropertyRowElem = null;
+
+        SelectPropertiesElem.onchange = (e) => {
+            var selectedOption = e.target.options[e.target.selectedIndex];
+            if (selectedOption.value) {
+                PropertyRowElem = document.getElementById(`property-row-${selectedOption.value}`);
+
+                // if (Boolean(document.getElementById(propertyGroupId)) == false) {
+                // PropertiesContainerDiv.insertAdjacentHTML('beforeend', `  <div class="input-group mt-4" id="property-group-${selectedOption.value}">
+                //                                 <span class="input-group-text">${selectedOption.text}</span>
+                //                                 <input data-val="true" data-val-required="${selectedOption.text} ضروری است" name="Properties[asdd]" type="text" class="form-control" />
+                //                                 <button onclick="DeletePropertyGroup(${selectedOption.value})" type="button" style="background-color:#dd0000;" class="btn btn-sm"><i class="fa-solid fa-xmark" style="color: white; font-size:22px;"></i></butto>
+                //                                                                                                 </div>
+                //                                 <span class="mt-1 text-danger field-validation-error" data-valmsg-for="Properties[asdd]" data-valmsg-replace="true"></span>`);
+                // }
+                //console.log($(document.getElementById(`property-group-${selectedOption.value}`).querySelector('input')).valid());
+                // ====>>>> In This Way Validation For Input Not Work !
+
+                PropertyRowElem.classList.remove('d-none');
+                PropertyRowElem.querySelector('input').disabled = false;
+            }
+            e.target.options[0].selected = true;
+        }
+
+        function DeletePropertyGroup(propertyId) {
+            PropertyRowElem = document.getElementById(`property-row-${propertyId}`);
+            PropertyRowElem.classList.add('d-none');
+            PropertyRowElem.querySelector('input').disabled = true;
+        }
+
+        let ImagesContainer = document.getElementById('images-container');
+        let ImageCounter = 0;
+
+        function PreviewImages(e) {
+            var imageUrl = '';
+            var imgElem = null;
+            ImagesContainer.innerHTML = '';
+            e.target.files.forEach(file => {
+                ImageCounter++;
+                imageUrl = URL.createObjectURL(file);
+                // ImagesContainer.insertAdjacentHTML('beforeend', `<div class="col-sm-2" style="margin-left:6px; margin-right:6px; margin-top:14px; display:flex; flex-direction:row-reverse;">
+                //                                  <i class="fa-solid fa-xmark rounded-1" onclick="DeleteImageView(${ImageCounter})" style="padding:1px; margin-left:2px; margin-top:2px; background-color:aliceblue; cursor:pointer; z-index:1000; font-size:21px; position:absolute; color: #e50b0b;"></i>
+                //                                 <img id="img-${ImageCounter}" class="col-sm-12 image-fluid rounded-2" src="~/media/images/picture/p1.jpg"style="border:solid 2px black" />
+                //                                 <input type="file" hidden name="Pictures" /></div>
+                //                                 `);
+
+                ImagesContainer.insertAdjacentHTML('beforeend', `
+                    <img id="img-${ImageCounter}" class="col-sm-2 image-fluid rounded-2" style="margin-left:8px; margin-right:8px; margin-top:18px; " />
+                `);
+
+                imgElem = document.getElementById(`img-${ImageCounter}`);
+                imgElem.src = imageUrl;
+                imgElem.onload = () => {
+                    URL.revokeObjectURL(imageUrl);
+                };
+            });
+        };
+
+
+        // function DeleteImageView(imageNumber) {
+        //     document.getElementById(`img-${imageNumber}`).parentElement.remove();
+        // }
+
+
+    </script> *@
+
+}

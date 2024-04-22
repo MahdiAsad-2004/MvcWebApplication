@@ -1,0 +1,135 @@
+﻿@using OrganicShop.Domain.Dtos.CommentDtos
+@model PageDto<Comment,CommentListDto,long>
+@{
+    Layout = "_LayoutIndex";
+}
+@section Styles {
+    <!-- Data Table css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/datatables.css">
+}
+
+
+@section FilterForm {
+
+    <form id="filter-form" class="filter-menu-form row col-12" method="post" action="/Admin/Comment/Table" data-container-id="table-container" onsubmit="FetchRequest(event)">
+        <input name="paging.PageNumber" id="filter-pageNumber" hidden value="1" />
+
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">وضعیت</label>
+            <select name="filter.Status" class="form-control filter-menu-input">
+                @foreach (var commetStatus in EnumExtension.GetArray<CommentStatus>())
+                {
+                    <option value="@((byte)commetStatus)">@commetStatus.ToStringValue()</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">مرتب سازی</label>
+            <select name="filter.SortBy" class="form-control filter-menu-input">
+                @foreach (var sortType in EnumExtension.GetArray<CommentSortType>())
+                {
+                    <option value="@((byte)sortType)">@sortType.ToStringValue()</option>
+                }
+            </select>
+        </div>
+
+        <partial name="_FilterDefaults" />
+
+    </form>
+}
+
+<partial name="_Table" model="Model" />
+
+
+@section Modals {
+    <!-- Delete Modal Box Start -->
+    <div class="modal fade theme-modal remove-coupon" id="exampleModalToggle" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header d-block text-center">
+                    <h5 class="modal-title w-100" id="exampleModalLabel22">آیا اطمینان دارید ؟</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="remove-box">
+                        <p>نطر حذف شود</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="modal-button-close" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">خیر</button>
+                    <button type="button" class="btn btn-animation btn-md fw-bold" onclick="DeleteComment()">بله</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form hidden onsubmit="FetchRequest(event)" id="delete-comment-form" data-container-id="table-container" action="/Admin/Comment/Delete" method="delete">
+        <input hidden name="Id" id="comment-id-input" value="0" />
+        <button type="submit" id="delete-comment-form-submit"></button>
+    </form>
+
+    <!-- Picture View Modal -->
+    <div class="modal fade" id="editCommentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body col-12" id="edit-comment-partial-container">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <a id="edit-comment-partial-request-button" onclick="LoadPartial(event)" hidden href="/Admin/Comment/Edit/0" data-container-id="edit-comment-partial-container">
+
+    </a>
+}
+
+
+
+
+@section Scripts {
+
+    <!-- Data table js -->
+    <script src="~/admin/assets/js/jquery.dataTables.js"></script>
+    <script src="~/admin/assets/js/custom-data-table.js"></script>
+
+
+    <script>
+
+
+        let CommentIdInput = document.getElementById('comment-id-input');
+        let ModalButtonClose = document.getElementById('modal-button-close');
+        let DeleteCommentForm = document.getElementById('delete-comment-form');
+        let DeleteCommentFormSubmit = document.getElementById('delete-comment-form-submit');
+        let EditCommentPartialRequestButton = document.getElementById('edit-comment-partial-request-button');
+
+        let EditCommentPartialContainer = document.getElementById('edit-comment-partial-container');
+
+        function SetCommentOnModal(id, title) {
+            CommentIdInput.setAttribute('value', id);
+        }
+
+
+        function DeleteComment() {
+            ModalButtonClose.click();
+            DeleteCommentFormSubmit.click();
+            CommentIdInput.setAttribute('value', 0);
+        }
+
+        function EditCommentModalOpen(id){
+            EditCommentPartialRequestButton.setAttribute('href', `/Admin/Comment/Edit/${id}`);
+            EditCommentPartialRequestButton.click();
+            EditCommentPartialRequestButton.setAttribute('href', `/Admin/Comment/Edit/0`);
+        }
+
+
+    </script>
+
+
+}
+
+

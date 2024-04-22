@@ -1,0 +1,25 @@
+﻿
+<input name="paging.PageNumber" id="filter-pageNumber" hidden value="1" />
+
+<div class="form-group col-3 mb-1 ">
+    <label class="form-label filter-menu-label">وضعیت</label>
+    <select name="filter.ActiveFilter" class="form-control filter-menu-input">
+        @foreach (var isActiveFilter in EnumExtension.GetArray<IsActiveFilter>())
+        {
+            <option selected="@(isActiveFilter == IsActiveFilter.Active)" value="@((byte)isActiveFilter)">@isActiveFilter.ToStringValue()</option>
+        }
+    </select>
+</div>
+<div class="form-group col-3 mb-1 ">
+    <label class="form-label filter-menu-label">تعداد در صفحه</label>
+    <select name="paging.PageItemsCount" class="form-control filter-menu-input">
+        <option value="12">12</option>
+        <option value="24">24</option>
+        <option value="48">48</option>
+        <option value="100">100</option>
+    </select>
+</div>
+<div class="form-group col-1 mt-2 mr-3">
+    <label class="form-label filter-menu-label"></label>
+    <button type="submit" id="filter-menu-submit" class="btn btn-primary form-control">اعمال</button>
+</div>

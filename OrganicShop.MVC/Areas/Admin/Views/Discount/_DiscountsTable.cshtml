@@ -1,0 +1,93 @@
+﻿@using OrganicShop.Domain.Dtos.DiscountDtos
+@model PageDto<Discount,DiscountListDto,int>
+
+<div class="card-body">
+    <div class="title-header option-title">
+        <h5>لیست ویژگی ها</h5>
+        <form class="d-inline-flex">
+            <a href="/Admin/Property/Create" class="align-items-center btn btn-theme d-flex">
+                <i data-feather="plus"></i>افزودن ویژگی جدید
+            </a>
+        </form>
+    </div>
+
+    <div class="table-responsive table-product">
+
+        <div class="table-responsive category-table">
+            <table class="table all-package theme-table" id="table_id">
+                <thead>
+                    <tr>
+                        <th>عنوان</th>
+                        <th>کد</th>
+                        <th>تخفیف</th>
+                        <th>تعداد</th>
+                        <th>اعمال پیشفرض</th>
+                        <th>تاریخ</th>
+                        <th>وضعیت</th>
+                        <th>تنظیمات</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.List)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td class="theme-color">@item.Code</td>
+                            <td>@(item.IsFixDiscount ? item.FixValue.Value.ToToman() : $"{item.Percent} %")</td>
+                            <td>@item.Count</td>
+                            <td>
+                                @if (item.IsDefault)
+                                {
+                                    <i class="fa-solid fa-square-check" style="font-size:20px; color: #01d84d;"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa-solid fa-square-xmark" style="font-size:20px; color: #eb3601;"></i>
+                                }
+                            </td>
+                            <td>@(item.StartDate == null ? "_" : $"{item.StartDate.Value.ToShortDateString()} - {item.EndDate.Value.ToShortDateString()}")</td>
+                            @if (item.IsActive)
+                            {
+                                <td class="status-close">
+                                    <span>فعال</span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="status-danger">
+                                    <span>غیرفعال</span>
+                                </td>
+                            }
+                            <td>
+                                <ul>
+                                    <li>
+                                        <a href="/Admin/Discount/Edit/@item.Id">
+                                            <i class="ri-pencil-line"></i>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0)" data-bs-toggle="modal"
+                                           data-bs-target="#exampleModalToggle" onclick="SetDiscountOnModal('@item.Id' , '@item.Title')">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-footer d-flex justify-content-center pb-0">
+
+        <partial name="_PagerPartial" model="Model.Pager" view-data="ViewData" view-data-formId="@("filter-form")" />
+
+    </div>
+
+
+
+

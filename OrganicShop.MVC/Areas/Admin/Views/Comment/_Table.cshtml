@@ -1,0 +1,67 @@
+﻿@using OrganicShop.Domain.Dtos.CommentDtos
+@model PageDto<Comment,CommentListDto,long>
+
+<div class="card-body">
+    <div class="title-header option-title">
+        <h5>لیست نطرات</h5>
+    </div>
+
+    <div class="table-responsive table-product">
+
+        <div class="table-responsive category-table">
+            <table class="table all-package theme-table" id="table_id">
+                <thead>
+                    <tr>
+                        <th>کاربر</th>
+                        <th>محصول</th>
+                        <th>متن</th>
+                        <th>امتیاز</th>
+                        <th>وضعیت</th>
+                        <th>وضعیت</th>
+                        <th>تنظیمات</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.List)
+                    {
+                        <tr>
+                            <td>@item.UserName</td>
+                            <td>@item.ProductName</td>
+                            <td>@item.Text.Substring(0,30) ...</td>
+                            <td>@item.Rate</td>
+                            <td>@item.Status</td>
+                            <td>@item.Date.ToString("yyyy/MM/dd  HH:mm")</td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="EditCommentModalOpen(@item.Id)" data-bs-toggle="modal" data-bs-target="#editCommentModal">
+                                            <i class="ri-pencil-line"></i>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0)" data-bs-toggle="modal"
+                                           data-bs-target="#exampleModalToggle" onclick="SetCommentOnModal('@item.Id')">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card-footer d-flex justify-content-center pb-0">
+
+    <partial name="_PagerPartial" model="Model.Pager" view-data="ViewData" view-data-formId="@("filter-form")" />
+
+</div>
+
+
+
+

@@ -1,0 +1,73 @@
+﻿@using OrganicShop.Domain.Dtos.PropertyDtos
+@model UpdatePropertyDto
+
+@section Styles{
+    <!-- Bootstrap-tag input css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/bootstrap-tagsinput.css">
+
+    <!-- Plugins css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/chartist.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/date-picker.css">
+
+    <!--Dropzon css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/dropzone.css">
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-xxl-8 col-lg-10 m-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header-2">
+                                <h5>ویرایش ویژگی</h5>
+                            </div>
+
+                            <form class="theme-form theme-form-2 mega-form" onsubmit="FetchRequest(event)" method="put" action="/Admin/Property/Edit">
+                                <input asp-for="Id" hidden/>
+                                <div class="mb-4 row align-items-center">
+                                    @* <label class="form-label-title col-sm-3 mb-0">عنوان ویژگی</label> *@
+                                    <label class="form-label-title col-sm-3 mb-0" asp-for="Title"></label>
+                                    <div class="col-sm-9">
+                                        <input asp-for="Title" class="form-control" type="text" placeholder="عنوان ویژگی را وارد کنید"> 
+                                        <span class="text-danger mt-1" asp-validation-for="Title"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-4 row align-items-center">
+                                    <label class="form-label-title col-sm-3 mb-0" asp-for="Priority"></label>
+                                    <div class="col-sm-9">
+                                        <input asp-for="Priority" class="form-control" type="number" placeholder="الویت ویژگی را وارد کنید">
+                                        <span class="text-danger mt-1" asp-validation-for="Priority" ></span>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn ms-auto theme-bg-color text-white">ویرایش</button>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <!-- select2 js -->
+    <script src="~/admin/assets/js/select2.min.js"></script>
+    <script src="~/admin/assets/js/select2-custom.js"></script>
+
+    <!--Dropzon js -->
+    <script src="~/admin/assets/js/dropzone/dropzone.js"></script>
+    <script src="~/admin/assets/js/dropzone/dropzone-script.js"></script>
+
+    <!-- bootstrap tag-input js -->
+    <script src="~/admin/assets/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/admin/assets/js/sidebar-menu.js"></script>
+
+    <partial name="_ValidationScriptsPartial" /> 
+}

@@ -1,0 +1,34 @@
+﻿@using OrganicShop.Domain.Dtos.CategoryDtos
+@model List<CategoryListDto>
+
+
+<!-- Category Section Start -->
+<section class="category-section-2">
+    <div class="container-fluid-lg">
+        <div class="title">
+            <h2>دسته بندی های ما</h2>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="category-slider arrow-slider">
+                    
+                    @foreach (var item in Model)
+                    {
+                        <div>
+                            <div class="shop-category-box border-0 wow fadeIn">
+                                <a href="" class="circle-1">
+                                    <img src="~/media/images/category/@item.ImageName" class="img-fluid blur-up lazyload" alt="">
+                                </a>
+                                <div class="category-name">
+                                    <h6>@item.Title</h6>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Category Section End -->

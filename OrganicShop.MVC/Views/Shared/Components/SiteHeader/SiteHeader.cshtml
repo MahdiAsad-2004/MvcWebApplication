@@ -1,0 +1,18 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.ProductItemDtos
+@using OrganicShop.Domain.Enums
+@using OrganicShop.Domain.IServices
+@inject IProductItemService _ProductItemService
+
+
+<!-- Header Start -->
+<header class="header-2">
+  
+    @await Component.InvokeAsync("SiteHeader_Notifs")
+    
+    @await Component.InvokeAsync("SiteHeader_FirstMenu")
+
+    @await Component.InvokeAsync("SiteHeader_SecondMenu")
+   
+</header>
+<!-- Header End -->

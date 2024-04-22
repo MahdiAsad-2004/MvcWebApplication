@@ -1,0 +1,21 @@
+﻿@model Toast
+
+<form id="toast-form">
+
+    <input type="text" disabled hidden id="toast-title" value="@(Model.Title)"/>
+
+    <input type="text" disabled hidden id="toast-text" value="@(Model.Text)" />
+
+</form>
+
+
+<script>
+
+    let Title = document.getElementById('toast-title').value;
+
+    let Text = document.getElementById('toast-text').value;
+
+    Toast(Title, Text, @((int)Model.Type), @(Model.TimeMs));
+
+</script>
+

@@ -1,0 +1,362 @@
+﻿@using OrganicShop.Domain.Dtos.DiscountDtos
+@model CreateDiscountDto
+
+@{
+    var categoryCombos = ViewData["CategoryCombos"] as List<ComboDto<Category>>;
+}
+
+@section Styles {
+    <!-- Bootstrap-tag input css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/bootstrap-tagsinput.css">
+
+    <!-- Plugins css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/chartist.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/date-picker.css">
+
+    <!--Dropzon css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/dropzone.css">
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <form class="card-body" action="/Admin/Discount/Create" method="post" onsubmit="FetchRequest(event)">
+                            <div class="title-header option-title">
+                                <h5>ایجاد کد تخفیف</h5>
+                            </div>
+                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="pills-home-tab"
+                                            data-bs-toggle="pill" data-bs-target="#pills-home"
+                                            type="button">
+                                        عمومی
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="pills-profile-tab"
+                                            data-bs-toggle="pill" data-bs-target="#pills-profile"
+                                            type="button">
+                                        ویژه
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade show active" id="pills-home" role="tabpanel">
+                                    <div class="theme-form theme-form-2 mega-form">
+                                        <div class="card-header-1">
+                                            <h5>عمومی</h5>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="mb-4 row align-items-center">
+                                                <label asp-for="Title" class="form-label-title col-lg-2 col-md-3 mb-0"></label>
+                                                <div class="col-md-9 col-lg-10">
+                                                    <input asp-for="Title" class="form-control"  type="text">
+                                                    <span asp-validation-for="Title" class="mt-1 text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4 row align-items-center">
+                                                <label asp-for="IsFixDiscount" class="form-label-title col-lg-2 col-md-3 mb-0"></label>
+                                                <div class="col-md-9 col-lg-10">
+                                                    <select id="select-discountType" asp-for="IsFixDiscount" class="form-control">
+                                                        <option selected value="true">ثابت</option>
+                                                        <option value="false">درصد</option>
+                                                    </select>
+                                                    <span asp-validation-for="IsFixDiscount" class="mt-1 text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div id="fixValue" class="mb-4 row align-items-center">
+                                                <label asp-for="FixValue" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                <div class="col-md-9 col-lg-10">
+                                                    <input id="fixValue-input" asp-for="FixValue" data-persian-datepicker="6" class="form-control" type="text">
+                                                    <span asp-validation-for="FixValue" class="mt-1 text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div id="percent" class="mb-4 row align-items-center d-none">
+                                                <label asp-for="Percent" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                <div class="col-md-9 col-lg-10">
+                                                    <input id="percent-input" asp-for="Percent" class="form-control" type="text">
+                                                    <span asp-validation-for="Percent" class="mt-1 text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4 row align-items-center">
+                                                <label asp-for="Code" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                <div class="col-md-9 col-lg-10">
+                                                    <input asp-for="Code" class="form-control" type="text">
+                                                    <span asp-validation-for="Code" class="mt-1 text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4 row align-items-center">
+                                                <label asp-for="Count" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                <div class="col-md-9 col-lg-10">
+                                                    <input asp-for="Count" class="form-control" type="number">
+                                                    <span asp-validation-for="Count" class="mt-1 text-danger"></span>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="mb-4 row align-items-center">
+                                                <div class="col-md-6  row align-items-center">
+                                                    <label asp-for="FreeDelivery" class="form-label-title col-lg-2 col-md-3 mb-0"></label>
+                                                    <div class="col-md-9">
+                                                        <div class="form-check user-checkbox ps-0">
+                                                            <input asp-for="FreeDelivery" class="checkbox_animated check-it" type="checkbox" id="flexCheckDefault1">
+                                                            <span asp-validation-for="FreeDelivery" class="mt-1 text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6  row align-items-center">
+                                                    <label asp-for="IsDefault" class="form-label-title col-lg-2 col-md-3 mb-0"></label>
+                                                    <div class="col-md-9">
+                                                        <div class="form-check user-checkbox ps-0">
+                                                            <input asp-for="IsDefault" class="checkbox_animated check-it" type="checkbox" id="flexCheckDefault1">
+                                                            <span asp-validation-for="IsDefault" class="mt-1 text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button type="submit" class="mt-3 btn ms-auto theme-bg-color text-white">افزودن</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="pills-profile" role="tabpanel">
+                                    <div class="theme-form theme-form-2 mega-form">
+                                        <div class="card-header-1">
+                                            <h5>محصولات</h5>
+                                        </div>
+
+                                        <select hidden asp-for="ProductIds" id="productIds-select" multiple>
+                                           
+                                        </select>
+
+                                        <div class="row">
+                                            <div class="mb-5 row align-items-center">
+                                                <label class="form-label-title col-lg-2 col-md-3 mb-0">محصولات</label>
+                                                <div class="col-lg-9 col-md-7">
+                                                    <ul class="p-1 mt-3 rounded-2 select-container">
+                                                        @*    <li class="rounded-3" data-product-id="">
+                                                        <span>fsadadad</span>
+                                                        <i onclick="DeleteItem(event)" class="fa-solid fa-xmark" style="color: #dd0000;"></i>
+                                                        </li>
+                                                        <li class="rounded-3">
+                                                        <span>;sakdjodjoicjaspij</span>
+                                                        <i onclick="DeleteItem(event)" class="fa-solid fa-xmark" style="color: #dd0000;"></i>
+                                                        </li> *@
+                                                    </ul>
+                                                </div>
+                                                <button type="button" class="col-lg-1 col-md-2 btn btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#productsModal" href="/Admin/Discount/ProductsPartial"
+                                                        onclick="document.getElementById('filter-menu-submit').click()">
+                                                    انتخاب
+                                                </button>                                              
+                                            </div>
+
+                                            <div class="mb-5 row align-items-center">
+                                                <label class="col-sm-2 col-form-label form-label-title">دسته ها</label>
+                                                <div class="col-sm-10">
+
+                                                    <select class="select-2" asp-for="CategoryIds" multiple>
+                                                        <option disabled>--انتخاب کنید--</option>
+                                                        @foreach (var item in categoryCombos)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                        <option value="54">دیجیتال مارکتینگ</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-5 row ">
+                                                <div class="col-md-6  row align-items-center">
+                                                    <label asp-for="StartDate" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                    <div class="col-md-9 col-lg-10">
+                                                        <input asp-for="StartDate" class="form-control p-date-picker" type="text" autocomplete="off">
+                                                        <span asp-validation-for="StartDate" class="mt-1 text-danger"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6  row ">
+                                                    <label asp-for="EndDate" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                    <div class="col-md-9 col-lg-10">
+                                                        <input asp-for="EndDate" class="form-control p-date-picker" type="text" autocomplete="off">
+                                                        <span asp-validation-for="EndDate" class="mt-1 text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-5 row align-items-center">
+                                                <div class="col-md-6  row ">
+                                                    <label asp-for="MinCost" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                    <div class="col-md-9 col-lg-10">
+                                                        <input asp-for="MinCost" class="form-control" step="1000" type="number">
+                                                        <span asp-validation-for="MinCost" class="mt-1 text-danger"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6  row ">
+                                                    <label asp-for="MaxCost" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                                    <div class="col-md-9 col-lg-10">
+                                                        <input asp-for="MaxCost" class="form-control" step="1000" type="number">
+                                                        <span asp-validation-for="MaxCost" class="mt-1 text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Modals {
+    <div class="modal fade" id="productsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div id="filter-menu" style="margin-bottom:20px !important">
+                        <p class="text-center p-2 filter-menu-header" onclick="ToggleFilterMenu()" onselectstart="return false">
+                            <i class="fa-regular fa-filter-list" style="color: #ffffff; font-size:30px;"></i>
+                        </p>
+                        <form id="filter-products-form" class="filter-menu-form row col-12 mt-1" method="post" href="/Admin/Discount/ProductsPartial" 
+                        data-container-id="products-partial"
+                              onsubmit="FetchRequest(event)">
+                            <input name="paging.PageNumber" id="filter-pageNumber" hidden value="1" />
+                            <div class="form-group col-3 mb-1 ">
+                                <label class="form-label m-0">عنوان</label>
+                                <input name="filter.Title m-0" class="form-control" type="text" />
+                            </div>
+                            <div class="form-group col-3 mb-1 ">
+                                <label class="form-label m-0">حداقل قیمت</label>
+                                <input name="filter.MinPrice" class="form-control m-0" min="0" step="1000" type="number" />
+                            </div>
+                            <div class="form-group col-3 mb-1 ">
+                                <label class="form-label m-0">حداکثر قیمت</label>
+                                <input name="filter.MaxPrice" class="form-control" min="0" step="1000" type="number" />
+                            </div>
+                            <div class="form-group col-3 mb-1 ">
+                                <label class="form-label m-0">مرتب سازی</label>
+                                <select name="filter.Type" class="form-control m-0">
+                                    @foreach (var categoryType in EnumExtension.GetArray<ProductSortType>())
+                                    {
+                                        <option value="@((byte)categoryType)">@categoryType.ToStringValue()</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group col-3 mb-1 ">
+                                <label class="form-label m-0">وضعیت</label>
+                                <select name="filter.ActiveFilter" class="form-control m-0">
+                                    @foreach (var isActiveFilter in EnumExtension.GetArray<IsActiveFilter>())
+                                    {
+                                        <option value="@((byte)isActiveFilter)">@isActiveFilter.ToStringValue()</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group col-1 mt-2 mr-3 form-submit asd">
+                                <label class="form-label m-0"></label>
+                                <button type="submit" id="filter-menu-submit" class="btn btn-primary form-control m-0">اعمال</button>
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div>
+                <div class="modal-body persian-date-picker" id="products-partial">
+                    @* <partial name="ProductsPartial"/> *@
+                </div>
+                <div id="zxcv" class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+
+    <!--Dropzon js -->
+    <script src="~/admin/assets/js/dropzone/dropzone.js"></script>
+    <script src="~/admin/assets/js/dropzone/dropzone-script.js"></script>
+
+    <!-- bootstrap tag-input js -->
+    <script src="~/admin/assets/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/admin/assets/js/sidebar-menu.js"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        let productsUl = document.getElementsByClassName('select-container')[0];
+        let productIdsSelect = document.getElementById('productIds-select');
+
+        function CheckProduct(e) {
+            if (e.target.checked) {
+                if (document.getElementById(`option-productId-${e.target.value}`)) {
+                }
+                else {
+                    productsUl.insertAdjacentHTML('beforeend', ` <li 
+                                                    class="rounded-3" data-product-id="${e.target.value}">
+                                                    <span>${e.target.getAttribute('data-title')}</span>
+                                                    <i onclick="DeleteProductLi(event)" class="fa-solid fa-xmark" style="color: #dd0000;"></i>
+                                                                                                    </li>`)
+                    productIdsSelect.insertAdjacentHTML('beforeend', `<option id="option-productId-${e.target.value}" selected value="${e.target.value}"></option>`)
+                }
+                console.log(document.getElementById(`option-productId-${e.target.value}`));
+                console.log(productIdsSelect);
+            }
+            // else {
+            //     if (!!productIds.has(e.target.value)) {
+            //         productIds.delete(e.target.value);
+            //         productsUl.querySelector(`li[data-product-id='${e.target.value}']`).remove();
+            //         document.getElementById(`option-productId-${e.target.value}`).remove();
+            //     }
+            // }
+        }
+
+        function DeleteProductLi(e) {
+            var li = e.target.parentElement;
+            var id = li.getAttribute('data-product-id');
+            document.getElementById(`option-productId-${id}`).remove();
+            li.remove();
+            console.log(productIds);
+            console.log(productIdsSelect);
+        }
+
+        document.getElementById('select-discountType').oninput = (e) => {
+            if (e.target.value == 'true') {
+                document.getElementById('fixValue').classList.remove('d-none');
+                document.getElementById('percent').classList.add('d-none');
+                document.getElementById('fixValue-input').value = '';
+                document.getElementById('percent-input').value = 1;
+            }
+            else {
+                document.getElementById('fixValue').classList.add('d-none');
+                document.getElementById('fixValue-input').value = 1000;
+                document.getElementById('percent').classList.remove('d-none');
+                document.getElementById('percent-input').value = '';
+            }
+        }
+
+        // $(document).ready(function () {
+        //     $('.select-categories').select2();
+        // });
+
+    </script>
+}

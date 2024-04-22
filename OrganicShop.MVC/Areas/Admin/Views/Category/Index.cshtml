@@ -1,0 +1,110 @@
+﻿@using OrganicShop.Domain.Dtos.CategoryDtos
+@model PageDto<Category,CategoryListDto,int>
+@{
+    Layout = "_LayoutIndex";
+}
+@section Styles {
+    <!-- Data Table css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/datatables.css">
+}
+
+
+@section FilterForm {
+    <form id="filter-form" class="filter-menu-form row col-12" method="post" action="/Admin/Category/Table" data-container-id="table-container" onsubmit="FetchRequest(event)">
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">عنوان</label>
+            <input name="filter.Title" class="form-control filter-menu-input" type="text" />
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">نوع</label>
+            <select name="filter.Type" class="form-control filter-menu-input">
+                @foreach (var categoryType in EnumExtension.GetArray<CategoryType>())
+                {
+                    <option value="@((byte)categoryType)">@categoryType.ToStringValue()</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-3 mb-1 ">
+            <label class="form-label filter-menu-label">مرتب سازی</label>
+            <select name="filter.SortBy" class="form-control filter-menu-input">
+                @foreach (var categoryType in EnumExtension.GetArray<CategorySortType>())
+                {
+                    <option value="@((byte)categoryType)">@categoryType.ToStringValue()</option>
+                }
+            </select>
+        </div>
+
+        <partial name="_FilterDefaults" />
+
+    </form>
+}
+
+
+<partial name="_Table" model="Model" />
+
+
+@section Modals {
+    <div class="modal fade theme-modal remove-coupon" id="exampleModalToggle" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header d-block text-center">
+                    <h5 class="modal-title w-100" id="exampleModalLabel22">آیا اطمینان دارید ؟</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="remove-box">
+                        <p>دسته با عنوان  ' <i id="category-name"></i> ' حذف شود</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal" id="modal-close-button">خیر</button>
+                    <button type="button" class="btn btn-animation btn-md fw-bold" onclick="DeleteCategory()">بله</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form hidden method="delete" action="/Admin/Category/Delete" data-container-id="table-container" id="delete-category-form" onsubmit="AjaxRequest(event)">
+        <input name="Id" id="category-id" value="0" />
+        <button id="delete-category-submit" hidden></button>
+    </form>
+
+}
+
+
+
+
+
+
+@section Scripts {
+
+    <!-- Data table js -->
+    <script src="~/admin/assets/js/jquery.dataTables.js"></script>
+    <script src="~/admin/assets/js/custom-data-table.js"></script>
+
+
+
+    <script>
+
+        let inputId = document.getElementById('category-id');
+        let categoryNameElem = document.getElementById('category-name');
+        let modalCloseButton = document.getElementById('modal-close-button');
+        let deleteCategorySubmit = document.getElementById('delete-category-submit');
+
+        function SetCategoryOnModal(id, name) {
+            inputId.setAttribute('value', id);
+            categoryNameElem.innerHTML = name;
+        }
+
+        function DeleteCategory() {
+            modalCloseButton.click();
+            deleteCategorySubmit.click();
+            inputId.setAttribute('value', 0);
+            categoryNameElem.innerHTML = 'NULL';
+        }
+
+    </script>
+
+}

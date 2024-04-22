@@ -1,0 +1,37 @@
+﻿@using OrganicShop.Domain.Dtos.CommentDtos
+@model CommentListDto
+
+<form class="form row" method="put" action="/Admin/Comment/Edit">
+    <input hidden asp-for="Id" />
+    <div class="col-6 form-group mb-3">
+        <label class="form-label">کاربر</label>
+        <input class="form-control" disabled value="@Model.UserName" />
+    </div>
+    <div class="col-6 form-group mb-3">
+        <label class="form-label">محصول</label>
+        <input class="form-control" disabled value="@Model.ProductName" />
+    </div>
+    <div class="col-12 form-group mb-3">
+        <label class="form-label">متن نطر</label>
+        <textarea class="form-control" disabled style="height:auto;">
+            @Model.Text
+        </textarea>
+    </div>
+    <div class="col-6 form-group mb-3">
+        <label class="form-label">تاریخ</label>
+        <input class="form-control" disabled value="@Model.Date.ToString("yyyy/MM/dd  HH:mm")" />
+    </div>
+    <div class="col-6 form-group mb-3">
+        <label class="form-label">وضعیت</label>
+        <select class="form-control" asp-for="Status">
+            @foreach (var commetStatus in EnumExtension.GetArray<CommentStatus>())
+            {
+                <option id="comment-status-option-@((byte)commetStatus)" value="@((byte)commetStatus)">@commetStatus.ToStringValue()</option>
+            }
+        </select>
+        <div class="form-group col-12">
+            <label></label>
+            <button type="submit" class="form-control btn btn-primary">ویرایش</button>
+        </div>
+    </div>
+</form>

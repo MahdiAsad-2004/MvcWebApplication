@@ -1,0 +1,164 @@
+﻿@using OrganicShop.Domain.Dtos.ContactUsDtos;
+@model UpdateContactUsDto
+
+@section Styles {
+    <!-- Bootstrap-tag input css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/bootstrap-tagsinput.css">
+
+    <!-- Plugins css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/chartist.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/date-picker.css">
+
+    <!--Dropzon css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vendors/dropzone.css">
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <form class="row" action="/Admin/ContactUs/" method="post" onsubmit="FetchRequest(event)">
+                <div class="col-sm-12 m-auto">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header-2">
+                                <h5>ویرایش ارتباط با ما</h5>
+                            </div>
+                            <div class="theme-form theme-form-2 mega-form row">
+                                <div class="mb-3 form-group col-md-12">
+                                    <label asp-for="Address" class="form-label"></label>
+                                    <input asp-for="Address" class="form-control" type="text">
+                                    <span asp-validation-for="Address" class="mt-1 text-danger"></span>
+                                </div>
+
+
+                                <div class="mb-3 form-group col-md-12">
+                                    <label asp-for="ShortDescription" class="form-label"></label>
+                                    <textarea asp-for="ShortDescription" rows="3" class="form-control">
+
+                                    </textarea>
+                                    <span asp-validation-for="ShortDescription" class="mt-1 text-danger"></span>
+                                </div>
+
+
+                                <div class="mb-3 form-group col-md-12">
+                                    <label asp-for="Description" class="form-label"></label>
+                                    <textarea id="ckeditor" asp-for="Description" class="form-control">
+                                    </textarea>
+                                    <span asp-validation-for="Description" class="mt-1 text-danger"></span>
+                                </div>
+
+
+
+                                <div class="mb-3 col-md-12 row">
+                                    <div class="form-group col-6">
+                                        <label asp-for="Email1" class="form-label"></label>
+                                        <input asp-for="Email1" class="form-control" />
+                                        <span asp-validation-for="Email1" class="mt-1 text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label asp-for="Email2" class="form-label"></label>
+                                        <input asp-for="Email2" class="form-control" />
+                                        <span asp-validation-for="Email2" class="mt-1 text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 col-md-12 row">
+                                    <div class="form-group col-4">
+                                        <label asp-for="Phone1" class="form-label"></label>
+                                        <input asp-for="Phone1" class="form-control" />
+                                        <span asp-validation-for="Phone1" class="mt-1 text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label asp-for="Phone2" class="form-label"></label>
+                                        <input asp-for="Phone2" class="form-control" />
+                                        <span asp-validation-for="Phone2" class="mt-1 text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label asp-for="Phone3" class="form-label"></label>
+                                        <input asp-for="Phone3" class="form-control" />
+                                        <span asp-validation-for="Phone3" class="mt-1 text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 col-md-12 row">
+                                    <div class="form-group col-4">
+                                        <label asp-for="PhoneNumber1" class="form-label"></label>
+                                        <input asp-for="PhoneNumber1" class="form-control" />
+                                        <span asp-validation-for="PhoneNumber1" class="mt-1 text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label asp-for="PhoneNumber2" class="form-label"></label>
+                                        <input asp-for="PhoneNumber2" class="form-control" />
+                                        <span asp-validation-for="PhoneNumber2" class="mt-1 text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label asp-for="PhoneNumber3" class="form-label"></label>
+                                        <input asp-for="PhoneNumber3" class="form-control" />
+                                        <span asp-validation-for="PhoneNumber3" class="mt-1 text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 col-md-12 row">
+                                    <div class="form-group col-4">
+                                        <label asp-for="Office1" class="form-label"></label>
+                                        <input asp-for="Office1" class="form-control" />
+                                        <span asp-validation-for="Office1" class="mt-1 text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label asp-for="Office2" class="form-label"></label>
+                                        <input asp-for="Office2" class="form-control" />
+                                        <span asp-validation-for="Office2" class="mt-1 text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label asp-for="Office3" class="form-label"></label>
+                                        <input asp-for="Office3" class="form-control" />
+                                        <span asp-validation-for="Office3" class="mt-1 text-danger"></span>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group col-12">
+                                    <label class="form-label"></label>
+                                    <button class="form-control btn btn-primary">ویرایش</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@section Scripts {
+
+    <!-- bootstrap tag-input js -->
+    <script src="~/admin/assets/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/admin/assets/js/sidebar-menu.js"></script>
+
+    <!--Dropzon js -->
+    <script src="~/admin/assets/js/dropzone/dropzone.js"></script>
+    <script src="~/admin/assets/js/dropzone/dropzone-script.js"></script>
+
+
+
+    <partial name="_ValidationScriptsPartial" />
+
+
+
+}

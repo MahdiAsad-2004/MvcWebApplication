@@ -1,0 +1,210 @@
+﻿@{
+
+}
+
+@section Styles {
+    <!-- ratio css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/ratio.css">
+
+    <!-- vector map css -->
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/vector-map.css">
+
+    <!-- Slick Slider Css -->
+    <link rel="stylesheet" href="~/admin/assets/css/vendors/slick.css">
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group col-3 mb-1 ">
+                <a class="btn btn-primary mt-4" onclick="LoadPatial(event)">Load Patial</a>
+                <button class="btn btn-success" onclick="Alertt()">Alert</button>
+            </div>
+            <div id="filter-menu" style="margin-bottom:20px !important">
+                <p class="text-center p-2 filter-menu-header" onclick="ToggleFilterMenu()" onselectstart="return false">
+                    <i class="fa-regular fa-filter-list" style="color: #ffffff; font-size:30px;"></i>
+                </p>
+                <form class="filter-menu-form row col-12">
+                    <div class="form-group col-3 mb-1 ">
+                        <label class="form-label filter-menu-label">Id</label>
+                        <input class="form-control filter-menu-input" type="number" />
+                    </div>
+                    <div class="form-group col-3 mb-1 ">
+                        <label class="form-label filter-menu-label">Title</label>
+                        <input class="form-control filter-menu-input" type="text" />
+                    </div>
+                    <div class="form-group col-3 mb-1 ">
+                        <label class="form-label filter-menu-label">Title</label>
+                        <select class="form-control filter-menu-input">
+                            <option>no option</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="card card-table">
+                <div class="card-body">
+                    <div class="title-header option-title">
+                        <h5>لیست دسته ها</h5>
+                        <form class="d-inline-flex">
+                            <a href="/Admin/Category/Create"
+                               class="align-items-center btn btn-theme d-flex">
+                                <i data-feather="plus-square"></i>افزودن دسته جدید
+                            </a>
+                        </form>
+                    </div>
+
+                    <div class="table-responsive category-table">
+                        <div>
+                            <table class="table all-package theme-table" id="table_id">
+                                <thead>
+                                    <tr>
+                                        <th>عنوان</th>
+                                        <th>عنوان سر دسته</th>
+                                        <th>تاریخ</th>
+                                        <th>تصویر</th>
+                                        <th>آیکن</th>
+                                        <th>تنظیمات</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-center pb-0">
+                    <div class="pagination">
+                        <a class="pagination-arrow"><i class="fa-solid fa-arrow-left"></i></a>
+                        <a>1</a>
+                        <p><i style="padding-top: 5px;" class="fa-solid fa-ellipsis"></i></p>
+                        <a>8</a>
+                        <a>9</a>
+                        <a>10</a>
+                        <a class="pagination-item-active">11</a>
+                        <a>12</a>
+                        <a>13</a>
+                        <a>14</a>
+                        <p><i class="fa-solid fa-ellipsis"></i></p>
+                        <a>20</a>
+                        <a class="pagination-arrow"><i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+
+
+        function LoadPatial(e) {
+            e.preventDefault();
+            var ress = fetch("/Admin/Home/Test", {
+                method: "get",
+            });
+
+            console.log('fetch');
+
+            ress.then(r => r.text().then(t => {
+                document.getElementById('view-container').innerHTML = t;
+            }));
+
+
+        }
+
+
+        // Swal.fire({
+        //     //title: `<strong style="font-size:25px; color:white;">Error !</strong>`,
+        //     //text: '<p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>',
+        //     html:`
+
+        // <div class="p-2" style="display:flex; justify-content:center; align-items:center; ">
+        //     <i class="fa-regular fa-circle-exclamation bg-green" style="display:inline; color: #ffffff; font-size:25px; margin-left:20px;"></i>
+        //     <h4 style="display:inline; font-size:17px; font-family: 'iranyekan'!important;">این یک هشدار خطر پررنگ است - بررسی کنید !</h4>
+        // </div>            
+        //     `,
+        //     position: 'top',
+        //     background: '#ff5b5c',
+        //     width: '100%',
+        //     color: '#fff',
+        //     animation: true,
+        //     showClass: {
+        //         backdrop: 'swal2-backdrop-hide',
+        //         popup: `
+        //             animate__animated
+        //             animate__backInDown
+        //                 `
+        //     },
+        //     hideClass: {
+        //         popup: `
+        //             animate__animated
+        //             animate__flipOutX
+        //                 `
+        //     },
+        //     allowOutsideClick: false,
+        //     allowEnterKey: false,
+        //     showConfirmButton: false,
+        //     showCloseButton: true,
+
+        // });
+
+
+
+        function Alertt() {
+            Swal.fire({
+                title: `<strong style="font-size:25px; color:white;">Error !</strong>`,
+                text: 'An error was thrown form server .',
+                position: 'top',
+                background: '#ff5b5c',
+                color: '#fff',
+                width: '100%',
+                animation: true,
+                showClass: {
+                    backdrop: 'swal2-backdrop-hide',
+                    popup: `
+                                              animate__animated
+                                              animate__tada
+                                            `
+                },
+                hideClass: {
+                    popup: `
+                                              animate__animated
+                                              animate__zoomOutUp
+                                            `
+                },
+                allowOutsideClick: false,
+                allowEnterKey: false,
+                showConfirmButton: false,
+                showCloseButton:true,
+
+
+            });
+
+            // Swal.fire({
+            //     title: "Custom animation with Animate.css",
+            //     showClass: {
+            //         popup: `
+            //                   animate__animated
+            //                   animate__fadeInUp
+            //                   animate__faster
+            //                 `
+            //     },
+            //     hideClass: {
+            //         popup: `
+            //                   animate__animated
+            //                   animate__fadeOutDown
+            //                   animate__faster
+            //                 `
+            //     }
+            // });
+        }
+
+
+
+
+    </script>
+}
