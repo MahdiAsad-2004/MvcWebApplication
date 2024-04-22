@@ -73,7 +73,6 @@ app.MapControllerRoute(
 
 
 
-
 #region add Ioc
 
 void RegisterServices(IServiceCollection services)
