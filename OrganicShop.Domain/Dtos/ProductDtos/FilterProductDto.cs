@@ -61,17 +61,74 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
                     query = query.OrderByDescending(a => a.SoldCount);
                     break;
 
-                //case ProductSortType.Discount:
-                //    query = query.OrderBy(a => a.UpdatedPrice);
-                //    break;
+                case ProductSortType.Discount:
+                    {
+                        var discountProducts = query.SelectMany(a => a.DiscountProducts);
+                        if (query.Select(a => a.Category) != null)
+                        {
+                            var discountCategories = query.Select(a => a.Category);
+                            if (discountProducts != null && discountCategories != null)
+                            {
+                                query = query.OrderBy(a => a.GetDefaultDiscountedPrice1());
+                            }
+                        }
+                        return query;
+                    };
 
-                //case ProductSortType.DiscountDesc:
-                //    query = query.OrderByDescending(a => a.UpdatedPrice);
-                //    break;
+                case ProductSortType.DiscountDesc:
+                    {
+                        var discountProducts = query.SelectMany(a => a.DiscountProducts);
+                        if (query.Select(a => a.Category) != null)
+                        {
+                            var discountCategories = query.Select(a => a.Category);
+                            if (discountProducts != null && discountCategories != null)
+                            {
+                                query = query.OrderByDescending(a => a.GetDefaultDiscountedPrice1());
+                            }
+                        }
+                        return query;
+                    };
 
             }
 
             return query;
+        }
+    }
+
+    public static class xxx
+    {
+        public static int? GetDefaultDiscountedPrice1(this Product product)
+        {
+            Discount? discount;
+            discount = product.DiscountProducts.Select(a => a.Discount).OrderByDescending(a => a.BaseEntity.LastModified)
+                .FirstOrDefault(a => a.IsDefault == true);
+
+            if (discount != null)
+                return discount.GetDiscountedPrice1(product.Price);
+
+            discount = product.Category.DiscountCategories.Select(a => a.Discount).OrderByDescending(a => a.BaseEntity.LastModified)
+                .FirstOrDefault(a => a.IsDefault == true);
+
+            if (discount != null)
+                return discount.GetDiscountedPrice1(product.Price);
+
+            return null;
+        }
+
+        public static int GetDiscountedPrice1(this Discount discount, int price)
+        {
+            if (discount.IsFixDiscount)
+            {
+                if (discount.FixValue != null)
+                    return price - discount.FixValue.Value;
+                throw new Exception("Discount is not valid .");
+            }
+            else
+            {
+                if (discount.Percent != null)
+                    return price - (price * discount.Percent.Value / 100);
+                throw new Exception("Discount is not valid .");
+            }
         }
     }
 

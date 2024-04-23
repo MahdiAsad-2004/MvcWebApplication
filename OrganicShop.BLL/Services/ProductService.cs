@@ -29,15 +29,19 @@ namespace OrganicShop.BLL.Services
         private readonly ICategoryRepository _CategoryRepository;
         private readonly IPropertyRepository _PropertyRepository;
         private readonly IDiscountProductsRepository _DiscountProductRepository;
+        private readonly IDiscountCategoriesRepository _DiscountCategoriesRepository;
+        private readonly IDiscountRepository _DiscountRepository;
 
         public ProductService(IApplicationUserProvider provider, IMapper mapper, IProductRepository ProductRepository, ICategoryRepository categoryRepository,
-            IDiscountProductsRepository discountProductRepository, IPropertyRepository propertyRepository) : base(provider)
+            IDiscountProductsRepository discountProductRepository, IPropertyRepository propertyRepository, IDiscountCategoriesRepository discountCategoriesRepository, IDiscountRepository discountRepository) : base(provider)
         {
             _Mapper = mapper;
             _ProductRepository = ProductRepository;
             _CategoryRepository = categoryRepository;
             _DiscountProductRepository = discountProductRepository;
             _PropertyRepository = propertyRepository;
+            _DiscountCategoriesRepository = discountCategoriesRepository;
+            _DiscountRepository = discountRepository;
         }
 
         #endregion
@@ -48,10 +52,6 @@ namespace OrganicShop.BLL.Services
             var query = _ProductRepository.GetQueryable()
                 .Include(a => a.Pictures)
                 .Include(a => a.Category)
-                    .ThenInclude(a => a.DiscountCategories)
-                        .ThenInclude(a => a.Discount)
-                .Include(a => a.DiscountProducts)
-                    .ThenInclude(a => a.Discount)
                 .AsQueryable();
 
             if (filter == null) filter = new FilterProductDto();
@@ -93,6 +93,57 @@ namespace OrganicShop.BLL.Services
         }
 
 
+
+        public async Task<ServiceResponse<PageDto<Product, ProductSummaryDto, long>>> GetAll(bool summary = true,FilterProductDto? filter = null, PagingDto? paging = null)
+        {
+            var query = _ProductRepository.GetQueryable()
+                .Include(a => a.Pictures)
+                .Include(a => a.Category)
+                    .ThenInclude(a => a.DiscountCategories)
+                        .ThenInclude(a => a.Discount)
+                .Include(a => a.DiscountProducts)
+                    .ThenInclude(a => a.Discount)
+                .Include(a => a.Comments)
+                .Include(a => a.Properties)
+                .AsQueryable();
+
+            if (filter == null) filter = new FilterProductDto();
+            if (paging == null) paging = new PagingDto();
+
+            #region filter
+
+            query = filter.ApplyBaseFilters(query);
+
+            if (filter.ProductId != null)
+                query = query.Where(q => q.Id == filter.ProductId);
+
+            if (filter.Title != null)
+                query = query.Where(q => EF.Functions.Like(q.Title, $"%{filter.Title}%"));
+
+            if (filter.MaxPrice != null)
+                query = query.Where(q => q.Price <= filter.MaxPrice);
+
+            if (filter.MinPrice != null)
+                query = query.Where(q => q.Price >= filter.MinPrice);
+
+            if (filter.CategoryId != null)
+                query = query.Where(q => q.CategoryId.Equals(filter.CategoryId));
+
+
+            #endregion
+
+            #region sort
+
+            query = filter.ApplySortType(query);
+
+            #endregion
+
+            PageDto<Product, ProductSummaryDto, long> pageDto = new();
+            pageDto.List = pageDto.SetPaging(query, paging).Select(a => _Mapper.Map<ProductSummaryDto>(a)).ToList();
+            pageDto.Pager = pageDto.SetPager(query, paging);
+
+            return new ServiceResponse<PageDto<Product, ProductSummaryDto, long>>(ResponseResult.Success, pageDto);
+        }
 
 
 
@@ -159,14 +210,14 @@ namespace OrganicShop.BLL.Services
             #region pictures
 
             var pictures = new List<Picture>();
-            var pictureMain = await create.MainImageFile.SavePictureAsync(PathKey.ProductImages , PictureType.Product);
+            var pictureMain = await create.MainImageFile.SavePictureAsync(PathKey.ProductImages, PictureType.Product);
             pictureMain.IsMain = true;
             pictures.Add(pictureMain);
             if (create.PictureFiles != null)
             {
                 foreach (var pictureFile in create.PictureFiles)
                 {
-                    pictures.Add(await pictureFile.SavePictureAsync(PathKey.ProductImages,PictureType.Product));
+                    pictures.Add(await pictureFile.SavePictureAsync(PathKey.ProductImages, PictureType.Product));
                 }
             }
             Product.Pictures = pictures;
@@ -220,9 +271,9 @@ namespace OrganicShop.BLL.Services
 
             #region unitValue
 
-            if((byte)create.UnitType > 1)
+            if ((byte)create.UnitType > 1)
             {
-                if(create.UnitValuesArray != null)
+                if (create.UnitValuesArray != null)
                 {
                     List<UnitValue> unitValues = new List<UnitValue>();
                     foreach (var value in create.UnitValuesArray)
@@ -267,7 +318,7 @@ namespace OrganicShop.BLL.Services
             if (update.DiscountId > 0)
             {
                 discountProduct = Product.DiscountProducts.First(a => a.DiscountId == update.DiscountId);
-                if(update.UpdatedPrice < update.Price)
+                if (update.UpdatedPrice < update.Price)
                 {
                     discountProduct.Discount.FixValue = update.UpdatedPrice;
                     discountProduct.Discount.BaseEntity.LastModified = DateTime.Now;
@@ -278,7 +329,7 @@ namespace OrganicShop.BLL.Services
                 {
                     Product.DiscountProducts.Remove(discountProduct);
                 }
-                
+
             }
             else
             {
@@ -301,7 +352,7 @@ namespace OrganicShop.BLL.Services
                     Product.DiscountProducts.Add(discountProduct);
                 }
             }
-           
+
 
             #endregion
 
@@ -315,7 +366,7 @@ namespace OrganicShop.BLL.Services
                 Product.Pictures.Add(mainPicture);
             }
 
-            if(update.OldPicturesDic == null)
+            if (update.OldPicturesDic == null)
             {
                 foreach (var picture in Product.Pictures.Where(a => a.IsMain == false))
                 {
@@ -329,7 +380,7 @@ namespace OrganicShop.BLL.Services
                     picture.BaseEntity.IsDelete = true;
                 }
             }
-            
+
             if (update.NewPictureFiles != null)
             {
                 foreach (var file in update.NewPictureFiles)
@@ -461,6 +512,40 @@ namespace OrganicShop.BLL.Services
               .Select(a => _Mapper.Map<ComboDto<Product>>(a))
               .ToList();
             return new ServiceResponse<List<ComboDto<Product>>>(ResponseResult.Success, comboDtos);
+        }
+
+
+
+        public async Task<ServiceResponse<List<ProductSummaryDto>>> HotDiscountProducts()
+        {
+            var discounts = _DiscountRepository.GetQueryable()
+                .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Pictures)
+                .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Category)
+                .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Comments)
+                .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Properties)
+                .Include(a => a.DiscountCategories).ThenInclude(a => a.Category).ThenInclude(a => a.Products)
+                .Where(a => a.IsDefault == true && a.BaseEntity.IsActive == true &&
+                        a.StartDate < DateTime.Now && a.EndDate > DateTime.Now &&
+                        (a.Count == null || a.Count > 0));
+
+            var products1 = discounts.SelectMany(a => a.DiscountProducts).Select(a => a.Product);
+            var products2 = discounts.SelectMany(a => a.DiscountCategories).Select(a => a.Category).SelectMany(a => a.Products);
+
+            if (products1 == null || products2 == null)
+            {
+                if (products1 != null)
+                    return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products1.ToList()));
+                
+                else if(products2 != null)
+                    return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products2.ToList()));
+                
+                return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success,  new List<ProductSummaryDto>());
+            }
+
+            var products = products1.Union(products2);
+
+            return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products.ToList()));
+
         }
 
     }

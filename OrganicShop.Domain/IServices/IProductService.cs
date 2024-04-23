@@ -23,5 +23,13 @@ namespace OrganicShop.Domain.IServices
         
         Task<ServiceResponse<List<ComboDto<Product>>>> GetCombos(long[] productIds);
 
+        Task<ServiceResponse<List<ProductSummaryDto>>> HotDiscountProducts();
+
+
+
+
+
+
+
     }
 }

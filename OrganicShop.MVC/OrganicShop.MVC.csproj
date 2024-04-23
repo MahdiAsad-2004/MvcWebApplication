@@ -25,6 +25,10 @@
 		<Compile Remove="C:\Users\Mahdi\.nuget\packages\dryioc\5.4.3\contentFiles\cs\netstandard2.0\DryIoc\FastExpressionCompiler.cs" />
 		<Compile Remove="C:\Users\Mahdi\.nuget\packages\dryioc\5.4.3\contentFiles\cs\netstandard2.0\DryIoc\ImTools.cs" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="Views\Home\_SpecialProductsSection.cshtml" />
+	</ItemGroup>
 	
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
@@ -85,6 +89,7 @@
 	  <None Include="Areas\Admin\Views\_ViewStart.cshtml" />
 	  <None Include="Views\Error\NotFound.cshtml" />
 	  <None Include="Views\Home\Index.cshtml" />
+	  <None Include="Views\Home\_SpecialProductsSection.cshtml" />
 	  <None Include="Views\Home\_HomeStartSection.cshtml" />
 	  <None Include="Views\Shared\Components\CategoriesSection\CategoriesSection.cshtml" />
 	  <None Include="Views\Shared\Components\SiteFooter\SiteFooter.cshtml" />

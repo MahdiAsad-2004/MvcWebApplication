@@ -1,0 +1,365 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.ProductDtos
+@model List<ProductSummaryDto>
+
+<!-- Deal Section Start -->
+<section class="deal-section">
+    <div class="container-fluid-lg">
+        <div class="title">
+            <h2>تخفیفات داغ روزانه</h2>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="three-slider-1 arrow-slider">
+                    @foreach (var item in Model)
+                    {
+                        <div>
+                            <div class="deal-box wow fadeInUp">
+                                <a href="shop-left-sidebar.html" class="category-image order-sm-2">
+                                    <img src="~/media/images/product/@item.MainImageName" class="img-fluid blur-up lazyload"
+                                         alt="">
+                                </a>
+
+                                <div class="deal-detail order-sm-1">
+                                    <button class="buy-box btn theme-bg-color text-white btn-cart">
+                                        <i class="iconly-Buy icli m-0"></i>
+                                    </button>
+                                    <div class="hot-deal">
+                                        <span>معاملات داغ</span>
+                                    </div>
+                                    <ul class="rating">
+                                        @{
+                                            int i = 1;
+                                            for (i = 1; i <= float.Floor(item.CommentsRate); i++)
+                                            {
+                                                <li>
+                                                    <i class="fa-solid fa-star-sharp"></i>
+                                                </li>
+
+                                            }
+                                            if ((item.CommentsRate * 10) % 10 >= 5)
+                                            {
+                                                <li>
+                                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                                </li>
+                                                for (int j = 5; j > i + 1; j--)
+                                                {
+                                                    <li>
+                                                        <i class="fa-regular fa-star-sharp"></i>
+                                                    </li>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int j = 5; j > i; j--)
+                                                {
+                                                    <li>
+                                                        <i class="fa-regular fa-star-sharp"></i>
+                                                    </li>
+                                                }
+                                            }
+                                        }
+
+                                      @*   <i class="fa-solid fa-star-sharp"></i>
+                                        <i class="fa-solid fa-star-half-stroke"></i>
+                                        <i class="fa-regular fa-star-sharp"></i>
+
+                                        <li>
+                                            <i data-feather="star" class="fill"></i>
+                                        </li>
+                                        <li>
+                                            <i data-feather="star" class="fill"></i>
+                                        </li>
+                                        <li>
+                                            <i data-feather="star" class="fill"></i>
+                                        </li>
+                                        <li>
+                                            <i data-feather="star"></i>
+                                        </li>
+                                        <li>
+                                            <i data-feather="star"></i>
+                                        </li> *@
+                                    </ul>
+                                    <a href="shop-left-sidebar.html" class="text-title">
+                                        <h5>@item.Title</h5>
+                                    </a>
+                                    <h5 class="price"> @item.Price.ToMoney() تومان  <span>@item.DiscountedPrice.ToMoney() </span></h5>
+                                    <div class="progress custom-progressbar">
+                                        <div class="progress-bar" style="width: 50%" role="progressbar"
+                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="item">باقی مانده : <span>@item.Stock</span></h4>
+                                    <h4 class="offer">عجله کنید !!</h4>
+                                    <div class="timer" id="clockdiv-4" data-hours="1" data-minutes="2" data-seconds="3">
+                                        <ul>
+                                            <li>
+                                                <div class="counter">
+                                                    <div class="seconds">
+                                                        <h6>@(item.DiscountEndDate.Subtract(DateTime.Now).Seconds)</h6>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="counter">
+                                                    <div class="minutes">
+                                                        <h6>@(item.DiscountEndDate.Subtract(DateTime.Now).Minutes)</h6>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="counter">
+                                                    <div class="hours">
+                                                        <h6>@(item.DiscountEndDate.Subtract(DateTime.Now).Hours)</h6>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="counter">
+                                                    <div class="days">
+                                                        <h6>@(item.DiscountEndDate.Subtract(DateTime.Now).Days)</h6>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                    <div>
+                        <div class="deal-box wow fadeInUp" data-wow-delay="0.05s">
+                            <a href="shop-left-sidebar.html" class="category-image order-sm-2">
+                                <img src="assets/images/veg-3/cate1/2.png" class="img-fluid blur-up lazyload"
+                                     alt="">
+                            </a>
+
+                            <div class="deal-detail order-sm-1">
+                                <button class="buy-box btn theme-bg-color text-white btn-cart">
+                                    <i class="iconly-Buy icli m-0"></i>
+                                </button>
+                                <div class="hot-deal">
+                                    <span>معاملات داغ</span>
+                                </div>
+                                <ul class="rating">
+                                    <li>
+                                        <i data-feather="star" class="fill"></i>
+                                    </li>
+                                    <li>
+                                        <i data-feather="star" class="fill"></i>
+                                    </li>
+                                    <li>
+                                        <i data-feather="star"></i>
+                                    </li>
+                                    <li>
+                                        <i data-feather="star"></i>
+                                    </li>
+                                    <li>
+                                        <i data-feather="star"></i>
+                                    </li>
+                                </ul>
+                                <a href="shop-left-sidebar.html" class="text-title">
+                                    <h5>بادمجان</h5>
+                                </a>
+                                <h5 class="price"> 60.000 تومان  <span> 70.210</span></h5>
+                                <div class="progress custom-progressbar">
+                                    <div class="progress-bar" style="width: 50%" role="progressbar"
+                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <h4 class="item">باقی مانده : <span>30 مورد</span></h4>
+                                <h4 class="offer">عجله کنید !!</h4>
+                                <div class="timer clockdivs" data-endDate="@DateTime.Now.AddDays(10)" data-hours="1" data-minutes="2" data-seconds="3">
+                                    <ul>
+                                        <li>
+                                            <div class="counter">
+                                                <div class="seconds">
+                                                    <h6></h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="counter">
+                                                <div class="minutes">
+                                                    <h6></h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="counter">
+                                                <div class="hours">
+                                                    <h6></h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="counter">
+                                                <div class="days">
+                                                    <h6></h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="deal-box wow fadeInUp" data-wow-delay="0.1s">
+                            <a href="shop-left-sidebar.html" class="category-image order-sm-2">
+                                <img src="assets/images/veg-3/cate1/3.png" class="img-fluid blur-up lazyload"
+                                     alt="">
+                            </a>
+
+                            <div class="deal-detail order-sm-1">
+                                <button class="buy-box btn theme-bg-color text-white btn-cart">
+                                    <i class="iconly-Buy icli m-0"></i>
+                                </button>
+                                <div class="hot-deal">
+                                    <span>معاملات داغ</span>
+                                </div>
+                                <ul class="rating">
+                                    <li>
+                                        <i data-feather="star" class="fill"></i>
+                                    </li>
+                                    <li>
+                                        <i data-feather="star" class="fill"></i>
+                                    </li>
+                                    <li>
+                                        <i data-feather="star"></i>
+                                    </li>
+                                    <li>
+                                        <i data-feather="star"></i>
+                                    </li>
+                                    <li>
+                                        <i data-feather="star"></i>
+                                    </li>
+                                </ul>
+                                <a href="shop-left-sidebar.html" class="text-title">
+                                    <h5>پیاز</h5>
+                                </a>
+                                <h5 class="price"> 60.000 تومان  <span> 70.210</span></h5>
+                                <div class="progress custom-progressbar">
+                                    <div class="progress-bar" style="width: 50%" role="progressbar"
+                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <h4 class="item">باقی مانده : <span>30 مورد</span></h4>
+                                <h4 class="offer">عجله کنید !!</h4>
+                                <div class="timer" id="clockdiv-2" data-hours="1" data-minutes="2" data-seconds="3">
+                                    <ul>
+                                        <li>
+                                            <div class="counter">
+                                                <div class="seconds">
+                                                    <h6></h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="counter">
+                                                <div class="minutes">
+                                                    <h6></h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="counter">
+                                                <div class="hours">
+                                                    <h6></h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="counter">
+                                                <div class="days">
+                                                    <h6>5</h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="deal-box wow fadeInUp" data-wow-delay="0.15s">
+                            <div class="category-image order-sm-2">
+                                <img src="assets/images/veg-3/cate1/1.png" class="img-fluid" alt="">
+                            </div>
+
+                            <div class="deal-detail order-sm-1">
+                                <button class="buy-box btn theme-bg-color text-white btn-cart">
+                                    <i class="iconly-Buy icli m-0"></i>
+                                </button>
+                                <div class="hot-deal">
+                                    <span>معاملات داغ</span>
+                                </div>
+                                <ul class="rating">
+                                    <li>
+                                        <i data-feather="star" class="fill"></i>
+                                    </li>
+                                    <li>
+                                        <i data-feather="star" class="fill"></i>
+                                    </li>
+                                    <li>
+                                        <i data-feather="star"></i>
+                                    </li>
+                                    <li>
+                                        <i data-feather="star"></i>
+                                    </li>
+                                    <li>
+                                        <i data-feather="star"></i>
+                                    </li>
+                                </ul>
+                                <a href="shop-left-sidebar.html" class="text-title">
+                                    <h5>فلفل دلمه ای</h5>
+                                </a>
+                                <h5 class="price"> 60.000 تومان  <span> 70.210</span></h5>
+                                <div class="progress custom-progressbar">
+                                    <div class="progress-bar" style="width: 50%" role="progressbar"
+                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <h4 class="item">باقی مانده : <span>30 مورد</span></h4>
+                                <h4 class="offer">عجله کنید !!</h4>
+                                <div class="timer" id="clockdiv-3" data-hours="1" data-minutes="2" data-seconds="3">
+                                    <ul>
+                                        <li>
+                                            <div class="counter">
+                                                <div class="seconds">
+                                                    <h6></h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="counter">
+                                                <div class="minutes">
+                                                    <h6></h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="counter">
+                                                <div class="hours">
+                                                    <h6></h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="counter">
+                                                <div class="days">
+                                                    <h6></h6>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Deal Section End -->
