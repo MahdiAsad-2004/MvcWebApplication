@@ -23,6 +23,8 @@ namespace OrganicShop.BLL.Extensions
 
         public static readonly string ProductImages = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\media\\images\\product\\");
 
+        public static readonly string ArticleImages = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\media\\images\\article\\");
+
         
         
 
@@ -39,6 +41,9 @@ namespace OrganicShop.BLL.Extensions
 
                 case PathKey.UserImages:
                     return PathExtensions.UserImages;
+
+                case PathKey.ArticleImages:
+                    return PathExtensions.ArticleImages;
 
                 default: throw new Exception("Invalid enum");
             }
@@ -67,7 +72,7 @@ namespace OrganicShop.BLL.Extensions
 
     public enum PathKey
     {
-        ProductImages , CategoryImages , UserImages , 
+        ProductImages , CategoryImages , UserImages , ArticleImages
 
     }
 

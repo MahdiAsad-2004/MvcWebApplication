@@ -17,13 +17,15 @@ namespace OrganicShop.Domain.Entities
         public bool IsMain { get; set; }
         public PictureType Type { get; set; }
         public long? ProductId { get; set; }
-        public long? UserPictureId { get; set; }
-        public int? CategoryPictureId { get; set; }
+        public long? UserId { get; set; }
+        public int? CategoryId { get; set; }
+        public int? ArticleId { get; set; }
 
 
         public Product? Product { get; set; }
         public User? User { get; set; }
         public Category? Category { get; set; }
+        public Article? Article { get; set; }
 
 
 

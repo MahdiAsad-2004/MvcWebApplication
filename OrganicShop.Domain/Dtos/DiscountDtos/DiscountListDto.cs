@@ -17,6 +17,7 @@ namespace OrganicShop.Domain.Dtos.DiscountDtos
         public int? Percent { get; set; }
         public PersianDateTime? StartDate { get; set; }
         public PersianDateTime? EndDate { get; set; }
+        public int Priority { get; set; }
     }
 
 

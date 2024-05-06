@@ -3,23 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrganicShop.Domain", "OrganicShop.Domain\OrganicShop.Domain.csproj", "{C3B95A11-C6E7-4B73-A05B-32B6AB23AA1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrganicShop.Domain", "OrganicShop.Domain\OrganicShop.Domain.csproj", "{C3B95A11-C6E7-4B73-A05B-32B6AB23AA1E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{9983967D-5AFF-404F-96C5-BA6000AAC33E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrganicShop.DAL", "OrganicShop.DAL\OrganicShop.DAL.csproj", "{AD2EC10A-4CA0-4A7B-AD09-FC56C01DBFEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrganicShop.DAL", "OrganicShop.DAL\OrganicShop.DAL.csproj", "{AD2EC10A-4CA0-4A7B-AD09-FC56C01DBFEF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DAL", "DAL", "{9C3B4143-5790-401F-8DEB-3F013F4D9F12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrganicShop.BLL", "OrganicShop.BLL\OrganicShop.BLL.csproj", "{1F165B27-5CF2-476E-A664-BB7D16AE9020}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrganicShop.BLL", "OrganicShop.BLL\OrganicShop.BLL.csproj", "{1F165B27-5CF2-476E-A664-BB7D16AE9020}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BLL", "BLL", "{C9EAC79F-3AF3-4A52-8C45-7A53457B4B89}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IOC", "IOC", "{FCCAAB09-19BB-469E-82A9-271B871EBB01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrganicShop.IOC", "OrganicShop.IOC\OrganicShop.IOC.csproj", "{03B79520-C98B-4C11-85F3-E12B94E47477}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrganicShop.IOC", "OrganicShop.IOC\OrganicShop.IOC.csproj", "{03B79520-C98B-4C11-85F3-E12B94E47477}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrganicShop.MVC", "OrganicShop.MVC\OrganicShop.MVC.csproj", "{D65E1987-E515-4E29-BCF6-06818A44DB49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrganicShop.MVC", "OrganicShop.MVC\OrganicShop.MVC.csproj", "{D65E1987-E515-4E29-BCF6-06818A44DB49}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MVC", "MVC", "{50EFDEF2-0E57-400D-9558-F6AACCDB42E5}"
 EndProject

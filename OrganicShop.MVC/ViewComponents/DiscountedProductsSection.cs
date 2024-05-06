@@ -23,11 +23,11 @@ namespace OrganicShop.Mvc.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            //var response = await _ProductService.HotDiscountProducts();
-            //if (response.Result == ResponseResult.Success)
-            //{
-            //    return View("DiscountedProductsSection", response.Data);
-            //}
+            var response = await _ProductService.HotDiscountProducts();
+            if (response.Result == ResponseResult.Success)
+            {
+                return View("DiscountedProductsSection", response.Data);
+            }
             return View("DiscountedProductsSection", new List<ProductSummaryDto>());
         }
 

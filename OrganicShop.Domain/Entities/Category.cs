@@ -25,7 +25,31 @@ namespace OrganicShop.Domain.Entities
         public Category? Parent { get; set; }
         public ICollection<Category> Subs { get; set; }
         public ICollection<Product> Products { get; set; }
+        public ICollection<Article> Articles { get; set; }
         public ICollection<DiscountCategories> DiscountCategories { get; set; }
+
+
+
+
+
+
+
+
+
+
+        public List<Category> GetWithAllParents()
+        {
+            var category = this;
+            var list = new List<Category>() { category};
+            while (category.Parent != null)
+            {
+                list.Add(category.Parent);
+                category = category.Parent;
+            }
+            return list;
+        }
+
+
 
     }
 }

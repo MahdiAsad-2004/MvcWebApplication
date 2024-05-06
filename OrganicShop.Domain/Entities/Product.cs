@@ -18,13 +18,14 @@ namespace OrganicShop.Domain.Entities
         public int SoldCount { get; set; }
         public string ShortDescription { get; set; }
         public string Description { get; set; }
-        public int CategoryId { get; set; }
+        public int? DiscountedPrice { get; set; }
+        
+        //public int CategoryId { get; set; }
 
 
 
 
-
-        public Category Category { get; set; }
+        public ICollection<Category> Categories { get; set; }
         public ICollection<Picture> Pictures { get; set; }
         public ICollection<DiscountProducts> DiscountProducts { get; set; }
         public ICollection<ProductItem> ProductItems { get; set; }

@@ -1,0 +1,312 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.Page
+@using OrganicShop.Domain.Dtos.ProductDtos
+@using OrganicShop.Domain.Entities
+@{
+    List<ProductSummaryDto> newestProducts = ViewData["NewestProducts"] as List<ProductSummaryDto>;
+    List<ProductSummaryDto> specialProducts = ViewData["SpecialProducts"] as List<ProductSummaryDto>;
+    List<ProductSummaryDto> bestSellingProducts = ViewData["BestSellingProducts"] as List<ProductSummaryDto>;
+    List<ProductSummaryDto> lowestSellingProducts = ViewData["LowestSellingProducts"] as List<ProductSummaryDto>;
+}
+<!-- Product Section Start -->
+<section class="product-section-2">
+    <div class="container-fluid-lg">
+        <div class="row gy-sm-5 gy-4">
+          
+            <div class="col-xxl-3 col-md-6">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="title title-border d-block">
+                            <h3>محصولات جدید</h3>
+                        </div>
+
+                        <div class="product-category-1 arrow-slider-2">
+                            @for (int i = 0; i <= (byte)(newestProducts.Count/3) ; i++)
+                            {
+                                <div>
+                                    <div class="row gy-sm-4 gy-3">
+                                        
+                                        @foreach (var item in newestProducts.Skip(i * 3).Take(3))
+                                        {
+                                            <div class="col-12">
+                                                <div class="product-box-4 wow fadeInUp">
+                                                    <a href="" class="product-image">
+                                                        <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
+                                                    </a>
+                                                    <div class="product-details">
+                                                        @await Html.PartialAsync("_ProductRating",item.CommentsRate)
+                                                        <a href="">
+                                                            <h4 class="name">@item.Title</h4>
+                                                        </a>
+                                                        @if (item.DiscountedPrice != null)
+                                                        {
+                                                            <h5 class="price theme-color"> @item.DiscountedPrice.Value.ToToman() <del>&ensp;@item.Price.ToMoney()</del></h5>
+                                                        }
+                                                        else
+                                                        {
+                                                            <h5 class="price theme-color"> @item.Price.ToToman()</h5>
+                                                        }
+                                                        <ul class="option">
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="افزودن به سبد خرید">
+                                                                <a href="cart.html">
+                                                                    <i class="iconly-Buy icli"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="نمایش">
+                                                                <a href="javascript:void(0)" data-bs-toggle="modal"
+                                                                   data-bs-target="#exampleModal">
+                                                                    <i class="iconly-Show icli"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="افزودن به لیست علاقه‌مندی">
+                                                                <a href="wishlist.html">
+                                                                    <i class="iconly-Heart icli"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="مقایسه">
+                                                                <a href="compare.html">
+                                                                    <i class="iconly-Swap icli"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-3 col-md-6">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="title title-border d-block">
+                            <h3>محصول ویژه</h3>
+                        </div>
+
+                        <div class="product-category-1 arrow-slider-2">
+
+                            @for (int i = 0; i <= (byte)(specialProducts.Count / 3); i++)
+                            {
+                                <div>
+                                    <div class="row gy-sm-4 gy-3">
+
+                                        @foreach (var item in specialProducts.Skip(i * 3).Take(3))
+                                        {
+                                            <div class="col-12">
+                                                <div class="product-box-4 wow fadeInUp">
+                                                    <a href="" class="product-image">
+                                                        <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
+                                                    </a>
+                                                    <div class="product-details">
+                                                        @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                                                        <a href="">
+                                                            <h4 class="name">@item.Title</h4>
+                                                        </a>
+                                                        @if (item.DiscountedPrice != null)
+                                                        {
+                                                            <h5 class="price theme-color"> @item.DiscountedPrice.Value.ToToman() <del>&ensp;@item.Price.ToMoney()</del></h5>
+                                                        }
+                                                        else
+                                                        {
+                                                            <h5 class="price theme-color"> @item.Price.ToToman()</h5>
+                                                        }
+                                                        <ul class="option">
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="افزودن به سبد خرید">
+                                                                <a href="cart.html">
+                                                                    <i class="iconly-Buy icli"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="نمایش">
+                                                                <a href="javascript:void(0)" data-bs-toggle="modal"
+                                                                   data-bs-target="#exampleModal">
+                                                                    <i class="iconly-Show icli"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="افزودن به لیست علاقه‌مندی">
+                                                                <a href="wishlist.html">
+                                                                    <i class="iconly-Heart icli"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="مقایسه">
+                                                                <a href="compare.html">
+                                                                    <i class="iconly-Swap icli"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-3 col-md-6">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="title title-border d-block">
+                            <h3>پرفروش ترین</h3>
+                        </div>
+
+                        <div class="product-category-1 arrow-slider-2">
+                            @for (int i = 0; i <= (byte)(bestSellingProducts.Count / 3); i++)
+                            {
+                                <div>
+                                    <div class="row gy-sm-4 gy-3">
+
+                                        @foreach (var item in bestSellingProducts.Skip(i * 3).Take(3))
+                                        {
+                                            <div class="col-12">
+                                                <div class="product-box-4 wow fadeInUp">
+                                                    <a href="" class="product-image">
+                                                        <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
+                                                    </a>
+                                                    <div class="product-details">
+                                                        @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                                                        <a href="">
+                                                            <h4 class="name">@item.Title</h4>
+                                                        </a>
+                                                        @if (item.DiscountedPrice != null)
+                                                        {
+                                                            <h5 class="price theme-color"> @item.DiscountedPrice.Value.ToToman() <del>&ensp;@item.Price.ToMoney()</del></h5>
+                                                        }
+                                                        else
+                                                        {
+                                                            <h5 class="price theme-color"> @item.Price.ToToman()</h5>
+                                                        }
+                                                        <ul class="option">
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="افزودن به سبد خرید">
+                                                                <a href="cart.html">
+                                                                    <i class="iconly-Buy icli"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="نمایش">
+                                                                <a href="javascript:void(0)" data-bs-toggle="modal"
+                                                                   data-bs-target="#exampleModal">
+                                                                    <i class="iconly-Show icli"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="افزودن به لیست علاقه‌مندی">
+                                                                <a href="wishlist.html">
+                                                                    <i class="iconly-Heart icli"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="مقایسه">
+                                                                <a href="compare.html">
+                                                                    <i class="iconly-Swap icli"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-3 col-md-6">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="title title-border d-block">
+                            <h3>در حال فروش</h3>
+                        </div>
+
+                        <div class="product-category-1 arrow-slider-2">
+                            @for (int i = 0; i <= (byte)(lowestSellingProducts.Count / 3); i++)
+                            {
+                                <div>
+                                    <div class="row gy-sm-4 gy-3">
+
+                                        @foreach (var item in lowestSellingProducts.Skip(i * 3).Take(3))
+                                        {
+                                            <div class="col-12">
+                                                <div class="product-box-4 wow fadeInUp">
+                                                    <a href="" class="product-image">
+                                                        <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
+                                                    </a>
+                                                    <div class="product-details">
+                                                        @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                                                        <a href="">
+                                                            <h4 class="name">@item.Title</h4>
+                                                        </a>
+                                                        @if (item.DiscountedPrice != null)
+                                                        {
+                                                            <h5 class="price theme-color"> @item.DiscountedPrice.Value.ToToman() <del>&ensp;@item.Price.ToMoney()</del></h5>
+                                                        }
+                                                        else
+                                                        {
+                                                            <h5 class="price theme-color"> @item.Price.ToToman()</h5>
+                                                        }
+                                                        <ul class="option">
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="افزودن به سبد خرید">
+                                                                <a href="cart.html">
+                                                                    <i class="iconly-Buy icli"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="نمایش">
+                                                                <a href="javascript:void(0)" data-bs-toggle="modal"
+                                                                   data-bs-target="#exampleModal">
+                                                                    <i class="iconly-Show icli"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="افزودن به لیست علاقه‌مندی">
+                                                                <a href="wishlist.html">
+                                                                    <i class="iconly-Heart icli"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="مقایسه">
+                                                                <a href="compare.html">
+                                                                    <i class="iconly-Swap icli"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Product Section End -->

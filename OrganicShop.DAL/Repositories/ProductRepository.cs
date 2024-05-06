@@ -13,7 +13,10 @@ namespace OrganicShop.DAL.Repositories
     {
         public ProductRepository(OrganicShopDbContext organicShopDbContext) : base(organicShopDbContext)
         {
+            
         }
+
+        
     }
 
 

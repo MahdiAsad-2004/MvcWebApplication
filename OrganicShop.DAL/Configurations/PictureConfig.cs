@@ -14,9 +14,10 @@ namespace OrganicShop.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<Picture> builder)
         {
-            builder.HasOne<Product>(a => a.Product).WithMany(a => a.Pictures).HasForeignKey(a => a.ProductId);
-            builder.HasOne(a => a.Category).WithOne(a => a.Picture).HasForeignKey<Picture>(a => a.CategoryPictureId);
-            builder.HasOne(a => a.User).WithOne(a => a.Picture).HasForeignKey<Picture>(a => a.UserPictureId);
+            builder.HasOne(a => a.Product).WithMany(a => a.Pictures).HasForeignKey(a => a.ProductId);
+            builder.HasOne(a => a.Article).WithMany(a => a.Pictures).HasForeignKey(a => a.ArticleId);
+            builder.HasOne(a => a.Category).WithOne(a => a.Picture).HasForeignKey<Picture>(a => a.CategoryId).OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(a => a.User).WithOne(a => a.Picture).HasForeignKey<Picture>(a => a.UserId).OnDelete(DeleteBehavior.SetNull);
 
 
 
@@ -29,9 +30,9 @@ namespace OrganicShop.DAL.Configurations
             {
                 Id = 1,
                 IsMain = true,
-                Name = "jocker.png",
+                Name = "joker.png",
                 SizeMB = 0.5f,
-                UserPictureId = 1,
+                UserId = 1,
             });
             builder.OwnsOne(a => a.BaseEntity).HasData(new
             {

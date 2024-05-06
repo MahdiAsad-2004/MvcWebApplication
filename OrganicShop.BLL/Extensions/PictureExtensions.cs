@@ -1,14 +1,7 @@
-﻿using Microsoft.Identity.Client;
-using Microsoft.VisualBasic;
-using OrganicShop.Domain.Dtos.PictureDtos;
+﻿using OrganicShop.Domain.Dtos.PictureDtos;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Entities.Relations;
 using OrganicShop.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrganicShop.BLL.Extensions
 {
@@ -26,7 +19,10 @@ namespace OrganicShop.BLL.Extensions
                     return $"/media/images/category/{picture.Name}";
 
                 case PictureType.User:
-                    return $"/media/images/userr/{picture.Name}";
+                    return $"/media/images/user/{picture.Name}";
+
+                case PictureType.Article:
+                    return $"/media/images/article/{picture.Name}";
 
                 default: throw new Exception("Invalid enum");
             }
@@ -46,6 +42,9 @@ namespace OrganicShop.BLL.Extensions
                 case PictureType.User:
                     return $"/media/images/userr/{picture.Name}";
 
+                case PictureType.Article:
+                    return $"/media/images/article/{picture.Name}";
+
                 default: throw new Exception("Invalid picture type");
             }
             throw new Exception("Picture url not found");
@@ -54,7 +53,7 @@ namespace OrganicShop.BLL.Extensions
 
         public static string? GetMainPictureName(this ICollection<Picture> pictures)
         {
-            Picture? mainPicture = pictures.FirstOrDefault(a => a.IsMain);
+            Picture? mainPicture = pictures.FirstOrDefault(a => a.IsMain && a.BaseEntity.IsActive);
             
             if(mainPicture != null)
                 return mainPicture.Name;
@@ -73,6 +72,9 @@ namespace OrganicShop.BLL.Extensions
                     return Path.Combine(PathExtensions.CategoryImages, picture.Name);
 
                 case PictureType.User:
+                    return Path.Combine(PathExtensions.UserImages, picture.Name);
+                
+                case PictureType.Article:
                     return Path.Combine(PathExtensions.UserImages, picture.Name);
 
                 default:

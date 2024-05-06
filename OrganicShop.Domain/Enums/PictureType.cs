@@ -16,6 +16,8 @@ namespace OrganicShop.Domain.Enums
 
         User = 3,
 
+        Article = 4,
+
 
     }
 }

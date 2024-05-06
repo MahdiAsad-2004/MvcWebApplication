@@ -70,4 +70,4 @@ function initializeClock(id, endtime) {
 
 /***** SET A VALID END DATE *****/
 var deadline = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
-initializeClock('clockdiv-2', deadline);
+//initializeClock('clockdiv-2', deadline);

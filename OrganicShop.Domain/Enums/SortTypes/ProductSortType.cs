@@ -39,5 +39,9 @@ namespace OrganicShop.Domain.Enums.SortTypes
 
         DiscountDesc,
 
+        Rate,
+
+        RateDesc,
+
     }
 }

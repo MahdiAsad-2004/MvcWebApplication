@@ -51,9 +51,12 @@
         <div class="form-group col-3 mb-1 ">
             <label class="form-label filter-menu-label">مرتب سازی</label>
             <select name="filter.SortBy" class="form-control filter-menu-input">
-                @foreach (var categorySortType in EnumExtension.GetArray<CategorySortType>())
+                @foreach (var productSortType in EnumExtension.GetArray<ProductSortType>())
                 {
-                    <option value="@((byte)categorySortType)">@categorySortType.ToStringValue()</option>
+                    if(productSortType.ToString().Contains("Discount") == false)
+                    {
+                        <option value="@((byte)productSortType)">@productSortType.ToStringValue()</option>
+                    }
                 }
             </select>
         </div>

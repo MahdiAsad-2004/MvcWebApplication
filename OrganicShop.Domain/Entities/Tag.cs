@@ -16,5 +16,6 @@ namespace OrganicShop.Domain.Entities
 
 
         public ICollection<TagProducts> TagProducts { get; set; }
+        public ICollection<TagArticles> TagArticles { get; set; }
     }
 }

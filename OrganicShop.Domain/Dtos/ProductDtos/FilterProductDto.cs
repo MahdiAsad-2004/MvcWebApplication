@@ -7,11 +7,13 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
 {
     public class FilterProductDto : BaseFilterDto<Product, long>
     {
+        public long? Id { get; set; }
+        public long[]? Ids { get; set; }
         public string? Title { get; set; }
         public int? MinPrice { get; set; }
         public int? MaxPrice { get; set; }
-        public long? ProductId { get; set; }
         public int? CategoryId { get; set; }
+        public int[]? CategoryIds { get; set; }
         public int? TagId { get; set; }
         public ProductSortType SortBy { get; set; } = ProductSortType.None;
 
@@ -19,7 +21,6 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
 
         public IQueryable<Product> ApplySortType(IQueryable<Product> query)
         {
-
             switch (SortBy)
             {
                 case ProductSortType.None:
@@ -62,37 +63,27 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
                     break;
 
                 case ProductSortType.Discount:
-                    {
-                        var discountProducts = query.SelectMany(a => a.DiscountProducts);
-                        if (query.Select(a => a.Category) != null)
-                        {
-                            var discountCategories = query.Select(a => a.Category);
-                            if (discountProducts != null && discountCategories != null)
-                            {
-                                query = query.OrderBy(a => a.GetDefaultDiscountedPrice1());
-                            }
-                        }
-                        return query;
-                    };
-
+                        query = query.OrderByDescending(a => a.Price - a.DiscountedPrice);
+                        break;
+                    
                 case ProductSortType.DiscountDesc:
-                    {
-                        var discountProducts = query.SelectMany(a => a.DiscountProducts);
-                        if (query.Select(a => a.Category) != null)
-                        {
-                            var discountCategories = query.Select(a => a.Category);
-                            if (discountProducts != null && discountCategories != null)
-                            {
-                                query = query.OrderByDescending(a => a.GetDefaultDiscountedPrice1());
-                            }
-                        }
-                        return query;
-                    };
+                        query = query.OrderBy(a => a.Price - a.DiscountedPrice);
+                        break;
 
+                case ProductSortType.Rate:
+                    query = query.OrderBy(a => (float)a.Comments.Sum(b => b.Rate) / a.Comments.Count == 0 ? int.MaxValue : a.Comments.Count);
+                    break;
+
+                case ProductSortType.RateDesc:
+                    query = query.OrderByDescending(a => (float)a.Comments.Sum(b => b.Rate) / a.Comments.Count == 0 ? int.MaxValue : a.Comments.Count);
+                    break;
             }
 
             return query;
         }
+
+
+
     }
 
     public static class xxx
@@ -106,7 +97,7 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
             if (discount != null)
                 return discount.GetDiscountedPrice1(product.Price);
 
-            discount = product.Category.DiscountCategories.Select(a => a.Discount).OrderByDescending(a => a.BaseEntity.LastModified)
+            discount = product.Categories.Last().DiscountCategories.Select(a => a.Discount).OrderByDescending(a => a.BaseEntity.LastModified)
                 .FirstOrDefault(a => a.IsDefault == true);
 
             if (discount != null)

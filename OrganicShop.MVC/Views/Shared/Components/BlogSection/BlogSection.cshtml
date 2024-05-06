@@ -1,0 +1,40 @@
+﻿@using OrganicShop.Domain.Dtos.ArticleDtos
+@model List<ArticleListDto>
+
+<!-- Blog Section Start -->
+<section class="blog-section">
+    <div class="container-fluid-lg">
+        <div class="title">
+            <h2>وبلاگ</h2>
+        </div>
+
+        <div class="slider-3 arrow-slider">
+
+            @foreach (var item in Model)
+            {
+                <div>
+                    <div class="blog-box ratio_50">
+                        <div class="blog-box-image">
+                            <a href="blog-detail.html">
+                                <img src="~/media/images/article/@item.MainImageName" class="img-fluid bg-img" alt="">
+                            </a>
+                        </div>
+
+                        <div class="blog-detail">
+                            <label>@item.CategoryTitle</label>
+                            <a href="blog-detail.html">
+                                <h2>@item.CategoryTitle</h2>
+                            </a>
+                            <div class="blog-list">
+                                <span>@item.CreateDate.ToString("yyyy MMMM dd")</span>
+                                <span>توسط : @item.AuthorName</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>
+<!-- Blog Section End -->

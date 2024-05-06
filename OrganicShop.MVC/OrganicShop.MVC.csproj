@@ -27,6 +27,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Content Remove="Views\Home\_BannerSection1.cshtml" />
+	  <Content Remove="Views\Home\_BannerSection2.cshtml" />
+	  <Content Remove="Views\Home\_HomeStartSection1.cshtml" />
 	  <Content Remove="Views\Home\_SpecialProductsSection.cshtml" />
 	</ItemGroup>
 	
@@ -89,6 +92,9 @@
 	  <None Include="Areas\Admin\Views\_ViewStart.cshtml" />
 	  <None Include="Views\Error\NotFound.cshtml" />
 	  <None Include="Views\Home\Index.cshtml" />
+	  <None Include="Views\Home\_BannerSection1.cshtml" />
+	  <None Include="Views\Home\_BannerSection2.cshtml" />
+	  <None Include="Views\Home\_HomeStartSection1.cshtml" />
 	  <None Include="Views\Home\_SpecialProductsSection.cshtml" />
 	  <None Include="Views\Home\_HomeStartSection.cshtml" />
 	  <None Include="Views\Shared\Components\CategoriesSection\CategoriesSection.cshtml" />
@@ -601,6 +607,11 @@
 
 	<ItemGroup>
 	  <TypeScriptCompile Include="wwwroot\lib\sweetAlert2\sweetalert2.d.ts" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\media\images\article\" />
 	</ItemGroup>
 
 </Project>

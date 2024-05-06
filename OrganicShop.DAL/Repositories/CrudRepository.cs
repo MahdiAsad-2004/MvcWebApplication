@@ -176,13 +176,13 @@ namespace OrganicShop.DAL.Repositories
             .FirstOrDefaultAsync(a => a.Id.Equals(id));
 
 
-        public IQueryable<TEntity> GetQueryable()
+        public virtual IQueryable<TEntity> GetQueryable()
             => _dbSet
             .AsNoTracking()
             .AsQueryable();
 
 
-        public IQueryable<TEntity> GetQueryableTracking()
+        public virtual IQueryable<TEntity> GetQueryableTracking()
           => _dbSet
             .AsTracking()
             .AsQueryable();

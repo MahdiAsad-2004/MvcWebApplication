@@ -14,7 +14,11 @@ namespace OrganicShop.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<Article> builder)
         {
-
+            builder.HasMany(a => a.TagArticles).WithOne(a => a.Article).HasForeignKey(a => a.ArticleId);
+            builder.HasOne(a => a.Category).WithMany(a => a.Articles).HasForeignKey(a => a.CategoryId);
+            builder.HasOne(a => a.User).WithMany(a => a.Articles).HasForeignKey(a => a.UserId);
+            builder.HasMany(a => a.Pictures).WithOne(a => a.Article).HasForeignKey(a => a.ArticleId);
+            builder.HasMany(a => a.Comments).WithOne(a => a.Article).HasForeignKey(a => a.ArticleId);
 
 
             builder.HasQueryFilter(a => a.BaseEntity.IsDelete == false);

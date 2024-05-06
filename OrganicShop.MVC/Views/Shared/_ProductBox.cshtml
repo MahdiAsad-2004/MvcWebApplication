@@ -1,0 +1,18 @@
+﻿@{
+    int? boxMode = ViewData["ProductBox-Mode"] as int?;
+    string? classes = ViewData["ProductBox-Classes"] as string;
+    string? styles = ViewData["ProductBox-Styles"] as string;
+    Dictionary<string, string>? attributes = ViewData["ProductBox-Attributes"] as Dictionary<string, string>;
+}
+@if(boxMode == 3)
+{
+    
+}
+else if(boxMode == 4)
+{
+    
+}
+else
+{
+    throw new Exception("ProductBox Partial boxMode is not valid");
+}

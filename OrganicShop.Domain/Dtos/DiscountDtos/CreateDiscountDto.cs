@@ -71,6 +71,10 @@ namespace OrganicShop.Domain.Dtos.DiscountDtos
         public int? MaxCost { get; set; }
 
 
+        [DisplayName("الویت")]
+        [Range(1, 100, ErrorMessage = "{0} باید حداقل {2} و حداکثر {1} باشد")]
+        public int Priority { get; set; }
+
 
         [DisplayName("دسته ها")]
         public int[] CategoryIds { get; set; }

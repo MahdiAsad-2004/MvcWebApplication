@@ -35,6 +35,7 @@ namespace OrganicShop.DAL.Context
         public DbSet<Property> Properties { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<TagProducts> TagProducts { get; set; }
+        public DbSet<TagArticles> TagArticles { get; set; }
         public DbSet<UnitValue> Units { get; set; }
         public DbSet<User> Users { get; set; }
 

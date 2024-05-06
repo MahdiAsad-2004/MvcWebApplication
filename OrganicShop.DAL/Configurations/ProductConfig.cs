@@ -1,13 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 using OrganicShop.Domain.Entities;
-using OrganicShop.Domain.Entities.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OrganicShop.Domain.Dtos.ProductDtos;
 
 namespace OrganicShop.DAL.Configurations
 {
@@ -20,7 +18,7 @@ namespace OrganicShop.DAL.Configurations
 
             builder.HasMany(a => a.Pictures).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
             builder.HasMany(a => a.ProductItems).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
-            builder.HasOne(a => a.Category).WithMany(a => a.Products).HasForeignKey(a => a.CategoryId);
+            builder.HasMany(a => a.Categories).WithMany(a => a.Products);
             builder.HasMany(a => a.DiscountProducts).WithOne(a => a.Product).HasForeignKey(a => a.ProductId).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(a => a.TagProducts).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
             builder.HasMany(a => a.Properties).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
@@ -31,23 +29,8 @@ namespace OrganicShop.DAL.Configurations
 
             builder.HasQueryFilter(a => a.BaseEntity.IsDelete == false);
 
-
-
-
         }
     }
 
-    //public static class ProductConverter
-    //{
-    //    public static Product SetProducDiscunt( this Product product)
-    //    {
-    //        var discount = product.Discounts != null ? product.Discounts.LastOrDefault() : null;   
-    //        if(discount != null)
-    //        {
-    //            product.Price = discount.Percent != null ? (product.Price - (product.Price * discount.Percent.Value)) : (product.Price - discount.FixedValue!.Value);
-    //        }
-    //        return product;
-    //    }
- 
-    //}
+
 }

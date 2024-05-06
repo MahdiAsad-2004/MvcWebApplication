@@ -11,6 +11,8 @@ using OrganicShop.Domain.IProviders;
 using OrganicShop.Mvc.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using OrganicShop.DAL.Context;
+using Microsoft.Extensions.Configuration;
+using OrganicShop.BLL.Utily;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<IApplicationUserProvider,ApplicationUserProvider>();
+
+builder.Services.Configure<AesKeys>(builder.Configuration.GetSection("AesKeys"));
 
 RegisterServices(builder.Services);
 

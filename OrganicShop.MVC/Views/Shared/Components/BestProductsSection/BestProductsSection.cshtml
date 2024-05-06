@@ -1,0 +1,147 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.ProductDtos
+@model List<ProductSummaryDto>
+<!-- Product Sction Start -->
+<section class="product-section">
+    <div class="container-fluid-lg">
+        <div class="title">
+            <h2>محصولات برتر</h2>
+        </div>
+
+        <div class="slider-6 img-slider slick-slider-1 arrow-slider">
+           
+            @{
+                var item = new ProductSummaryDto();
+            }
+            @for (int i = 0; i < Model.Count; i += 2)
+            {
+                item = Model[i];
+                <div class="product-box-4 wow fadeInUp">
+                    <div class="product-image">
+                        <div class="label-flex">
+                            <button class="btn p-0 wishlist btn-wishlist notifi-wishlist">
+                                <i class="iconly-Heart icli"></i>
+                            </button>
+                        </div>
+
+                        <a href="product-left.html">
+                            <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
+                        </a>
+
+                        <ul class="option">
+                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
+                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
+                                    <i class="iconly-Show icli"></i>
+                                </a>
+                            </li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
+                                <a href="compare.html">
+                                    <i class="iconly-Swap icli"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="product-detail">
+                        @await Html.PartialAsync("_ProductRating" , item.CommentsRate)
+                        <a href="">
+                            <h5 class="name">@item.Title</h5>
+                        </a>
+                        @if (item.DiscountedPrice != null)
+                        {
+                            <h5 class="price theme-color"> @item.DiscountedPrice.Value.ToToman() <del>@item.Price.ToMoney()</del></h5>
+                        }
+                        else
+                        {
+                            <h5 class="price theme-color"> @item.Price.ToToman()</h5>
+                        }
+                        <div class="price-qty">
+                            <div class="counter-number">
+                                <div class="counter">
+                                    <div class="qty-left-minus" data-type="minus" data-field="">
+                                        <i class="fa-solid fa-minus"></i>
+                                    </div>
+                                    <input class="form-control input-number qty-input" type="text" name="quantity"
+                                           value="0">
+                                    <div class="qty-right-plus" data-type="plus" data-field="">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="buy-button buy-button-2 btn btn-cart">
+                                <i class="iconly-Buy icli text-white m-0"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                @if (i+1 < Model.Count)
+                {
+                    item = Model[i + 1];
+                    <div class="product-box-4 wow fadeInUp">
+                        <div class="product-image">
+                            <div class="label-flex">
+                                <button class="btn p-0 wishlist btn-wishlist notifi-wishlist">
+                                    <i class="iconly-Heart icli"></i>
+                                </button>
+                            </div>
+
+                            <a href="product-left.html">
+                                <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
+                            </a>
+
+                            <ul class="option">
+                                <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
+                                    <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
+                                        <i class="iconly-Show icli"></i>
+                                    </a>
+                                </li>
+                                <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
+                                    <a href="compare.html">
+                                        <i class="iconly-Swap icli"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="product-detail">
+                            @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                            <a href="">
+                                <h5 class="name">@item.Title</h5>
+                            </a>
+                            @if (item.DiscountedPrice != null)
+                            {
+                                <h5 class="price theme-color"> @item.DiscountedPrice.Value.ToToman() <del>@item.Price.ToMoney()</del></h5>
+                            }
+                            else
+                            {
+                                <h5 class="price theme-color"> @item.Price.ToToman()</h5>
+                            }
+                            <div class="price-qty">
+                                <div class="counter-number">
+                                    <div class="counter">
+                                        <div class="qty-left-minus" data-type="minus" data-field="">
+                                            <i class="fa-solid fa-minus"></i>
+                                        </div>
+                                        <input class="form-control input-number qty-input" type="text" name="quantity"
+                                               value="0">
+                                        <div class="qty-right-plus" data-type="plus" data-field="">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button class="buy-button buy-button-2 btn btn-cart">
+                                    <i class="iconly-Buy icli text-white m-0"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+           
+        </div>
+    </div>
+</section>
+<!-- Product Sction End -->

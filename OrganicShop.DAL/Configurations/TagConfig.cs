@@ -15,6 +15,7 @@ namespace OrganicShop.DAL.Configurations
         public void Configure(EntityTypeBuilder<Tag> builder)
         {
             builder.HasMany(a => a.TagProducts).WithOne(a => a.Tag).HasForeignKey(a => a.TagId);
+            builder.HasMany(a => a.TagArticles).WithOne(a => a.Tag).HasForeignKey(a => a.TagId);
 
 
             builder.HasQueryFilter(a => a.BaseEntity.IsDelete == false);

@@ -17,8 +17,9 @@ namespace OrganicShop.Domain.Entities
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool FreeDelivery { get; set; }
-        public int MinPrice { get; set; }
-        public int MaxPrice { get; set; }
+        public int? MinPrice { get; set; }
+        public int? MaxPrice { get; set; }
+        public int Priority { get; set; }
 
 
 

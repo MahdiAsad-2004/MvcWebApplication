@@ -1,14 +1,36 @@
-﻿@{
+﻿@using OrganicShop.Domain.Enums.SortTypes
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<partial name="_HomeStartSection"/>
+@await Html.PartialAsync("_HomeStartSection")
 
 
 @await Component.InvokeAsync("CategoriesSection");
 
 
-@* <partial name="_SpecialProductsSection" /> *@
+@await Html.PartialAsync("_SpecialProductsSection")
 
 
 @await Component.InvokeAsync("DiscountedProductsSection");
+
+
+@await Component.InvokeAsync("CategorizedProducts");
+
+
+@await Html.PartialAsync("_BannerSection1");
+
+
+@await Component.InvokeAsync("ProductsMenuSection");
+
+
+@await Html.PartialAsync("_BannerSection2");
+
+
+@await Component.InvokeAsync("BestProductsSection")
+
+
+@await Component.InvokeAsync("BlogSection")
+
+
+@await Html.PartialAsync("_NewsLetterSection");

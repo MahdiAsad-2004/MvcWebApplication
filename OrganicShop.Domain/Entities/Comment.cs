@@ -16,12 +16,14 @@ namespace OrganicShop.Domain.Entities
         public string Text { get; set; }
         public CommentStatus Status { get; set; }
         public long UserId { get; set; }
-        public long ProductId { get; set; }
+        public long? ProductId { get; set; }
+        public int? ArticleId { get; set; }
 
 
 
         public User User { get; set; }
-        public Product Product { get; set; }
+        public Product? Product { get; set; }
+        public Article? Article { get; set; }
 
 
 

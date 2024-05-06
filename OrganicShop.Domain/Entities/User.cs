@@ -25,6 +25,7 @@ namespace OrganicShop.Domain.Entities
         public Cart NextCart { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Order> Orders { get; set; }
+        public ICollection<Article> Articles { get; set; }
         public ICollection<Operation> Operations { get; set; }
         //public ICollection<Cart> Carts { get; set; }
         public ICollection<PermissionUsers> PermissionUsers { get; set; }

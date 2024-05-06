@@ -28,6 +28,28 @@ namespace OrganicShop.BLL.Extensions
         }
 
 
+        public static bool IsDiscountValid(this Discount discount, int price, string? code = null)
+        {
+            if (discount.StartDate != null)
+                if (discount.StartDate.Value > DateTime.Now)
+                    return false;
+
+            if (discount.EndDate != null)
+                if (discount.EndDate.Value < DateTime.Now)
+                    return false;
+
+            if (discount.Code != null)
+                return discount.Code.Equals(code);
+
+            if (discount.MinPrice != null)
+                return discount.MinPrice <= price;
+
+            if (discount.MaxPrice != null)
+                return discount.MaxPrice >= price;
+
+            return true;
+        }
+
         public static int? GetDefaultDiscountedPrice(this Product product)
         {
             Discount? discount;
@@ -35,13 +57,15 @@ namespace OrganicShop.BLL.Extensions
                 .FirstOrDefault(a => a.IsDefault == true);
 
             if (discount != null)
-                return discount.GetDiscountedPrice(product.Price);
+                if (discount.IsDiscountValid(product.Price))
+                    return discount.GetDiscountedPrice(product.Price);
 
-            discount = product.Category.DiscountCategories.Select(a => a.Discount).OrderByDescending(a => a.BaseEntity.LastModified)
+            discount = product.Categories.Last().DiscountCategories.Select(a => a.Discount).OrderByDescending(a => a.BaseEntity.LastModified)
                 .FirstOrDefault(a => a.IsDefault == true);
 
             if (discount != null)
-                return discount.GetDiscountedPrice(product.Price);
+                if (discount.IsDiscountValid(product.Price))
+                    return discount.GetDiscountedPrice(product.Price);
 
             return null;
         }
@@ -55,7 +79,7 @@ namespace OrganicShop.BLL.Extensions
             if (discount != null)
                 return discount;
 
-            discount = product.Category.DiscountCategories.Select(a => a.Discount).OrderByDescending(a => a.BaseEntity.LastModified)
+            discount = product.Categories.Last().DiscountCategories.Select(a => a.Discount).OrderByDescending(a => a.BaseEntity.LastModified)
                 .FirstOrDefault(a => a.IsDefault == true);
 
             if (discount != null)

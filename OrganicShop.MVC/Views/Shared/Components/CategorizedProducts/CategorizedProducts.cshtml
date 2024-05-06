@@ -1,0 +1,271 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.Page
+@using OrganicShop.Domain.Dtos.ProductDtos
+@using OrganicShop.Domain.Entities
+@model PageDto<Product,ProductSummaryDto,long>
+@{
+    var CategoriesGroup = Model.List.GroupBy(a => a.CategoryTitle);
+    List<ProductSummaryDto> productsHistory = ViewData["ProductsHistory"] as List<ProductSummaryDto>;
+}
+<section class="product-section">
+    <div class="container-fluid-lg">
+        <div class="title title-flex">
+            <h2 class="mb-lg-0 mb-2">محصولات ما</h2>
+            <ul class="nav nav-tabs tab-style-color" id="myTab">
+                <li class="nav-item">
+                    <button class="nav-link btn active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all"
+                            type="button">
+                        همه
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link btn" id="cookies-tab" data-bs-toggle="tab" data-bs-target="#cookies"
+                            type="button">
+                        بازید های اخیر
+                    </button>
+                </li>
+
+                @{
+                    byte index = 1;
+                }
+                @foreach (var keyGroupName in CategoriesGroup.Select(a => a.Key))
+                {
+                    <li class="nav-item">
+                        <button class="nav-link btn" id="tab-number-@index" data-bs-toggle="tab" data-bs-target="#tab-number-@index" type="button">
+                            @keyGroupName
+                        </button>
+                    </li>
+                    index++;
+                }
+            </ul>
+        </div>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+                <div class="row g-8">
+
+                    @foreach (var item in Model.List.UnionBy(productsHistory, a => a.Id))
+                    {
+                        <div class="col-xxl-2 col-lg-3 col-md-4 col-6 wow fadeInUp">
+                            <div class="product-box-4">
+                                <div class="product-image">
+                                    <div class="label-flex">
+                                        <button class="btn p-0 wishlist btn-wishlist notifi-wishlist">
+                                            <i class="iconly-Heart icli"></i>
+                                        </button>
+                                    </div>
+
+                                    <a href="product-left.html">
+                                        <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
+                                    </a>
+
+                                    <ul class="option">
+                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
+                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
+                                                <i class="iconly-Show icli"></i>
+                                            </a>
+                                        </li>
+                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
+                                            <a href="compare.html">
+                                                <i class="iconly-Swap icli"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="product-detail">
+                                    @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                                    <a href="product-left.html">
+                                        <h5 class="name">@item.Title</h5>
+                                    </a>
+                                    @if (item.DiscountedPrice != null)
+                                    {
+                                        <h5 class="price theme-color"> @item.DiscountedPrice.Value.ToToman() <del>@item.Price.ToMoney()</del></h5>
+                                    }
+                                    else
+                                    {
+                                        <h5 class="price theme-color"> @item.Price.ToToman()</h5>
+                                    }
+                                    <div class="price-qty">
+                                        <div class="counter-number">
+                                            <div class="counter">
+                                                <div class="qty-left-minus" data-type="minus" data-field="">
+                                                    <i class="fa-solid fa-minus"></i>
+                                                </div>
+                                                <input class="form-control input-number qty-input" type="text"
+                                                       name="quantity" value="0">
+                                                <div class="qty-right-plus" data-type="plus" data-field="">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button class="buy-button buy-button-2 btn btn-cart">
+                                            <i class="iconly-Buy icli text-white m-0"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="cookies" role="tabpanel" aria-labelledby="cookies-tab">
+                <div class="row g-8">
+
+                    @foreach (var item in productsHistory)
+                    {
+                        <div class="col-xxl-2 col-lg-3 col-md-4 col-6">
+                            <div class="product-box-4">
+                                <div class="product-image">
+                                    <div class="label-flex">
+                                        <button class="btn p-0 wishlist btn-wishlist notifi-wishlist">
+                                            <i class="iconly-Heart icli"></i>
+                                        </button>
+                                    </div>
+
+                                    <a href="product-left.html">
+                                        <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
+                                    </a>
+
+                                    <ul class="option">
+                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
+                                            <a href="" data-bs-toggle="modal" data-bs-target="#view">
+                                                <i class="iconly-Show icli"></i>
+                                            </a>
+                                        </li>
+                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
+                                            <a href="">
+                                                <i class="iconly-Swap icli"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="product-detail">
+                                    @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                                    <a href="product-left.html">
+                                        <h5 class="name">@item.Title</h5>
+                                    </a>
+                                    @if (item.DiscountedPrice != null)
+                                    {
+                                        <h5 class="price theme-color"> @item.DiscountedPrice.Value.ToToman() <del>@item.Price.ToMoney()</del></h5>
+                                    }
+                                    else
+                                    {
+                                        <h5 class="price theme-color"> @item.Price.ToToman()</h5>
+                                    }
+                                    <div class="price-qty">
+                                        <div class="counter-number">
+                                            <div class="counter">
+                                                <div class="qty-left-minus" data-type="minus" data-field="">
+                                                    <i class="fa-solid fa-minus"></i>
+                                                </div>
+                                                <input class="form-control input-number qty-input" type="text"
+                                                       name="quantity" value="0">
+                                                <div class="qty-right-plus" data-type="plus" data-field="">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button class="buy-button buy-button-2 btn btn-cart">
+                                            <i class="iconly-Buy icli text-white m-0"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+
+            @{
+                index = 1;
+            }
+            @foreach (var categoryGroup in CategoriesGroup)
+            {
+                <div class="tab-pane fade" id="tab-number-@index" role="tabpanel" aria-labelledby>
+                    
+                    <div class="row g-8">
+
+                        @foreach (var item in categoryGroup)
+                        {
+                            <div class="col-xxl-2 col-lg-3 col-md-4 col-6">
+                                <div class="product-box-4">
+                                    <div class="product-image">
+                                        <div class="label-flex">
+                                            <button class="btn p-0 wishlist btn-wishlist notifi-wishlist">
+                                                <i class="iconly-Heart icli"></i>
+                                            </button>
+                                        </div>
+
+                                        <a href="product-left.html">
+                                            <img src="~/media//images/product/@item.MainImageName" class="img-fluid" alt="">
+                                        </a>
+
+                                        <ul class="option">
+                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
+                                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
+                                                    <i class="iconly-Show icli"></i>
+                                                </a>
+                                            </li>
+                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
+                                                <a href="compare.html">
+                                                    <i class="iconly-Swap icli"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="product-detail">
+                                        @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                                        <a href="product-left.html">
+                                            <h5 class="name">@item.Title</h5>
+                                        </a>
+                                        @if (item.DiscountedPrice != null)
+                                        {
+                                            <h5 class="price theme-color"> @item.DiscountedPrice.Value.ToToman() <del>@item.Price.ToMoney()</del></h5>
+                                        }
+                                        else
+                                        {
+                                            <h5 class="price theme-color"> @item.Price.ToToman()</h5>
+                                        }                                       
+                                        <div class="price-qty">
+                                            <div class="counter-number">
+                                                <div class="counter">
+                                                    <div class="qty-left-minus" data-type="minus" data-field="">
+                                                        <i class="fa-solid fa-minus"></i>
+                                                    </div>
+                                                    <input class="form-control input-number qty-input" type="text"
+                                                           name="quantity" value="0">
+                                                    <div class="qty-right-plus" data-type="plus" data-field="">
+                                                        <i class="fa-solid fa-plus"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button class="buy-button buy-button-2 btn btn-cart">
+                                                <i class="iconly-Buy icli text-white m-0"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                    
+                </div>
+                index++;
+            }
+
+
+        </div>
+    </div>
+</section>
