@@ -1,4 +1,7 @@
-﻿   <!-- Newsletter Section Start -->
+﻿@using OrganicShop.Domain.Dtos.NewsLetterMemberDtos
+@model CreateNewsLetterMemberDto
+
+   <!-- Newsletter Section Start -->
 <section class="newsletter-section-2 section-b-space">
     <div class="container-fluid-lg">
         <div class="row">
@@ -12,11 +15,12 @@
                                 <div>
                                     <h2>در خبرنامه ما عضو شوید</h2>
                                     <h4>با عضویت در خبرنامه تخفیف 30 درصدی برای خرید اول دریافت میکنید.</h4>
-                                    <form class="row g-2 mt-4 newsletter-form">
+                                    <form class="row g-2 mt-4 newsletter-form" action="/Home/SubscribeNewsLetter" onsubmit="FetchRequest(e)" method="post">
                                         <div class="col-8">
-                                            <input type="email" class="form-control" id="email"
+                                            <input asp-for="Email" type="email" class="form-control" id="email"
                                                    placeholder="ایمیل خود وارد کنید">
                                         </div>
+                                        <span asp-validation-for="Email" class="mt-2 text-danger"></span>
                                         <div class="col-sm-2 col-4">
                                             <button type="submit"
                                                     class="btn bg-white theme-color btn-md fw-500 submit-button w-100 h-100">
