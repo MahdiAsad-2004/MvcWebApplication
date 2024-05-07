@@ -12,7 +12,7 @@ namespace OrganicShop.Domain.IServices
 
         Task<ServiceResponse<Empty>> Create(CreateAddressDto create);
 
-        Task<ServiceResponse<Empty>> Update(UpdateArticleDto update);
+        Task<ServiceResponse<Empty>> Update(UpdateAddressDto update);
         
         Task<ServiceResponse<Empty>> Delete(long delete);
         

@@ -14,10 +14,10 @@ namespace OrganicShop.BLL.Mappers
             CreateMap<Address,AddressListDto>();
 
 
-            CreateMap<CreateArticleDto,Address>();
+            CreateMap<CreateAddressDto,Address>();
             
 
-            CreateMap<UpdateArticleDto,Address>();
+            CreateMap<UpdateAddressDto,Address>();
         
         }
 

@@ -35,7 +35,7 @@ namespace OrganicShop.Mvc.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Index(FilterNewsLetterDto filter, PagingDto paging)
+        public async Task<IActionResult> Index(FilterTagDto filter, PagingDto paging)
         {
             var response = await _TagService.GetAll(filter, paging);
             if (response.Result == ResponseResult.Success)
@@ -47,7 +47,7 @@ namespace OrganicShop.Mvc.Areas.Admin.Controllers
 
 
 
-        public async Task<IActionResult> Table(FilterNewsLetterDto filter, PagingDto paging)
+        public async Task<IActionResult> Table(FilterTagDto filter, PagingDto paging)
         {
             var response = await _TagService.GetAll(filter, paging);
 
@@ -67,7 +67,7 @@ namespace OrganicShop.Mvc.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateNewsLetterDto? create)
+        public async Task<IActionResult> Create(CreateTagDto? create)
         {
             var response = await _TagService.Create(create);
             if (response.Result == ResponseResult.Success)
@@ -115,7 +115,7 @@ namespace OrganicShop.Mvc.Areas.Admin.Controllers
             var response = await _TagService.Delete(Id);
             if (response.Result == ResponseResult.Success)
             {
-                var model = (await _TagService.GetAll(new FilterNewsLetterDto())).Data;
+                var model = (await _TagService.GetAll(new FilterTagDto())).Data;
                 return _ClientHandleResult.PartialThenToast(HttpContext, PartialView("_Table", model), new Toast(ToastType.Success, response.Message));
                 //return _ClientHandleResult.PartialThenToast(HttpContext, PartialView(model), new Toast(ToastType.Success, response.Message));
                 //return _ClientHandleResult.RedirectThenToast(HttpContext, TempData, "Index", new Toast(ToastType.Success, response.Message), true);

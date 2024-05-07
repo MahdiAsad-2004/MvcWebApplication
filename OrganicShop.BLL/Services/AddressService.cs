@@ -66,7 +66,7 @@ namespace OrganicShop.BLL.Services
      
 
 
-        public async Task<ServiceResponse<Empty>> Create(CreateArticleDto create)
+        public async Task<ServiceResponse<Empty>> Create(CreateAddressDto create)
         {
             if (await _AddressRepository.GetQueryable().Where(a => a.UserId == create.UserId).CountAsync() > 4)
                 return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.MaxCreate(4));
@@ -79,7 +79,7 @@ namespace OrganicShop.BLL.Services
 
 
 
-        public async Task<ServiceResponse<Empty>> Update(UpdateArticleDto update)
+        public async Task<ServiceResponse<Empty>> Update(UpdateAddressDto update)
         {
             Address? Address = await _AddressRepository.GetAsTracking(update.Id);
 
