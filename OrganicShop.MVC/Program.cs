@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using OrganicShop.DAL.Context;
 using Microsoft.Extensions.Configuration;
 using OrganicShop.BLL.Utily;
+using Hangfire;
+using Hangfire.MemoryStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IApplicationUserProvider,ApplicationUserProvider>();
 
 builder.Services.Configure<AesKeys>(builder.Configuration.GetSection("AesKeys"));
+
+builder.Services.AddHangfire(c => c.UseMemoryStorage());
+builder.Services.AddHangfireServer();
+
 
 RegisterServices(builder.Services);
 
