@@ -39,6 +39,7 @@ namespace OrganicShop.BLL.Services
         {
             var query = _CategoryRepository.GetQueryable()
                 .Include(a => a.Picture)
+                .Include(a => a.Products)
                 .AsQueryable();
 
             if (filter == null) filter = new FilterCategoryDto();

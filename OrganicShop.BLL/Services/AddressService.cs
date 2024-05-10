@@ -24,7 +24,7 @@ namespace OrganicShop.BLL.Services
         private readonly IAddressRepository _AddressRepository;
         private readonly IMapper _Mapper;
 
-        public AddressService(ApplicationUserProvider applicationUserProvider, IMapper mapper, IAddressRepository AddressRepository) : base(applicationUserProvider)
+        public AddressService(IApplicationUserProvider applicationUserProvider, IMapper mapper, IAddressRepository AddressRepository) : base(applicationUserProvider)
         {
             _AddressRepository = AddressRepository;
             _Mapper = mapper;

@@ -30,7 +30,7 @@
 // 20. user-dashboard profile change js
 // 21. Wishlist box remove js
 // 22. Category Box js
-// 23. remove notication bar js
+// 23. remove notification bar js
 // 24. category box js
 
 (function ($) {
@@ -263,7 +263,7 @@ $(window).on("load resize", function () {
         $(this).parents(".search-full").addClass("show");
     });
 
-    // close seach
+    // close search
     $(".close-search").on("click", function () {
         $(this).closest(".rightside-box").find(".search-full").removeClass("open");
     });
@@ -333,7 +333,6 @@ $(".dropdown-menu li a").on('click', function () {
     var getSampling = a.text();
     var getImage = a.find('img').attr('src');
 
-    // console.log("src path", getImage);
     $(this).closest(".dropdown-menu").prev('.dropdown-toggle').find('span').text(getSampling);
     $(this).closest(".dropdown-menu").prev('.dropdown-toggle').find('img').attr("src", getImage);
 });
@@ -354,7 +353,7 @@ $(".add-cart-box .btn-close").click(function () {
 /*=====================
    17. active class Js
    ==========================*/
-$(".product-packege .select-packege li a").click(function () {
+$(".product-package .select-package li a").click(function () {
     $("li a").removeClass("active");
     $(this).addClass("active");
 });
@@ -362,13 +361,13 @@ $(".product-packege .select-packege li a").click(function () {
 /*=====================
    18. Scroll down header fix js
    ==========================*/
-$(window).scroll(function () {
-    if ($(this).scrollTop() > 100) {
-        $('header').addClass('active')
-    } else {
-        $('header').removeClass('active')
-    }
-});
+// $(window).scroll(function () {
+//     if ($(this).scrollTop() > 150) {
+//         $('header').addClass('active')
+//     } else {
+//         $('header').removeClass('active')
+//     }
+// });
 
 /*=====================
    19. setting-option open js
@@ -406,7 +405,7 @@ $(".close-button, .bg-overlay").click(function () {
 });
 
 /*=====================
-   23. remove notication bar js
+   23. remove notification bar js
    ==========================*/
 $(".close-notification").click(function () {
     $(".header-notification").addClass("remove");
@@ -448,3 +447,19 @@ $(".navbar-toggler-icon-2").click(function () {
 $(".bg-overlay").click(function () {
     $(".bg-overlay, .sidebar-col").removeClass("show");
 });
+
+
+
+
+Number.prototype.formatMoney = function (s) {
+    var n = 0;
+    var x = 3;
+    var c = null;
+
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = this.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+};
+
+//https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-strings

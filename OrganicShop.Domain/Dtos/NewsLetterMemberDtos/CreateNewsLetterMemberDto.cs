@@ -12,6 +12,8 @@ namespace OrganicShop.Domain.Dtos.NewsLetterMemberDtos
         [RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$", ErrorMessage = "{0} معتبر وارد شده معتبر نیست")]
         public string Email { get; set; }
 
+
+
     }
 
 

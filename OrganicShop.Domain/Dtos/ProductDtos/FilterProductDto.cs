@@ -15,6 +15,7 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
         public int? CategoryId { get; set; }
         public int[]? CategoryIds { get; set; }
         public int? TagId { get; set; }
+        public byte? Rate { get; set; }
         public ProductSortType SortBy { get; set; } = ProductSortType.None;
 
 

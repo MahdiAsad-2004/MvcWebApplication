@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Web;
 
 
 namespace OrganicShop.BLL.Extensions
@@ -110,6 +111,18 @@ namespace OrganicShop.BLL.Extensions
                 return $"{(sizeMb * 1000).ToString("0.00")} KB";
             else
                 return $"{(sizeMb).ToString("0.00")} MB";
+        }
+
+
+        public static string EncodePersianString(string str)
+        {
+            return HttpUtility.UrlEncode(str, Encoding.UTF8).Replace("+", "-");
+        }
+
+
+        public static string DecodePersianString(string codedSttring)
+        {
+            return HttpUtility.UrlDecode(codedSttring, Encoding.UTF8).Replace("+", "-");
         }
 
     }

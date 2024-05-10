@@ -51,9 +51,9 @@ namespace OrganicShop.Mvc.ViewComponents
             var response = await _ProductService.GetAllSummary(new FilterProductDto {CategoryIds = categoryIds });
             if (response.Result == ResponseResult.Success)
             {
-                return View("DiscountedProductsSection", response.Data);
+                return View("CategorizedProducts", response.Data);
             }
-            return View("DiscountedProductsSection", new List<ProductSummaryDto>());
+            return View("CategorizedProducts", new List<ProductSummaryDto>());
         }
 
 

@@ -9,9 +9,6 @@
 @await Component.InvokeAsync("CategoriesSection");
 
 
-@await Html.PartialAsync("_SpecialProductsSection")
-
-
 @await Component.InvokeAsync("DiscountedProductsSection");
 
 
@@ -34,3 +31,11 @@
 
 
 @await Html.PartialAsync("_NewsLetterSection");
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}
+

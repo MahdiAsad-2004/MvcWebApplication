@@ -299,12 +299,12 @@ var options = {
         style: 'hollow',
     },
     title: {
-        text: 'کل درآمد',
-        align: 'left'
+        text: 'میزان درامد',
+        align: 'right'
     },
     subtitle: {
-        text: 'حرکات قیمت',
-        align: 'left'
+        text: 'میزان درامد شما به تفکیک ماه و روز',
+        align: 'right'
     },
     xaxis: {
         type: 'datetime',
@@ -364,13 +364,11 @@ var options = {
         enabled: false
     },
     title: {
-        text: 'فروش کلی',
+        text: 'نمودار وضعیت فروش',
         align: 'right',
-        right: '10px'
-
     },
-    labels: ['سفارش اخیر', 'پرداخت‌ها', 'پرداخت های دریافت شده', 'سفارش کامل'],
-    colors: ['#9d479a', '#c8c8c8', '#0da487', '#3230bd'],
+    labels: ['سفارشات اخیر', 'در انتظار پرداخت', 'پرداخت شده', 'سفارشات نهایی'],
+    colors: ['#c517ac', '#c59813', '#0da487', '#1368e4'],
     responsive: [{
         breakpoint: 1430,
         options: {

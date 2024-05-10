@@ -25,10 +25,10 @@ namespace OrganicShop.Mvc.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var paging = new PagingDto { PageItemsCount = 9 };
-            ViewData["NewestProducts"] = await _ProductService.GetAllSummary(new FilterProductDto { SortBy = ProductSortType.Newest },paging);
-            ViewData["SpecialProducts"] = await _ProductService.GetAllSummary(new FilterProductDto { SortBy = ProductSortType.DiscountDesc },paging);
-            ViewData["BestSellingProducts"] = await _ProductService.GetAllSummary(new FilterProductDto { SortBy = ProductSortType.SoldCountDesc },paging);
-            ViewData["LowestSellingProducts"] = await _ProductService.GetAllSummary(new FilterProductDto { SortBy = ProductSortType.SoldCount },paging);
+            ViewData["NewestProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { SortBy = ProductSortType.Newest }, paging))?.Data!.List;
+            ViewData["SpecialProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { SortBy = ProductSortType.DiscountDesc }, paging))?.Data!.List;
+            ViewData["BestSellingProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { SortBy = ProductSortType.SoldCountDesc },paging))?.Data!.List;
+            ViewData["LowestSellingProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { SortBy = ProductSortType.SoldCount },paging))?.Data!.List;
             return View("ProductsMenuSection");
         }
     }

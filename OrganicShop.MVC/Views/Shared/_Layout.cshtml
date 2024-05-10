@@ -22,7 +22,9 @@
 
 <body class="theme-color-2 bg-effect">
 
-   
+
+    <img src="~/media/images/loading/Chunk-4s-1px.png" id="loading-background" style="width: 100%; height: 120%; opacity: 0.4; z-index: 9999; display: none;  position: absolute;" />
+    <img src="~/media//images/loading/Bean Eater1x-0.8s-100px-100px.svg" id="loading-svg" style="width: 16%; height: 16%; margin-top: 300px; margin-right: 650px; z-index: 99999; display: none;  position: fixed;" />
 
     <!-- Loader Start -->
     <div class="fullpage-loader">
@@ -37,11 +39,12 @@
 
     @await Component.InvokeAsync("SiteHeader")
 
-    <div class="container">
-        <main role="main" id="view-container">
-            @RenderBody()
-        </main>
-    </div>
+    @RenderSection("Breadcrumb",false)
+
+    <main role="main" id="view-container">
+        @RenderBody()
+    </main>
+
 
     @await Component.InvokeAsync("SiteFooter")
 

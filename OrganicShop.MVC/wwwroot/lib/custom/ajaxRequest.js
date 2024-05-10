@@ -140,6 +140,9 @@ let CkEditorElement = document.getElementById('ckeditor');
 async function FetchRequest(e) {
     e.preventDefault();
     formElem = e.target;
+    console.log(formElem);
+    CkEditorElement = formElem.querySelector('#ckeditor');
+    console.log(`Is Form Valid: ${$(formElem).valid()}`)
     if ($(formElem).valid()) {
         ShowLoading();
         try {

@@ -46,8 +46,6 @@ namespace OrganicShop.BLL.Mappers
                 .ForMember(m => m.DiscountId, a => a.MapFrom(b => b.GetDefaultDiscountProduct() != null ? b.GetDefaultDiscountProduct().Id : default(int?)))
                 .ForMember(m => m.PropertiesDic, a => a.MapFrom(b => b.Properties.ToDictionary(k => k.BaseId.Value,v => new EditPropertyDto {Id = v.Id ,Value = v.Value})))
                 .ForMember(m => m.MainPictureName, a => a.MapFrom(b => b.Pictures.First(a => a.IsMain).Name))
-                .ForMember(m => m.UnitType, a => a.MapFrom(b => b.UnitValues.Any() ? b.UnitValues.First(u => true).UnitType : UnitType.None))
-                .ForMember(m => m.UnitValuesArray, a => a.MapFrom(b => b.UnitValues.Select(a => a.Value).ToArray()))
                 .ForMember(m => m.CategoryId, a => a.MapFrom(b => b.Categories.Last().Id))
                 .ForMember(m => m.OldPicturesDic, a => a.MapFrom(b => b.Pictures.Where(a => a.IsMain == false).ToDictionary(k => k.Id , v => v.Name)));
 

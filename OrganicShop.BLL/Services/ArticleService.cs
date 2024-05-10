@@ -12,14 +12,11 @@ using OrganicShop.Domain.Entities.Base;
 using OrganicShop.Domain.Entities.Relations;
 using OrganicShop.Domain.Enums;
 using OrganicShop.Domain.Enums.Response;
-using OrganicShop.Domain.Enums.Response;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.IRepositories;
 using OrganicShop.Domain.IServices;
 using OrganicShop.Domain.Models;
 using OrganicShop.Domain.Response;
-using System.Reflection;
-using System.Threading.Channels;
 
 namespace OrganicShop.BLL.Services
 {
@@ -30,7 +27,7 @@ namespace OrganicShop.BLL.Services
         private readonly IArticleRepository _ArticleRepository;
         private readonly IMapper _Mapper;
 
-        public ArticleService(ApplicationUserProvider applicationUserProvider, IMapper mapper, IArticleRepository ArticleRepository) : base(applicationUserProvider)
+        public ArticleService(IApplicationUserProvider applicationUserProvider, IMapper mapper, IArticleRepository ArticleRepository) : base(applicationUserProvider)
         {
             _ArticleRepository = ArticleRepository;
             _Mapper = mapper;

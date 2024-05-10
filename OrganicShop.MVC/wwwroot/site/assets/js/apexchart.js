@@ -1043,7 +1043,7 @@
                     }))), m.attr({
                         x: a,
                         y: s,
-                        "text-anchor": 'strat',
+                        "text-anchor": o,
                         "dominant-baseline": "auto",
                         "font-size": n,
                         "font-family": l,
@@ -1722,10 +1722,10 @@
     var C = {
             name: "en",
             options: {
-                months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-                shortMonths: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                shortDays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                months: ["دی", "بهمن", "اسفند", "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر"],
+                shortMonths: ["دی", "بهمن", "اسفند", "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر"],
+                days: ["یکسنبه", "دوسنبه", "سه شنبه", "چهارشنبه", "پنج شنبه", "جمعه", "شنبه"],
+                shortDays: ["یکسنبه", "دوسنبه", "سه شنبه", "چهارشنبه", "پنج شنبه", "جمعه", "شنبه"],
                 toolbar: {
                     exportToSVG: "Download SVG",
                     exportToPNG: "Download PNG",
@@ -2033,7 +2033,7 @@
                                 brushScrolled: void 0
                             },
                             foreColor: "#373d3f",
-                            fontFamily: "iransans;",
+                            fontFamily: "vazir, iranyekan, iransans",
                             height: "auto",
                             parentHeightOffset: 15,
                             redrawOnParentResize: !0,
@@ -13967,7 +13967,7 @@
                     "stop-opacity": 1,
                     "stop-color": "#000000",
                     "font-size": 16,
-                    "font-family": "iransans;",
+                    "font-family": "vazir, iranyekan, iransans",
                     "text-anchor": "start"
                 }
             }, a.Color = function (t) {

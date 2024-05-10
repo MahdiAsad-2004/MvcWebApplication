@@ -22,6 +22,7 @@ let Messagetype = MessageTypes[0];
 let ViewContainer = document.getElementById('view-container');
 
 var TargetElementId = null;
+var ContainerElementId = null;
 
 let ResponseDataType = '';
 
@@ -115,12 +116,15 @@ function HandleFetchResponse(response, ev) {
 
 
 function Partial(response, ev) {
-    TargetElementId = ev.target.getAttribute('data-container-id');
+    ContainerElementId = ev.target.getAttribute('data-container-id');
+    TargetElementId = ev.target.getAttribute('data-target-id');
     response.text().then(partial => {
         if (TargetElementId) {
-
-            console.log(document.getElementById(TargetElementId));
-            document.getElementById(TargetElementId).innerHTML = partial;
+            document.getElementById(TargetElementId).insertAdjacentHTML('afterend', partial);
+            document.getElementById(TargetElementId).remove();
+        }
+        else if (ContainerElementId) {
+            document.getElementById(ContainerElementId).innerHTML = partial;
         }
         else {
             ViewContainer.innerHTML = partial;
@@ -130,13 +134,19 @@ function Partial(response, ev) {
 }
 
 function PartialThenToast(response, ev) {
-    TargetElementId = ev.target.getAttribute('data-container-id');
+    ContainerElementId = ev.target.getAttribute('data-container-id');
+    TargetElementId = ev.target.getAttribute('data-target-id');
     MessageString = response.headers.get("Message");
     Message = JSON.parse(MessageString);
     response.text().then(partial => {
 
         if (TargetElementId) {
-            document.getElementById(TargetElementId).innerHTML = partial;
+            console.log(document.getElementById(TargetElementId));
+            document.getElementById(TargetElementId).insertAdjacentHTML('beforebegin', partial);
+            document.getElementById(TargetElementId).remove();
+        }
+        else if (ContainerElementId) {
+            document.getElementById(ContainerElementId).innerHTML =partial;
         }
         else {
             ViewContainer.innerHTML = partial;

@@ -12,6 +12,10 @@ namespace OrganicShop.Domain.Dtos.CategoryDtos
         public string ImageName { get; set; }
         public PersianDateTime CreateDate { get; set; }
         public string? ParentTitle { get; set; }
+        public int ProductsCount { get; set; }
+
+
+
     }
 
 

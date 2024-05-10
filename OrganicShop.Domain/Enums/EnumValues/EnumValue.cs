@@ -1,11 +1,4 @@
 ﻿using OrganicShop.Domain.Enums.SortTypes;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrganicShop.Domain.Enums.EnumValues
 {
@@ -371,6 +364,12 @@ namespace OrganicShop.Domain.Enums.EnumValues
                 case ProductSortType.DiscountDesc:
                     return "تخفیف بیشترین";
 
+                case ProductSortType.Rate:
+                    return "امتیاز بیشترین";
+
+                case ProductSortType.RateDesc:
+                    return "امتیاز بیشترین";
+                    
                 default:
                     throw new Exception("Enum value not found");
             }

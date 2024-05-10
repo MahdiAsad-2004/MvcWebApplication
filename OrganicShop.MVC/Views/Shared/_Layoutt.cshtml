@@ -11,10 +11,10 @@
     <link rel="icon" href="assets/images/favicon/1.png" type="image/x-icon">
     <title>OraganicShop - ارگانیک شاپ</title>
 
-    
+
     <partial name="_SiteStyles" />
 
-    @RenderSection("Styles",false)
+    @RenderSection("Styles", false)
 
 </head>
 
@@ -22,7 +22,7 @@
 
 <body class="bg-effect">
 
-   
+
 
     <!-- Loader Start -->
     <div class="fullpage-loader">
@@ -34,14 +34,13 @@
         <span></span>
     </div>
     <!-- Loader End -->
-
     @await Component.InvokeAsync("SiteHeader")
 
-    <div class="container">
-        <main role="main" id="view-container">
-            @RenderBody()
-        </main>
-    </div>
+
+    <main role="main" id="view-container">
+        @RenderBody()
+    </main>
+
 
     @await Component.InvokeAsync("SiteFooter")
 

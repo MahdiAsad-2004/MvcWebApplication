@@ -82,6 +82,17 @@ namespace OrganicShop.BLL.Services
                 //query = query.Where(q => filter.CategoryIds.Contains(q.CategoryId));
             }
 
+            if(filter.Rate != null)
+            {
+                query = query.Where(q =>
+                ((float)q.Comments.Sum(b => b.Rate) / q.Comments.Count == 0 ? int.MaxValue : q.Comments.Count) >= filter.Rate &&
+                   ((float)q.Comments.Sum(b => b.Rate) / q.Comments.Count == 0 ? int.MaxValue : q.Comments.Count) < filter.Rate+1);
+            }
+
+            //query = query.Where(q => q)
+
+            
+
 
             #endregion
 
@@ -102,6 +113,9 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.Categories)
                 .AsQueryable();
 
+            if (filter == null) filter = new FilterProductDto();
+            if (paging == null) paging = new PagingDto();
+
             query = FilterAndSort(query, filter, paging);
 
             PageDto<Product, ProductListDto, long> pageDto = new();
@@ -119,7 +133,7 @@ namespace OrganicShop.BLL.Services
 
             #region includes
 
-            query = query
+            var x = query
                 .Include(a => a.Pictures)
                 .Include(a => a.Categories)
                     .ThenInclude(a => a.DiscountCategories)
@@ -145,12 +159,18 @@ namespace OrganicShop.BLL.Services
                     Stock = a.Stock,
                     TagProducts = a.TagProducts,
                     Title = a.Title,
-                    UnitValues = a.UnitValues,
+                    //DiscountedPrice = a.GetDefaultDiscountedPrice(),
                     DiscountedPrice = a.GetDefaultDiscountedPrice(),
                 })
+                .AsParallel();
+
+            query = x
                 .AsQueryable();
 
             #endregion
+
+            if (filter == null) filter = new FilterProductDto();
+            if (paging == null) paging = new PagingDto();
 
             query = FilterAndSort(query, filter, paging);
 
@@ -173,7 +193,6 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.TagProducts)
                 .Include(a => a.Properties)
                 .Include(a => a.Pictures)
-                .Include(a => a.UnitValues)
                 .Include(a => a.Categories)
                 .Include(a => a.DiscountProducts)
                     .ThenInclude(a => a.Discount)
@@ -285,28 +304,6 @@ namespace OrganicShop.BLL.Services
 
             #endregion
 
-            #region unitValue
-
-            if ((byte)create.UnitType > 1)
-            {
-                if (create.UnitValuesArray != null)
-                {
-                    List<UnitValue> unitValues = new List<UnitValue>();
-                    foreach (var value in create.UnitValuesArray)
-                    {
-                        unitValues.Add(new UnitValue
-                        {
-                            UnitType = create.UnitType,
-                            Value = value,
-                            BaseEntity = new BaseEntity(true),
-                        });
-                    }
-                    Product.UnitValues = unitValues;
-                }
-            }
-
-            #endregion
-
             #region categories
 
             var category = await _CategoryRepository.GetQueryable().Include(a => a.Parent).FirstOrDefaultAsync(a => a.Id == create.CategoryId);
@@ -328,7 +325,6 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.TagProducts)
                 .Include(a => a.Properties)
                 .Include(a => a.Pictures)
-                .Include(a => a.UnitValues)
                 .Include(a => a.Categories)
                 .Include(a => a.DiscountProducts)
                     .ThenInclude(a => a.Discount)
@@ -474,27 +470,6 @@ namespace OrganicShop.BLL.Services
                 }
 
 
-            }
-
-            #endregion
-
-            #region unitValue
-
-            if ((byte)update.UnitType > 1)
-            {
-                Product.UnitValues.Clear();
-                if (update.UnitValuesArray != null)
-                {
-                    foreach (var value in update.UnitValuesArray)
-                    {
-                        Product.UnitValues.Add(new UnitValue
-                        {
-                            UnitType = update.UnitType,
-                            Value = value,
-                            BaseEntity = new BaseEntity(true),
-                        });
-                    }
-                }
             }
 
             #endregion

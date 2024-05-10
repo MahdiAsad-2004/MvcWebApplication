@@ -1,30 +1,8 @@
- /**=====================
-     Timer 1 js
+/**=====================
+    Timer 1 js
 ==========================**/
- //  var second = 1000,
- //      minute = second * 60,
- //      hour = minute * 60,
- //      day = hour * 24;
-
- //  var countDown = new Date("Aug 21, 2023 00:00:00").getTime(),
- //      x = setInterval(function () {
- //          var now = new Date().getTime(),
- //              distance = countDown - now;
-
- //          (document.getElementById("days2").innerText = Math.floor(distance / day)),
- //          (document.getElementById("hours2").innerText = Math.floor(
- //              (distance % day) / hour
- //          )),
- //          (document.getElementById("minutes2").innerText = Math.floor(
- //              (distance % hour) / minute
- //          )),
- //          (document.getElementById("seconds2").innerText = Math.floor(
- //              (distance % minute) / second
- //          ));
- //      }, second);
-
- /***** CALCULATE THE TIME REMAINING *****/
- function getTimeRemaining(endtime) {
+/***** CALCULATE THE TIME REMAINING *****/
+function getTimeRemaining(endtime) {
     var t = Date.parse(endtime) - Date.parse(new Date());
 
     /***** CONVERT THE TIME TO A USEABLE FORMAT *****/
@@ -70,6 +48,4 @@ function initializeClock(id, endtime) {
 
 /***** SET A VALID END DATE *****/
 var deadline = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
-//initializeClock('clockdiv-1', deadline);
-
-
+initializeClock('clockdiv-1', deadline);

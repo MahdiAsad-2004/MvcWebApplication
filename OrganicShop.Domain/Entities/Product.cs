@@ -32,7 +32,6 @@ namespace OrganicShop.Domain.Entities
         public ICollection<TagProducts> TagProducts { get; set; }
         public ICollection<Property> Properties { get; set; }
         public ICollection<Comment> Comments { get; set; }
-        public ICollection<UnitValue> UnitValues { get; set; }
 
     }
 }

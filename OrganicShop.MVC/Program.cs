@@ -15,19 +15,31 @@ using Microsoft.Extensions.Configuration;
 using OrganicShop.BLL.Utily;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Hangfire.SqlServer;
+using OrganicShop.BLL.Services.BackgroundServices;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//builder.Services.AddScoped<ITestServ, TestServ>();
+
 builder.Services.AddSingleton<IApplicationUserProvider,ApplicationUserProvider>();
 
 builder.Services.Configure<AesKeys>(builder.Configuration.GetSection("AesKeys"));
+builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSetting"));
 
-builder.Services.AddHangfire(c => c.UseMemoryStorage());
+//builder.Services.AddHangfire(c => c.UseMemoryStorage(new MemoryStorageOptions { }));
+builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("OrganicShopConnectionString")));
 builder.Services.AddHangfireServer();
 
+builder.Services.AddHostedService<NewsLetterSenderServiceBackground>();
 
 RegisterServices(builder.Services);
 
