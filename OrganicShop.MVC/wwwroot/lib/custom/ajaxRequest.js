@@ -156,6 +156,7 @@ async function FetchRequest(e) {
                 body: formMethod == 'get' ? null : formData,
             });
             HandleFetchResponse(fetchResponse, e);
+            formElem.reset();
         }
         catch (er) {
             Toast('Warning', 'An error was thrown from client', 2, 5000);

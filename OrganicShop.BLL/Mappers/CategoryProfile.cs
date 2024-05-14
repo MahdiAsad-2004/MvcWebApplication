@@ -18,6 +18,7 @@ namespace OrganicShop.BLL.Mappers
                 .ForMember(m => m.Type, a => a.MapFrom(b => b.Type.ToStringValue()))
                 .ForMember(m => m.ImageName, a => a.MapFrom(b => b.Picture != null ? b.Picture.Name : string.Empty))
                 .ForMember(m => m.ProductsCount, a => a.MapFrom(b => b.Products.Count))
+                .ForMember(m => m.ArticlesCount, a => a.MapFrom(b => b.Articles.Count))
                 .ForMember(m => m.ParentTitle, a => a.MapFrom(b => b.Parent != null ? b.Parent.Title : null));
 
 

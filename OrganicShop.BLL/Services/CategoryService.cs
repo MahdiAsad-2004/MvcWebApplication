@@ -40,6 +40,7 @@ namespace OrganicShop.BLL.Services
             var query = _CategoryRepository.GetQueryable()
                 .Include(a => a.Picture)
                 .Include(a => a.Products)
+                .Include(a => a.Articles)
                 .AsQueryable();
 
             if (filter == null) filter = new FilterCategoryDto();
@@ -54,12 +55,18 @@ namespace OrganicShop.BLL.Services
 
             if (filter.ParentId != null)
             {
-                if(filter.ParentId != 0) query = query.Where(q => q.ParentId == filter.ParentId);
+                if (filter.ParentId != 0) query = query.Where(q => q.ParentId == filter.ParentId);
                 else query = query.Where(q => q.ParentId == null);
             }
 
             if (filter.Type != CategoryType.All)
-                query = query.Where(q => q.Type == filter.Type);
+            {
+                if (filter.Type == CategoryType.Product)
+                    query = query.Where(q => q.Type == CategoryType.All || q.Type == CategoryType.Product);
+                
+                if (filter.Type == CategoryType.Article)
+                    query = query.Where(q => q.Type == CategoryType.All || q.Type == CategoryType.Article);
+            }
 
             #endregion
 

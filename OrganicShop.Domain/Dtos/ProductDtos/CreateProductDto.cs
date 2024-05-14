@@ -70,8 +70,6 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
 
 
 
-        [DisplayName("واحد")]
-        public UnitType UnitType { get; set; }
 
         public float[] UnitValuesArray { get; set; }
         //public Dictionary<int,CreateUnitValueDto> UnitValuesDictionary { get; set; }

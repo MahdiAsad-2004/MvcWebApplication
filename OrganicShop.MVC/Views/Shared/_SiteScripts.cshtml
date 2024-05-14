@@ -83,11 +83,11 @@
     function GoPage(pageNumber, formId) {
         if(pageNumber && pageNumber > 0){
             document.getElementById('pageNumber-input').ariaValueMax = pageNumber;
-            SubmitFormById(formId);
+            SubmitFormByIdWithButton(formId);
         }
     }
 
-    function SubmitFormById(id){
+    function SubmitFormByIdWithButton(id){
         document.getElementById(id).querySelector(`[type='submit']`).click();
     }
 

@@ -14,6 +14,7 @@ namespace OrganicShop.Domain.Entities
     {
         public string Title { get; set; }
         public string Content { get; set; }
+        public string ShortDescription { get; set; }
         public long UserId { get; set; }
         public int CategoryId { get; set; }
 

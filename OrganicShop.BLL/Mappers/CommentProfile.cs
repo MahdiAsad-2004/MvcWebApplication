@@ -14,16 +14,38 @@ namespace OrganicShop.BLL.Mappers
         {
             CreateMap<Comment, CommentListDto>()
                 .ForMember(m => m.Date, a => a.MapFrom(b => b.BaseEntity.CreateDate.ToPersianDate()))
-                .ForMember(m => m.UserName, a => a.MapFrom(b => b.User.Name))
-                .ForMember(m => m.ProductName, a => a.MapFrom(b => b.Product.Title));
+                .ForMember(m => m.Email, a => a.MapFrom(b => b.User != null ? b.User.Email : b.Email))
+                .ForMember(m => m.UserName, a => a.MapFrom(b => b.User != null ? b.User.Name : b.AuthorName));
 
 
             CreateMap<CreateCommentDto, Comment>();
 
 
+            CreateMap<CreateCommentUserDto, Comment>();
+
+
             CreateMap<UpdateCommentDto, Comment>();
 
         }
-
     }
+
+    public static class CommentMappers
+    {
+        public static CommentListDto ToListDto(this Comment comment)
+        {
+            return new CommentListDto
+            {
+                Date = comment.BaseEntity.CreateDate.ToPersianDate(),
+                Id = comment.Id,
+                Rate = comment.Rate,
+                Status = comment.Status,
+                Text = comment.Text,
+                AuthorName = comment.User != null ? comment.User.Name : comment.AuthorName!,
+                Email = comment.User != null ? comment.User.Email : comment.Email!,
+                AuthorImageName = comment.User != null ? comment.User.Picture!.Name : PathExtensions.UserImageDefault,
+            };
+        }
+    }
+
+
 }

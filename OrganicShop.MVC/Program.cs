@@ -12,12 +12,12 @@ using OrganicShop.Mvc.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using OrganicShop.DAL.Context;
 using Microsoft.Extensions.Configuration;
-using OrganicShop.BLL.Utily;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Hangfire.SqlServer;
 using OrganicShop.BLL.Services.BackgroundServices;
 using System.Configuration;
+using OrganicShop.BLL.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 

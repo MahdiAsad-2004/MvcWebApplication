@@ -20,11 +20,14 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly ICommentRepository _CommentRepository;
+        private readonly IUserRepository _UserRepository;
 
-        public CommentService(IApplicationUserProvider provider, IMapper mapper, ICommentRepository CommentRepository) : base(provider)
+        public CommentService(IApplicationUserProvider provider, IMapper mapper, ICommentRepository CommentRepository,
+            IUserRepository userRepository) : base(provider)
         {
             _Mapper = mapper;
             this._CommentRepository = CommentRepository;
+            _UserRepository = userRepository;
         }
 
         #endregion
@@ -34,7 +37,7 @@ namespace OrganicShop.BLL.Services
         {
             var query = _CommentRepository.GetQueryable()
                 .Include(a => a.User)
-                .Include(a => a.Product)
+                    .ThenInclude(a => a.Picture)
                 .AsQueryable();
 
             if (filter == null) filter = new FilterCommentDto();
@@ -80,10 +83,21 @@ namespace OrganicShop.BLL.Services
         }
 
 
-        public async Task<ServiceResponse<Empty>> Create(CreateCommentDto create)
+        public async Task<ServiceResponse<Empty>> Create(CreateCommentDto? create = null , CreateCommentUserDto? createForUser = null)
         {
+            if(create == null && createForUser == null)
+                throw new ArgumentNullException("CreateCommentDto and CreateCommentUserDto are null !");
+
             Comment Comment = _Mapper.Map<Comment>(create);
             Comment.Status = CommentStatus.Unread;
+            
+            if(createForUser != null)
+            {
+                if(_AppUserProvider.User.Id < 1)
+                    return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.NoAccess());
+                Comment.UserId = _AppUserProvider.User.Id;
+            }
+            
             await _CommentRepository.Add(Comment, _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());
         }

@@ -11,9 +11,17 @@ namespace OrganicShop.Domain.Dtos.ArticleDtos
         public DateTime? MinCreateDate { get; set; }
         public int? CategoryId { get; set; }
         public long? UserId { get; set; }
+        public int[]? TagIds { get; set; }
 
 
         public BaseSortType SortBy { get; set; } = BaseSortType.None;
+
+
+
+
+
+
+
 
     }
 

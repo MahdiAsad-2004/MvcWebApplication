@@ -23,7 +23,7 @@ namespace OrganicShop.BLL.Services
     public class ArticleService : Service<Article>, IArticleService
     {
         #region ctor
-        
+
         private readonly IArticleRepository _ArticleRepository;
         private readonly IMapper _Mapper;
 
@@ -43,9 +43,9 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.Category)
                 .Include(a => a.Pictures)
                 .AsQueryable();
-            
+
             if (filter == null) filter = new FilterArticleDto();
-            if(paging == null) paging = new PagingDto();
+            if (paging == null) paging = new PagingDto();
 
             #region filter
 
@@ -65,6 +65,13 @@ namespace OrganicShop.BLL.Services
 
             if (filter.MinCreateDate != null)
                 query = query.Where(a => a.BaseEntity.CreateDate > filter.MinCreateDate.Value);
+
+            if (filter.TagIds != null)
+            {
+                //query = query.Where(q => q.TagArticles.Any(a => filter.TagIds.Any(b => b == a.ArticleId)));
+                query = query.Where(q => q.TagArticles.Any(a => filter.TagIds.Contains(a.Id)));
+            }
+
 
             #endregion
 
@@ -103,10 +110,43 @@ namespace OrganicShop.BLL.Services
         }
 
 
+
+        public async Task<ServiceResponse<ArticleDetailDto>> GetDetail(int? id = null, string? title = null)
+        {
+            Article article;
+            if (id != null && string.IsNullOrEmpty(title))
+                throw new ArgumentNullException("Article Id and Article Title");
+            var query = _ArticleRepository.GetQueryable()
+                .Include(a => a.User)
+                .Include(a => a.Pictures)
+                .Include(a => a.Category)
+                .Include(a => a.Comments)
+                .Include(a => a.TagArticles)
+                .AsQueryable();
+            if (id != null)
+            {
+                if (id < 1)
+                    return new ServiceResponse<ArticleDetailDto>(ResponseResult.NotFound, null);
+
+                article = await query.FirstOrDefaultAsync(a => a.Id.Equals(id));
+            }
+            else
+            {
+                article = await query.FirstOrDefaultAsync(a => a.Title == title);
+            }
+
+            if (article == null)
+                return new ServiceResponse<ArticleDetailDto>(ResponseResult.NotFound, null);
+
+            return new ServiceResponse<ArticleDetailDto>(ResponseResult.Success, _Mapper.Map<ArticleDetailDto>(article));
+        }
+
+
+
         public async Task<ServiceResponse<Empty>> Create(CreateArticleDto create)
         {
             if (await _ArticleRepository.GetQueryable().AnyAsync(a => a.Title == create.Title))
-                return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(create,a => nameof(a.Title)));
+                return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(create, a => nameof(a.Title)));
 
             Article Article = _Mapper.Map<Article>(create);
             await _ArticleRepository.Add(Article, _AppUserProvider.User.Id);
@@ -135,9 +175,9 @@ namespace OrganicShop.BLL.Services
 
             #region Tags
 
-            if(update.TagIds != null)
+            if (update.TagIds != null)
             {
-                foreach (var tagArticle in Article.TagArticles.ExceptBy(update.TagIds , a => a.TagId))
+                foreach (var tagArticle in Article.TagArticles.ExceptBy(update.TagIds, a => a.TagId))
                 {
                     Article.TagArticles.Remove(tagArticle);
                 }
@@ -148,7 +188,7 @@ namespace OrganicShop.BLL.Services
                     {
                         ArticleId = Article.Id,
                         TagId = tagId,
-                        BaseEntity = new BaseEntity(true), 
+                        BaseEntity = new BaseEntity(true),
                     });
                 }
             }
@@ -157,7 +197,7 @@ namespace OrganicShop.BLL.Services
 
             #region Picture
 
-            if(update.MainPictureFile != null)
+            if (update.MainPictureFile != null)
             {
                 var oldMainPicture = Article.Pictures.FirstOrDefault(a => a.IsMain);
                 if (oldMainPicture != null)
@@ -171,7 +211,7 @@ namespace OrganicShop.BLL.Services
 
             #endregion
 
-            await _ArticleRepository.Update(_Mapper.Map(update,Article), _AppUserProvider.User.Id);
+            await _ArticleRepository.Update(_Mapper.Map(update, Article), _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
         }
 
@@ -188,7 +228,7 @@ namespace OrganicShop.BLL.Services
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessDelete());
         }
 
-       
-     
+
+
     }
 }

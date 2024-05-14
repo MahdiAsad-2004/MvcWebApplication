@@ -1,0 +1,260 @@
+﻿@using OrganicShop.Domain.Dtos.ArticleDtos
+@using OrganicShop.Domain.Dtos.CategoryDtos
+@using OrganicShop.Domain.Dtos.Combo
+@using OrganicShop.Domain.Dtos.Page
+@using OrganicShop.Domain.Dtos.ProductDtos
+@using OrganicShop.Domain.Dtos.TagDtos
+@using OrganicShop.Domain.Entities
+@using OrganicShop.BLL.Extensions
+@model PageDto<Article,ArticleListDto,int>
+@{
+    var categories = ViewData["Categories"] as List<CategoryListDto>;
+    var tagCombos = ViewData["TagCombos"] as List<ComboDto<Tag>>;
+    var mostSellProducts = ViewData["MostSellProducts"] as List<ProductListDto>;
+    var lastBlogs = ViewData["LastBlogs"] as List<ArticleListDto>;
+    string? categoryTitle = ViewBag.CategoryTitle;
+    var filter = ViewData["FilterArticleDto"] as FilterArticleDto;
+}
+
+@section Breadcrumb {
+    <!-- Breadcrumb Section Start -->
+    <section class="breadcrumb-section pt-0">
+        <div class="container-fluid-lg">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumb-contain">
+                        <h2>وبلاگ ها : @(!string.IsNullOrEmpty(categoryTitle) ? $"دسته بندی ها : {categoryTitle}" : "")</h2>
+                        <nav>
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item">
+                                    <a href="/">
+                                        <i class="fa-solid fa-house"></i>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active">
+                                    <a href="/Blogs">
+                                        وبلاگ ها
+                                    </a>
+                                </li>
+                                @if (!string.IsNullOrEmpty(categoryTitle))
+                                {
+                                    <li class="breadcrumb-item active">
+                                        <a href="/Blogs/Category/@TextExtension.EncodePersianString(categoryTitle)">
+                                            @categoryTitle
+                                        </a>
+                                    </li>
+                                }
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+}
+
+<!-- Blog Section Start -->
+<section class="blog-section section-b-space">
+    <div class="container-fluid-lg">
+        <div class="row g-4">
+            <div class="col-xxl-9 col-xl-8 col-lg-7 order-lg-2">
+                <div class="row g-4">
+
+                    @foreach (var item in Model.List)
+                    {
+                        <div class="col-12">
+                            <div class="blog-box blog-list wow fadeInUp">
+                                <div class="blog-image">
+                                    <img src="~/media/images/article/@item.MainImageName" class="blur-up lazyload" alt="">
+                                </div>
+
+                                <div class="blog-contain blog-contain-2">
+                                    <div class="blog-label">
+                                        <span class="time"><i data-feather="clock"></i> <span>@item.CreateDate.ToString("yyyy  MMMMM  dd")</span></span>
+                                        <span class="super"><i data-feather="user"></i> <span>@item.AuthorName</span></span>
+                                    </div>
+                                    <a href="blog-detail.html">
+                                        <h3>@item.Title</h3>
+                                    </a>
+                                    <p> @item.ShortDescription </p>
+                                    <button onclick="location.href = '/Blog/@TextExtension.EncodePersianString(item.Title)';" class="blog-button">
+                                        مطالعه بیشتر<i class="fa-solid fa-right-long"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <partial name="_PagerPartial" model="Model.Pager" view-data="ViewData" view-data-formId="@("filter-articles-form")" />
+
+            </div>
+
+            <div class="col-xxl-3 col-xl-4 col-lg-5 order-lg-1">
+                <form class="left-sidebar-box wow fadeInUp" method="get" id="filter-articles-form"
+                      action="/Blogs@(!string.IsNullOrEmpty(categoryTitle) ? $"/Category/{TextExtension.EncodePersianString(categoryTitle)}" : "")">
+                    <div class="left-search-box">
+                        <div class="search-box">
+                            <input name="filter.Title" type="search" class="form-control" id="exampleFormControlInput1" placeholder="جستجو ...">
+                        </div>
+                    </div>
+
+                    <div class="accordion left-accordion-box" id="accordionPanelsStayOpenExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseOne">
+                                    پست های اخیر
+                                </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                                <div class="accordion-body pt-0">
+                                    <div class="recent-post-box">
+
+                                        @foreach (var blog in lastBlogs)
+                                        {
+                                            <div class="recent-box">
+                                                <a href="/Blogs/@TextExtension.EncodePersianString(blog.Title)" class="recent-image">
+                                                    <img src="~/media/images/article/@blog.MainImageName"
+                                                         class="img-fluid blur-up lazyload" alt="">
+                                                </a>
+
+                                                <div class="recent-detail">
+                                                    <a href="/Blog/@TextExtension.EncodePersianString(blog.Title)">
+                                                        <h5 class="recent-name">@blog.Title</h5>
+                                                    </a>
+                                                    <h6>@blog.CreateDate.ToString("yyyy  MMMMM  dd")<i data-feather="thumbs-up"></i></h6>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseTwo">
+                                    دسته بندی
+                                </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse collapse show">
+                                <div class="accordion-body p-0">
+                                    <div class="category-list-box">
+                                        <ul>
+
+                                            @foreach (var item in categories)
+                                            {
+                                                <li>
+                                                    <a href="/Blogs/Category/@TextExtension.EncodePersianString(item.Title)">
+                                                        <div class="category-name">
+                                                            <h5>@item.Title</h5>
+                                                            <span>@item.ArticlesCount</span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            }
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseThree">
+                                    برچسب ها
+                                </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseThree"
+                                 class="accordion-collapse collapse collapse show">
+                                <div class="accordion-body pt-0">
+                                    <div class="product-tags-box">
+                                        <ul>
+                                            @if (filter.TagIds != null)
+                                            {
+                                                @foreach (var tagCombo in tagCombos)
+                                                {
+                                                    @if (filter.TagIds.Any(a => a == int.Parse(tagCombo.Value)))
+                                                    {
+                                                        <li style="background-color:var(--theme-color);">
+                                                            <a href="javascript:void(0)">@tagCombo.Text</a>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>
+                                                            <a onclick="ChangeTagIds('@tagCombo.Value')">@tagCombo.Text</a>
+                                                        </li>
+                                                    }
+                                                    <input name="filter.TagIds" value="@tagCombo.Value" id="tagId-@(tagCombo.Value)-input" disabled hidden />
+                                                }
+                                            }
+                                            @foreach (var tagCombo in tagCombos)
+                                            {
+
+                                                <li>
+                                                    <a onclick="ChangeTagIds('@tagCombo.Value')">@tagCombo.Text</a>
+                                                </li>
+                                                <input name="filter.TagIds" value="@tagCombo.Value" id="tagId-@(tagCombo.Value)-input" disabled hidden />
+                                            }
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseFour">
+                                    پرفروش ترین محصولات
+                                </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse collapse show">
+                                <div class="accordion-body">
+                                    <ul class="product-list product-list-2 border-0 p-0">
+
+                                        @foreach (var item in mostSellProducts)
+                                        {
+                                            <li>
+                                                <div class="offer-product">
+                                                    <a href="/Product/@item.Barcode" class="offer-image">
+                                                        <img src="~/media/images/product/@item.MainImageName" class="blur-up lazyload" alt="">
+                                                    </a>
+                                                    <div class="offer-detail">
+                                                        <div>
+                                                            <a href="shop-left-sidebar.html">
+                                                                <h6 class="name">@item.Title</h6>
+                                                            </a>
+                                                            @* <span>450 گرم</span> *@
+                                                            <h6 class="price theme-color">@item.Price.ToToman()</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        }
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button hidden type="submit"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Blog Section End -->
+
+@section Scripts{
+
+    <script src="~/site/views/blog/index.js"></script>
+
+}

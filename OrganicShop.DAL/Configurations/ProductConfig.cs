@@ -23,6 +23,7 @@ namespace OrganicShop.DAL.Configurations
             builder.HasMany(a => a.TagProducts).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
             builder.HasMany(a => a.Properties).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
             builder.HasMany(a => a.Comments).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
+            builder.HasMany(a => a.ProductVarients).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
 
 
 

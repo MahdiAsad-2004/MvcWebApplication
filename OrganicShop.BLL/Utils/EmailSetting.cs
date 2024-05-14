@@ -1,5 +1,4 @@
-﻿
-namespace OrganicShop.BLL.Utily
+﻿namespace OrganicShop.BLL.Utils
 {
     public class EmailSetting
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using OrganicShop.BLL.Providers;
-using OrganicShop.BLL.Utily;
+using OrganicShop.BLL.Utils;
 using OrganicShop.Domain.Dtos.NotificationDtos;
 using OrganicShop.Domain.Dtos.ProductDtos;
 using OrganicShop.Domain.Enums;

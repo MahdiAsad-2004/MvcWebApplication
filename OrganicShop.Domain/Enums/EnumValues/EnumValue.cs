@@ -1,4 +1,5 @@
 ﻿using OrganicShop.Domain.Enums.SortTypes;
+using System.ComponentModel.DataAnnotations;
 
 namespace OrganicShop.Domain.Enums.EnumValues
 {
@@ -493,33 +494,21 @@ namespace OrganicShop.Domain.Enums.EnumValues
         }
         
 
-        public static string ToStringValue(this UnitType unitType)
+        public static string ToStringValue(this VarientType varientType)
         {
-            switch (unitType)
+            switch (varientType)
             {
-                case UnitType.None:
-                    return "هیچ";
+                case VarientType.Color:
+                    return "رنگ";
 
-                case UnitType.KiloGram:
-                    return "کیلوگرم";
+                case VarientType.Size:
+                    return "سایز";
                 
-                case UnitType.Gram:
-                    return "گرم";
+                case VarientType.Weight:
+                    return "وزن";
                 
-                case UnitType.Liter:
-                    return "لیتر";
-                
-                case UnitType.MilliLiter:
-                    return "میلی لیتر";
-                
-                case UnitType.Piece:
-                    return "قطعه";
-                
-                case UnitType.Packet:
-                    return "بسته";
-                
-                case UnitType.Box:
-                    return "جعبه";
+                case VarientType.Volume:
+                    return "حجم";
                 
                 default:
                     throw new Exception("Enum value not found");

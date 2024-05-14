@@ -1,33 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace OrganicShop.Domain.Enums
 {
-    public enum UnitType
+    public enum VarientType
     {
-        None = 1,
+        Color = 1,
 
-        KiloGram = 2,
+        Size = 2,
 
-        Gram = 3,
+        Weight = 3,
 
-        Liter = 4,
-        
-        MilliLiter = 5,
-
-        Piece = 6,
-
-        Packet = 7,
-
-        Box = 8,
-
-        //Number = 9,
-
-
+        Volume = 4,
 
 
     }

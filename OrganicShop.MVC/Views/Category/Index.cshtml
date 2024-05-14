@@ -14,16 +14,16 @@
     var paging = ViewData["PagingDto"] as PagingDto;
     string? categoryTitle = ViewBag.CategoryTitle;
     ProductSortType sortBy = filter.SortBy;
-    bool IsPageWithCategory = categoryChilds != null;
 }
 
-@section Breadcrumb{
+
+@section Breadcrumb {
     <section class="breadcrumb-section pt-0">
         <div class="container-fluid-lg">
             <div class="row">
                 <div class="col-12">
                     <div class="breadcrumb-contain">
-                        <h2>دسته بندی ها : محصولات : @(!string.IsNullOrEmpty(categoryTitle) ? categoryTitle : "")</h2>
+                        <h2>دسته ها : @(!string.IsNullOrEmpty(categoryTitle) ? categoryTitle : "")</h2>
                         <nav>
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item">
@@ -31,13 +31,11 @@
                                         <i class="fa-solid fa-house"></i>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="/Products">محصولات</a>
-                                </li>
+
                                 @if (!string.IsNullOrEmpty(categoryTitle))
                                 {
                                     <li class="breadcrumb-item active">
-                                        <a href="/Category/@TextExtension.EncodePersianString(categoryTitle)">دسته بندی ها</a>
+                                        <a href="/Category/@TextExtension.EncodePersianString(categoryTitle)">دسته ها</a>
                                     </li>
                                     <li>
                                         @categoryTitle
@@ -46,7 +44,7 @@
                                 else
                                 {
                                     <li>
-                                        دسته بندی ها
+                                        دسته ها
                                     </li>
                                 }
 
@@ -59,51 +57,48 @@
     </section>
 }
 
-@if(categoryChilds != null)
-{
-    <!-- Category Section Start -->
-    <section class="wow fadeInUp">
-        <div class="container-fluid-lg">
-            <div class="row">
-                <div class="col-12">
-                    <div class="slider-7_1 no-space shop-box no-arrow">
 
-                        @foreach (var categoryChild in categoryChilds)
-                        {
-                            <div>
-                                <div class="shop-category-box">
-                                    <a href="/Products/Category/@TextExtension.EncodePersianString(categoryChild.Title)">
-                                        <div class="shop-category-image">
-                                            <i class="@categoryChild.IconClass"
-                                               style="color:@(!string.IsNullOrEmpty(categoryChild.IconColor) ? categoryChild.IconColor : "black"); font-size:25px;"></i>
-                                        </div>
-                                        <div class="category-box-name">
-                                            <h6>@categoryChild.Title</h6>
-                                        </div>
-                                    </a>
-                                </div>
+
+<!-- Category Section Start -->
+<section class="wow fadeInUp">
+    <div class="container-fluid-lg">
+        <div class="row">
+            <div class="col-12">
+                <div class="slider-7_1 no-space shop-box no-arrow">
+
+                    @foreach (var categoryChild in categoryChilds)
+                    {
+                        <div>
+                            <div class="shop-category-box">
+                                <a href="/Category/@TextExtension.EncodePersianString(categoryChild.Title)">
+                                    <div class="shop-category-image">
+                                        <i class="@categoryChild.IconClass"
+                                           style="color:@(!string.IsNullOrEmpty(categoryChild.IconColor) ? categoryChild.IconColor : "black"); font-size:25px;"></i>
+                                    </div>
+                                    <div class="category-box-name">
+                                        <h6>@categoryChild.Title</h6>
+                                    </div>
+                                </a>
                             </div>
-                        }
+                        </div>
+                    }
 
-                    </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Category Section End -->
-}
-
-
+    </div>
+</section>
+<!-- Category Section End -->
 <!-- Shop Section Start -->
 <section class="section-b-space shop-section">
     <div class="container-fluid-lg">
         <div class="row">
             <div class="col-custom-3">
                 <div class="left-box wow fadeInUp">
-                    <form id="filter-products-form" class="shop-left-sidebar"  method="get"
-                          action="/Products/@(IsPageWithCategory ? $"/Category{(!string.IsNullOrEmpty(categoryTitle) ? $"/{TextExtension.EncodePersianString(categoryTitle)}" : "")}" : "")">
-                        <input id="pageNumber-input" value="1" type="number" hidden name="paging.PageNumber"/>
-                        
+                    <form id="filter-products-form" class="shop-left-sidebar" method="get"
+                          action="/Category@(!string.IsNullOrEmpty(categoryTitle) ? $"/{TextExtension.EncodePersianString(categoryTitle)}" : "")">
+                        <input id="pageNumber-input" value="1" type="number" hidden name="paging.PageNumber" />
+
                         <div class="back-button">
                             <h3><i class="fa-solid fa-arrow-right"></i> بازگشت</h3>
                         </div>
@@ -113,8 +108,8 @@
                                 <h2>فیلتر</h2>
                                 <a>حذف فیلتر</a>
                             </div>
-                            <div class="filter-remove" >
-                                @if(filter.MinPrice != null && filter.MinPrice > 0)
+                            <div class="filter-remove">
+                                @if (filter.MinPrice != null && filter.MinPrice > 0)
                                 {
                                     <div style="">
                                         <i onclick="RemoveMinPriceFilter()" class="fa-solid fa-xmark"></i>
@@ -128,16 +123,16 @@
                                         <span>حداکثر قیمت: @filter.MaxPrice.Value.ToMoney()</span>
                                     </div>
                                 }
-                                @if(filter.Rate != null)
+                                @if (filter.Rate != null)
                                 {
                                     <div style="">
                                         <i onclick="RemoveRateFilter()" class="fa-solid fa-xmark"></i>
                                         <span>امتیاز: @filter.Rate.Value</span>
                                     </div>
                                 }
-                                @if(filter.CategoryIds != null)
+                                @if (filter.CategoryIds != null)
                                 {
-                                    @foreach (var category in categories.IntersectBy(filter.CategoryIds , a => a.Id))
+                                    @foreach (var category in categories.IntersectBy(filter.CategoryIds, a => a.Id))
                                     {
                                         <div style="">
                                             <i onclick="RemoveCategoryFilter('@category.Id')" class="fa-solid fa-xmark"></i>
@@ -165,10 +160,10 @@
                                         </div>
 
                                         <ul class="category-list custom-padding custom-height">
-                                            
+
                                             @foreach (var category in categories)
                                             {
-                                                if(filter.CategoryIds != null)
+                                                if (filter.CategoryIds != null)
                                                 {
                                                     <li>
                                                         <div class="form-check ps-0 m-0 category-list-box">
@@ -195,7 +190,7 @@
                                                 }
 
                                             }
-                                            
+
                                         </ul>
                                     </div>
                                 </div>
@@ -216,8 +211,8 @@
                                     <div class="accordion-body">
                                         <div class="form-group mb-2 row">
                                             <label class="form-lable col-12">حداقل قیمت</label>
-                                            <input type="range" class="form-contorl col-8" min="0" max="10000000" 
-                                                name="filter.MinPrice" value="@(minPrice)" step="1000" />
+                                            <input type="range" class="form-contorl col-8" min="0" max="10000000"
+                                                   name="filter.MinPrice" value="@(minPrice)" step="1000" />
                                             <span class="col-4" id="minPrice-value">@minPrice.ToMoney()</span>
                                         </div>
                                         <div class="form-group mb-2 row">
@@ -249,10 +244,10 @@
                                                 <li>
                                                     <div class="form-check ps-0 m-0 category-list-box">
                                                         <input onchange="ChangeRateCheckbox(event)" class="checkbox_animated" name="filter.Rate" value="@i"
-                                                            type="checkbox" checked="@(rate == i)">
+                                                               type="checkbox" checked="@(rate == i)">
                                                         <div class="form-check-label">
                                                             <ul class="rating">
-                                                                @for (j = 1 ; j <= i; j++)
+                                                                @for (j = 1; j <= i; j++)
                                                                 {
                                                                     <li>
                                                                         <i data-feather="star" class="fill"></i>
@@ -276,7 +271,7 @@
                             </div>
 
                         </div>
-                        <input hidden name="filter.SortBy" value="@sortBy"/>
+                        <input hidden name="filter.SortBy" value="@sortBy" />
                         <button type="submit" hidden></button>
                     </form>
                 </div>
@@ -490,12 +485,10 @@
     </div>
 </section>
 <!-- Shop Section End -->
-
-
-@section Scripts{
+@section Scripts {
 
     <!-- Price Range Js -->
     <script src="~/site/assets/js/ion.rangeSlider.min.js"></script>
 
-    <script src="~/site/views/product/index.js"></script>
+    <script src="~/site/views/category/index.js"></script>
 }

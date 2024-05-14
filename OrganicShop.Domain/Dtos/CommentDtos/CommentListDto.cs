@@ -10,10 +10,10 @@ namespace OrganicShop.Domain.Dtos.CommentDtos
         public string Text { get; set; }
         public CommentStatus Status { get; set; }
         public PersianDateTime Date { get; set; }
-        public long UserId { get; set; }
-        public string UserName { get; set; }
-        public long ProductId { get; set; }
-        public string ProductName { get; set; }
+        public string AuthorName { get; set; }
+        public string AuthorImageName { get; set; }
+        public string Email { get; set; }
+  
     }
 
 

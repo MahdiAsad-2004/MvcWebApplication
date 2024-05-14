@@ -67,14 +67,14 @@
                                 </div>
 
                                 <div class="mb-5 row align-items-center">
-                                    <label asp-for="UnitType" class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
+                                    <label  class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
                                     <div class="col-md-7 col-lg-9">
-                                        <select id="unit-type-select" asp-for="UnitType" class="form-select">
+                                        @* <select id="unit-type-select" asp-for="UnitType" class="form-select">
                                             @foreach (var unitType in EnumExtension.GetArray<UnitType>())
                                             {
                                                 <option value="@((byte)unitType)">@unitType.ToStringValue()</option>
                                             }
-                                        </select>
+                                        </select> *@
                                         <span class="mt-1 text-danger"></span>
                                     </div>
                                     <button type="button" id="add-unit-value-button" class="col-md-2 col-lg-1 btn btn-primary mb-3">افزودن مقدار</button>
@@ -87,7 +87,7 @@
                                             <div class="mt-1 col-4" id="unit-group-@(unitCounter)">
                                                 <div class="input-group">
                                                     <input value="@value" data-val="true" type="number" min="0" step="0.1" name="UnitValuesArray" type="text" class="form-control" />
-                                                    <span class="input-group-text unit-type-text">@Model.UnitType.ToStringValue()</span>
+                                                    <span class="input-group-text unit-type-text">@* @Model.UnitType.ToStringValue() *@</span>
                                                     <button onclick="DeleteUnitGroup('@(unitCounter)')" type="button" style="background-color:#dd0000;" class="btn btn-sm"><i class="fa-solid fa-xmark" style="color: white; font-size:22px;"></i></button>
                                                 </div>
                                             </div>

@@ -82,9 +82,6 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
         public Dictionary<long,string> OldPicturesDic { get; set; }
 
 
-        [DisplayName("واحد")]
-        public UnitType UnitType { get; set; }
-
 
         public float[] UnitValuesArray { get; set; }
 

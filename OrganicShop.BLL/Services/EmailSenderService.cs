@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
-using OrganicShop.BLL.Utily;
+using OrganicShop.BLL.Utils;
 using OrganicShop.Domain.IServices;
 
 namespace OrganicShop.BLL.Services
