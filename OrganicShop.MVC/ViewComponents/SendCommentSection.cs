@@ -41,6 +41,8 @@ namespace OrganicShop.MVC.ViewComponents
                 createComment.Email = AesOperation.Decrypt(EmailSavedForCommentCoded, _AesKeys.Cookie) ?? string.Empty;
                 //ViewBag.EmailSavedForComment = AesOperation.Decrypt(EmailSavedForCommentCoded, _AesKeys.Cookie);
             }
+            createComment.ProductId = ViewComponentContext.Arguments["ProductId"] as long?;
+            createComment.ArticleId = ViewComponentContext.Arguments["ArticleId"] as int?;
             return View("SendCommentSection" , createComment);
         }
 

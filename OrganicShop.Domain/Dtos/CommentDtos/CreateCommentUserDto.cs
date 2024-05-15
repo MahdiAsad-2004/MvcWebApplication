@@ -23,8 +23,16 @@ namespace OrganicShop.Domain.Dtos.CommentDtos
         [DisplayName("پاسخ به دیدگاه")]
         [Range(1, int.MaxValue, ErrorMessage = "{0} باید حداقل {2} و حداکثر {1} باشد")]
         public long? ParentId { get; set; }
-        
-        
+
+
+        [DisplayName("محصول")]
+        [Range(1, long.MaxValue, ErrorMessage = "{0} باید حداقل {2} و حداکثر {1} باشد")]
+        public long? ProductId { get; set; }
+
+
+        [DisplayName("مطلب")]
+        [Range(1, int.MaxValue, ErrorMessage = "{0} باید حداقل {2} و حداکثر {1} باشد")]
+        public int? ArticleId { get; set; }
 
     }
 

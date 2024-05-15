@@ -2,6 +2,18 @@
 @model CreateCommentUserDto
 
 <form class="leave-box" method="post" onsubmit="FetchRequest(event)" action="/Comment/Create" id="create-comment-form">
+    @if(Model.ProductId != null)
+    {
+        <input asp-for="ProductId" hidden readonly/>
+    }
+    else if(Model.ArticleId != null)
+    {
+        <input asp-for="ArticleId" hidden readonly/>
+    }
+    else
+    {
+        throw new Exception("productId and articleId are null in send comment partial !");
+    }
     <input hidden readonly asp-for="Rate" value="1" />
     <div class="leave-title mt-0">
         <h3>ارسال دیدگاه</h3>

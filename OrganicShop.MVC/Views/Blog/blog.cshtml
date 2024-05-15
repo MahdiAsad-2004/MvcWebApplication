@@ -1,6 +1,7 @@
 ﻿@using OrganicShop.Domain.Dtos.ArticleDtos
 @using OrganicShop.Domain.Dtos.CategoryDtos
 @using OrganicShop.Domain.Dtos.Combo
+@using OrganicShop.Domain.Dtos.CommentDtos
 @using OrganicShop.Domain.Dtos.Page
 @using OrganicShop.Domain.Dtos.ProductDtos
 @using OrganicShop.Domain.Dtos.TagDtos
@@ -232,10 +233,10 @@
                
                 @if (User.Identity.IsAuthenticated)
                 {
-                    await Html.PartialAsync("_SendCommentUserSection");
+                    await Html.PartialAsync("_SendCommentUserSection", new CreateCommentUserDto { ArticleId = Model.Id });
                 }
                 else{
-                    await Component.InvokeAsync("_SendCommentSection");
+                    await Component.InvokeAsync("_SendCommentSection",new {ProductId = default(int?) , Article = Model.Id});
                 }
 
 

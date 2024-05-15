@@ -7,6 +7,18 @@
     </div>
 
     <form class="leave-comment" method="post" onsubmit="FetchRequest(event)" action="/Comment/Create">
+        @if (Model.ProductId != null)
+        {
+            <input asp-for="ProductId" hidden readonly />
+        }
+        else if (Model.ArticleId != null)
+        {
+            <input asp-for="ArticleId" hidden readonly />
+        }
+        else
+        {
+            throw new Exception("productId and articleId are null in send comment partial !");
+        }
         <div class="comment-notes">
             <p class="text-content mb-4">آدرس ایمیل شما منتشر نخواهد شد!</p>
         </div>
