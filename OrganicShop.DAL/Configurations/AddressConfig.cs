@@ -17,6 +17,7 @@ namespace OrganicShop.DAL.Configurations
 
 
             builder.HasOne(a => a.User).WithMany(a => a.Addresses).HasForeignKey(a => a.UserId);
+            builder.HasOne(a => a.Seller).WithOne(a => a.Address).HasForeignKey<Address>(a => a.SellerId);
             builder.HasMany(a => a.Orders).WithOne(a => a.Address).HasForeignKey(a => a.AddressId);
             //builder.HasMany(a => a.Orders).WithOne(a => a.Address).HasForeignKey(a => a.AddressId);
 

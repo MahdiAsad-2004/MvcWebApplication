@@ -18,6 +18,7 @@ namespace OrganicShop.DAL.Configurations
             builder.HasOne(a => a.Article).WithMany(a => a.Pictures).HasForeignKey(a => a.ArticleId);
             builder.HasOne(a => a.Category).WithOne(a => a.Picture).HasForeignKey<Picture>(a => a.CategoryId).OnDelete(DeleteBehavior.SetNull);
             builder.HasOne(a => a.User).WithOne(a => a.Picture).HasForeignKey<Picture>(a => a.UserId).OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(a => a.Seller).WithOne(a => a.Picture).HasForeignKey<Picture>(a => a.SellerId).OnDelete(DeleteBehavior.SetNull);
 
 
 

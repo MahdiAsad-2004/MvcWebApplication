@@ -606,7 +606,14 @@
 
 	<ItemGroup>
 	  <Folder Include="Views\Shared\Partials\" />
-	  <Folder Include="wwwroot\media\images\article\" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <Content Update="wwwroot\site\views\product\product.js">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

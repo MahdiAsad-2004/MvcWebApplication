@@ -46,7 +46,7 @@ namespace OrganicShop.BLL.Services
 
         #endregion
 
-        private IQueryable<Product> FilterAndSort(IQueryable<Product> query,FilterProductDto? filter = null, PagingDto? paging = null)
+        private IQueryable<Product> FilterAndSort(IQueryable<Product> query, FilterProductDto? filter = null, PagingDto? paging = null)
         {
             if (filter == null) filter = new FilterProductDto();
             if (paging == null) paging = new PagingDto();
@@ -82,16 +82,16 @@ namespace OrganicShop.BLL.Services
                 //query = query.Where(q => filter.CategoryIds.Contains(q.CategoryId));
             }
 
-            if(filter.Rate != null)
+            if (filter.Rate != null)
             {
                 query = query.Where(q =>
                 ((float)q.Comments.Sum(b => b.Rate) / q.Comments.Count == 0 ? int.MaxValue : q.Comments.Count) >= filter.Rate &&
-                   ((float)q.Comments.Sum(b => b.Rate) / q.Comments.Count == 0 ? int.MaxValue : q.Comments.Count) < filter.Rate+1);
+                   ((float)q.Comments.Sum(b => b.Rate) / q.Comments.Count == 0 ? int.MaxValue : q.Comments.Count) < filter.Rate + 1);
             }
 
             //query = query.Where(q => q)
 
-            
+
 
 
             #endregion
@@ -142,26 +142,8 @@ namespace OrganicShop.BLL.Services
                     .ThenInclude(a => a.Discount)
                 .Include(a => a.Comments)
                 .Include(a => a.Properties)
-                .Select(a => new Product
-                {
-                    BaseEntity = a.BaseEntity,
-                    Categories = a.Categories,
-                    Comments = a.Comments,
-                    Description = a.Description,
-                    DiscountProducts = a.DiscountProducts,
-                    Id = a.Id,
-                    Pictures = a.Pictures,
-                    Price = a.Price,
-                    ProductItems = a.ProductItems,
-                    Properties = a.Properties,
-                    ShortDescription = a.ShortDescription,
-                    SoldCount = a.SoldCount,
-                    Stock = a.Stock,
-                    TagProducts = a.TagProducts,
-                    Title = a.Title,
-                    //DiscountedPrice = a.GetDefaultDiscountedPrice(),
-                    DiscountedPrice = a.GetDefaultDiscountedPrice(),
-                })
+                .Include(a => a.ProductVarients)
+                .Select(a => a.ToModel())
                 .AsParallel();
 
             query = x
@@ -206,6 +188,47 @@ namespace OrganicShop.BLL.Services
 
 
 
+        public async Task<ServiceResponse<ProductDetailDto>> GetDetail(long? id = null, string? barcode = null , string? title = null)
+        {
+            if (id == null && barcode == null && title == null)
+                throw new ArgumentNullException("Id and barcode and title are null in ProductService => GetDetail()");
+
+            #region includes
+
+            var query = _ProductRepository.GetQueryable()
+                .Include(a => a.Pictures)
+                .Include(a => a.Categories)
+                    .ThenInclude(a => a.DiscountCategories)
+                        .ThenInclude(a => a.Discount)
+                .Include(a => a.DiscountProducts)
+                    .ThenInclude(a => a.Discount)
+                .Include(a => a.Comments)
+                .Include(a => a.Properties)
+                .Include(a => a.ProductVarients)
+                .AsQueryable();
+
+            #endregion
+
+            Product? product = null;
+
+            if (id != null && id > 1)
+            {
+                product = await query.FirstOrDefaultAsync(a => a.Id.Equals(id));
+            }
+            else if (string.IsNullOrWhiteSpace(barcode) == false)
+            {
+                product = await query.FirstOrDefaultAsync(a => a.BarCode == barcode);
+            }
+            else if (string.IsNullOrWhiteSpace(title) == false)
+            {
+                product = await query.FirstOrDefaultAsync(a => a.Title == title);
+            }
+
+            if (product == null)
+                return new ServiceResponse<ProductDetailDto>(ResponseResult.NotFound, null);
+
+            return new ServiceResponse<ProductDetailDto>(ResponseResult.Success ,_Mapper.Map<ProductDetailDto>(product.ToModel()));   
+        }
 
 
 
@@ -476,7 +499,7 @@ namespace OrganicShop.BLL.Services
 
             #region categories
 
-            if(Product.Categories.Last().Id != update.CategoryId)
+            if (Product.Categories.Last().Id != update.CategoryId)
             {
                 var category = await _CategoryRepository.GetQueryable().Include(a => a.Parent).FirstOrDefaultAsync(a => a.Id == update.CategoryId);
                 if (category == null)
@@ -549,16 +572,16 @@ namespace OrganicShop.BLL.Services
             {
                 if (products1 != null)
                     return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products1.ToList()));
-                
-                else if(products2 != null)
+
+                else if (products2 != null)
                     return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products2.ToList()));
-                
-                return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success,  new List<ProductSummaryDto>());
+
+                return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, new List<ProductSummaryDto>());
             }
 
-                //return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success,  new List<ProductSummaryDto>());
+            //return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success,  new List<ProductSummaryDto>());
             //var products = products1.Union(products2);
-            var products = products1.UnionBy(products2 , a => a.Id);
+            var products = products1.UnionBy(products2, a => a.Id);
 
             return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products.ToList()));
 

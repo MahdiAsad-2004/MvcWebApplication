@@ -24,6 +24,9 @@ namespace OrganicShop.BLL.Extensions
                 case PictureType.Article:
                     return $"/media/images/article/{picture.Name}";
 
+                case PictureType.Seller:
+                    return $"/media/images/seller/{picture.Name}";
+
                 default: throw new Exception("Invalid enum");
             }
         }
@@ -44,6 +47,9 @@ namespace OrganicShop.BLL.Extensions
 
                 case PictureType.Article:
                     return $"/media/images/article/{picture.Name}";
+
+                case PictureType.Seller:
+                    return $"/media/images/seller/{picture.Name}";
 
                 default: throw new Exception("Invalid picture type");
             }
@@ -75,7 +81,10 @@ namespace OrganicShop.BLL.Extensions
                     return Path.Combine(PathExtensions.UserImages, picture.Name);
                 
                 case PictureType.Article:
-                    return Path.Combine(PathExtensions.UserImages, picture.Name);
+                    return Path.Combine(PathExtensions.ArticleImages, picture.Name);
+
+                case PictureType.Seller:
+                    return Path.Combine(PathExtensions.SellerImages, picture.Name);
 
                 default:
                     throw new Exception("Picture file path not found");

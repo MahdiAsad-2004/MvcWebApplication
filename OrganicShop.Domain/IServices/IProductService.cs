@@ -15,6 +15,8 @@ namespace OrganicShop.Domain.IServices
         
         Task<ServiceResponse<UpdateProductDto>> Get(long Id);
 
+        Task<ServiceResponse<ProductDetailDto>> GetDetail(long? id = null, string? barcode = null, string? title = null);
+
         Task<ServiceResponse<Empty>> Create(CreateProductDto create);
 
         Task<ServiceResponse<Empty>> Update(UpdateProductDto update);

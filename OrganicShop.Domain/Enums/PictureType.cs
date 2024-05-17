@@ -18,6 +18,8 @@ namespace OrganicShop.Domain.Enums
 
         Article = 4,
 
+        Seller = 5,
+
 
     }
 }

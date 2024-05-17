@@ -17,18 +17,31 @@ namespace OrganicShop.BLL.Mappers
 
             CreateMap<Product, ProductListDto>()
                 .ForMember(m => m.CategoryTitle, a => a.MapFrom(b => b.Categories.Last().Title))
-                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? string.Empty))
+                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
                 .ForMember(m => m.IsActive, a => a.MapFrom(b => b.BaseEntity.IsActive));
 
             CreateMap<Product, ProductSummaryDto>()
                .ForMember(m => m.DiscountedPrice, a => a.MapFrom(b => b.DiscountedPrice))
                .ForMember(m => m.CategoryTitle, a => a.MapFrom(b => b.Categories.Last().Title))
-               .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? string.Empty))
+               .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
                .ForMember(m => m.ImageNames, a => a.MapFrom(b => b.Pictures.Select(p => p.Name).ToArray()))
-               .ForMember(m => m.CommentsRate, a => a.MapFrom(b =>  (float)b.Comments.Sum(c => c.Rate) / (float)b.Comments.Count))
-               .ForMember(m => m.CommentsCount, a => a.MapFrom(b => b.Comments.Count))
+               .ForMember(m => m.CommentsRate, a => a.MapFrom(b => 
+                    b.Comments.Where(c => c.Status == CommentStatus.Accepted).Any() ?   
+                    ((float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Sum(c => c.Rate) / 
+                    (float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()) : 0))
+               .ForMember(m => m.CommentsCount, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()))
                .ForMember(m => m.PropertiesDictionary, a => a.MapFrom(b => b.Properties.ToDictionary(p => p.Title , p => p.Value)))
                .ForMember(m => m.IsActive, a => a.MapFrom(b => b.BaseEntity.IsActive));
+
+
+            CreateMap<Product, ProductDetailDto>()
+               .ForMember(m => m.DiscountedPrice, a => a.MapFrom(b => b.DiscountedPrice))
+               .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
+               .ForMember(m => m.ImageNames, a => a.MapFrom(b => b.Pictures.Select(p => p.Name).ToArray()))
+               .ForMember(m => m.PropertiesDictionary, a => a.MapFrom(b => b.Properties.ToDictionary(p => p.Title, p => p.Value)))
+               .ForMember(m => m.Comments, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Select(c => c.ToListDto()).ToList()))
+               .ForMember(m => m.Discount, a => a.MapFrom(b => b.GetDefaultDiscount()))
+               .ForMember(m => m.Varients, a => a.MapFrom(b => b.ProductVarients.ToList()));
 
 
             CreateMap<CreateProductDto, Product>()
@@ -39,13 +52,14 @@ namespace OrganicShop.BLL.Mappers
             CreateMap<UpdateProductDto, Product>()
                 .ForMember(m => m.Description, a => a.MapFrom(b => string.IsNullOrEmpty(b.Description) ? string.Empty : b.Description));
 
+
             CreateMap<Product, UpdateProductDto>()
                 .ForMember(m => m.TagIds, a => a.MapFrom(b => b.TagProducts.Select(t => t.TagId).ToArray()))
                 .ForMember(m => m.UpdatedPrice, a => a.MapFrom(b => b.GetDefaultDiscountedPriceProduct()))
                 .ForMember(m => m.DiscountCount, a => a.MapFrom(b => b.GetDefaultDiscountProduct() != null ? b.GetDefaultDiscountProduct().Count : null))
                 .ForMember(m => m.DiscountId, a => a.MapFrom(b => b.GetDefaultDiscountProduct() != null ? b.GetDefaultDiscountProduct().Id : default(int?)))
                 .ForMember(m => m.PropertiesDic, a => a.MapFrom(b => b.Properties.ToDictionary(k => k.BaseId.Value,v => new EditPropertyDto {Id = v.Id ,Value = v.Value})))
-                .ForMember(m => m.MainPictureName, a => a.MapFrom(b => b.Pictures.First(a => a.IsMain).Name))
+                .ForMember(m => m.MainPictureName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductImageDefault))
                 .ForMember(m => m.CategoryId, a => a.MapFrom(b => b.Categories.Last().Id))
                 .ForMember(m => m.OldPicturesDic, a => a.MapFrom(b => b.Pictures.Where(a => a.IsMain == false).ToDictionary(k => k.Id , v => v.Name)));
 
@@ -55,6 +69,35 @@ namespace OrganicShop.BLL.Mappers
              .ForMember(m => m.Value, a => a.MapFrom(b => b.Id))
              .ForMember(m => m.Text, a => a.MapFrom(b => b.Title));
 
+        }
+
+    }
+
+
+    public static class ProductMappers
+    {
+        public static Product ToModel(this Product product)
+        {
+            return new Product
+            {
+                BaseEntity = product.BaseEntity,
+                Categories = product.Categories,
+                Comments = product.Comments,
+                Description = product.Description,
+                DiscountProducts = product.DiscountProducts,
+                Id = product.Id,
+                Pictures = product.Pictures,
+                Price = product.Price,
+                ProductItems = product.ProductItems,
+                Properties = product.Properties,
+                ShortDescription = product.ShortDescription,
+                SoldCount = product.SoldCount,
+                Stock = product.ProductVarients.Any() ? product.ProductVarients.Sum(b => b.Stock) : product.Stock,
+                TagProducts = product.TagProducts,
+                Title = product.Title,
+                //DiscountedPrice = product.GetDefaultDiscountedPrice(),
+                DiscountedPrice = product.GetDefaultDiscountedPrice(),
+            };
         }
 
     }

@@ -84,5 +84,17 @@ namespace OrganicShop.Mvc.Controllers
         }
 
 
+        [HttpGet("/Product/{barcode}")]
+        public async Task<IActionResult> Product(string barcode)
+        {
+            var response = await _ProductService.GetDetail(barcode: barcode);
+            
+            if (response.Result == ResponseResult.Success)
+                return View("Product", response.Data);
+
+            return Redirect("/Error/404");
+        }
+
+
     }
 }

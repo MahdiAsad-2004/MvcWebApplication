@@ -15,12 +15,14 @@ namespace OrganicShop.Domain.Entities
         public long? UserId { get; set; }
         public long? ProductId { get; set; }
         public int? ArticleId { get; set; }
+        public int? SellerId { get; set; }
 
 
 
         public User? User { get; set; }
         public Product? Product { get; set; }
         public Article? Article { get; set; }
+        public Seller? Seller { get; set; }
 
 
 

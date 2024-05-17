@@ -15,11 +15,13 @@ namespace OrganicShop.Domain.Entities
         public string Text { get; set; }
         public string PostCode { get; set; }
         public string Phone { get; set; }
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
+        public long? SellerId { get; set; }
 
 
 
-        public User User { get; set; }
+        public User? User { get; set; }
+        public Seller? Seller { get; set; }
         public ICollection<Order> Orders { get; set; }
 
 

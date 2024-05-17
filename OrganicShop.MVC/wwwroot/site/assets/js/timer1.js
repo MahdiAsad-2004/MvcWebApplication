@@ -23,6 +23,7 @@ function getTimeRemaining(endtime) {
 
 /***** DISPLAY THE CLOCK AND STOP IT WHEN IT REACHES ZERO *****/
 function initializeClock(id, endtime) {
+    //endtime = document.getElementById()
     var clock = document.getElementById(id);
     var daysSpan = clock.querySelector('.days');
     var hoursSpan = clock.querySelector('.hours');
@@ -48,4 +49,5 @@ function initializeClock(id, endtime) {
 
 /***** SET A VALID END DATE *****/
 var deadline = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
+var deadline = new Date(document.getElementById('clockdiv-1').getAttribute('data-deadline'));
 initializeClock('clockdiv-1', deadline);

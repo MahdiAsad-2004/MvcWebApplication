@@ -451,7 +451,7 @@ $(".bg-overlay").click(function () {
 
 
 
-Number.prototype.formatMoney = function (s) {
+Number.prototype.formatMoney = function (s, type) {
     var n = 0;
     var x = 3;
     var c = null;
@@ -459,7 +459,11 @@ Number.prototype.formatMoney = function (s) {
     var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
         num = this.toFixed(Math.max(0, ~~n));
 
-    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+    var f = (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));;
+    if (type) {
+        return `${type} ${f}`;
+    }
+    return f;
 };
 
 //https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-strings

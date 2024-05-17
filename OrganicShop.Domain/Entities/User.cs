@@ -29,6 +29,7 @@ namespace OrganicShop.Domain.Entities
         public ICollection<Operation> Operations { get; set; }
         //public ICollection<Cart> Carts { get; set; }
         public ICollection<PermissionUsers> PermissionUsers { get; set; }
+        public Seller? Seller { get; set; }
 
         #endregion
 

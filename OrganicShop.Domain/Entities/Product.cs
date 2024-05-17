@@ -20,7 +20,7 @@ namespace OrganicShop.Domain.Entities
         public string Description { get; set; }
         public int? DiscountedPrice { get; set; }
         public string BarCode { get; set; } = Guid.NewGuid().ToString().Substring(0, 13);
-
+        public int? SellerId { get; set; }
 
 
         public ICollection<Category> Categories { get; set; }
@@ -31,6 +31,7 @@ namespace OrganicShop.Domain.Entities
         public ICollection<Property> Properties { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<ProductVarient> ProductVarients { get; set; }
+        public Seller? Seller { get; set; }
 
     }
 }

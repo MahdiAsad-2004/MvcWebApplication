@@ -1,24 +1,23 @@
 ﻿@model float
 @{
-    bool? ShowAvarege = ViewData["Aarage"] as bool?;
+    float decimalValue = (Model * 10) % 10;
 }
-
 <ul class="rating">
     @{
-        int i = 1;
-        for (i = 1; i <= float.Floor(Model); i++)
+        int i = 0;
+        for (i = 0; i < float.Floor(Model); i++)
         {
             <li>
                 <i class="fa-solid fa-star-sharp"></i>
             </li>
 
         }
-        if ((Model * 10) % 10 >= 5)
+        if (decimalValue >= 5)
         {
             <li>
                 <i class="fa-solid fa-star-half-stroke"></i>
             </li>
-            for (int j = 5; j > i + 1; j--)
+            for (int j = 5 - i - 1; j >= 1; j++)
             {
                 <li>
                     <i class="fa-regular fa-star-sharp"></i>
@@ -27,7 +26,7 @@
         }
         else
         {
-            for (int j = 5; j > i; j--)
+            for (int j = 5 - i; j >= 1; j++)
             {
                 <li>
                     <i class="fa-regular fa-star-sharp"></i>
@@ -56,4 +55,3 @@
     <i data-feather="star"></i>
     </li> *@
 </ul>
-<span>(@(Model.ToString("0.0")))</span>

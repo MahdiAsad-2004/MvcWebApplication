@@ -90,7 +90,8 @@
                                     </div>
                                     <h4 class="item">باقی مانده : <span>@item.Stock</span></h4>
                                     <h4 class="offer">عجله کنید !!</h4>
-                                    <div class="timer clockdiv" id="@($"clock-{item.Id}")" data-hours="1" data-minutes="2" data-seconds="3">
+                                    <div class="timer clockdiv" id="@($"clock-{item.Id}")" data-hours="1" data-minutes="2" data-seconds="3" 
+                                    data-endDate="@item.DiscountEndDate">
                                         <ul>
                                             <li>
                                                 <div class="counter">

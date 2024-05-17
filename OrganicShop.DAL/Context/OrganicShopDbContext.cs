@@ -27,6 +27,7 @@ namespace OrganicShop.DAL.Context
         public DbSet<NewsLetterMember> NewsLetterMembers { get; set; }
         public DbSet<Operation> Operations { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Seller> Sellers { get; set; }
         public DbSet<TrackingStatus> TrackingStatuses { get; set; }
         public DbSet<TrackingDescription> TrackingDescriptions { get; set; }
         public DbSet<Permission> Permissions { get; set; }
