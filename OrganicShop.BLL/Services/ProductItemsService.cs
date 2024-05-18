@@ -11,6 +11,10 @@ using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
 using OrganicShop.Domain.Enums.Response;
+using OrganicShop.Domain.Entities.Base;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using OrganicShop.BLL.Extensions;
+using OrganicShop.Domain.Enums.EnumValues;
 
 namespace OrganicShop.BLL.Services
 {
@@ -21,13 +25,15 @@ namespace OrganicShop.BLL.Services
         private readonly IMapper _Mapper;
         private readonly IProductItemRepository _ProductItemRepository;
         private readonly ICartRepository _CartRepository;
+        private readonly IProductRepository _ProductRepository;
 
-        public ProductItemService(IApplicationUserProvider provider,IMapper mapper,IProductItemRepository ProductItemRepository, ICartRepository CartRepository)
+        public ProductItemService(IApplicationUserProvider provider, IMapper mapper, IProductItemRepository ProductItemRepository, ICartRepository CartRepository, IProductRepository productRepository)
             : base(provider)
         {
             _Mapper = mapper;
             _ProductItemRepository = ProductItemRepository;
             _CartRepository = CartRepository;
+            _ProductRepository = productRepository;
         }
 
         #endregion
@@ -36,6 +42,24 @@ namespace OrganicShop.BLL.Services
         public async Task<ServiceResponse<PageDto<ProductItem, ProductItemListDto, long>>> GetAll(FilterProductItemDto? filter = null, PagingDto? paging = null)
         {
             var query = _ProductItemRepository.GetQueryable();
+
+            #region includes
+
+            query = query
+                .Include(a => a.Product)
+                    .ThenInclude(a => a.Categories)
+                        .ThenInclude(a => a.DiscountCategories)
+                            .ThenInclude(a => a.Discount)
+                .Include(a => a.Product)
+                    .ThenInclude(a => a.DiscountProducts)
+                        .ThenInclude(a => a.Discount)
+                .Include(a => a.Product)
+                    .ThenInclude(a => a.Pictures)
+                .Include(a => a.Product)
+                    .ThenInclude(a => a.ProductVarients)
+                .AsQueryable();
+
+            #endregion
 
             if (filter == null) filter = new FilterProductItemDto();
             if (paging == null) paging = new PagingDto();
@@ -68,7 +92,7 @@ namespace OrganicShop.BLL.Services
             pageDto.List = pageDto.SetPaging(query, paging).Select(a => _Mapper.Map<ProductItemListDto>(a)).ToList();
             pageDto.Pager = pageDto.SetPager(query, paging);
 
-            return new ServiceResponse<PageDto<ProductItem, ProductItemListDto, long>>(ResponseResult.Success,pageDto);
+            return new ServiceResponse<PageDto<ProductItem, ProductItemListDto, long>>(ResponseResult.Success, pageDto);
         }
 
 
@@ -77,10 +101,17 @@ namespace OrganicShop.BLL.Services
         {
             ProductItem? ProductItem = new();
 
-            ProductItem = await _ProductItemRepository.GetQueryable()
+            long? userCartId = _CartRepository.GetQueryable()
+                .FirstOrDefaultAsync(a => a.UserId.Equals(_AppUserProvider.User.Id)).Result?.UserId;
+
+            if (userCartId == null)
+            {
+                ProductItem = await _ProductItemRepository.GetQueryable()
                 .AsTracking()
                 .Include(a => a.Product)
-                .FirstOrDefaultAsync(a => a.ProductId == create.ProductId && a.CartId == create.CartId);
+                .FirstOrDefaultAsync(a => a.ProductId == create.ProductId && a.CartId == userCartId);
+            }
+
             if (ProductItem != null)
             {
                 ProductItem.Count += create.Count;
@@ -96,22 +127,20 @@ namespace OrganicShop.BLL.Services
                 ProductItem = _Mapper.Map<ProductItem>(create);
                 ProductItem.IsOrdered = false;
                 await _ProductItemRepository.Add(ProductItem, _AppUserProvider.User.Id);
-
-
             }
 
             #region update Cart
 
-            var Cart = await _CartRepository.GetQueryable()
-                .Include(a => a.ProductItems)
-                .AsTracking()
-                .FirstAsync(a => a.Id == create.CartId);
-            Cart.TotalPrice = 0;
-            foreach (var coP in Cart.ProductItems)
-            {
-                Cart.TotalPrice += coP.UpdatedPrice == null ? coP.Price : coP.UpdatedPrice.Value;
-            }
-            await _CartRepository.Update(Cart, _AppUserProvider.User.Id);
+            //var Cart = await _CartRepository.GetQueryable()
+            //    .Include(a => a.ProductItems)
+            //    .AsTracking()
+            //    .FirstAsync(a => a.Id == create.CartId);
+            //Cart.TotalPrice = 0;
+            //foreach (var coP in Cart.ProductItems)
+            //{
+            //    Cart.TotalPrice += coP.UpdatedPrice == null ? coP.Price : coP.UpdatedPrice.Value;
+            //}
+            //await _CartRepository.Update(Cart, _AppUserProvider.User.Id);
 
             #endregion
 
@@ -175,6 +204,95 @@ namespace OrganicShop.BLL.Services
 
             await _ProductItemRepository.SoftDelete(ProductItem, _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessDelete());
+        }
+
+
+
+        public async Task<ServiceResponse<List<ProductItemListDto>>> GetAll(List<CreateProductItemDto> creates)
+        {
+            var productIds = creates.Select(a => a.ProductId);
+            var productsQuery = _ProductRepository.GetQueryable();
+
+            #region includes
+
+            productsQuery = productsQuery
+              .Include(a => a.Pictures)
+              .Include(a => a.Categories)
+                  .ThenInclude(a => a.DiscountCategories)
+                      .ThenInclude(a => a.Discount)
+              .Include(a => a.DiscountProducts)
+                  .ThenInclude(a => a.Discount)
+              .Include(a => a.ProductVarients);
+
+            #endregion
+
+            var products = await productsQuery
+                .Where(a => productIds.Contains(a.Id))
+                .Select(a => a.ToModel())
+                .ToArrayAsync();
+
+            var list = new List<ProductItemListDto>();
+            Product product;
+
+            foreach (var create in creates)
+            {
+                product = products.First(a => a.Id == create.ProductId);
+                list.Add(new ProductItemListDto
+                {
+                    Title = product.Title,
+                    Count = create.Count,
+                    Price = product.Price,
+                    ProductId = product.Id,
+                    DiscountedPrice = product.DiscountedPrice,
+                    MainImageName = product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,
+                    VarientType = create.ProductVarientId > 0 ? product.ProductVarients.First(a => a.Id == create.ProductVarientId).Type.ToStringValue() : null,
+                    VarientValue = create.ProductVarientId > 0 ? product.ProductVarients.First(a => a.Id == create.ProductVarientId).Value : null,
+                });
+            }
+            return new ServiceResponse<List<ProductItemListDto>>(ResponseResult.Success, list);
+        }
+
+
+
+
+        public async Task<ServiceResponse<List<CreateProductItemDto>>> CreateForCookie(CreateProductItemDto create, List<CreateProductItemDto> previousCreates)
+        {
+            var productStock = 0;
+
+            if (create.ProductVarientId > 0)
+            {
+                productStock = _ProductRepository.GetQueryable()
+                .Include(a => a.ProductVarients)
+                .FirstAsync(a => a.Id == create.ProductId).Result.ProductVarients
+                .First(a => a.Id == create.ProductVarientId).Stock;
+            }
+            else
+            {
+                productStock = _ProductRepository.GetQueryable()
+                .Include(a => a.ProductVarients)
+                .FirstAsync(a => a.Id == create.ProductId).Result.Stock;
+            }
+
+            var previousCreate = previousCreates.FirstOrDefault(a => a.ProductId == create.ProductId);
+
+            if (previousCreate == null)
+            {
+                if (create.Count > productStock)
+                {
+                    create.Count = productStock;
+                }
+                previousCreates.Add(create);
+            }
+            else
+            {
+                previousCreate.Count += create.Count;
+                if (previousCreate.Count > productStock)
+                {
+                    previousCreate.Count = productStock;
+                }
+            }
+
+            return new ServiceResponse<List<CreateProductItemDto>>(ResponseResult.Success, previousCreates);
         }
     }
 }

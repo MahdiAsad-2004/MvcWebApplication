@@ -87,8 +87,13 @@
         }
     }
 
-    function SubmitFormByIdWithButton(id){
+    function SubmitFormWithButton(form) { 
+        form.querySelector(`[type='submit']`).click();
+    }
+    
+        function SubmitFormByIdWithButton(id){
         document.getElementById(id).querySelector(`[type='submit']`).click();
     }
+
 
 </script>

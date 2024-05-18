@@ -32,6 +32,7 @@ namespace OrganicShop.Domain.Entities
         public ICollection<Comment> Comments { get; set; }
         public ICollection<ProductVarient> ProductVarients { get; set; }
         public Seller? Seller { get; set; }
+        public ICollection<WishItem> WhishItems { get; set; }
 
     }
 }

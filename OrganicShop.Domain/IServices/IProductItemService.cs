@@ -12,8 +12,12 @@ namespace OrganicShop.Domain.IServices
         Task<ServiceResponse<Empty>> Create(CreateProductItemDto create);
 
         Task<ServiceResponse<Empty>> Update(UpdateProductItemDto update);
-        
+
         Task<ServiceResponse<Empty>> Delete(long id);
-        
+
+        Task<ServiceResponse<List<ProductItemListDto>>> GetAll(List<CreateProductItemDto> creates);
+
+        Task<ServiceResponse<List<CreateProductItemDto>>> CreateForCookie(CreateProductItemDto create, List<CreateProductItemDto> previousCreates);
+
     }
 }

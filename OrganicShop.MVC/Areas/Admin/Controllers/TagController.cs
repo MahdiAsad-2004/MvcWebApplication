@@ -67,7 +67,7 @@ namespace OrganicShop.Mvc.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateTagDto? create)
+        public async Task<IActionResult> Create(CreateWishItemDto? create)
         {
             var response = await _TagService.Create(create);
             if (response.Result == ResponseResult.Success)

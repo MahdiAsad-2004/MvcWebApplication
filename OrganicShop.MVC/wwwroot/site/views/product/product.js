@@ -1,66 +1,63 @@
 ﻿
 let ProductVarientRadios = Array.from(document.getElementsByClassName('product-varient-radio'));
 
-let ProductPriceContainer = document.getElementById('product-price-container');
-let ProductDiscountDiv = document.getElementById('product-discount-div');
-let ProductHasDiscount = false;
-let DiscountIsFix = false;
-let DiscountFixValue = 0;
-let DiscountPercent = 0;
-if (ProductDiscountDiv) {
-    ProductHasDiscount = true;
-    DiscountIsFix = ProductDiscountDiv.querySelector('#product-discount-isFix').value.toLowerCase() == 'ture';
-    DiscountFixValue = Number(ProductDiscountDiv.querySelector('#product-discount-fixVaue').value);
-    DiscountPercent = Number(ProductDiscountDiv.querySelector('#product-discount-percent').value);
-}
-
-let MainPrice = Number(document.getElementById('product-main-price').value);
-let DiscountedPrice = 0;
-let PreviousPrice = 0;
-let DiscountedPriceStr = '';
-
-
-let productVarientPrice = 0;
 let productVarientStock = 0;
+let productVarientId = 0;
 
 ProductVarientRadios.forEach(varientRadio => {
     varientRadio.addEventListener('change', a => {
-        productVarientPrice = Number(a.getAttribute(' data-product-varient-price').value);
-        productVarientStock = Number(a.getAttribute(' data-product-varient-stock').value);
-        if (productVarientPrice) {
-            ChangeProductPriceByVarient(productVarientPrice);
-        }
+        productVarientStock = Number(a.getAttribute('data-product-varient-stock').value);
+        productVarientId = Number(a.getAttribute('data-product-varient-id').value);
         if (productVarientStock) {
-
+            ProductItemCountInput.max = productVarientStock;
+            if (ProductItemCountInput.value > ProductItemCountInput.max) {
+                ProductItemCountInput.value = ProductItemCountInput.max;
+            }
         }
+        ProductItemVarientIdInput.value = productVarientId;
     })
 })
 
 
-function ChangeProductPriceByVarient(price) {
-        var priceStr = price.formatMoney(',');
-    if (ProductHasDiscount) {
-        if (DiscountIsFix) {
-            DiscountedPriceStr = Math.floor(price - DiscountFixValue).formatMoney(',');
-        }
-        else {
-            DiscountedPriceStr = Math.floor(price - (price * DiscountPercent)).formatMoney(',');
-        }
 
-        ProductPriceContainer.innerHTML =
-            `تومان ${DiscountedPriceStr}
-            <del class="text-content">${priceStr}</del>
-            <span class="offer theme-color">
-                (${DiscountIsFix ? DiscountFixValue.formatMoney(',') : `${DiscountPercent}%`} تخفیف)
-            </span>`;
+
+const ProductItemVarientIdInput = document.getElementById('createProductItem.ProductVarientId');
+const ProductItemCountInput = document.getElementsByName('createproductItem.Count')[0];
+const ProductCartCountPlus = document.getElementById('product-cart-count-plus');
+const ProductCartCountMinus = document.getElementById('product-cart-count-minus');
+
+var productCartCount = 0;
+
+ProductCartCountMinus.addEventListener('click', () => {
+    productCartCount = Number(ProductItemCountInput.value) - 1;
+    if (productCartCount >= 0) {
+        ProductItemCountInput.value = productCartCount; 
+    }
+});
+
+ProductCartCountPlus.addEventListener('click', () => {
+    productCartCount = Number(ProductItemCountInput.value) + 1;
+    if (productCartCount <= ProductItemCountInput.max) {
+        ProductItemCountInput.value = productCartCount;
+    }
+});
+
+
+const AddToCartForm = document.getElementById('add-to-cart-form');
+const AddToCartButton = document.getElementById('add-to-cart-button');
+
+
+AddToCartButton.addEventListener('click', (e) => {
+    if (ProductItemCountInput.value > 0 && ProductItemCountInput.value < ProductItemCountInput.max) {
+        SubmitFormWithButton(AddToCartForm);
     }
     else {
-
-        ProductPriceContainer.innerHTML = `تومان ${priceStr}`;
+        Toast('خطا !' , 'تعداد محصول انتخاب شده معتبر نیست' , 1 , 2000);
     }
-}
+})
 
 
-function CalcDiscountedPrice() {
 
-}
+
+
+

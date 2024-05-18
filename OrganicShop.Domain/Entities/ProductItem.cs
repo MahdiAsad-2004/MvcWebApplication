@@ -13,6 +13,7 @@ namespace OrganicShop.Domain.Entities
     {
         public string Title { get; set; }
         public long ProductId { get; set; }
+        public long? ProductVarientId { get; set; }
         public int Count { get; set; }
         public int Price { get; set; }
         public int? UpdatedPrice { get; set; }

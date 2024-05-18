@@ -13,6 +13,7 @@ using OrganicShop.Domain.Entities.Relations;
 using OrganicShop.Domain.Entities.Base;
 using OrganicShop.Domain.Enums;
 using OrganicShop.BLL.Extensions;
+using OrganicShop.Domain.Dtos.TagDtos;
 
 namespace OrganicShop.BLL.Services
 {
@@ -22,17 +23,20 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly IUserRepository _userRepository;
+        private readonly IWishItemRepository _WishItemRepository;
 
-        public UserService(IApplicationUserProvider provider,IMapper mapper,IUserRepository userRepository) : base(provider)
+        public UserService(IApplicationUserProvider provider, IMapper mapper, IUserRepository userRepository,
+            IWishItemRepository wishItemRepository) : base(provider)
         {
             _Mapper = mapper;
             _userRepository = userRepository;
+            _WishItemRepository = wishItemRepository;
         }
 
         #endregion
 
 
-        
+
         public async Task<ServiceResponse<PageDto<User, UserListDto, long>>> GetAll(FilterUserDto? filter = null,PagingDto? paging = null)
         {
             var query = _userRepository.GetQueryable()
@@ -185,5 +189,15 @@ namespace OrganicShop.BLL.Services
             phoneNumber = phoneNumber.Trim().ToLower();
             return Task.FromResult(_userRepository.GetQueryable().Any(a => a.PhoneNumber == phoneNumber));
         }
+
+
+
+        public async Task<ServiceResponse<Empty>> CreateWish(CreateWishItemDto create)
+        {
+            await _WishItemRepository.Add(_Mapper.Map<WishItem>(create) , _AppUserProvider.User.Id));
+            return new ServiceResponse<Empty>(ResponseResult.Success, null);
+        }
+
+
     }
 }

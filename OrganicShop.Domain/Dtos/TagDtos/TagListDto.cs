@@ -2,7 +2,7 @@
 
 namespace OrganicShop.Domain.Dtos.TagDtos
 {
-    public class TagListDto : BaseListDto<int>
+    public class ShishItemListDto : BaseListDto<int>
     {
         public string Title { get; set; }
     }

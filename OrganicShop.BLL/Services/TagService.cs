@@ -33,7 +33,7 @@ namespace OrganicShop.BLL.Services
 
 
 
-        public async Task<ServiceResponse<PageDto<Tag, TagListDto, int>>> GetAll(FilterTagDto? filter = null,PagingDto? paging = null)
+        public async Task<ServiceResponse<PageDto<Tag, ShishItemListDto, int>>> GetAll(FilterTagDto? filter = null,PagingDto? paging = null)
         {
             var query = _TagRepository.GetQueryable();
 
@@ -55,11 +55,11 @@ namespace OrganicShop.BLL.Services
 
             #endregion
 
-            PageDto<Tag, TagListDto,int> pageDto = new();
-            pageDto.List = pageDto.SetPaging(query , paging).Select(a => _Mapper.Map<TagListDto>(a)).ToList();
+            PageDto<Tag, ShishItemListDto,int> pageDto = new();
+            pageDto.List = pageDto.SetPaging(query , paging).Select(a => _Mapper.Map<ShishItemListDto>(a)).ToList();
             pageDto.Pager = pageDto.SetPager(query, paging);
 
-            return new ServiceResponse<PageDto<Tag, TagListDto, int>>(ResponseResult.Success,pageDto);
+            return new ServiceResponse<PageDto<Tag, ShishItemListDto, int>>(ResponseResult.Success,pageDto);
         }
 
 
@@ -77,7 +77,7 @@ namespace OrganicShop.BLL.Services
         }
 
 
-        public async Task<ServiceResponse<Empty>> Create(CreateTagDto create)
+        public async Task<ServiceResponse<Empty>> Create(CreateWishItemDto create)
         {
             Tag Tag = _Mapper.Map<Tag>(create);
 

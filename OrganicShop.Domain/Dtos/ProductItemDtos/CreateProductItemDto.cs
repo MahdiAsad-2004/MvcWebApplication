@@ -5,7 +5,7 @@ namespace OrganicShop.Domain.Dtos.ProductItemDtos
     public class CreateProductItemDto : BaseDto
     {
         public long ProductId { get; set; }
-        public long CartId { get; set; }
+        public long? ProductVarientId { get; set; }
         public int Count { get; set; }
     }
 

@@ -11,7 +11,6 @@ namespace OrganicShop.Domain.Entities
         public VarientType Type { get; set; }
         public string Value { get; set; }
         public int Stock { get; set; }
-        public int? Price { get; set; }
         public long ProductId { get; set; }
 
 
