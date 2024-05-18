@@ -10,6 +10,7 @@ using OrganicShop.Domain.Dtos.Page;
 using OrganicShop.Domain.Dtos.ProductDtos;
 using OrganicShop.Domain.Dtos.ProductItemDtos;
 using OrganicShop.Domain.Dtos.TagDtos;
+using OrganicShop.Domain.Dtos.WishItemDtos;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Enums;
 using OrganicShop.Domain.Enums.Response;
@@ -149,11 +150,11 @@ namespace OrganicShop.Mvc.Controllers
         }
 
 
-        [Authorize]
-        public async Task<IActionResult> AddToWishList(CreateWishItemDto createWishItem)
-        {
-            var response = 
-        }
+        //[Authorize]
+        //public async Task<IActionResult> AddToWishList(CreateWishItemDto createWishItem)
+        //{
+        //    var response = 
+        //}
 
 
 

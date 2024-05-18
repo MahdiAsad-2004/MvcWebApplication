@@ -14,6 +14,7 @@ using OrganicShop.Domain.Entities.Base;
 using OrganicShop.Domain.Enums;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.Domain.Dtos.TagDtos;
+using OrganicShop.Domain.Dtos.WishItemDtos;
 
 namespace OrganicShop.BLL.Services
 {
@@ -194,7 +195,7 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> CreateWish(CreateWishItemDto create)
         {
-            await _WishItemRepository.Add(_Mapper.Map<WishItem>(create) , _AppUserProvider.User.Id));
+            await _WishItemRepository.Add(_Mapper.Map<WishItem>(create) , _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, null);
         }
 
