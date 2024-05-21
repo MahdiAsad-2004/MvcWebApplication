@@ -16,7 +16,7 @@ namespace OrganicShop.Domain.Entities
         public string PostCode { get; set; }
         public string Phone { get; set; }
         public long? UserId { get; set; }
-        public long? SellerId { get; set; }
+        public int? SellerId { get; set; }
 
 
 

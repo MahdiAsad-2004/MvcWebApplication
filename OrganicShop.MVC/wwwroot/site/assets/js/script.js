@@ -450,6 +450,21 @@ $(".bg-overlay").click(function () {
 
 
 
+function GoPage(pageNumber, formId) {
+    if (pageNumber && pageNumber > 0) {
+        document.getElementById('pageNumber-input').ariaValueMax = pageNumber;
+        SubmitFormByIdWithButton(formId);
+    }
+}
+
+function SubmitFormWithButton(form) {
+    form.querySelector(`[type='submit']`).click();
+}
+
+function SubmitFormByIdWithButton(id) {
+    document.getElementById(id).querySelector(`[type='submit']`).click();
+}
+
 
 Number.prototype.formatMoney = function (s, type) {
     var n = 0;
@@ -467,3 +482,56 @@ Number.prototype.formatMoney = function (s, type) {
 };
 
 //https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-strings
+
+
+
+let AddToCartForm = document.getElementById('add-to-cart-form');
+function AddProductToCart(productId, productVarientId, count) {
+    if (productId > 0 && productVarientId > 0 && count > 0) {
+        AddToCartForm.querySelector('#add-to-cart-form-productId').value = productId;
+        AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
+        AddToCartForm.querySelector('#add-to-cart-form-count').value = count;
+        SubmitFormWithButton(AddToCartForm);
+    }
+}
+
+
+
+//preview product modal add to cart
+
+const PreviewProductVarientSelect = document.getElementById('preview-product-varient-select');
+const PreviewProductAddToCartButton = document.getElementById('preview-product-add-to-cart-button');
+if (PreviewProductVarientSelect) {
+    PreviewProductVarientSelect.addEventListener('change', (e) => {
+        var option = PreviewProductVarientSelect.options[PreviewProductVarientSelect.selectedIndex];
+        if (option.disabled == false) {
+            PreviewProductAddToCartButton.onclick = (e) => {
+                AddProductToCart(PreviewProductAddToCartButton.getAttribute('data-product-id'), option.value , 1);
+            }
+        }
+    })
+}
+
+
+
+
+
+//preview product modal request
+
+const PreviewProductModalRequestForm = document.getElementById('preview-product-modal-request-form');
+const PreviewProductModalRequestInputId = PreviewProductModalRequestForm.querySelector("input [name = 'id']");
+const PreviewProductModalOpenButton = document.getElementById('preview-product-modal-open-button');
+function PreviewProductModalRequest(id) {
+    PreviewProductModalRequestInputId.value = id;
+    SubmitFormWithButton(PreviewProductModalRequestForm);
+    PreviewProductModalOpenButton.click();
+}
+
+
+
+
+
+
+
+
+

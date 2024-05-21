@@ -1,0 +1,94 @@
+﻿@using OrganicShop.Domain.Dtos.ProductDtos
+@using OrganicShop.Domain.Enums.EnumValues
+@model ProductSummaryDto
+
+@* <div id="preview-product-modal-container">
+
+</div> *@
+
+@if (Model != null)
+{
+    bool IsAvalable = Model.Stock > 0;
+    Model.Varients = Model.Varients.OrderByDescending(a => a.Stock).ToArray();
+
+    <div class="modal fade theme-modal view-modal show" id="preview-product-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    style="display: block; padding-right: 0px;" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header p-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-sm-4 g-2">
+                        <div class="col-lg-6">
+                            <div class="slider-image">
+                                <img src="" class="img-fluid blur-up lazyloaded" alt="">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="right-sidebar-modal">
+                                <h4 class="title-name">کیک خامه ای سفید رنگ با روکش قرم 500 گرمی</h4>
+                                <h4 class="price">36.000 تومان</h4>
+                                <div class="product-rating">
+
+                                    @await Html.PartialAsync("_RatingPartial", Model.CommentsRate)
+
+                                    <span class="ms-2">@Model.CommentsCount بازخورد</span>
+                                </div>
+
+                                <div class="product-detail">
+                                    <h4>جزئیات محصول :</h4>
+                                    <p>@Model.ShortDescription</p>
+                                </div>
+
+                                <ul class="brand-list">
+                                    @foreach (var property in Model.Properties)
+                                    {
+                                        <li>
+                                            <div class="brand-box">
+                                                <h5>@property.Title :</h5>
+                                                <h6>@property.Value</h6>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+
+                                @if (Model.Varients.Any())
+                                {
+                                    <div class="select-size">
+                                        <h4>اندازه کیک :</h4>
+                                        <select id="preview-product-varient-select" class="form-select select-form-size" disabled="@(!IsAvalable)">
+                                            <option selected="">انتخاب @(Model.Varients[0].Type.ToStringValue())</option>
+                                            @foreach (var productVarient in Model.Varients)
+                                            {
+                                                <option value="@productVarient.Id" disabled="@(productVarient.Stock < 1)">@productVarient.Value</option>
+                                            }
+                                        </select>
+                                    </div>
+                                }
+
+                                <div class="modal-button">
+                                    <button id="preview-product-add-to-cart-button" data-product-id="@Model.Id" class="btn btn-md add-cart-button icon ml-2"
+                                            disabled="@(!IsAvalable)"
+                                            onclick="AddProductToCart('@Model.Id' , '@(Model.Varients.Any() ? Model.Varients[0].Id : 0)' , '1')">
+                                        افزودن به سبد خرید
+                                    </button>
+
+                                    <a class="btn theme-bg-color view-button icon text-white fw-bold btn-md" href="/Product/@Model.Barcode">
+                                        نمایش جزئیات بیشتر
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="preview-product-modal-open-button" data-bs-toggle="modal" data-bs-target="#preview-product-modal" hidden>
+        </button>
+    </div>
+}
+

@@ -16,7 +16,7 @@ namespace OrganicShop.Domain.Entities
         public ICollection<Product> Products { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public Address Address { get; set; }
-        public Picture Picture { get; set; }
+        public Picture? Picture { get; set; }
         public User User { get; set; }
     
     }

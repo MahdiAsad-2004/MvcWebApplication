@@ -5,6 +5,7 @@ using OrganicShop.BLL.Extensions;
 using OrganicShop.BLL.Providers;
 using OrganicShop.BLL.Utils;
 using OrganicShop.Domain.Dtos.CategoryDtos;
+using OrganicShop.Domain.Dtos.CommentDtos;
 using OrganicShop.Domain.Dtos.NewsLetterMemberDtos;
 using OrganicShop.Domain.Dtos.Page;
 using OrganicShop.Domain.Dtos.ProductDtos;
@@ -29,14 +30,16 @@ namespace OrganicShop.Mvc.Controllers
         private readonly IProductService _ProductService;
         private readonly ICategoryService _CategoryService;
         private readonly IProductItemService _ProductItemService;
+        private readonly ICommentService _CommentService;
         private readonly AesKeys _AesKeys;
         public ProductController(IProductService productService, ICategoryService categoryService,
-            IProductItemService productItemService, IOptions<AesKeys> options)
+            IProductItemService productItemService, IOptions<AesKeys> options, ICommentService commentService)
         {
             _ProductService = productService;
             _CategoryService = categoryService;
             _ProductItemService = productItemService;
             _AesKeys = options.Value;
+            _CommentService = commentService;
         }
 
         #endregion
@@ -104,50 +107,51 @@ namespace OrganicShop.Mvc.Controllers
             var response = await _ProductService.GetDetail(barcode: barcode);
 
             if (response.Result == ResponseResult.Success)
+            {
+                ViewData["SimilarProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { CategoryId = response.Data.CategoryId })).Data!.List;
                 return View("Product", response.Data);
+            }
 
             return Redirect("/Error/404");
         }
 
 
 
-        public async Task<IActionResult> AddToCart(CreateProductItemDto createProductItem)
+        public async Task<IActionResult> Preview(long id)
         {
-            var successToast = new Toast(ToastType.Success, "محصول با موفقیت به سبد خربد افزوده شد");
-            if (User.Identity.IsAuthenticated)
+            if (id < 1)
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "محصول مورد نطر یافت نشد"));
+
+            var reponse = await _ProductService.GetAllSummary(new FilterProductDto { Id = id });
+            ProductSummaryDto model;
+            if (reponse.Result == ResponseResult.Success)
             {
-                List<CreateProductItemDto> previousCreates = new();
-
-                #region Get Cookie ProductItems
-
-                var CookieCartItemsStrCoded = Request.Cookies["OrganocShopUnknownUserCartItems"];
-                if (string.IsNullOrEmpty(CookieCartItemsStrCoded) == false)
+                model = reponse.Data.List[0];
+                if (model != null)
                 {
-                    var CookieCartItemsStr = AesOperation.Decrypt(CookieCartItemsStrCoded, _AesKeys.Cookie);
-                    if (string.IsNullOrEmpty(CookieCartItemsStr) == false)
-                    {
-                        previousCreates = JsonSerializer.Deserialize<List<CreateProductItemDto>>(CookieCartItemsStr) ?? new List<CreateProductItemDto>();
-                    }
+                    return _ClientHandleResult.Partial(HttpContext, PartialView("_PreviewProductModal", model));
                 }
-
-                #endregion
-
-                var response = await _ProductItemService.CreateForCookie(createProductItem, previousCreates);
-
-                var jsonData = JsonSerializer.Serialize(response.Data);
-                Response.Cookies.Append("OrganocShopUnknownUserCartItems", AesOperation.Encrypt(jsonData, _AesKeys.Cookie));
-                return _ClientHandleResult.Toast(HttpContext, successToast);
             }
-            else
-            {
-                var response = await _ProductItemService.Create(createProductItem);
-                if (response.Result == ResponseResult.Success)
-                {
-                    return _ClientHandleResult.Toast(HttpContext, successToast);
-                }
-                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
-            }
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "محصول مورد نطر یافت نشد"));
         }
+
+
+
+        [Authorize]
+        public async Task<IActionResult> AddComment(CreateCommentUserDto createCommentUser)
+        {
+            var response = await _CommentService.Create(createForUser: createCommentUser);
+            if (response.Result == ResponseResult.Success)
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, "نطر شما با موفقیت ثبت شد"));
+
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
+        }
+
+
+
+
+
+
 
 
         //[Authorize]

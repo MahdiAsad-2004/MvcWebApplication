@@ -20,6 +20,7 @@ namespace OrganicShop.BLL.Mappers
                 .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
                 .ForMember(m => m.IsActive, a => a.MapFrom(b => b.BaseEntity.IsActive));
 
+
             CreateMap<Product, ProductSummaryDto>()
                .ForMember(m => m.DiscountedPrice, a => a.MapFrom(b => b.DiscountedPrice))
                .ForMember(m => m.CategoryTitle, a => a.MapFrom(b => b.Categories.Last().Title))
@@ -30,18 +31,30 @@ namespace OrganicShop.BLL.Mappers
                     ((float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Sum(c => c.Rate) / 
                     (float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()) : 0))
                .ForMember(m => m.CommentsCount, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()))
-               .ForMember(m => m.PropertiesDictionary, a => a.MapFrom(b => b.Properties.ToDictionary(p => p.Title , p => p.Value)))
-               .ForMember(m => m.IsActive, a => a.MapFrom(b => b.BaseEntity.IsActive));
+               .ForMember(m => m.Properties, a => a.MapFrom(b => b.Properties.OrderBy(p => p.Priority).Take(4).ToArray()))
+               .ForMember(m => m.IsActive, a => a.MapFrom(b => b.BaseEntity.IsActive))
+               .ForMember(m => m.Varients, a => a.MapFrom(b => b.ProductVarients.ToArray()));
 
 
             CreateMap<Product, ProductDetailDto>()
                .ForMember(m => m.DiscountedPrice, a => a.MapFrom(b => b.DiscountedPrice))
                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
                .ForMember(m => m.ImageNames, a => a.MapFrom(b => b.Pictures.Select(p => p.Name).ToArray()))
-               .ForMember(m => m.PropertiesDictionary, a => a.MapFrom(b => b.Properties.ToDictionary(p => p.Title, p => p.Value)))
+               .ForMember(m => m.Properties, a => a.MapFrom(b => b.Properties.OrderBy(p => p.Priority).ToArray()))
                .ForMember(m => m.Comments, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Select(c => c.ToListDto()).ToList()))
                .ForMember(m => m.Discount, a => a.MapFrom(b => b.GetDefaultDiscount()))
-               .ForMember(m => m.Varients, a => a.MapFrom(b => b.ProductVarients.ToList()));
+               .ForMember(m => m.CategoryId, a => a.MapFrom(b => b.Categories.First().Id))
+               .ForMember(m => m.SellerInfo, a => a.MapFrom(b => b.Seller == null ? default(object) : 
+                    ValueTuple.Create(
+                        b.Seller.Title,
+                        b.Seller.Description,
+                        b.Seller.Picture != null ? b.Seller.Picture.Name:PathExtensions.SellerDefaultImage,
+                        b.Seller.Address.Text,
+                        b.Seller.Address.Phone,
+                        b.Seller.Comments.Count,
+                        b.Seller.Comments.Any() ? (float)b.Seller.Comments.Sum(a => a.Rate) / (float)b.Seller.Comments.Count() : 0
+                        )))
+               .ForMember(m => m.Varients, a => a.MapFrom(b => b.ProductVarients.ToArray()));
 
 
             CreateMap<CreateProductDto, Product>()
@@ -81,8 +94,8 @@ namespace OrganicShop.BLL.Mappers
             return new Product
             {
                 BaseEntity = product.BaseEntity,
-                Categories = product.Categories,
-                Comments = product.Comments,
+                Categories = product.Categories != null ? product.Categories!.OrderByDescending(a => a.Id).ToList() : product.Categories,
+                Comments = product.Comments/*.Where(a => a.Status == CommentStatus.Accepted).ToList()*/,
                 Description = product.Description,
                 DiscountProducts = product.DiscountProducts,
                 Id = product.Id,

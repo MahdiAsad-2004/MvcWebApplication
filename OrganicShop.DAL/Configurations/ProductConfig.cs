@@ -25,6 +25,7 @@ namespace OrganicShop.DAL.Configurations
             builder.HasMany(a => a.Comments).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
             builder.HasMany(a => a.ProductVarients).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
             builder.HasOne(a => a.Seller).WithMany(a => a.Products).HasForeignKey(a => a.SellerId).OnDelete(DeleteBehavior.SetNull);
+            builder.HasMany(a => a.WishItems).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
 
 
 

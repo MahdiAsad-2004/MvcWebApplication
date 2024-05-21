@@ -1,11 +1,15 @@
 ﻿@using OrganicShop.BLL.Extensions
 @using OrganicShop.Domain.Dtos.ProductDtos
+@using OrganicShop.Domain.Entities
 @using OrganicShop.Domain.Enums.EnumValues
 @model ProductDetailDto
 @{
-    Model.Varients = Model.Varients.OrderByDescending(a => a.Stock).ToList();
+    var similarProducts = ViewData["SimilarProducts"] as List<ProductSummaryDto>;
+    Model.Varients = Model.Varients.OrderByDescending(a => a.Stock).ToArray();
     float commentsRatingAverage = Model.Comments.Any() ? (float)Model.Comments.Sum(a => a.Rate) / (float)Model.Comments.Count : 0;
+    float commentsCount = Model.Comments.Count;
     var firstProductVarient = Model.Varients[0];
+    var IsAvailable = Model.Stock > 0;
 }
 
 
@@ -120,7 +124,7 @@
 
                                     @await Html.PartialAsync("_ProductRating", commentsRatingAverage)
 
-                                    <span>(@(commentsRatingAverage.ToString("0.0"))) بازخورد</span>
+                                    <span>(@(commentsCount.ToString("0.0"))) بازخورد</span>
                                 </div>
                             </div>
 
@@ -130,39 +134,56 @@
 
                             @if (Model.Varients.Any())
                             {
-                                <div class="product-package">
-                                    <div class="product-title">
-                                        <h4>@Model.Varients[0].Type.ToStringValue()</h4>
+                                @if (IsAvailable)
+                                {
+                                    <div class="product-package">
+                                        <div class="product-title">
+                                            <h4>@Model.Varients[0].Type.ToStringValue()</h4>
+                                        </div>
+
+                                        <ul class="rectangle select-package">
+
+                                            @if (firstProductVarient != null)
+                                            {
+                                                <li class="form-check">
+                                                    <input class="form-check-input product-varient-radio" type="radio" disabled="@(firstProductVarient.Stock < 1)" checked
+                                                           data-product-varient-id="@firstProductVarient.Id" data-product-varient-stock="@firstProductVarient.Stock">
+                                                    <label class="form-check-label" for="small">
+                                                        <span>@firstProductVarient.Value</span>
+                                                    </label>
+                                                </li>
+                                            }
+                                            @foreach (var productVarient in Model.Varients.Skip(1))
+                                            {
+                                                <li class="form-check">
+                                                    <input class="form-check-input product-varient-radio" type="radio" disabled="@(productVarient.Stock < 1)"
+                                                           data-product-varient-id="@productVarient.Id" data-product-varient-stock="@productVarient.Stock">
+                                                    <label class="form-check-label" for="small">
+                                                        <span>@productVarient.Value</span>
+                                                    </label>
+                                                </li>
+                                            }
+
+                                        </ul>
                                     </div>
-
-                                    <ul class="rectangle select-package">
-
-                                        @if (firstProductVarient != null)
-                                        {
-                                            <li class="form-check">
-                                                <input class="form-check-input product-varient-radio" type="radio" checked
-                                                       data-product-varient-id="@firstProductVarient.Id" data-product-varient-stock="@firstProductVarient.Stock">
-                                                <label class="form-check-label" for="small">
-                                                    <span>@firstProductVarient.Value</span>
-                                                </label>
-                                            </li>
-                                        }
-                                        @foreach (var productVarient in Model.Varients.Skip(1))
-                                        {
-                                            <li class="form-check">
-                                                <input class="form-check-input product-varient-radio" type="radio"
-                                                       data-product-varient-id="@productVarient.Id" data-product-varient-stock="@productVarient.Stock">
-                                                <label class="form-check-label" for="small">
-                                                    <span>@productVarient.Value</span>
-                                                </label>
-                                            </li>
-                                        }
-
-                                    </ul>
-                                </div>
+                                }
+                                else
+                                {
+                                    @foreach (var productVarient in Model.Varients)
+                                    {
+                                        <li class="form-check disabled">
+                                            <input class="form-check-input product-varient-radio" type="radio" disabled
+                                                   data-product-varient-id="@productVarient.Id" data-product-varient-stock="@productVarient.Stock">
+                                            <label class="form-check-label" for="small">
+                                                <span>@productVarient.Value</span>
+                                            </label>
+                                        </li>
+                                    }
+                                }
                             }
 
-                            @if (Model.Discount.StartDate > DateTime.Now)
+
+                            @if (Model.Discount.StartDate > DateTime.Now && Model.Discount.EndDate > DateTime.Now && IsAvailable == true)
                             {
                                 <div class="time deal-timer product-deal-timer mx-md-0 mx-auto" id="clockdiv-1"
                                      data-hours="1" data-minutes="2" data-seconds="3" data-deadline="@(Model.Discount.EndDate.Value)">
@@ -208,17 +229,18 @@
 
 
                             <div class="note-box product-package">
-                                <form id="add-to-cart-form" class="cart_qty qty-box product-qty" action="/Product/AddToCart" 
-                                method="post" onsubmit="FetchRequest(event)">
+                                <form id="add-product-to-cart-form" class="cart_qty qty-box product-qty" action="/Product/AddToCart"
+                                      method="post" onsubmit="FetchRequest(event)">
                                     <input name="createProductItem.ProductId" value="@Model.Id" hidden readonly />
-                                    <input name="createProductItem.ProductVarientId" value="@Model.Id" hidden readonly />
+                                    <input name="createProductItem.ProductVarientId" value="@(firstProductVarient != null ? firstProductVarient.Id : null)" hidden readonly />
                                     <div class="input-group">
                                         <div class="input-group">
-                                            <button type="button" id="product-cart-count-minus">
+                                            <button type="button" id="product-cart-count-minus" disabled="@(!IsAvailable)">
                                                 <i class="fa fa-minus"></i>
                                             </button>
-                                            <input class="form-control" name="createProductItem.Count" type="text" value="1" max="@firstProductVarient.Stock">
-                                            <button type="button" id="product-cart-count-plus">
+                                            <input class="form-control" name="createProductItem.Count" type="text" value="1"
+                                                   max="@(firstProductVarient == null ? Model.Stock : firstProductVarient.Stock)">
+                                            <button type="button" id="product-cart-count-plus" disabled="@(!IsAvailable)">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
@@ -226,7 +248,7 @@
                                     <button type="submit" hidden></button>
                                 </form>
 
-                                <button type="button" id="add-to-cart-button" class="btn btn-md bg-dark cart-button text-white w-100">
+                                <button type="button" id="add-product-to-cart-button" class="btn btn-md bg-dark cart-button text-white w-100" disabled="@(!IsAvailable)">
                                     افزودن به سبد خرید
                                 </button>
                             </div>
@@ -244,19 +266,12 @@
                             </div>
 
                             <div class="pickup-box">
-                                <div class="product-title">
-                                    <h4>اطلاعات فروشگاه</h4>
-                                </div>
-
-                                <div class="pickup-detail">
-                                    <h4 class="text-content w-100">کیک آب نبات چوبی کیک شکلاتی کیک شکلاتی دسر عناب. شیرینی کوتاه آلو شکر پودر دسر کوکی براونی شیرین.</h4>
-                                </div>
-
                                 <div class="product-info">
                                     <ul class="product-info-list product-info-list-2">
-                                        <li>نوع : <a href="javascript:void(0)">میوه</a></li>
-                                        <li>تاریخ : <a href="javascript:void(0)">1403/02/02</a></li>
-                                        <li>موجودی : <a href="javascript:void(0)">5 </a></li>
+                                        @foreach (var property in Model.Properties)
+                                        {
+                                            <li>@property.Title : <a href="javascript:void(0)">@property.Value</a></li>
+                                        }
                                     </ul>
                                 </div>
                             </div>
@@ -303,71 +318,55 @@
                 </div>
             </div>
 
-            <div class="col-xxl-3 col-xl-4 col-lg-5 d-none d-lg-block wow fadeInUp">
-                <div class="right-sidebar-box">
-                    <div class="vendor-box">
-                        <div class="vendor-contain">
-                            <div class="vendor-image">
-                                <img src="../assets/images/product/vendor.png" class="blur-up lazyload" alt="">
-                            </div>
-
-                            <div class="vendor-name">
-                                <h5 class="fw-500">فارس کد</h5>
-
-                                <div class="product-rating mt-1">
-                                    <ul class="rating">
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                    </ul>
-                                    <span>(36 دیدگاه)</span>
+            @if (Model.SellerInfo != null)
+            {
+                <div class="col-xxl-3 col-xl-4 col-lg-5 d-none d-lg-block wow fadeInUp">
+                    <div class="right-sidebar-box">
+                        <div class="vendor-box">
+                            <div class="vendor-contain">
+                                <div class="vendor-image">
+                                    <img src="~/media/images/seller/@Model.SellerInfo.Value.ImageName" class="blur-up lazyload" alt="">
                                 </div>
 
+                                <div class="vendor-name">
+                                    <h5 class="fw-500">@Model.SellerInfo.Value.Title</h5>
+
+
+                                    <div class="product-rating mt-1">
+                                        @await Html.PartialAsync("_RatingPartial", Model.SellerInfo.Value.CommentsRate)
+
+                                        <span>(@(Model.SellerInfo.Value.CommentsCount) دیدگاه)</span>
+                                    </div>
+
+                                </div>
                             </div>
-                        </div>
 
-                        <p class="vendor-detail">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است.</p>
+                            <p class="vendor-detail">@Model.SellerInfo.Value.Description</p>
 
-                        <div class="vendor-list">
-                            <ul>
-                                <li>
-                                    <div class="address-contact">
-                                        <i data-feather="map-pin"></i>
-                                        <h5>آدرس : <span class="text-content">تهران برج میلاد</span></h5>
-                                    </div>
-                                </li>
+                            <div class="vendor-list">
+                                <ul>
+                                    <li>
+                                        <div class="address-contact">
+                                            <i data-feather="map-pin"></i>
+                                            <h5>آدرس : <span class="text-content">@Model.SellerInfo.Value.AddressText</span></h5>
+                                        </div>
+                                    </li>
 
-                                <li>
-                                    <div class="address-contact">
-                                        <i data-feather="headphones"></i>
-                                        <h5>شماره تماس : <span class="text-content">(+1)-123-456-789</span></h5>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="pt-25">
-                        <div class="hot-line-number">
-                            <h5>برقراری اتباط با تولید کننده ::</h5>
-                            <h6>شنبه - جمعه: 07:00 صبح - 08 عصر</h6>
-                            <h3>(+1) 123 456 789</h3>
+                                    <li>
+                                        <div class="address-contact">
+                                            <i data-feather="headphones"></i>
+                                            <h5>شماره تماس : <span class="text-content">@Model.SellerInfo.Value.Phone</span></h5>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
+
+
+
         </div>
     </div>
 </section>
@@ -389,13 +388,6 @@
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="info-tab" data-bs-toggle="tab" data-bs-target="#info"
                                     type="button" role="tab">
-                                اطلاعات محصول
-                            </button>
-                        </li>
-
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="care-tab" data-bs-toggle="tab" data-bs-target="#care"
-                                    type="button" role="tab">
                                 ویژگی محصول
                             </button>
                         </li>
@@ -411,69 +403,7 @@
                     <div class="tab-content custom-tab" id="myTabContent">
                         <div class="tab-pane fade show active" id="description" role="tabpanel">
                             <div class="product-description">
-                                <div class="nav-desh">
-                                    <p>
-                                        کیک هویج ژله ای کیک بیسکویت جو دوسر کیک گومی خرس تارت. پودینگ کیک هویج
-                                        قطره لیمو خرس شیرین گومی. شکلات تارت کیک شکلاتی کیک کیک دونات شیرین بیان آلو
-                                        شکر. لوبیا ژله تیرامیسو کارامل عناب بیسکویت شیرین بیان شکلات. پودینگ تافی
-                                        عناب کیک جو دوسر رول شیرین. رویه حلوای براونی رول کروسان دسر قطره لیمو.
-                                        آب نبات پودر گل ختمی، کنجد، ژله لوبیا، نبات، پای شیرینی زنجبیلی.
-                                    </p>
-                                </div>
-
-                                <div class="nav-desh">
-                                    <div class="desh-title">
-                                        <h5>اورگانیک :</h5>
-                                    </div>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از
-                                        طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                        و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای
-                                        کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه
-                                        و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی
-                                        الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان
-                                        امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به
-                                        پایان رسد وزمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی
-                                        سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
-                                    </p>
-                                </div>
-
-                                <div class="banner-contain nav-desh">
-                                    <img src="../assets/images/vegetable/banner/14.jpg"
-                                         class="bg-img blur-up lazyload" alt="">
-                                    <div class="banner-details p-center banner-b-space w-100 text-center">
-                                        <div>
-                                            <h6 class="ls-expanded theme-color mb-sm-3 mb-1">تابستان</h6>
-                                            <h2>هیجان انگیز</h2>
-                                            <p class="mx-auto mt-1">تا 5% تخفیف ویژه</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="nav-desh">
-                                    <div class="desh-title">
-                                        <h5>سازنده محصول کیست :</h5>
-                                    </div>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با
-                                        تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها
-                                        و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط
-                                        فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی
-                                        می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان
-                                        جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان
-                                        رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد.
-                                    </p>
-
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ
-                                        و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله
-                                        در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و
-                                        کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی
-                                        در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان
-                                        را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه
-                                        ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد.
-                                    </p>
-                                </div>
+                                @Html.Raw(Model.Description)
                             </div>
                         </div>
 
@@ -481,52 +411,15 @@
                             <div class="table-responsive">
                                 <table class="table info-table">
                                     <tbody>
-                                        <tr>
-                                            <td>سازنده</td>
-                                            <td>امین احمدی</td>
-                                        </tr>
-                                        <tr>
-                                            <td>میزان قند</td>
-                                            <td>100 گرم</td>
-                                        </tr>
-                                        <tr>
-                                            <td>نوشته روی کیک</td>
-                                            <td>امین تولدت مبارک</td>
-                                        </tr>
-                                        <tr>
-                                            <td>میزان چربی</td>
-                                            <td>120 گرم</td>
-                                        </tr>
-                                        <tr>
-                                            <td>نوع خمیر</td>
-                                            <td>تهیه شده با آرد معمولی</td>
-                                        </tr>
-                                        <tr>
-                                            <td>نوع خامه</td>
-                                            <td>شکلاتی</td>
-                                        </tr>
+                                        @foreach (var property in Model.Properties)
+                                        {
+                                            <tr>
+                                                <td>@property.Title</td>
+                                                <td>@property.Value</td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="care" role="tabpanel">
-                            <div class="information-box">
-                                <ul>
-                                    <li>کیک های خامه ای را در یخچال نگهداری کنید. کیک های فوندانت باید در محیطی با تهویه مطبوع نگهداری شوند.</li>
-
-                                    <li>کیک را برش بزنید و در دمای اتاق سرو کنید و مطمئن شوید که در معرض حرارت نباشد.</li>
-
-                                    <li>از یک چاقوی دندانه دار برای برش کیک فوندانت استفاده کنید.</li>
-
-                                    <li>عناصر مجسمه سازی و مجسمه ها ممکن است حاوی تکیه گاه های سیمی یا خلال دندان یا سیخ های چوبی برای حمایت باشند.</li>
-
-                                    <li>لطفاً محل قرارگیری این اقلام را قبل از ارائه به کودکان کوچک بررسی کنید.</li>
-
-                                    <li>کیک باید ظرف 24 ساعت مصرف شود.</li>
-
-                                    <li>از کیک خود لذت ببرید!</li>
-                                </ul>
                             </div>
                         </div>
 
@@ -539,77 +432,88 @@
                                                 <div class="col-xl-12">
                                                     <div class="product-main-rating">
                                                         <h2>
-                                                            3.40
+                                                            @commentsRatingAverage.ToString("0.00")
                                                             <i data-feather="star"></i>
                                                         </h2>
 
-                                                        <h5>از 5</h5>
+                                                        <h3>از 5</h3>
                                                     </div>
                                                 </div>
 
                                                 <div class="col-xl-12">
+                                                    @{
+                                                        int RateCount1 = Model.Comments.Where(a => a.Rate == 1).Count();
+                                                        int RateCount2 = Model.Comments.Where(a => a.Rate == 2).Count();
+                                                        int RateCount3 = Model.Comments.Where(a => a.Rate == 3).Count();
+                                                        int RateCount4 = Model.Comments.Where(a => a.Rate == 4).Count();
+                                                        int RateCount5 = Model.Comments.Where(a => a.Rate == 5).Count();
+                                                    }
                                                     <ul class="product-rating-list">
                                                         <li>
                                                             <div class="rating-product">
                                                                 <h5>5<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: 40%;">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount5 / commentsCount * 100} %" : "0 %");">
                                                                     </div>
                                                                 </div>
-                                                                <h5 class="total">2</h5>
+                                                                <h5 class="total">@RateCount5</h5>
                                                             </div>
                                                         </li>
                                                         <li>
                                                             <div class="rating-product">
                                                                 <h5>4<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: 20%;">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount4 / commentsCount * 100} %" : "0 %");">
                                                                     </div>
                                                                 </div>
-                                                                <h5 class="total">1</h5>
+                                                                <h5 class="total">@RateCount4</h5>
                                                             </div>
                                                         </li>
                                                         <li>
                                                             <div class="rating-product">
                                                                 <h5>3<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: 0%;">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount3 / commentsCount * 100} %" : "0 %");">
                                                                     </div>
                                                                 </div>
-                                                                <h5 class="total">0</h5>
+                                                                <h5 class="total">@RateCount3</h5>
                                                             </div>
                                                         </li>
                                                         <li>
                                                             <div class="rating-product">
                                                                 <h5>2<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: 20%;">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount2 / commentsCount * 100} %" : "0 %");">
                                                                     </div>
                                                                 </div>
-                                                                <h5 class="total">1</h5>
+                                                                <h5 class="total">@RateCount2</h5>
                                                             </div>
                                                         </li>
                                                         <li>
                                                             <div class="rating-product">
                                                                 <h5>1<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: 20%;">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount1 / commentsCount * 100} %" : "0 %");">
                                                                     </div>
                                                                 </div>
-                                                                <h5 class="total">1</h5>
+                                                                <h5 class="total">@RateCount1</h5>
                                                             </div>
                                                         </li>
 
                                                     </ul>
 
-                                                    <div class="review-title-2">
-                                                        <h4 class="fw-bold">بازخورد این محصول</h4>
-                                                        <p>با ثبت بازخورد خود در خرید دیگران راهنمایی خوبی باشید</p>
-                                                        <button class="btn" type="button" data-bs-toggle="modal"
-                                                                data-bs-target="#writereview">
-                                                            ثبت دیدگاه جدید
-                                                        </button>
-                                                    </div>
+                                                    @if (User.Identity.IsAuthenticated)
+                                                    {
+                                                        <div class="review-title-2">
+                                                            <h4 class="fw-bold">بازخورد این محصول</h4>
+                                                            <p>با ثبت بازخورد خود در خرید دیگران راهنمایی خوبی باشید</p>
+                                                            <button class="btn" type="button" data-bs-toggle="modal"
+                                                                    data-bs-target="#writereview">
+                                                                ثبت دیدگاه جدید
+                                                            </button>
+                                                        </div>
+                                                    }
+
                                                 </div>
                                             </div>
                                         </div>
@@ -618,248 +522,37 @@
                                     <div class="col-xl-7">
                                         <div class="review-people">
                                             <ul class="review-list">
-                                                <li>
-                                                    <div class="people-box">
-                                                        <div>
-                                                            <div class="people-image people-text">
-                                                                <img alt="user" class="img-fluid "
-                                                                     src="../assets/images/review/1.jpg">
-                                                            </div>
-                                                        </div>
-                                                        <div class="people-comment">
-                                                            <div class="people-name">
-                                                                <a href="javascript:void(0)"
-                                                                   class="name">جک داو</a>
-                                                                <div class="date-time">
-                                                                    <h6 class="text-content">
-                                                                        29 اردیبهشت 1403
-                                                                        06:40 : عصر
-                                                                    </h6>
-                                                                    <div class="product-rating">
-                                                                        <ul class="rating">
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"></i>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
+
+                                                @foreach (var comment in Model.Comments)
+                                                {
+                                                    <li>
+                                                        <div class="people-box">
+                                                            <div>
+                                                                <div class="people-image people-text">
+                                                                    <img alt="user" class="img-fluid " src="~/media/images/user/@comment.AuthorImageName">
                                                                 </div>
                                                             </div>
-                                                            <div class="reply">
-                                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="people-box">
-                                                        <div>
-                                                            <div class="people-image people-text">
-                                                                <img alt="user" class="img-fluid "
-                                                                     src="../assets/images/review/2.jpg">
-                                                            </div>
-                                                        </div>
-                                                        <div class="people-comment">
-                                                            <div class="people-name">
-                                                                <a href="javascript:void(0)"
-                                                                   class="name">جیسیکا میلر</a>
-                                                                <div class="date-time">
-                                                                    <h6 class="text-content">
-                                                                        29 اردیبهشت 1403
-                                                                        06:34 : عصر
-                                                                    </h6>
-                                                                    <div class="product-rating">
+                                                            <div class="people-comment">
+                                                                <div class="people-name">
+                                                                    <a href="javascript:void(0)" class="name">@comment.AuthorName</a>
+                                                                    <div class="date-time">
+                                                                        <h6 class="text-content">
+                                                                            @comment.Date.ToShortDateTimeString()
+                                                                        </h6>
                                                                         <div class="product-rating">
-                                                                            <ul class="rating">
-                                                                                <li>
-                                                                                    <i data-feather="star"
-                                                                                       class="fill"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i data-feather="star"
-                                                                                       class="fill"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i data-feather="star"
-                                                                                       class="fill"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i data-feather="star"
-                                                                                       class="fill"></i>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i data-feather="star"></i>
-                                                                                </li>
-                                                                            </ul>
+                                                                            @await Html.PartialAsync("_RatingPartial", comment.Rate)
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="reply">
-                                                                <p>کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد.</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="people-box">
-                                                        <div>
-                                                            <div class="people-image people-text">
-                                                                <img alt="user" class="img-fluid "
-                                                                     src="../assets/images/review/3.jpg">
-                                                            </div>
-                                                        </div>
-                                                        <div class="people-comment">
-                                                            <div class="people-name">
-                                                                <a href="javascript:void(0)"
-                                                                   class="name">امین احمدی</a>
-                                                                <div class="date-time">
-                                                                    <h6 class="text-content">
-                                                                        29 فروردین 1403
-                                                                        06:18 : صبح
-                                                                    </h6>
-                                                                    <div class="product-rating">
-                                                                        <ul class="rating">
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"></i>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
+                                                                <div class="reply">
+                                                                    <p>@comment.Text</p>
                                                                 </div>
                                                             </div>
-                                                            <div class="reply">
-                                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.</p>
-                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="people-box">
-                                                        <div>
-                                                            <div class="people-image people-text">
-                                                                <img alt="user" class="img-fluid "
-                                                                     src="../assets/images/review/4.jpg">
-                                                            </div>
-                                                        </div>
-                                                        <div class="people-comment">
-                                                            <div class="people-name">
-                                                                <a href="javascript:void(0)"
-                                                                   class="name">علی صادقی</a>
-                                                                <div class="date-time">
-                                                                    <h6 class="text-content">
-                                                                        5 مهر 1403
-                                                                        05:58 : عصر
-                                                                    </h6>
-                                                                    <div class="product-rating">
-                                                                        <ul class="rating">
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"></i>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="reply">
-                                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است.</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="people-box">
-                                                        <div>
-                                                            <div class="people-image people-text">
-                                                                <img alt="user" class="img-fluid "
-                                                                     src="../assets/images/review/5.jpg">
-                                                            </div>
-                                                        </div>
-                                                        <div class="people-comment">
-                                                            <div class="people-name">
-                                                                <a href="javascript:void(0)"
-                                                                   class="name">امین احمدی</a>
-                                                                <div class="date-time">
-                                                                    <h6 class="text-content">
-                                                                        29 مهر 1402
-                                                                        05:22 : عصر
-                                                                    </h6>
-                                                                    <div class="product-rating">
-                                                                        <ul class="rating">
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"
-                                                                                   class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"></i>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="reply">
-                                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است.</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
+                                                    </li>
+
+                                                }
+
                                             </ul>
                                         </div>
                                     </div>
@@ -887,633 +580,181 @@
         <div class="row">
             <div class="col-12">
                 <div class="slider-6_1 product-wrapper">
-                    <div>
-                        <div class="product-box-3 wow fadeInUp">
-                            <div class="product-header">
-                                <div class="product-image">
-                                    <a href="product-left.htm">
-                                        <img src="../assets/images/cake/product/11.png"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
 
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal"
-                                               data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
+                    @{
+                        ProductVarient? similarProductVarient = null;
+                    }
+                    @foreach (var similarProduct in similarProducts)
+                    {
+                        similarProductVarient = null;
+                        if (similarProduct.Varients.Any())
+                        {
+                            similarProductVarient = similarProduct.Varients.OrderByDescending(a => a.Stock).First();
+                        }
 
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
-                                            <a href="compare.html">
-                                                <i data-feather="refresh-cw"></i>
-                                            </a>
-                                        </li>
+                        <div>
+                            <div class="product-box-3 wow fadeInUp">
+                                <div class="product-header">
+                                    <div class="product-image">
+                                        <a href="product-left.htm">
+                                            <img src="~/media/images/product/@similarProduct.MainImageName" class="img-fluid blur-up lazyload" alt="">
+                                        </a>
 
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+                                        <ul class="product-option">
+                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
+                                                <button onclick="PreviewProductModalRequest('@similarProduct.Id')"> 
+                                                   <i data-feather="eye"></i>
+                                                </button>
+                                            </li>
 
-                            <div class="product-footer">
-                                <div class="product-detail">
-                                    <span class="span-name">کیک</span>
-                                    <a href="product-left-thumbnail.html">
-                                        <h5 class="name">کیک شکلاتی 250 گرمی</h5>
-                                    </a>
-                                    <div class="product-rating mt-2">
-                                        <ul class="rating">
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
+                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
+                                                <a href="wishlist.html" class="notifi-wishlist">
+                                                    <i data-feather="heart"></i>
+                                                </a>
                                             </li>
                                         </ul>
-                                        <span>(5.0)</span>
                                     </div>
-                                    <h6 class="unit">500 گرم</h6>
-                                    <h5 class="price">
-                                        <span class="theme-color">10.25 تومان</span> <del>12.57</del>
-                                    </h5>
-                                    <div class="add-to-cart-box bg-white">
-                                        <button class="btn btn-add-cart addcart-button">
-                                            افزودن
-                                            <span class="add-icon bg-light-gray">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </span>
-                                        </button>
-                                        <div class="cart_qty qty-box">
-                                            <div class="input-group bg-white">
-                                                <button type="button" class="qty-left-minus bg-gray"
-                                                        data-type="minus" data-field="">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="0">
-                                                <button type="button" class="qty-right-plus bg-gray"
-                                                        data-type="plus" data-field="">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
+                                </div>
+
+                                <div class="product-footer">
+                                    <div class="product-detail">
+                                        <span class="span-name">@similarProduct.CategoryTitle</span>
+                                        <a href="/Product/@similarProduct.Barcode">
+                                            <h5 class="name">@similarProduct.Title</h5>
+                                        </a>
+                                        <div class="product-rating mt-2">
+
+                                            @await Html.PartialAsync("_RatingPartial", similarProduct.CommentsRate)
+
+                                            <span>(@similarProduct.CommentsRate.ToString("0.0"))</span>
+                                        </div>
+
+                                        @if (similarProductVarient != null)
+                                        {
+                                            <h6 class="unit">@similarProductVarient.Value</h6>
+                                        }
+                                        @if (similarProduct.DiscountedPrice != null)
+                                        {
+
+                                            <h5 class="price">
+                                                <span class="theme-color">@similarProduct.DiscountedPrice.Value.ToToman()</span> <del>@similarProduct.Price.ToMoney()</del>
+                                            </h5>
+                                        }
+                                        else
+                                        {
+                                            <h5 class="price">
+                                                <span class="theme-color">@similarProduct.Price.ToToman()</span>
+                                            </h5>
+                                        }
+                                        <div class="add-to-cart-box bg-white">
+                                            <button class="btn btn-add-cart addcart-button"
+                                                    onclick="AddProductToCart('@(similarProduct.Id)' , '@(similarProductVarient != null ? similarProductVarient.Id : 0)' , '1')">
+                                                افزودن
+                                                <span class="add-icon bg-light-gray">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
 
-                    <div>
-                        <div class="product-box-3 wow fadeInUp" data-wow-delay="0.05s">
-                            <div class="product-header">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="../assets/images/cake/product/2.png"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
-
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal"
-                                               data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
-                                            <a href="compare.html">
-                                                <i data-feather="refresh-cw"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="product-footer">
-                                <div class="product-detail">
-                                    <span class="span-name">سبزیجات</span>
-                                    <a href="product-left-thumbnail.html">
-                                        <h5 class="name">ماهی زنده ایتالیایی</h5>
-                                    </a>
-                                    <div class="product-rating mt-2">
-                                        <ul class="rating">
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star"></i>
-                                            </li>
-                                        </ul>
-                                        <span>(4.0)</span>
-                                    </div>
-                                    <h6 class="unit">250 میلی لیتر</h6>
-                                    <h5 class="price">
-                                        <span class="theme-color">08.02 تومان</span> <del>15.15</del>
-                                    </h5>
-                                    <div class="add-to-cart-box bg-white">
-                                        <button class="btn btn-add-cart addcart-button">
-                                            افزودن
-                                            <span class="add-icon bg-light-gray">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </span>
-                                        </button>
-                                        <div class="cart_qty qty-box">
-                                            <div class="input-group bg-white">
-                                                <button type="button" class="qty-left-minus bg-gray"
-                                                        data-type="minus" data-field="">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="0">
-                                                <button type="button" class="qty-right-plus bg-gray"
-                                                        data-type="plus" data-field="">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="product-box-3 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="product-header">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="../assets/images/cake/product/3.png"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
-
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal"
-                                               data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
-                                            <a href="compare.html">
-                                                <i data-feather="refresh-cw"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="product-footer">
-                                <div class="product-detail">
-                                    <span class="span-name">سبزیجات</span>
-                                    <a href="product-left-thumbnail.html">
-                                        <h5 class="name">کوکی اسنکی پرتقالی 200 گرم</h5>
-                                    </a>
-                                    <div class="product-rating mt-2">
-                                        <ul class="rating">
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star"></i>
-                                            </li>
-                                        </ul>
-                                        <span>(2.4)</span>
-                                    </div>
-                                    <h6 class="unit">350 گرم</h6>
-                                    <h5 class="price">
-                                        <span class="theme-color">04.33 تومان</span> <del>10.36</del>
-                                    </h5>
-                                    <div class="add-to-cart-box bg-white">
-                                        <button class="btn btn-add-cart addcart-button">
-                                            افزودن
-                                            <span class="add-icon bg-light-gray">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </span>
-                                        </button>
-                                        <div class="cart_qty qty-box">
-                                            <div class="input-group bg-white">
-                                                <button type="button" class="qty-left-minus bg-gray"
-                                                        data-type="minus" data-field="">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="0">
-                                                <button type="button" class="qty-right-plus bg-gray"
-                                                        data-type="plus" data-field="">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="product-box-3 wow fadeInUp" data-wow-delay="0.15s">
-                            <div class="product-header">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="../assets/images/cake/product/4.png"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
-
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal"
-                                               data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
-                                            <a href="compare.html">
-                                                <i data-feather="refresh-cw"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="product-footer">
-                                <div class="product-detail">
-                                    <span class="span-name">اسنک</span>
-                                    <a href="product-left-thumbnail.html">
-                                        <h5 class="name">چیپس سرکه ای مزمز</h5>
-                                    </a>
-                                    <div class="product-rating mt-2">
-                                        <ul class="rating">
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                        </ul>
-                                        <span>(5.0)</span>
-                                    </div>
-                                    <h6 class="unit">570 گرم</h6>
-                                    <h5 class="price">
-                                        <span class="theme-color">12.52 تومان</span> <del>13.62</del>
-                                    </h5>
-                                    <div class="add-to-cart-box bg-white">
-                                        <button class="btn btn-add-cart addcart-button">
-                                            افزودن
-                                            <span class="add-icon bg-light-gray">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </span>
-                                        </button>
-                                        <div class="cart_qty qty-box">
-                                            <div class="input-group bg-white">
-                                                <button type="button" class="qty-left-minus bg-gray"
-                                                        data-type="minus" data-field="">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="0">
-                                                <button type="button" class="qty-right-plus bg-gray"
-                                                        data-type="plus" data-field="">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="product-box-3 wow fadeInUp" data-wow-delay="0.2s">
-                            <div class="product-header">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="../assets/images/cake/product/5.png"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
-
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal"
-                                               data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
-                                            <a href="compare.html">
-                                                <i data-feather="refresh-cw"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="product-footer">
-                                <div class="product-detail">
-                                    <span class="span-name">اسنک</span>
-                                    <a href="product-left-thumbnail.html">
-                                        <h5 class="name">سیب زمینی تازه کردستان</h5>
-                                    </a>
-                                    <div class="product-rating mt-2">
-                                        <ul class="rating">
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star"></i>
-                                            </li>
-                                        </ul>
-                                        <span>(3.8)</span>
-                                    </div>
-                                    <h6 class="unit">100 گرم</h6>
-                                    <h5 class="price">
-                                        <span class="theme-color">10.25 تومان</span> <del>12.36</del>
-                                    </h5>
-                                    <div class="add-to-cart-box bg-white">
-                                        <button class="btn btn-add-cart addcart-button">
-                                            افزودن
-                                            <span class="add-icon bg-light-gray">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </span>
-                                        </button>
-                                        <div class="cart_qty qty-box">
-                                            <div class="input-group bg-white">
-                                                <button type="button" class="qty-left-minus bg-gray"
-                                                        data-type="minus" data-field="">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="0">
-                                                <button type="button" class="qty-right-plus bg-gray"
-                                                        data-type="plus" data-field="">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="product-box-3 wow fadeInUp" data-wow-delay="0.25s">
-                            <div class="product-header">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="../assets/images/cake/product/6.png"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
-
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal"
-                                               data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
-                                            <a href="compare.html">
-                                                <i data-feather="refresh-cw"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="product-footer">
-                                <div class="product-detail">
-                                    <span class="span-name">سبزیجات</span>
-                                    <a href="product-left-thumbnail.html">
-                                        <h5 class="name">کوکی سیب زمینی با طرح عروسک</h5>
-                                    </a>
-                                    <div class="product-rating mt-2">
-                                        <ul class="rating">
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star"></i>
-                                            </li>
-                                        </ul>
-                                        <span>(4.0)</span>
-                                    </div>
-
-                                    <h6 class="unit">550 گرم</h6>
-
-                                    <h5 class="price">
-                                        <span class="theme-color">14.25 تومان</span> <del>16.57</del>
-                                    </h5>
-                                    <div class="add-to-cart-box bg-white">
-                                        <button class="btn btn-add-cart addcart-button">
-                                            افزودن
-                                            <span class="add-icon bg-light-gray">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </span>
-                                        </button>
-                                        <div class="cart_qty qty-box">
-                                            <div class="input-group bg-white">
-                                                <button type="button" class="qty-left-minus bg-gray"
-                                                        data-type="minus" data-field="">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="0">
-                                                <button type="button" class="qty-right-plus bg-gray"
-                                                        data-type="plus" data-field="">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="product-box-3 wow fadeInUp" data-wow-delay="0.3s">
-                            <div class="product-header">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="../assets/images/cake/product/7.png" class="img-fluid" alt="">
-                                    </a>
-
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal"
-                                               data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
-                                            <a href="compare.html">
-                                                <i data-feather="refresh-cw"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="product-footer">
-                                <div class="product-detail">
-                                    <span class="span-name">سبزیجات</span>
-                                    <a href="product-left-thumbnail.html">
-                                        <h5 class="name">ماهی زنده ایتالیایی</h5>
-                                    </a>
-                                    <div class="product-rating mt-2">
-                                        <ul class="rating">
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star"></i>
-                                            </li>
-                                        </ul>
-                                        <span>(3.8)</span>
-                                    </div>
-
-                                    <h6 class="unit">1 کیلوگرم</h6>
-
-                                    <h5 class="price">
-                                        <span class="theme-color">12.68 تومان</span> <del>14.69</del>
-                                    </h5>
-                                    <div class="add-to-cart-box bg-white">
-                                        <button class="btn btn-add-cart addcart-button">
-                                            افزودن
-                                            <span class="add-icon bg-light-gray">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </span>
-                                        </button>
-                                        <div class="cart_qty qty-box">
-                                            <div class="input-group bg-white">
-                                                <button type="button" class="qty-left-minus bg-gray"
-                                                        data-type="minus" data-field="">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="0">
-                                                <button type="button" class="qty-right-plus bg-gray"
-                                                        data-type="plus" data-field="">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 <!-- Related Product Section End -->
+<!-- Sticky Cart Box Start -->
+<div class="sticky-bottom-cart">
+    <div class="container-fluid-lg">
+        <div class="row">
+            <div class="col-12">
+                <div class="cart-content">
+                    <div class="product-image">
+                        <img src="../assets/images/product/category/1.jpg" class="img-fluid blur-up lazyload"
+                             alt="">
+                        <div class="content">
+                            <h5>@Model.Title</h5>
+                            @if (Model.DiscountedPrice != null)
+                            {
+                                <h6>
+                                    @Model.DiscountedPrice.Value.ToToman()
+                                    <del class="text-danger">@Model.Price.ToMoney()</del>
+                                    <span>@(Model.Discount.IsFixDiscount ? $"{Model.Discount.FixValue.Value.ToMoney()}" : $"{Model.Discount.Percent.Value}%") تخفیف</span>
+                                </h6>
+                            }
+                            else
+                            {
+                                <h6>@Model.Price.ToMoney()</h6>
+                            }
+                        </div>
+                    </div>
+                    <div class="selection-section">
+                        @if (Model.Varients.Any())
+                        {
+                            <div class="form-group mb-0">
+                                <select id="product-varient-select" required class="form-control form-select" disabled="@(!IsAvailable)">
+                                    <option selected disabled>انتخاب @(firstProductVarient.Type.ToStringValue()) ...</option>
+                                    @foreach (var productVarient in Model.Varients)
+                                    {
+                                        <option value="@productVarient.Id" data-product-varient-stock="@productVarient.Stock">@productVarient.Value</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        <form id="stick-add-product-to-cart-form" class="cart_qty qty-box product-qty m-0">
+                            <input name="createProductItem.ProductId" value="@Model.Id" hidden readonly />
+                            <input name="createProductItem.ProductVarientId" value="@(firstProductVarient != null ? firstProductVarient.Id : null)" hidden readonly />
+                            <div class="input-group h-100">
+                                <button type="button" class="qty-left-minus" id="stick-product-cart-count-minus" disabled="@(!IsAvailable)">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <input class="form-control" name="createProductItem.Count" type="text" value="1" min="0"
+                                       max="@(firstProductVarient == null ? Model.Stock : firstProductVarient.Stock)">
+                                <button type="button" class="qty-right-plus" id="stick-product-cart-count-plus" disabled="@(!IsAvailable)">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                            <button type="submit" hidden></button>
+                        </form>
+                    </div>
+                    <div class="add-btn">
+                        <button class="btn theme-bg-color text-white" id="stick-add-product-to-cart-button" disabled="@(!IsAvailable)">
+                            <i class="fas fa-shopping-cart"></i> افزودن به سبد خرید
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Sticky Cart Box End -->
+
+<form id="add-to-cart-form" hidden action="/Cart/AddProduct" onsubmit="FetchRequest(event)" method="post">
+    <input type="number" id="add-to-cart-form-productId" name="createProductItem.ProductId" hidden readonly value="" />
+    <input type="number" id="add-to-cart-form-productVarientId" name="createProductItem.ProductVarientId" hidden readonly value="" />
+    <input type="number" id="add-to-cart-form-count" name="createProductItem.Count" hidden readonly value="" />
+    <button type="submit" hidden></button>
+</form>
+<form id="preview-product-modal-request-form" hidden action="/Product/Preview" onsubmit="FetchRequest(event)" method="post" data-target-id="preview-product-modal">
+    <input type="number" name="id" hidden readonly value="0" />
+    <button type="submit" hidden></button>
+</form>
+
+@section Modals {
+
+    @await Html.PartialAsync("_PreviewProductModal");
+
+}
+
+
+@section Scripts{
+
+    <script src="~/site/views/product/product.js"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

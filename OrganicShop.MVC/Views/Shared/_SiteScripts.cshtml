@@ -77,23 +77,3 @@
 
 </script> *@
 
-
-<script>
-
-    function GoPage(pageNumber, formId) {
-        if(pageNumber && pageNumber > 0){
-            document.getElementById('pageNumber-input').ariaValueMax = pageNumber;
-            SubmitFormByIdWithButton(formId);
-        }
-    }
-
-    function SubmitFormWithButton(form) { 
-        form.querySelector(`[type='submit']`).click();
-    }
-    
-        function SubmitFormByIdWithButton(id){
-        document.getElementById(id).querySelector(`[type='submit']`).click();
-    }
-
-
-</script>

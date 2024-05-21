@@ -202,9 +202,15 @@ namespace OrganicShop.BLL.Services
                         .ThenInclude(a => a.Discount)
                 .Include(a => a.DiscountProducts)
                     .ThenInclude(a => a.Discount)
-                .Include(a => a.Comments)
+                .Include(a => a.Comments.Where(b => b.Status == CommentStatus.Accepted))
                 .Include(a => a.Properties)
                 .Include(a => a.ProductVarients)
+                .Include(a => a.Seller)
+                    .ThenInclude(a => a.Address)
+                .Include(a => a.Seller)
+                    .ThenInclude(a => a.Picture)
+                .Include(a => a.Seller)
+                    .ThenInclude(a => a.Comments.Where(b => b.Status == CommentStatus.Accepted))
                 .AsQueryable();
 
             #endregion

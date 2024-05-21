@@ -5,7 +5,7 @@ namespace OrganicShop.Domain.Entities.Relations
 {
     public class WishItem : EntityId<long>
     {
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         public long ProductId { get; set; }
         
         
