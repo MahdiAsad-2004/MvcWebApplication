@@ -29,60 +29,63 @@ let ResponseDataType = '';
 let MessageString = null;
 
 
-function HandleResponse(data, jqxhr) {
-    ShowLoading();
-    if (jqxhr == null || jqxhr == undefined) {
-        throw new Error("jxhr is null or undefined");
-    }
-    ResponseDataType = jqxhr.getResponseHeader("ResponseDataType");
+//function HandleResponse(data, jqxhr) {
+//    ShowLoading();
+//    if (jqxhr == null || jqxhr == undefined) {
+//        throw new Error("jxhr is null or undefined");
+//    }
+//    ResponseDataType = jqxhr.getResponseHeader("ResponseDataType");
 
-    if (ResponseDataType == 'partial') {
-        Partial(data, jqxhr);
-    }
-    else if (ResponseDataType == 'partial-toast') {
-        PartialThenToast(data, jqxhr);
-    }
-    else if (ResponseDataType == 'redirect-toast') {
-        RedirectThenToast(data, jqxhr);
-    }
-    else if (ResponseDataType == 'toast-redirect') {
-        ToastThenRedirect(data, jqxhr);
-    }
-    else if (ResponseDataType == 'toast-refresh') {
-        ToastThenRefresh(data, jqxhr);
-    }
-    else if (ResponseDataType == 'toast') {
-        Message = JSON.parse(data);
-        HandleMessage(Message);
-    }
-    HideLoading();
-}
+//    if (ResponseDataType == 'partial') {
+//        Partial(data, jqxhr);
+//    }
+//    else if (ResponseDataType == 'partial-toast') {
+//        PartialThenToast(data, jqxhr);
+//    }
+//    else if (ResponseDataType == 'redirect-toast') {
+//        RedirectThenToast(data, jqxhr);
+//    }
+//    else if (ResponseDataType == 'toast-redirect') {
+//        ToastThenRedirect(data, jqxhr);
+//    }
+//    else if (ResponseDataType == 'toast-refresh') {
+//        ToastThenRefresh(data, jqxhr);
+//    }
+//    else if (ResponseDataType == 'toast') {
+//        Message = JSON.parse(data);
+//        HandleMessage(Message);
+//    }
+//    HideLoading();
+//}
 
 
 
-function HandleFetchResponse(response, ev) {
+async function HandleFetchResponse(response, ev) {
     if (response.status < 400) {
         ResponseDataType = response.headers.get('ResponseDataType');
         if (ResponseDataType == 'partial') {
-            Partial(response, ev);
+            await Partial(response, ev);
         }
         else if (ResponseDataType == 'partial-toast') {
-            PartialThenToast(response,ev);
+            await PartialThenToast(response, ev);
         }
         else if (ResponseDataType == 'redirect-toast') {
-            RedirectThenToast(response);
+            await RedirectThenToast(response);
         }
         else if (ResponseDataType == 'toast-redirect') {
-            ToastThenRedirect(response);
+            await ToastThenRedirect(response);
         }
         else if (ResponseDataType == 'toast-refresh') {
-            ToastThenRefresh(response);
+            await ToastThenRefresh(response);
         }
         else if (ResponseDataType == 'toast') {
-            response.json().then(a => { HandleMessage(a) });
+            await response.json().then(a => { HandleMessage(a) });
         }
         else if (ResponseDataType == 'json') {
-            response.json().then(a => { console.log(a); });
+            await response.json().then(a => { console.log(a); });
+        }
+        else if (ResponseDataType == 'empty') {
+            // nothing to do
         }
     }
     else {

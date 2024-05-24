@@ -32,17 +32,20 @@ namespace OrganicShop.Mvc.Controllers
         private readonly IProductItemService _ProductItemService;
         private readonly ICommentService _CommentService;
         private readonly AesKeys _AesKeys;
+        private readonly IWishItemService _WishItemService;
         public ProductController(IProductService productService, ICategoryService categoryService,
-            IProductItemService productItemService, IOptions<AesKeys> options, ICommentService commentService)
+            IProductItemService productItemService, IOptions<AesKeys> options, ICommentService commentService, IWishItemService wishItemService)
         {
             _ProductService = productService;
             _CategoryService = categoryService;
             _ProductItemService = productItemService;
             _AesKeys = options.Value;
             _CommentService = commentService;
+            _WishItemService = wishItemService;
         }
 
         #endregion
+
 
 
         [HttpGet("Products")]
@@ -53,6 +56,7 @@ namespace OrganicShop.Mvc.Controllers
             ViewData["Categories"] = (await _CategoryService.GetAll(new FilterCategoryDto { Type = CategoryType.Product })).Data.List;
             ViewData["FilterProductDto"] = filter;
             ViewData["PagingDto"] = paging;
+            ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
             paging.LogAsync();
             filter.LogAsync();
 
@@ -73,6 +77,7 @@ namespace OrganicShop.Mvc.Controllers
             ViewData["FilterProductDto"] = filter;
             ViewData["PagingDto"] = paging;
             ViewData["CategoryChilds"] = allCategories.Where(a => a.ParentId == null).ToList();
+            ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
 
             return View("Index", response.Data);
         }
@@ -95,6 +100,7 @@ namespace OrganicShop.Mvc.Controllers
             ViewData["FilterProductDto"] = filter;
             ViewData["PagingDto"] = paging;
             ViewData["CategoryChilds"] = allCategories.Where(a => a.ParentId == filter.CategoryId).ToList();
+            ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
             ViewBag.CategoryTitle = categoryTitle;
 
             return View("Index", response.Data);
@@ -109,6 +115,7 @@ namespace OrganicShop.Mvc.Controllers
             if (response.Result == ResponseResult.Success)
             {
                 ViewData["SimilarProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { CategoryId = response.Data.CategoryId })).Data!.List;
+                ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
                 return View("Product", response.Data);
             }
 
@@ -136,16 +143,6 @@ namespace OrganicShop.Mvc.Controllers
         }
 
 
-
-        [Authorize]
-        public async Task<IActionResult> AddComment(CreateCommentUserDto createCommentUser)
-        {
-            var response = await _CommentService.Create(createForUser: createCommentUser);
-            if (response.Result == ResponseResult.Success)
-                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, "نطر شما با موفقیت ثبت شد"));
-
-            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
-        }
 
 
 

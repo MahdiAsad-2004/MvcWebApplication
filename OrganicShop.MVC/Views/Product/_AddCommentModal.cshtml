@@ -21,7 +21,7 @@
                 </button>
             </div>
             <div class="modal-body pt-0">
-                <form class="product-comment-form" action="/Product/AddComment" method="post" onsubmit="FetchRequest(event)">
+                <form class="product-comment-form" action="/Comment/CreateForUser" method="post" onsubmit="FetchRequest(event)">
                     <input asp-for="ProductId" hidden value="@productId"/>
                     <div class="product-wrapper">
                         <div class="product-image">

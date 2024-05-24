@@ -15,8 +15,6 @@ namespace OrganicShop.BLL.Mappers
 
             CreateMap<CreateWishItemDto, WishItem>();
 
-
-            CreateMap<RemoveWishItemDto, WishItem>();
                
         }
 

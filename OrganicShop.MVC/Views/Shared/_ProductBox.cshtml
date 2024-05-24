@@ -1,18 +1,125 @@
-﻿@{
-    int? boxMode = ViewData["ProductBox-Mode"] as int?;
-    string? classes = ViewData["ProductBox-Classes"] as string;
-    string? styles = ViewData["ProductBox-Styles"] as string;
-    Dictionary<string, string>? attributes = ViewData["ProductBox-Attributes"] as Dictionary<string, string>;
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.ProductDtos
+@using OrganicShop.Domain.Entities
+@model ProductSummaryDto
+@{
+    Model.Varients = Model.Varients.OrderByDescending(a => a.Stock).ToArray();
+    var firstProductVarient = Model.Varients[0];
+    var userWihsIds = ViewData["UserWishProductIds"] as long[];
+    bool? removeButton = ViewData["RemoveButton"] as bool?;
+    // int? boxMode = ViewData["ProductBox-Mode"] as int?;
+    // string? classes = ViewData["ProductBox-Classes"] as string;
+    // string? styles = ViewData["ProductBox-Styles"] as string;
+    // Dictionary<string, string>? attributes = ViewData["ProductBox-Attributes"] as Dictionary<string, string>;
 }
-@if(boxMode == 3)
+
+
+<div>
+    <div class="product-box-3 wow fadeInUp">
+        <div class="product-header">
+            <div class="product-image">
+                <a href="/Product/@Model.Barcode">
+                    <img src="~/media/images/product/@Model.MainImageName" class="img-fluid blur-up lazyload" alt="">
+                </a>
+
+                @if(removeButton == true)
+                {
+                    <div class="product-header-top">
+                        <button class="btn wishlist-button">
+                            <i data-feather="x"></i>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <ul class="product-option">
+                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
+                            <button onclick="PreviewProductModalRequest('@Model.Id')">
+                                <i class="fa-regular fa-eye" style="color: #7c7e7e;"></i>
+                            </button>
+                        </li>
+
+                        @if (userWihsIds.Contains(Model.Id))
+                        {
+                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
+                                <button class="notifi-wishlist" data-iswish="true" onclick="EditProductInWishList(event,'@Model.Id')">
+                                    <i class="fa-solid fa-heart" style="color: #e14141;"></i>
+                                </button>
+                            </li>
+                        }
+                        else
+                        {
+                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
+                                <button class="notifi-wishlist" data-iswish="false" onclick="EditProductInWishList(event,'@Model.Id')">
+                                    <i class="fa-regular fa-heart" style="color: #7c7e7e;"></i>
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                }
+
+               
+            </div>
+        </div>
+
+        <div class="product-footer">
+            <div class="product-detail">
+                <span class="span-name">@Model.CategoryTitle</span>
+                <a href="/Product/@Model.Barcode">
+                    <h5 class="name">@Model.Title</h5>
+                </a>
+                <div class="product-rating mt-2">
+
+                    @await Html.PartialAsync("_ProductRating", Model.CommentsRate)
+
+                    <span>(@Model.CommentsRate.ToString("0.0"))</span>
+                </div>
+
+                @if (firstProductVarient != null)
+                {
+                    <h6 class="unit">@firstProductVarient.Value</h6>
+                }
+                @if (Model.DiscountedPrice != null)
+                {
+                    <h5 class="price">
+                        <span class="theme-color">@Model.DiscountedPrice.Value.ToToman()</span> <del>@Model.Price.ToMoney()</del>
+                    </h5>
+                }
+                else
+                {
+                    <h5 class="price">
+                        <span class="theme-color">@Model.Price.ToToman()</span>
+                    </h5>
+                }
+                <div class="add-to-cart-box bg-white">
+                    <button class="btn btn-add-cart addcart-button"
+                            onclick="AddProductToCart('@(Model.Id)' , '@(Model != null ? Model.Id : 0)' , '1' )">
+                        افزودن
+                        <span class="add-icon bg-light-gray">
+                            <i class="fa-solid fa-plus"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@* @if (boxMode == 3)
 {
-    
+   
 }
-else if(boxMode == 4)
+else if (boxMode == 4)
 {
-    
+
 }
 else
 {
     throw new Exception("ProductBox Partial boxMode is not valid");
-}
+} *@

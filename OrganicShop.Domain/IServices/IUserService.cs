@@ -1,6 +1,7 @@
 ﻿
 using OrganicShop.Domain.Dtos.Page;
 using OrganicShop.Domain.Dtos.UserDtos;
+using OrganicShop.Domain.Dtos.WishItemDtos;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Response;
 
@@ -24,6 +25,8 @@ namespace OrganicShop.Domain.IServices
 
         Task<bool> IsPhoneNumberExist(string email);
 
-        
+
+
+
     }
 }

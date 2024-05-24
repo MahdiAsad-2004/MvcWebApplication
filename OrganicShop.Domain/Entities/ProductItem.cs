@@ -16,7 +16,6 @@ namespace OrganicShop.Domain.Entities
         public long? ProductVarientId { get; set; }
         public int Count { get; set; }
         public int Price { get; set; }
-        public int? UpdatedPrice { get; set; }
         public long? CartId { get; set; }
         public long? OrderId { get; set; }
         public bool IsOrdered { get; set; }

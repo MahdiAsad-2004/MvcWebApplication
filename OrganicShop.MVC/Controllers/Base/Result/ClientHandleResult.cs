@@ -265,7 +265,15 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
         }
 
         #endregion
-    
-    
+
+
+
+        public IActionResult Empty(HttpContext httpContext)
+        {
+            httpContext.Response.Headers.Add("ResponseDataType", "empty");
+            return new StatusCodeResult(200);
+        }
+
+
     }
 }

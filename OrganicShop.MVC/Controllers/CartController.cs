@@ -17,6 +17,7 @@ using OrganicShop.Domain.Enums.Response;
 using OrganicShop.Domain.IRepositories;
 using OrganicShop.Domain.IServices;
 using OrganicShop.Mvc.Controllers.Base;
+using OrganicShop.Mvc.Extensions;
 using OrganicShop.Mvc.Models.Toast;
 using System.Text.Json;
 
@@ -26,55 +27,85 @@ namespace OrganicShop.Mvc.Controllers
     {
         #region ctor
 
-        private readonly IProductService _ProductService;
-        private readonly ICategoryService _CategoryService;
         private readonly IProductItemService _ProductItemService;
+        private readonly ICartService _CartService;
         private readonly AesKeys _AesKeys;
-        public CartController(IProductService productService, ICategoryService categoryService,
-            IProductItemService productItemService, IOptions<AesKeys> options)
+        public CartController(IProductItemService productItemService, IOptions<AesKeys> options, ICartService cartService)
         {
-            _ProductService = productService;
-            _CategoryService = categoryService;
             _ProductItemService = productItemService;
             _AesKeys = options.Value;
+            _CartService = cartService;
         }
 
         #endregion
 
 
-       
 
-        public async Task<IActionResult> AddProduct(CreateProductItemDto createProductItem)
+        private List<ProductItemCookieDto> GetCookieProductItems()
         {
-            if(createProductItem.ProductVarientId < 1)
-                createProductItem.ProductVarientId = 0;
-            
-            var successToast = new Toast(ToastType.Success, "محصول با موفقیت به سبد خربد افزوده شد");
+            List<ProductItemCookieDto> previousProductItems = new();
+            var CookieCartItemsStrCoded = Request.Cookies["OrganocShopUnknownUserCartItems"];
+            if (string.IsNullOrEmpty(CookieCartItemsStrCoded) == false)
+            {
+                var CookieCartItemsStr = AesOperation.Decrypt(CookieCartItemsStrCoded, _AesKeys.Cookie);
+                if (string.IsNullOrEmpty(CookieCartItemsStr) == false)
+                {
+                    previousProductItems = JsonSerializer.Deserialize<List<ProductItemCookieDto>>(CookieCartItemsStr) ?? new List<ProductItemCookieDto>();
+                }
+            }
+            return previousProductItems;
+        }
+
+
+        private async Task<List<ProductItemListDto>> GetProductItemListDtos()
+        {
+            List<ProductItemListDto> model = new();
             if (User.Identity.IsAuthenticated)
             {
-                List<CreateProductItemDto> previousCreates = new();
-
-                #region Get Cookie ProductItems
-
-                var CookieCartItemsStrCoded = Request.Cookies["OrganocShopUnknownUserCartItems"];
-                if (string.IsNullOrEmpty(CookieCartItemsStrCoded) == false)
+                var cartId = HttpContext.GetAppUser().CartId;
+                if (cartId > 0)
                 {
-                    var CookieCartItemsStr = AesOperation.Decrypt(CookieCartItemsStrCoded, _AesKeys.Cookie);
-                    if (string.IsNullOrEmpty(CookieCartItemsStr) == false)
-                    {
-                        previousCreates = JsonSerializer.Deserialize<List<CreateProductItemDto>>(CookieCartItemsStr) ?? new List<CreateProductItemDto>();
-                    }
+                    model = (await _ProductItemService.GetAll(new FilterProductItemDto { CartId = cartId }))?.Data ?? new List<ProductItemListDto>();
                 }
-
-                #endregion
-
-                var response = await _ProductItemService.CreateForCookie(createProductItem, previousCreates);
-
-                var jsonData = JsonSerializer.Serialize(response.Data);
-                Response.Cookies.Append("OrganocShopUnknownUserCartItems", AesOperation.Encrypt(jsonData, _AesKeys.Cookie));
-                return _ClientHandleResult.Toast(HttpContext, successToast);
             }
             else
+            {
+                List<ProductItemCookieDto> previousCreates = GetCookieProductItems();
+
+                if (previousCreates.Any())
+                {
+                    model = (await _ProductItemService.GetAll(previousCreates))?.Data ?? new List<ProductItemListDto>();
+                }
+            }
+            return model;
+        }
+
+
+
+
+
+        [HttpGet("/Cart")]
+        public async Task<IActionResult> Index()
+        {
+            List<ProductItemListDto> model = await GetProductItemListDtos();
+
+            return View("Index", model);
+        }
+
+
+
+
+
+
+
+
+        public async Task<IActionResult> AddProductItem(CreateProductItemDto createProductItem)
+        {
+            if (createProductItem.ProductVarientId < 1)
+                createProductItem.ProductVarientId = 0;
+
+            var successToast = new Toast(ToastType.Success, "محصول با موفقیت به سبد خربد افزوده شد");
+            if (User.Identity.IsAuthenticated)
             {
                 var response = await _ProductItemService.Create(createProductItem);
                 if (response.Result == ResponseResult.Success)
@@ -83,10 +114,56 @@ namespace OrganicShop.Mvc.Controllers
                 }
                 return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
             }
+            else
+            {
+                List<ProductItemCookieDto> previousProductItems = GetCookieProductItems();
+
+                var response = await _ProductItemService.CreateForCookie(createProductItem, previousProductItems);
+
+                var jsonData = JsonSerializer.Serialize(response.Data);
+                Response.Cookies.Append("OrganocShopUnknownUserCartItems", AesOperation.Encrypt(jsonData, _AesKeys.Cookie));
+                return _ClientHandleResult.Toast(HttpContext, successToast);
+            }
         }
 
 
-      
+        public async Task<IActionResult> EditProductItemCount(long productItemId, int count)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var response = await _ProductItemService.Update(new UpdateProductItemDto { Id = productItemId, Count = count });
+                if (response.Result == ResponseResult.Success)
+                {
+                    var model = await GetProductItemListDtos();
+                    return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart", model));
+                }
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
+            }
+            else
+            {
+                var response = await _ProductItemService.UpdateForCookie(productItemId, count, GetCookieProductItems());
+                if (response.Result == ResponseResult.Success)
+                {
+                    var model = await GetProductItemListDtos();
+                    return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart", model));
+                }
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
+            }
+        }
+
+
+        public async Task<IActionResult> RemoveProductItem(long productItemId)
+        {
+            var response = await _ProductItemService.Delete(productItemId);
+            if (response.Result == ResponseResult.Success)
+            {
+                var model = await GetProductItemListDtos();
+                return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart", model));
+            }
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
+
+        }
+
 
 
     }

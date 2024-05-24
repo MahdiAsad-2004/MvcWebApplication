@@ -7,7 +7,7 @@ namespace OrganicShop.Domain.IServices
 {
     public interface IProductItemService : IService<ProductItem>
     {
-        Task<ServiceResponse<PageDto<ProductItem, ProductItemListDto, long>>> GetAll(FilterProductItemDto? filter = null, PagingDto? paging = null);
+        Task<ServiceResponse<List<ProductItemListDto>>> GetAll(FilterProductItemDto? filter = null);
 
         Task<ServiceResponse<Empty>> Create(CreateProductItemDto create);
 
@@ -15,9 +15,11 @@ namespace OrganicShop.Domain.IServices
 
         Task<ServiceResponse<Empty>> Delete(long id);
 
-        Task<ServiceResponse<List<ProductItemListDto>>> GetAll(List<CreateProductItemDto> creates);
+        Task<ServiceResponse<List<ProductItemListDto>>> GetAll(List<ProductItemCookieDto> productItemCookieDtos);
 
-        Task<ServiceResponse<List<CreateProductItemDto>>> CreateForCookie(CreateProductItemDto create, List<CreateProductItemDto> previousCreates);
+        Task<ServiceResponse<List<ProductItemCookieDto>>> CreateForCookie(CreateProductItemDto create, List<ProductItemCookieDto> previousProductItems);
+
+        Task<ServiceResponse<List<ProductItemCookieDto>>> UpdateForCookie(long productItemId, int count, List<ProductItemCookieDto> previousProductItems);
 
     }
 }

@@ -486,12 +486,24 @@ Number.prototype.formatMoney = function (s, type) {
 
 
 let AddToCartForm = document.getElementById('add-to-cart-form');
-function AddProductToCart(productId, productVarientId, count) {
+function AddProductToCart(productId, productVarientId, count, timeOut) {
+    var result = false;
     if (productId > 0 && productVarientId > 0 && count > 0) {
-        AddToCartForm.querySelector('#add-to-cart-form-productId').value = productId;
-        AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
-        AddToCartForm.querySelector('#add-to-cart-form-count').value = count;
-        SubmitFormWithButton(AddToCartForm);
+        if (timeOut && timeOut > 1) {
+
+            setTimeout(() => {
+                AddToCartForm.querySelector('#add-to-cart-form-productId').value = productId;
+                AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
+                AddToCartForm.querySelector('#add-to-cart-form-count').value = count;
+                result = await FetchRequestForm(AddToCartForm);
+            }, timeOut);
+        }
+        else {
+            AddToCartForm.querySelector('#add-to-cart-form-productId').value = productId;
+            AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
+            AddToCartForm.querySelector('#add-to-cart-form-count').value = count;
+            result = await FetchRequestForm(AddToCartForm);
+        }
     }
 }
 
@@ -506,7 +518,7 @@ if (PreviewProductVarientSelect) {
         var option = PreviewProductVarientSelect.options[PreviewProductVarientSelect.selectedIndex];
         if (option.disabled == false) {
             PreviewProductAddToCartButton.onclick = (e) => {
-                AddProductToCart(PreviewProductAddToCartButton.getAttribute('data-product-id'), option.value , 1);
+                AddProductToCart(PreviewProductAddToCartButton.getAttribute('data-product-id'), option.value, 1);
             }
         }
     })
@@ -519,7 +531,6 @@ if (PreviewProductVarientSelect) {
 //preview product modal request
 
 const PreviewProductModalRequestForm = document.getElementById('preview-product-modal-request-form');
-const PreviewProductModalRequestInputId = PreviewProductModalRequestForm.querySelector("input [name = 'id']");
 const PreviewProductModalOpenButton = document.getElementById('preview-product-modal-open-button');
 function PreviewProductModalRequest(id) {
     PreviewProductModalRequestInputId.value = id;
@@ -528,6 +539,32 @@ function PreviewProductModalRequest(id) {
 }
 
 
+// add product to wihslist
+
+const EditProductWishListForm = document.getElementById('edit-product-wishlist-form');
+const EditProductWishListProductIdInput = EditProductWishListForm.querySelector("input [name = 'productId']");
+const EmptyHeartIconElemnt = `<i class="fa-regular fa-heart" style="color: #7c7e7e;"></i>`;
+const FullHeartIconElemnt = `<i class="fa-solid fa-heart" style="color: #e14141;"></i>`;
+
+var isInWishList = false;
+async function EditProductInWishList(event, productId) {
+    if (productid > 0) {
+        var btn = event.target;
+        AddProductToWishlistProductIdInput.value = productId;
+        isInWishList = btn.getAttribute('data-iswish') == 'true';
+        var result = await FetchRequestForm(EditProductWishListForm);
+        if (result == true) {
+            if (isInWishList) {
+                btn.innerHTML = EmptyHeartIconElemnt;
+                btn.setAttribute('data-iswish', 'false');
+            }
+            else {
+                btn.innerHTML = FullHeartIconElemnt;
+                btn.setAttribute('data-iswish', 'true');
+            }
+        }
+    }
+}
 
 
 

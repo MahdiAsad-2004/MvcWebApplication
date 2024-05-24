@@ -1,0 +1,179 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.ProductItemDtos
+@model List<ProductItemListDto>
+
+@{
+    int cartTotal = 0;
+    int productTotal = 0;
+    int deliveryPrice = 50_000;
+}
+
+<!-- Cart Section Start -->
+<section class="cart-section section-b-space" id="cart-section">
+    <div class="container-fluid-lg">
+        <div class="row g-sm-5 g-3">
+            <div class="col-xxl-9">
+                <div class="cart-table">
+                    <div class="table-responsive-xl">
+                        <table class="table">
+                            <tbody>
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr class="product-box-contain" id="productitem-@item.Id-tr">
+                                        <td class="product-detail">
+                                            <div class="product border-0">
+                                                <a href="/Product/@item.Barcode" class="product-image">
+                                                    <img src="~/media/images/product/@item.MainImageName"
+                                                         class="img-fluid blur-up lazyload" alt="">
+                                                </a>
+                                                <div class="product-detail">
+                                                    <ul>
+                                                        <li class="name">
+                                                            <a href="/Product/@item.Barcode">@item.Title</a>
+                                                        </li>
+
+                                                        @if (item.VarientType != null && item.VarientValue != null)
+                                                        {
+                                                            <li class="text-content">
+                                                                <span class="text-title">@item.VarientType </span> : @item.VarientValue
+                                                            </li>
+                                                        }
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td class="price">
+                                            <h4 class="table-title text-content">قیمت</h4>
+                                            @if (item.DiscountedPrice != null)
+                                            {
+                                                <h5>@item.DiscountedPrice.Value.ToMoney()<del class="text-content mr-2">@item.Price.ToMoney()</del></h5>
+                                                <h6 class="theme-color">سود شما : @((item.Price - item.DiscountedPrice.Value).ToMoney())</h6>
+                                            }
+                                            else
+                                            {
+                                                <h5>@item.Price.ToMoney()</h5>
+                                            }
+
+                                        </td>
+
+                                        <td class="quantity">
+                                            <h4 class="table-title text-content">تعداد</h4>
+                                            <div class="quantity-price">
+                                                <div class="cart_qty">
+                                                    <div class="input-group">
+                                                        <button type="button" class="btn qty-left-minus" onclick="DecreaseProductItemCount('@item.Id')">
+                                                            <i class="fa fa-minus ms-0"></i>
+                                                        </button>
+                                                        <input class="form-control" id="productItem-@item.Id-count" max="@item.Stock" type="text" value="@item.Count">
+                                                        <button type="button" class="btn qty-right-plus" onclick="IncreaseProductItemCount('@item.Id')">
+                                                            <i class="fa fa-plus ms-0"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td class="subtotal">
+                                            @{
+                                                productTotal = (item.DiscountedPrice != null ? (item.DiscountedPrice.Value * item.Count) : (item.Price * item.Count));
+                                            }
+                                            <h4 class="table-title text-content">جمع کل</h4>
+                                            <h5>@productTotal.ToToman()</h5>
+                                        </td>
+
+                                        <td class="save-remove">
+                                            <h4 class="table-title text-content">عملیات</h4>
+                                            <a class="save notifi-wishlist" href="javascript:void(0)">
+                                                افزودن به سبد خرید بعدی
+                                            </a>
+                                            <a class="remove close_button" href="javascript:void(0)" onclick="RemoveProductItem('@item.Id')">
+                                                حذف
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    cartTotal += productTotal;
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-3">
+                <div class="summery-box p-sticky">
+                    <div class="summery-header">
+                        <h3>صورت حساب</h3>
+                    </div>
+
+                    <div class="summery-contain">
+                        <div class="coupon-cart">
+                            <h6 class="text-content mb-2">کد تخفیف</h6>
+                            <div class="mb-3 coupon-box input-group">
+                                <input class="form-control" placeholder="کد تخفیف را وارد کنید">
+                                <button class="btn-apply">ثبت</button>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>
+                                <h4>جمع کل</h4>
+                                <h4 class="price">@cartTotal.ToToman()</h4>
+                            </li>
+
+                            <li>
+                                <h4>کد تخفیف</h4>
+                                <h4 class="price">(-) 0.00</h4>
+                            </li>
+
+                            <li class="align-items-start">
+                                <h4>هزینه پست</h4>
+                                <h4 class="price text-end">@deliveryPrice.ToToman()</h4>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <ul class="summery-total">
+                        <li class="list-total border-top-0">
+                            <h4>جمع نهایی</h4>
+                            <h4 class="price theme-color">@((cartTotal + deliveryPrice).ToToman())</h4>
+                        </li>
+                    </ul>
+
+                    <div class="button-group cart-button">
+                        <ul>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li>
+                                    <button onclick="" class="btn btn-animation proceed-btn fw-bold">
+                                        پرداخت
+                                    </button>
+                                </li>
+
+                            }
+                            else
+                            {
+                                <li>
+                                    <button onclick="location.href = '/Account/Register" class="btn btn-animation proceed-btn fw-bold">
+                                        ثبت نام و ادامه
+                                    </button>
+                                </li>
+
+                            }
+
+                            <li>
+                                <button onclick="location.href = 'index.html';"
+                                        class="btn btn-light shopping-button text-dark">
+                                    <i class="fa-solid fa-arrow-right-long"></i>بازگشت به فروشگاه
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Cart Section End -->

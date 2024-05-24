@@ -1,0 +1,49 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.ProductItemDtos
+@model List<ProductItemListDto>
+
+@section Breadcrumb {
+    <!-- Breadcrumb Section Start -->
+    <section class="breadcrumb-section pt-0">
+        <div class="container-fluid-lg">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumb-contain">
+                        <h2>سبد خرید</h2>
+                        <nav>
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item">
+                                    <a href="/">
+                                        <i class="fa-solid fa-house"></i>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active">سبد خرید</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+}
+
+
+
+@await Html.PartialAsync("_Cart" , Model);
+
+
+
+<form hidden id="remove-productitem-form" method="post" action="/Cart/RemoveProductItem" data-target-id="cart-section">
+    <input id="remove-productitem-form-id-input" name="productItemId" value="0" type="number" />
+</form>
+<form hidden id="edit-productitem-form" method="post" action="/Cart/EditProductItemCount" data-target-id="cart-section">
+    <input id="edit-productitem--id-input" name="productItemId" />
+    <input id="edit-productitem-count-input" name="productItemId" />
+</form>
+
+@section Scripts {
+    
+    <script src="~/site/views/cart/cart.js"></script>
+
+}

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Enums.Response;
+using OrganicShop.Domain.Models;
 using OrganicShop.Mvc.Controllers.Base.Result;
 using OrganicShop.Mvc.Models.Redirect;
 using OrganicShop.Mvc.Models.Toast;
@@ -76,7 +77,6 @@ namespace OrganicShop.Mvc.Controllers.Base
                     throw new Exception("Unhandled response result");
             }
         }
-
 
     }
 

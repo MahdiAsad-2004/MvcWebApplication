@@ -13,7 +13,10 @@ namespace OrganicShop.BLL.Mappers
         {
 
             CreateMap<ProductItem, ProductItemListDto>()
+                .ForMember(m => m.Title, a => a.MapFrom(b => b.Product.Title))
                 .ForMember(m => m.Price, a => a.MapFrom(b => b.Product.Price))
+                .ForMember(m => m.Barcode, a => a.MapFrom(b => b.Product.Title))
+                .ForMember(m => m.Stock, a => a.MapFrom(b => b.Product.Stock))
                 .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
                 .ForMember(m => m.VarientValue, a => a.MapFrom(b => 
                     b.ProductVarientId > 0 ? b.Product.ProductVarients.First(p => p.Id == b.ProductVarientId).Value : null))
@@ -26,6 +29,11 @@ namespace OrganicShop.BLL.Mappers
 
 
             CreateMap<UpdateProductItemDto, ProductItem>();
+
+
+
+            CreateMap<CreateProductItemDto, ProductItemCookieDto>()
+                .ForMember(m => m.Id , a => a.MapFrom(b => b.ProductId * (long)2));
 
         }
 

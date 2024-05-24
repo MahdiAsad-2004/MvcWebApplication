@@ -15,6 +15,7 @@ using OrganicShop.Domain.Entities.Base;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.Domain.Enums.EnumValues;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace OrganicShop.BLL.Services
 {
@@ -39,13 +40,15 @@ namespace OrganicShop.BLL.Services
         #endregion
 
 
-        public async Task<ServiceResponse<PageDto<ProductItem, ProductItemListDto, long>>> GetAll(FilterProductItemDto? filter = null, PagingDto? paging = null)
+        public async Task<ServiceResponse<List<ProductItemListDto>>> GetAll(FilterProductItemDto? filter = null)
         {
             var query = _ProductItemRepository.GetQueryable();
 
-            #region includes
+            #region includes 
 
             query = query
+                .Include(a => a.Product)
+                    .ThenInclude(a => a.Pictures)
                 .Include(a => a.Product)
                     .ThenInclude(a => a.Categories)
                         .ThenInclude(a => a.DiscountCategories)
@@ -54,15 +57,28 @@ namespace OrganicShop.BLL.Services
                     .ThenInclude(a => a.DiscountProducts)
                         .ThenInclude(a => a.Discount)
                 .Include(a => a.Product)
-                    .ThenInclude(a => a.Pictures)
-                .Include(a => a.Product)
                     .ThenInclude(a => a.ProductVarients)
+                .Select(a => new ProductItem
+                {
+                    Order = a.Order,
+                    BaseEntity = a.BaseEntity,
+                    IsOrdered = a.IsOrdered,
+                    Id = a.Id,
+                    Count = a.Count,
+                    Cart = a.Cart,
+                    CartId = a.CartId,
+                    OrderId = a.OrderId,
+                    Price = a.Price,
+                    Product = a.Product.ToModel(),
+                    ProductId = a.ProductId,
+                    ProductVarientId = a.ProductVarientId,
+                    Title = a.Title,
+                })
                 .AsQueryable();
 
             #endregion
 
             if (filter == null) filter = new FilterProductItemDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 
@@ -88,11 +104,12 @@ namespace OrganicShop.BLL.Services
 
             #endregion
 
-            PageDto<ProductItem, ProductItemListDto, long> pageDto = new();
-            pageDto.List = pageDto.SetPaging(query, paging).Select(a => _Mapper.Map<ProductItemListDto>(a)).ToList();
-            pageDto.Pager = pageDto.SetPager(query, paging);
+            var productsQuery = query.Select(a => a.Product.ToModel());
 
-            return new ServiceResponse<PageDto<ProductItem, ProductItemListDto, long>>(ResponseResult.Success, pageDto);
+            List<ProductItemListDto> list = new();
+            list = await query.Select(a => _Mapper.Map<ProductItemListDto>(a)).ToListAsync();
+
+            return new ServiceResponse<List<ProductItemListDto>>(ResponseResult.Success, list);
         }
 
 
@@ -170,23 +187,6 @@ namespace OrganicShop.BLL.Services
             }
             await _ProductItemRepository.Update(_Mapper.Map<ProductItem>(update), _AppUserProvider.User.Id);
 
-
-            #region update Cart
-
-            var Cart = await _CartRepository.GetQueryable()
-               .Include(a => a.ProductItems)
-               .AsTracking()
-               .FirstAsync(a => a.Id == update.CartId);
-            Cart.TotalPrice = 0;
-            foreach (var coP in Cart.ProductItems)
-            {
-                Cart.TotalPrice += coP.UpdatedPrice == null ? coP.Price : coP.UpdatedPrice.Value;
-            }
-            await _CartRepository.Update(Cart, _AppUserProvider.User.Id);
-
-            #endregion
-
-
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
         }
 
@@ -208,9 +208,9 @@ namespace OrganicShop.BLL.Services
 
 
 
-        public async Task<ServiceResponse<List<ProductItemListDto>>> GetAll(List<CreateProductItemDto> creates)
+        public async Task<ServiceResponse<List<ProductItemListDto>>> GetAll(List<ProductItemCookieDto> productItemCookieDtos)
         {
-            var productIds = creates.Select(a => a.ProductId);
+            var productIds = productItemCookieDtos.Select(a => a.ProductId);
             var productsQuery = _ProductRepository.GetQueryable();
 
             #region includes
@@ -234,7 +234,7 @@ namespace OrganicShop.BLL.Services
             var list = new List<ProductItemListDto>();
             Product product;
 
-            foreach (var create in creates)
+            foreach (var create in productItemCookieDtos)
             {
                 product = products.First(a => a.Id == create.ProductId);
                 list.Add(new ProductItemListDto
@@ -244,6 +244,7 @@ namespace OrganicShop.BLL.Services
                     Price = product.Price,
                     ProductId = product.Id,
                     DiscountedPrice = product.DiscountedPrice,
+                    Stock = product.Stock,
                     MainImageName = product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,
                     VarientType = create.ProductVarientId > 0 ? product.ProductVarients.First(a => a.Id == create.ProductVarientId).Type.ToStringValue() : null,
                     VarientValue = create.ProductVarientId > 0 ? product.ProductVarients.First(a => a.Id == create.ProductVarientId).Value : null,
@@ -255,7 +256,7 @@ namespace OrganicShop.BLL.Services
 
 
 
-        public async Task<ServiceResponse<List<CreateProductItemDto>>> CreateForCookie(CreateProductItemDto create, List<CreateProductItemDto> previousCreates)
+        public async Task<ServiceResponse<List<ProductItemCookieDto>>> CreateForCookie(CreateProductItemDto create, List<ProductItemCookieDto> previousProductItems)
         {
             var productStock = 0;
 
@@ -269,30 +270,65 @@ namespace OrganicShop.BLL.Services
             else
             {
                 productStock = _ProductRepository.GetQueryable()
-                .Include(a => a.ProductVarients)
                 .FirstAsync(a => a.Id == create.ProductId).Result.Stock;
             }
 
-            var previousCreate = previousCreates.FirstOrDefault(a => a.ProductId == create.ProductId);
+            var previousProductItem = previousProductItems.FirstOrDefault(a => a.ProductId == create.ProductId);
 
-            if (previousCreate == null)
+            if (previousProductItem == null)
             {
                 if (create.Count > productStock)
                 {
                     create.Count = productStock;
                 }
-                previousCreates.Add(create);
+                previousProductItems.Add(_Mapper.Map<ProductItemCookieDto>(create));
             }
             else
             {
-                previousCreate.Count += create.Count;
-                if (previousCreate.Count > productStock)
+                previousProductItem.Count += create.Count;
+                if (previousProductItem.Count > productStock)
                 {
-                    previousCreate.Count = productStock;
+                    previousProductItem.Count = productStock;
                 }
             }
 
-            return new ServiceResponse<List<CreateProductItemDto>>(ResponseResult.Success, previousCreates);
+            return new ServiceResponse<List<ProductItemCookieDto>>(ResponseResult.Success, previousProductItems);
         }
+
+
+
+
+
+
+        public async Task<ServiceResponse<List<ProductItemCookieDto>>> UpdateForCookie(long productItemId , int count, List<ProductItemCookieDto> previousProductItems)
+        {
+            var productItem = previousProductItems.FirstOrDefault(a => a.Id == productItemId);
+            
+            if (productItem == null)
+                return new ServiceResponse<List<ProductItemCookieDto>>(ResponseResult.NotFound, _Message.NotFound());
+            var productStock = 0;
+
+            if (productItem.ProductVarientId > 0)
+            {
+                productStock = _ProductRepository.GetQueryable()
+                    .Include(a => a.ProductVarients)
+                    .FirstAsync(a => a.Id == productItem.ProductId).Result.ProductVarients
+                    .First(a => a.Id == productItem.ProductVarientId).Stock;
+            }
+            else
+            {
+                productStock = _ProductRepository.GetQueryable()
+                    .FirstAsync(a => a.Id == productItem.ProductId).Result.Stock;
+            }
+            productItem.Count += count;
+            if(productItem.Count > productStock)
+            {
+                productItem.Count = productStock;
+            }
+
+            return new ServiceResponse<List<ProductItemCookieDto>>(ResponseResult.Success, _Message.SuccessUpdate(), previousProductItems);
+        }
+
+
     }
 }

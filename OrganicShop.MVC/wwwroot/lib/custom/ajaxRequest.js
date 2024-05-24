@@ -136,7 +136,7 @@ let fetchResponse = null;
 let formElem = document.createElement('form');
 let formMethod;
 let CkEditorElement = document.getElementById('ckeditor');
-            
+
 async function FetchRequest(e) {
     e.preventDefault();
     formElem = e.target;
@@ -165,6 +165,44 @@ async function FetchRequest(e) {
         HideLoading();
     }
 }
+
+
+let RequestResult = false;
+async function FetchRequestForm(form) {
+    RequestResult = false;
+    form.onsubmit = () => false;
+    form.requestSubmit();
+    //console.log(form);
+    CkEditorElement = form.querySelector('#ckeditor');
+    console.log(`Is Form Valid: ${$(form).valid()}`)
+    if ($(form).valid()) {
+        ShowLoading();
+        try {
+            formData = new FormData(form);
+            if (CkEditorElement) {
+                formData.set(CkEditorElement.name, `${CkEditor.getData()}`);
+            }
+            formMethod = form.getAttribute('method').toLowerCase();
+            fetchResponse = await fetch(form.action, {
+                method: formMethod,
+                body: formMethod == 'get' ? null : formData,
+            });
+            await HandleFetchResponse(fetchResponse, e);
+            form.reset();
+            RequestResult = true;
+        }
+        catch (er) {
+            Toast('Warning', 'An error was thrown from client', 2, 5000);
+            console.log(er);
+        }
+        await HideLoading();
+        //return new Promise((resolve, reject) => {
+        //    resolve(RequestResult);
+        //});
+        return RequestResult;
+    }
+}
+
 
 
 
