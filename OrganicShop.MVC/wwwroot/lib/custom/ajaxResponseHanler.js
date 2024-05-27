@@ -84,6 +84,9 @@ async function HandleFetchResponse(response, ev) {
         else if (ResponseDataType == 'json') {
             await response.json().then(a => { console.log(a); });
         }
+        else if (ResponseDataType == 'redirect') {
+            await RedirectThenToast(response);
+        }
         else if (ResponseDataType == 'empty') {
             // nothing to do
         }
@@ -190,6 +193,20 @@ function RedirectThenToast(response) {
         }
     });
 }
+
+function Redirect(response) {
+    response.json().then(redirect => {
+        if (redirect.IsReplace == true) {
+            console.log("replace action");
+            location.replace(redirect.Url);
+        }
+        else {
+            location.assign(redirect.Url);
+        }
+    });
+}
+
+
 
 function ToastThenRefresh(response) {
     response.json().then(message => {

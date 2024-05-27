@@ -50,7 +50,7 @@ namespace OrganicShop.BLL.Mappers
                         b.Seller.Description,
                         b.Seller.Picture != null ? b.Seller.Picture.Name:PathExtensions.SellerDefaultImage,
                         b.Seller.Address.Text,
-                        b.Seller.Address.Phone,
+                        b.Seller.Address.PhoneNumber,
                         b.Seller.Comments.Count,
                         b.Seller.Comments.Any() ? (float)b.Seller.Comments.Sum(a => a.Rate) / (float)b.Seller.Comments.Count() : 0
                         )))

@@ -268,6 +268,38 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
 
 
+        #region redirect
+
+        public IActionResult Redirect(HttpContext httpContext, string action, bool replace)
+        {
+            httpContext.Response.Headers.Add("ResponseDataType", "redirect");
+            Redirect redirect = new Redirect()
+            {
+                Url = GetUrl(action),
+                IsReplace = replace,
+                TimeOut = 0,
+            };
+            return new ContentResult() { Content = redirect.GetJsonStrng() };
+            //return Content(redirect.GetJsonStrng());
+        }
+        public IActionResult Redirect(HttpContext httpContext,string action, string controller,bool replace)
+        {
+            httpContext.Response.Headers.Add("ResponseDataType", "redirect");
+            Redirect redirect = new Redirect()
+            {
+                Url = GetUrl(action, controller),
+                IsReplace = replace,
+                TimeOut = 0,
+            };
+            return new ContentResult() { Content = redirect.GetJsonStrng() };
+            //return Content(redirect.GetJsonStrng());
+        }
+
+        #endregion
+
+
+
+
         public IActionResult Empty(HttpContext httpContext)
         {
             httpContext.Response.Headers.Add("ResponseDataType", "empty");

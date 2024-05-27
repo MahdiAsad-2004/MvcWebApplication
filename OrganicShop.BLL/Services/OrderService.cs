@@ -12,6 +12,7 @@ using AutoMapper;
 using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
+using System.Text;
 
 namespace OrganicShop.BLL.Services
 {
@@ -85,13 +86,42 @@ namespace OrganicShop.BLL.Services
 
 
 
-        public async Task<ServiceResponse<Empty>> Create(CreateOrderDto create)
+        public async Task<ServiceResponse<OrderDetailDto>> GetDetail(string trackingCode)
+        {
+            var query = _OrderRepository.GetQueryable();
+
+            #region includes
+
+            query = query
+                .Include(a => a.Address)
+                .Include(a => a.ProductItems)
+                    .ThenInclude(a => a.Product)
+                        .ThenInclude(a => a.Pictures)
+                .Include(a => a.ProductItems)
+                    .ThenInclude(a => a.Product)
+                        .ThenInclude(a => a.ProductVarients)
+                .AsQueryable();                            
+
+            #endregion
+
+            var order = await query.FirstOrDefaultAsync(a => a.TrackingCode == trackingCode);
+            
+            if (order == null)
+                return new ServiceResponse<OrderDetailDto>(ResponseResult.NotFound, null);
+
+            return new ServiceResponse<OrderDetailDto>(ResponseResult.Success, _Mapper.Map<OrderDetailDto>(order));
+        }
+
+
+
+
+        public async Task<ServiceResponse<string>> Create(CreateOrderDto create)
         {
             Order Order = _Mapper.Map<Order>(create);
             var Address = await _AddressRepository.GetAsNoTracking(create.AddressId);
 
             if (Address == null)
-                return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
+                return new ServiceResponse<string>(ResponseResult.NotFound, _Message.NotFound(),string.Empty);
 
             Order.Address = Address;
             long orderId = await _OrderRepository.Add(Order, _AppUserProvider.User.Id);
@@ -136,10 +166,20 @@ namespace OrganicShop.BLL.Services
             #endregion
 
 
-            if (result1.Result != ResponseResult.Success) 
-                return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.SuccessUpdate());
+            #region create trackingCode
 
-            return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append(Guid.NewGuid());
+            stringBuilder = stringBuilder.Replace("-", "");
+            Order.TrackingCode = stringBuilder.ToString()[0..12];
+
+            #endregion
+
+
+            if (result1.Result != ResponseResult.Success) 
+                return new ServiceResponse<string>(ResponseResult.NotFound, _Message.SuccessUpdate() , Order.TrackingCode);
+
+            return new ServiceResponse<string>(ResponseResult.Success, _Message.SuccessCreate(), string.Empty);
         }
 
 

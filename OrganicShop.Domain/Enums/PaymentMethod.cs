@@ -8,11 +8,13 @@ namespace OrganicShop.Domain.Enums
 {
     public enum PaymentMethod
     {
-        PaymentGeteway = 3,
+        Cash = 1,
 
-        Wallet = 2,
+        PaymentGeteway = 2,
 
-        CartToCart = 3,
+        Wallet = 3,
+
+        CartToCart = 4,
 
 
     }

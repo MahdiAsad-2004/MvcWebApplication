@@ -27,13 +27,12 @@
 
                     <div class="middle-box">
                         <div class="center-box">
-                            <div class="searchbar-box order-xl-1 d-none d-xl-block">
-                                <input type="search" class="form-control" id="exampleFormControlInput1"
-                                       placeholder="جستجوی محصول، تحویل درب منزل شما...">
-                                <button class="btn search-button">
+                            <form id="search-header-form" class="searchbar-box order-xl-1 d-none d-xl-block" action="/products/search/title" method="get">
+                                <input type="search" id="search-header-form-input" class="form-control" placeholder="جستجوی محصول ...">
+                                <button type="button" id="search-header-form-button" class="btn search-button">
                                     <i class="iconly-Search icli"></i>
                                 </button>
-                            </div>
+                            </form>
                             <div class="location-box-2">
                                 <button class="btn location-button" data-bs-toggle="modal"
                                         data-bs-target="#locationModal">

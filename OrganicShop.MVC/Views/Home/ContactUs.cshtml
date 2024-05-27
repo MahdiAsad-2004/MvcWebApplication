@@ -1,0 +1,169 @@
+﻿@using OrganicShop.Domain.Dtos.ContactUsDtos
+@using OrganicShop.Domain.Dtos.UserMessageDtos
+ @model UpdateContactUsDto
+
+<!-- Breadcrumb Section Start -->
+<section class="breadcrumb-section pt-0">
+    <div class="container-fluid-lg">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb-contain">
+                    <h2>تماس با ما</h2>
+                    <nav>
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item">
+                                <a href="/">
+                                    <i class="fa-solid fa-house"></i>
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active">تماس با ما</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Contact Box Section Start -->
+<section class="contact-box-section">
+    <div class="container-fluid-lg">
+        <div class="row g-lg-5 g-3">
+            <div class="col-lg-6">
+                <div class="left-sidebar-box">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="contact-image">
+                                <img src="../assets/images/inner-page/contact-us.png"
+                                     class="img-fluid blur-up lazyloaded" alt="">
+                            </div>
+                        </div>
+                        <div class="col-xl-12">
+                            <div class="contact-title">
+                                <h3>با ما در تماس باشید</h3>
+                            </div>
+
+                            <div class="contact-detail">
+                                <div class="row g-4">
+                                    <div class="col-xxl-6 col-lg-12 col-sm-6">
+                                        <div class="contact-detail-box">
+                                            <div class="contact-icon">
+                                                <i class="fa-solid fa-phone"></i>
+                                            </div>
+                                            <div class="contact-detail-title">
+                                                <h4>شماره تماس</h4>
+                                            </div>
+
+                                            @if (Model.PhoneNumber1 != null)
+                                            {
+                                                <div class="contact-detail-contain mt-1" style="cursor:pointer;">
+                                                    <p onclick="CopyText(event)">@Model.PhoneNumber1</p>
+                                                </div>
+                                            }
+                                            @if (Model.PhoneNumber2 != null)
+                                            {
+                                                <div class="contact-detail-contain mt-1" style="cursor:pointer;">
+                                                    <p onclick="CopyText(event)">@Model.PhoneNumber2</p>
+                                                </div>
+                                            }
+                                            @if (Model.PhoneNumber3 != null)
+                                            {
+                                                <div class="contact-detail-contain mt-1" style="cursor:pointer;">
+                                                    <p onclick="CopyText(event)">@Model.PhoneNumber3</p>
+                                                </div>
+                                            }
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xxl-6 col-lg-12 col-sm-6">
+                                        <div class="contact-detail-box">
+                                            <div class="contact-icon">
+                                                <i class="fa-solid fa-envelope"></i>
+                                            </div>
+                                            <div class="contact-detail-title">
+                                                <h4>ایمیل</h4>
+                                            </div>
+                                            @if (Model.Email1 != null)
+                                            {
+                                                <div class="contact-detail-contain mt-1" style="cursor:pointer;">
+                                                    <p onclick="CopyText(event)">@Model.Email1</p>
+                                                </div>
+                                            }
+                                            @if (Model.Email2 != null)
+                                            {
+                                                <div class="contact-detail-contain mt-1" style="cursor:pointer;">
+                                                    <p onclick="CopyText(event)">@Model.Email2</p>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-xxl-6 col-lg-12 col-sm-6">
+                                        <div class="contact-detail-box">
+                                            <div class="contact-icon">
+                                                <i class="fa-solid fa-location-dot"></i>
+                                            </div>
+                                            <div class="contact-detail-title">
+                                                <h4>@Model.Office1</h4>
+                                            </div>
+
+                                            <div class="contact-detail-contain">
+                                                <p>@Model.Address</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xxl-6 col-lg-12 col-sm-6">
+                                        <div class="contact-detail-box">
+                                            <div class="contact-icon">
+                                                <i class="fa-solid fa-phone"></i>
+                                            </div>
+                                            <div class="contact-detail-title">
+                                                <h4>تلفن تماس</h4>
+                                            </div>
+
+                                            @if (Model.Phone1 != null)
+                                            {
+                                                <div class="contact-detail-contain mt-1" style="cursor:pointer;">
+                                                    <p onclick="CopyText(event)">@Model.Phone1</p>
+                                                </div>
+                                            }
+                                            @if (Model.Phone2 != null)
+                                            {
+                                                <div class="contact-detail-contain mt-1" style="cursor:pointer;">
+                                                    <p onclick="CopyText(event)">@Model.Phone2</p>
+                                                </div>
+                                            }
+                                            @if (Model.Phone3 != null)
+                                            {
+                                                <div class="contact-detail-contain mt-1" style="cursor:pointer;">
+                                                    <p onclick="CopyText(event)">@Model.Phone3</p>
+                                                </div>
+                                            }
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @await Html.PartialAsync("_SendUserMessage" , new CreateUserMessageDto());
+
+        </div>
+    </div>
+</section>
+<!-- Contact Box Section End -->
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

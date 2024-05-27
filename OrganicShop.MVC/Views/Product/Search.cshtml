@@ -1,0 +1,77 @@
+﻿@using OrganicShop.Domain.Dtos.ProductDtos
+@model List<ProductSummaryDto>
+@{
+    string searchText = ViewBag.SearchText;
+}
+
+<!-- Breadcrumb Section Start -->
+<section class="breadcrumb-section pt-0">
+    <div class="container-fluid-lg">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb-contain">
+                    <h2>جستجو : محصولات</h2>
+                    <nav>
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item">
+                                <a href="/">
+                                    <i class="fa-solid fa-house"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/Products">محصولات</a>
+                            </li>
+                            <li class="breadcrumb-item active">جستجو</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Search Bar Section Start -->
+<section class="search-section">
+    <div class="container-fluid-lg">
+        <div class="row">
+            <div class="col-xxl-6 col-xl-8 mx-auto">
+                <div class="title d-block text-center">
+                    <h2>جستجو برای محصولات</h2>
+                    <span class="title-leaf">
+                        <svg class="icon-width">
+                            <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
+                        </svg>
+                    </span>
+                </div>
+
+                <form class="search-box" id="search-box-form" action="/product/search/" method="post" data-target-id="search-result-products-container" >
+                    <div class="input-group">
+                        <span hidden id="searchText-span">@searchText</span>
+                        <input id="search-box-form-input" name="searchText" type="text" class="form-control" placeholder="عبارت موردنظر را تایپ کنید" value="@searchText">
+                        <button class="btn theme-bg-color text-white m-0" type="button" id="search-box-form-button">
+                            جستجو
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Search Bar Section End -->
+
+@await Html.PartialAsync("_Search" , Model);
+
+
+<form id="add-to-cart-form" hidden action="/Cart/AddProduct" onsubmit="FetchRequest(event)" method="post">
+    <input type="number" id="add-to-cart-form-productId" name="createProductItem.ProductId" hidden readonly value="" />
+    <input type="number" id="add-to-cart-form-productVarientId" name="createProductItem.ProductVarientId" hidden readonly value="" />
+    <input type="number" id="add-to-cart-form-count" name="createProductItem.Count" hidden readonly value="" />
+    <button type="submit" hidden></button>
+</form>
+<form id="preview-product-modal-request-form" hidden action="/Product/Preview" onsubmit="FetchRequest(event)" method="post" data-target-id="preview-product-modal">
+    <input type="number" name="id" hidden readonly value="0" />
+    <button type="submit" hidden></button>
+</form>
+<form id="edit-product-wishlist-form" hidden action="/User/EditProductWishList" method="post">
+    <input type="number" name="productId" hidden readonly value="0" />
+</form>

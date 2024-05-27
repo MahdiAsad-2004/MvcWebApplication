@@ -48,7 +48,7 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
-        [HttpGet("Products")]
+        [HttpGet("/Products")]
         public async Task<IActionResult> Index(FilterProductDto filter, PagingDto paging)
         {
             paging.PageItemsCount = 24;
@@ -84,7 +84,7 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
-        [HttpGet("Category/{categoryTitle}")]
+        [HttpGet("/Category/{categoryTitle}")]
         public async Task<IActionResult> Index2(FilterProductDto filter, PagingDto paging, string categoryTitle)
         {
             categoryTitle = TextExtension.DecodePersianString(categoryTitle);
@@ -145,17 +145,37 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
+        [HttpGet("products/search/{searchText}")]
+        public async Task<IActionResult> Search(string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText))
+                return Redirect("/Error/404");
+
+            var model = (await _ProductService.GetAllSummary
+                (new FilterProductDto { Title = searchText }, new PagingDto { PageItemsCount = 20 })).Data?.List ?? new List<ProductSummaryDto>();
+
+            ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
+            ViewBag.SearchText = searchText;
+
+            return View("Search",model);
+        }
 
 
 
 
+        [HttpPost("products/search/{any}")]
+        public async Task<IActionResult> Search_Post(string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText))
+                return _ClientHandleResult.Redirect(HttpContext, "404", "Error", false);
 
+            var model = (await _ProductService.GetAllSummary
+                (new FilterProductDto { Title = searchText }, new PagingDto { PageItemsCount = 20 })).Data?.List ?? new List<ProductSummaryDto>();
+            
+            ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
 
-        //[Authorize]
-        //public async Task<IActionResult> AddToWishList(CreateWishItemDto createWishItem)
-        //{
-        //    var response = 
-        //}
+            return _ClientHandleResult.Partial(HttpContext, PartialView("_Search", model));
+        }
 
 
 

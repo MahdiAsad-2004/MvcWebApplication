@@ -16,7 +16,7 @@ namespace OrganicShop.Domain.IServices
         
         Task<ServiceResponse<Empty>> Delete( int id);
 
-        Task<ServiceResponse<List<ComboDto<Category>>>> GetCombos();
+        Task<ServiceResponse<List<ComboDto<Category>>>> GetCombos(FilterCategoryDto? filter = null);
 
         Task<ServiceResponse<UpdateCategoryDto>> Get(int Id);
 

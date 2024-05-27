@@ -567,8 +567,28 @@ async function EditProductInWishList(event, productId) {
 }
 
 
+// copy text
+
+let CopyingTargetElement;
+function CopyText(event) {
+    CopyingTargetElement = event.target;
+    if (CopyingTargetElement.innerText) {
+        window.navigator.clipboard.writeText(CopyingTargetElement.innerText);
+    }
+    else if (CopyingTargetElement.value) {
+        window.navigator.clipboard.writeText(CopyingTargetElement.value);
+    }
+}
 
 
+// search header form
 
+let SearchHeaderForm = document.getElementById('search-header-form');
+let SearchHeaderFormInput = document.getElementById('search-header-form-input');
+let SearchHeaderFormButton = document.getElementById('search-header-form-button');
 
+SearchHeaderFormButton.onclick = () => {
+    SearchHeaderForm.action = `/products/search/${SearchHeaderFormInput.value}`;
+    SearchHeaderForm.submit();
+}
 

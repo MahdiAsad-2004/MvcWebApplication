@@ -24,14 +24,11 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly IUserRepository _userRepository;
-        private readonly IWishItemRepository _WishItemRepository;
         private readonly IProductRepository _ProductRepository;
-        public UserService(IApplicationUserProvider provider, IMapper mapper, IUserRepository userRepository,
-            IWishItemRepository wishItemRepository, IProductRepository productRepository) : base(provider)
+        public UserService(IApplicationUserProvider provider, IMapper mapper, IUserRepository userRepository,IProductRepository productRepository) : base(provider)
         {
             _Mapper = mapper;
             _userRepository = userRepository;
-            _WishItemRepository = wishItemRepository;
             _ProductRepository = productRepository;
         }
 

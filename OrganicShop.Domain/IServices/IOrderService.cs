@@ -9,7 +9,9 @@ namespace OrganicShop.Domain.IServices
     {
         Task<ServiceResponse<PageDto<Order, OrderListDto, long>>> GetAll(FilterOrderDto? filter = null,PagingDto? paging = null);
 
-        Task<ServiceResponse<Empty>> Create(CreateOrderDto create);
+        Task<ServiceResponse<OrderDetailDto>> GetDetail(string trackingCode);
+
+        Task<ServiceResponse<string>> Create(CreateOrderDto create);
 
         Task<ServiceResponse<Empty>> Update(UpdateOrderDto update);
         

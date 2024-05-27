@@ -14,12 +14,14 @@ namespace OrganicShop.Domain.Entities
     {
         public string TrackingCode { get; set; }
         public int TotalPrice { get; set; }
-        public DeliveryType DeliveryType { get; set; }
+        public int DiscountPrice { get; set; }
+        public int FinalPrice { get; set; }
+        public int DeliveryPrice { get; set; }
+        public string DeliveryType { get; set; }
+        public DateTime DeliveryDate { get; set; }
         public OrderStatus OrderStatus { get; set; }
-        public DateTime DeliveryDatePredicate { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public long AddressId { get; set; }
-        
         public long ReceiverId { get; set; }
 
 

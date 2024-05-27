@@ -1,0 +1,90 @@
+﻿@using OrganicShop.Domain.Dtos.UserMessageDtos
+@model CreateUserMessageDto
+
+<div class="col-lg-6">
+    <div class="title d-xxl-none d-block">
+        <h2>تماس با ما</h2>
+    </div>
+    <div class="right-sidebar-box">
+        <form class="row" action="/Home/SendUserMessage" method="post" onsubmit="FetchRequest(event)">
+            @if (User.GetAppUser().Id > 0)
+            {
+                <input hidden asp-for="FirstName" disabled />
+                <input hidden asp-for="LastName" disabled />
+                <input hidden asp-for="Email" disabled />
+                <input hidden asp-for="PhoneNumber" disabled />
+                <input hidden readonly asp-for="UserId" value="@User.GetAppUser().Id"/>
+                <div class="col-12">
+                    <div class="mb-md-4 mb-3 custom-form">
+                        <label for="exampleFormControlTextarea" class="form-label">پیام شما</label>
+                        <div class="custom-textarea">
+                            <textarea class="form-control" asp-for="Text"
+                                      placeholder="پیام خود را تایپ کنید" rows="6"></textarea>
+                            <i class="fa-solid fa-message"></i>
+                        </div>
+                        <span asp-validation-for="Text" class="text-danger mt-2"></span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-xxl-6 col-lg-12 col-sm-6">
+                    <div class="mb-md-4 mb-3 custom-form">
+                        <label asp-for="FirstName" class="form-label"></label>
+                        <div class="custom-input">
+                            <input asp-for="FirstName" type="text" class="form-control" placeholder="نام خود را وارد گنید">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <span asp-validation-for="FirstName" class="text-danger mt-2"></span>
+                    </div>
+                </div>
+
+                <div class="col-xxl-6 col-lg-12 col-sm-6">
+                    <div class="mb-md-4 mb-3 custom-form">
+                        <label asp-for="LastName" for="exampleFormControlInput1" class="form-label"></label>
+                        <div class="custom-input">
+                            <input asp-for="LastName" type="text" class="form-control" placeholder="نام خانوادگی خود را وارد گنید">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <span asp-validation-for="LastName" class="text-danger mt-2"></span>
+                    </div>
+                </div>
+
+                <div class="col-xxl-6 col-lg-12 col-sm-6">
+                    <div class="mb-md-4 mb-3 custom-form">
+                        <label asp-for="Email" class="form-label"></label>
+                        <div class="custom-input">
+                            <input asp-for="Email" type="email" class="form-control" placeholder="ایمیل خود را وارد کنید">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger mt-2"></span>
+                    </div>
+                </div>
+
+                <div class="col-xxl-6 col-lg-12 col-sm-6">
+                    <div class="mb-md-4 mb-3 custom-form">
+                        <label asp-for="PhoneNumber" class="form-label"></label>
+                        <div class="custom-input">
+                            <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="شماره تماس خود را وارد کنید">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger mt-2"></span>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="mb-md-4 mb-3 custom-form">
+                        <label for="exampleFormControlTextarea" class="form-label">پیام شما</label>
+                        <div class="custom-textarea">
+                            <textarea asp-for="Text" class="form-control" placeholder="پیام خود را تایپ کنید" rows="6"></textarea>
+                            <i class="fa-solid fa-message"></i>
+                        </div>
+                        <span asp-validation-for="Text" class="text-danger mt-2"></span>
+                    </div>
+                </div>
+            }
+
+        </form>
+        <button type="submit" class="btn btn-animation btn-md fw-bold ms-auto">ارسال پیام</button>
+    </div>
+</div>

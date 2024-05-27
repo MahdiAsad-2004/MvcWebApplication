@@ -1,0 +1,315 @@
+﻿@using OrganicShop.BLL.Extensions
+@section Styles {
+    <link href="~/lib/datePicker/behzadi-persianDatepicker/css/persianDatepicker-default.css" rel="stylesheet" />
+}
+@using OrganicShop.Domain.Dtos.AddressDtos
+@using OrganicShop.Domain.Dtos.DeliveryDtos
+@using OrganicShop.Domain.Dtos.OrderDtos
+@using OrganicShop.Domain.Dtos.ProductItemDtos
+@model CreateOrderDto
+@{
+    var userAddresses = ViewData["UserAddresses"] as List<AddressListDto>;
+    var productItems = ViewData["ProductItems"] as List<ProductItemListDto>;
+    bool IsFreeDelivery = ViewBag.FreeDelivery;
+    int totalPrice = 0;
+}
+@section Breadcrumb {
+
+    <!-- Breadcrumb Section Start -->
+    <section class="breadcrumb-section pt-0">
+        <div class="container-fluid-lg">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumb-contain">
+                        <h2>پرداخت نهایی : سبد خرید</h2>
+                        <nav>
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item">
+                                    <a href="/">
+                                        <i class="fa-solid fa-house"></i>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="/cart">
+                                        سبد خرید
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active">پرداخت نهایی</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+}
+
+<!-- Checkout section Start -->
+<section class="checkout-section-2 section-b-space">
+    <div class="container-fluid-lg">
+        <form class="row g-sm-4 g-3" method="post" action="/Order/Create" onsubmit="FetchRequest(event)">
+            <div class="col-lg-8">
+                <div class="left-sidebar-checkout">
+                    <div class="checkout-detail-box">
+                        <ul>
+                            <li>
+                                <div class="checkout-icon">
+                                    <lord-icon target=".nav-item" src="https://cdn.lordicon.com/ggihhudh.json"
+                                               trigger="loop-on-hover"
+                                               colors="primary:#121331,secondary:#646e78,tertiary:#0baf9a"
+                                               class="lord-icon">
+                                    </lord-icon>
+                                </div>
+                                <div class="checkout-box">
+                                    <div class="checkout-title">
+                                        <h4>آدرس پستی</h4>
+                                    </div>
+
+                                    <div class="checkout-detail">
+                                        <div class="row g-4">
+                                            @if (userAddresses.Any())
+                                            {
+                                                @foreach (var address in userAddresses)
+                                                {
+                                                    <div class="col-xxl-6 col-lg-12 col-md-6">
+                                                        <div class="delivery-address-box">
+                                                            <div>
+                                                                <div class="form-check">
+                                                                    <input asp-for="AddressId" value="@address.Id" class="form-check-input" type="radio" id="flexRadioDefault1">
+                                                                </div>
+
+                                                                <div class="label">
+                                                                    <label>@address.Title</label>
+                                                                </div>
+
+                                                                <ul class="delivery-address-detail">
+                                                                    <li>
+                                                                        <h4 class="fw-500">@address.ReceiverName</h4>
+                                                                    </li>
+
+                                                                    <li>
+                                                                        <p class="text-content">
+                                                                            <span class="text-title">آدرس : </span> @address.Text
+                                                                        </p>
+                                                                    </li>
+
+                                                                    <li>
+                                                                        <h6 class="text-content">
+                                                                            <span class="text-title">کد پستی : </span> @address.PostCode
+                                                                        </h6>
+                                                                    </li>
+
+                                                                    <li>
+                                                                        <h6 class="text-content mb-0">
+                                                                            <span class="text-title">شماره تماس : </span> @address.PhoneNumber
+                                                                        </h6>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div class="col-xxl-2 col-lg-4 col-md-2">
+                                                    <button class="btn theme-bg-color text-white btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#add-address-modal-from">
+                                                        <i data-feather="plus"class="me-2"></i> افزودن آدرس جدید
+                                                    </button>
+                                                </div>
+                                            }
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="checkout-icon">
+                                    <lord-icon target=".nav-item" src="https://cdn.lordicon.com/oaflahpk.json"
+                                               trigger="loop-on-hover" colors="primary:#0baf9a" class="lord-icon">
+                                    </lord-icon>
+                                </div>
+                                <div class="checkout-box">
+                                    <div class="checkout-title">
+                                        <h4>زمان ارسال</h4>
+                                    </div>
+
+                                    <div class="checkout-detail">
+                                        <div class="row g-4">
+                                            <div class="col-12 future-box show">
+                                                <div class="future-option">
+                                                    <div class="row g-md-0 gy-4">
+                                                        <div class="col-md-6">
+                                                            <div class="delivery-items">
+                                                                <div>
+                                                                    <h5 class="items text-content">
+                                                                        <span>@productItems.Sum(a => a.Count) مورد </span>
+                                                                    </h5>
+                                                                    @if (IsFreeDelivery == false)
+                                                                    {
+                                                                        <h5 class="charge text-content">
+                                                                            @(IsFreeDelivery ? $"" : "")
+                                                                            هزینه ارسال
+                                                                            @Model.DeliveryPrice.ToToman()
+                                                                            <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Extra Charge">
+                                                                                <i class="fa-solid fa-circle-exclamation"></i>
+                                                                            </button>
+                                                                        </h5>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-floating theme-form-floating date-box">
+                                                                <label>انتخاب زمان </label>
+                                                                <input asp-for="DeliveryDate" class="form-control p-date-picker" type="text" autocomplete="off">
+                                                                <span asp-validation-for="DeliveryDate" class="mt-1 text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="checkout-icon">
+                                    <lord-icon target=".nav-item" src="https://cdn.lordicon.com/qmcsqnle.json"
+                                               trigger="loop-on-hover" colors="primary:#0baf9a,secondary:#0baf9a"
+                                               class="lord-icon">
+                                    </lord-icon>
+                                </div>
+                                <div class="checkout-box">
+                                    <div class="checkout-title">
+                                        <h4>پرداخت</h4>
+                                    </div>
+
+                                    <div class="checkout-detail">
+                                        <div class="accordion accordion-flush custom-accordion"
+                                             id="accordionFlushExample">
+                                            <div class="accordion-item">
+                                                <div class="accordion-header" id="flush-headingFour">
+                                                    <div class="accordion-button collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         data-bs-target="#flush-collapseFour">
+                                                        <div class="custom-form-check form-check mb-0">
+                                                            <label class="form-check-label" for="cash">
+                                                                <input class="form-check-input mt-0" type="radio"
+                                                                       name="flexRadioDefault" id="cash" checked> پرداخت نقدی
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="flush-collapseFour"
+                                                     class="accordion-collapse collapse show"
+                                                     data-bs-parent="#accordionFlushExample">
+                                                    <div class="accordion-body">
+                                                        <p class="cod-review">
+                                                            با لینک پرداخت پیامک به صورت دیجیتال پرداخت کنید. در مناطق ممنوعه کووید ممکن است پول نقد پذیرفته نشود. <a href="javascript:void(0)">بیشتر بدانید.</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="right-side-summery-box">
+                    <div class="summery-box-2">
+                        <div class="summery-header">
+                            <h3>سبد خرید</h3>
+                        </div>
+
+                        <ul class="summery-contain">
+                            @{
+                                int productItemTotalPrice = 0;
+                            }
+                            @foreach (var productItem in productItems)
+                            {
+                                productItemTotalPrice = productItem.DiscountedPrice == null ?
+                                (productItem.Price * productItem.Count) : (productItem.DiscountedPrice.Value * productItem.Count);
+
+                                <li>
+                                    <img src="~/media/images/product/@productItem.MainImageName" class="img-fluid blur-up lazyloaded checkout-image" alt="@productItem.Title">
+                                    <h4>@productItem.Title<span> (@productItem.Count) </span></h4>
+                                    <h4 class="price">
+                                        @productItemTotalPrice.ToToman()
+                                    </h4>
+                                </li>
+
+                                totalPrice += productItemTotalPrice;
+                            }
+
+                        </ul>
+                        @{
+                            int finalPrice = totalPrice + Model.DeliveryPrice - Model.DiscountPrice;
+                        }
+                        <ul class="summery-total">
+                            <li>
+                                <h4>جمع</h4>
+                                <h4 class="price">@totalPrice.ToToman()</h4>
+                            </li>
+
+                            <li>
+                                <h4>هزینه ارسال</h4>
+                                <h4 class="price">@(IsFreeDelivery ? "رایگان" : Model.DeliveryPrice.ToToman())</h4>
+                            </li>
+
+                            @if (Model.DiscountPrice > 0)
+                            {
+                                <li>
+                                    <h4>تخفیف</h4>
+                                    <h4 class="price"> - @Model.DiscountPrice.ToToman()</h4>
+                                </li>
+                            }
+
+                            <li class="list-total">
+                                <h4>جمع کل</h4>
+                                <h4 class="price">@finalPrice.ToToman()</h4>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button class="btn theme-bg-color text-white btn-md w-100 mt-4 fw-bold">ثبت سفارش</button>
+                </div>
+            </div>
+            <input hidden readonly asp-for="UserId" />
+            <input hidden readonly asp-for="CartId" />
+            <input hidden readonly asp-for="PaymentMethod" />
+            <input hidden readonly asp-for="DeliveryType" />
+            <input hidden readonly asp-for="TotalPrice" value="@totalPrice" />
+            <input hidden readonly asp-for="DiscountPrice" value="@Model.DiscountPrice" />
+            <input hidden readonly asp-for="DeliveryPrice" value="@(IsFreeDelivery ? 0 : Model.DeliveryPrice)" />
+            <input hidden readonly asp-for="FinalPrice" value="@finalPrice" />
+        </form>
+    </div>
+</section>
+<!-- Checkout section End -->
+@section Modals{
+
+    @await Html.PartialAsync("_AddAddressModal" , new CreateAddressDto{UserId = Model.UserId}); 
+}
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/lib/datePicker/behzadi-persianDatepicker/js/persianDatepicker.min.js"></script>
+
+    <script src="~/site/views/cart/checkout.js"></script>
+
+}

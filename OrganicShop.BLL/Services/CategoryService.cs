@@ -168,12 +168,40 @@ namespace OrganicShop.BLL.Services
         }
 
 
-        public async Task<ServiceResponse<List<ComboDto<Category>>>> GetCombos()
+        public async Task<ServiceResponse<List<ComboDto<Category>>>> GetCombos(FilterCategoryDto? filter = null)
         {
-            var comboDtos = _CategoryRepository
-              .GetQueryable()
+            if (filter == null) filter = new FilterCategoryDto();
+
+            var query = _CategoryRepository.GetQueryable();
+
+            #region filter
+
+            query = filter.ApplyBaseFilters(query);
+
+            if (filter.Title != null)
+                query = query.Where(q => EF.Functions.Like(q.Title, $"%{filter.Title}%"));
+
+            if (filter.ParentId != null)
+            {
+                if (filter.ParentId != 0) query = query.Where(q => q.ParentId == filter.ParentId);
+                else query = query.Where(q => q.ParentId == null);
+            }
+
+            if (filter.Type != CategoryType.All)
+            {
+                if (filter.Type == CategoryType.Product)
+                    query = query.Where(q => q.Type == CategoryType.All || q.Type == CategoryType.Product);
+
+                if (filter.Type == CategoryType.Article)
+                    query = query.Where(q => q.Type == CategoryType.All || q.Type == CategoryType.Article);
+            }
+
+            #endregion
+
+            var comboDtos = query
               .Select(a => _Mapper.Map<ComboDto<Category>>(a))
               .ToList();
+
             return new ServiceResponse<List<ComboDto<Category>>>(ResponseResult.Success, comboDtos);
         }
     }

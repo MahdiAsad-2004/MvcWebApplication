@@ -31,6 +31,7 @@ namespace OrganicShop.Domain.Entities
         public ICollection<PermissionUsers> PermissionUsers { get; set; }
         public Seller? Seller { get; set; }
         public ICollection<WishItem> WishItems { get; set; }
+        public ICollection<UserMessage> UserMessages { get; set; }
 
 
 

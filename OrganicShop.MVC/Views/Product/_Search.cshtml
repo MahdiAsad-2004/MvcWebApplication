@@ -1,0 +1,26 @@
+﻿@using OrganicShop.Domain.Dtos.ProductDtos
+@model List<ProductSummaryDto>  
+@{
+    var userWihsIds = ViewData["UserWishProductIds"] as long[];
+}
+
+<!-- Product Section Start -->
+<section class="section-b-space" id="search-result-products-container">
+    <div class="container-fluid-lg">
+        <div class="row">
+            <div class="col-12">
+                <div class="search-product product-wrapper">
+                  
+
+                    @foreach (var item in Model)
+                    {
+                        <partial name="_ProductBox" model="item" view-data="ViewData" view-data-UserWishProductIds="userWihsIds" view-data-RemoveButton="false" />
+                    }
+
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Product Section End -->

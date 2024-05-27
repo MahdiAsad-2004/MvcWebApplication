@@ -4,8 +4,10 @@ using Microsoft.Extensions.Options;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.BLL.Providers;
 using OrganicShop.BLL.Utils;
+using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.Dtos.CategoryDtos;
 using OrganicShop.Domain.Dtos.NewsLetterMemberDtos;
+using OrganicShop.Domain.Dtos.OrderDtos;
 using OrganicShop.Domain.Dtos.Page;
 using OrganicShop.Domain.Dtos.ProductDtos;
 using OrganicShop.Domain.Dtos.ProductItemDtos;
@@ -27,14 +29,21 @@ namespace OrganicShop.Mvc.Controllers
     {
         #region ctor
 
-        private readonly IProductItemService _ProductItemService;
-        private readonly ICartService _CartService;
         private readonly AesKeys _AesKeys;
-        public CartController(IProductItemService productItemService, IOptions<AesKeys> options, ICartService cartService)
+        private readonly ICartService _CartService;
+        private readonly IOrderService _OrderService;
+        private readonly IAddressService _AddressService;
+        private readonly IDeliveryService _DeliveryService;
+        private readonly IProductItemService _ProductItemService;
+        public CartController(IProductItemService productItemService, IOptions<AesKeys> options, ICartService cartService,
+            IAddressService addressService, IDeliveryService deliveryService, IOrderService orderService)
         {
             _ProductItemService = productItemService;
             _AesKeys = options.Value;
             _CartService = cartService;
+            _AddressService = addressService;
+            _DeliveryService = deliveryService;
+            _OrderService = orderService;
         }
 
         #endregion
@@ -91,10 +100,6 @@ namespace OrganicShop.Mvc.Controllers
 
             return View("Index", model);
         }
-
-
-
-
 
 
 
@@ -163,6 +168,59 @@ namespace OrganicShop.Mvc.Controllers
             return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
 
         }
+
+
+
+        [HttpGet("/Checkout")]
+        [Authorize]
+        public async Task<IActionResult> Checkout(int discountPrice, byte deliveryId, bool freeDelivery)
+        {
+            long userId = User.GetAppUser().Id;
+            var cartId = HttpContext.GetAppUser().CartId;
+
+            if (userId < 1 || cartId < 1)
+                return Redirect("/Error/404");
+
+            ViewData["UserAddresses"] = (await _AddressService.GetAll(new FilterAddressDto { UserId = userId })).Data?.List ?? new List<AddressListDto>();
+            ViewData["ProductItems"] = (await _ProductItemService.GetAll(new FilterProductItemDto { CartId = cartId }))?.Data ?? new List<ProductItemListDto>();
+            var delivery = (await _DeliveryService.Get(deliveryId)).Data;
+            ViewBag.FreeDelivery = freeDelivery;
+
+            var create = new CreateOrderDto
+            {
+                DeliveryType = delivery.Type,
+                DeliveryPrice = delivery.Price,
+                DiscountPrice = discountPrice,
+                CartId = cartId.Value,
+                UserId = userId,
+                PaymentMethod = PaymentMethod.Cash,
+            };
+
+            return View("Checkout", create);
+
+        }
+
+
+
+        [HttpPost("/order/create")]
+        public async Task<IActionResult> CreateOrder(CreateOrderDto create)
+        {
+            var response = await _OrderService.Create(create);
+            if (response.Result == ResponseResult.Success)
+            {
+                return _ClientHandleResult.ToastThenRedirect(HttpContext, $"Success/{response.Data}", "Order", new Toast(ToastType.Success, response.Message), false);
+            }
+            return _ClientHandleResult.Toast(HttpContext,new Toast(ToastType.Error, response.Message));
+        }
+
+
+
+        [HttpGet("/order/success/{trackingCode}")]
+        public async Task<IActionResult> OrderSuccess(string trackingCode)
+        {
+            
+        }
+
 
 
 

@@ -1,4 +1,5 @@
 ﻿using OrganicShop.Domain.Entities.Base;
+using OrganicShop.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +15,9 @@ namespace OrganicShop.Domain.Entities
         public string Title { get; set; }
         public string Text { get; set; }
         public string PostCode { get; set; }
-        public string Phone { get; set; }
+        public string PhoneNumber { get; set; }
+        public string ReceiverName { get; set; }
+        public Province Province { get; set; }
         public long? UserId { get; set; }
         public int? SellerId { get; set; }
 

@@ -1,0 +1,143 @@
+﻿@using OrganicShop.Domain.Dtos.FaqDtos
+@model List<FaqListDto>
+
+@section Breadcrumb {
+    <!-- Breadcrumb Section Start -->
+    <section class="breadcrumb-section pt-0">
+        <div class="container-fluid-lg">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumb-contain">
+                        <h2>سوالات متداول</h2>
+                        <nav>
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item">
+                                    <a href="/">
+                                        <i class="fa-solid fa-house"></i>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active">سوالات متداول</li>
+                                @* <i class="fa-solid fa-messages-question"></i> *@
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+}
+
+<!-- Faq Section Start -->
+<section class="faq-box-contain section-b-space">
+    <div class="container">
+        <div class="row">
+            <div class="col-xxl-4">
+                <div class="faq-contain p-sticky">
+                    <h2>سوالات متداول</h2>
+                    <p>
+                        ما در حال پاسخگویی به سوالات متداول هستیم. نگران نباشید اگر نتوانستید مورد دقیق را پیدا کنید. 
+                        می توانید با جستجو یا ادامه کلیک بر روی دکمه زیر یا مستقیماً اطلاعات بیشتری کسب کنید 
+                        <a href="/contact-us" class="theme-color text-decoration-underline">با پشتیبانی ما تماس بگیرید</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-xl-7">
+                <div class="faq-accordion">
+                    <div class="accordion" id="accordionExample">
+
+                        @{
+                            byte index = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapse-@index" aria-expanded="true" aria-controls="collapse-@index">
+                                        @item.QuestionText
+                                        <i class="fa-solid fa-angle-down"></i>
+                                    </button>
+                                </h2>
+                                <div id="collapse-@index" class="accordion-collapse collapse show"
+                                     aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                       @Html.Raw(item.AnswerText)
+                                    </div>
+                                </div>
+                            </div>
+                            index++;
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Faq Section End -->
+
+<section class="faq-contain">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="slider-4-2 product-wrapper">
+                    <div>
+                        <div class="faq-top-box">
+                            <div class="faq-box-icon">
+                                <img src="../assets/images/inner-page/faq/start.png" class="blur-up lazyload"
+                                     alt="">
+                            </div>
+
+                            <div class="faq-box-contain">
+                                <h3>ارسال سریع</h3>
+                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از.</p>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="faq-top-box">
+                            <div class="faq-box-icon">
+                                <img src="../assets/images/inner-page/faq/help.png" class="blur-up lazyload" alt="">
+                            </div>
+
+                            <div class="faq-box-contain">
+                                <h3>سوال فروش</h3>
+                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="faq-top-box">
+                            <div class="faq-box-icon">
+                                <img src="../assets/images/inner-page/faq/price.png" class="blur-up lazyload"
+                                     alt="">
+                            </div>
+
+                            <div class="faq-box-contain">
+                                <h3>قیمت ها و پلن ها</h3>
+                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="faq-top-box">
+                            <div class="faq-box-icon">
+                                <img src="../assets/images/inner-page/faq/contact.png" class="blur-up lazyload"
+                                     alt="">
+                            </div>
+
+                            <div class="faq-box-contain">
+                                <h3>پشتیبانی تلفنی</h3>
+                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

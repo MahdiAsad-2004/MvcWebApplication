@@ -257,6 +257,28 @@ namespace OrganicShop.Domain.Enums.EnumValues
         }
 
 
+        public static string ToStringValue(this PaymentMethod paymentMethod)
+        {
+            switch (paymentMethod)
+            {
+                case PaymentMethod.Cash:
+                    return "پرداخت نقد";
+
+                case PaymentMethod.PaymentGeteway:
+                    return "درگاه پرداخت";
+
+                case PaymentMethod.Wallet:
+                    return "کیف پول";
+
+                case PaymentMethod.CartToCart:
+                    return "کارت به کارت";
+
+                default:
+                    throw new Exception("Enum value not found");
+            }
+        }
+
+
         public static string ToStringValue(this PermissionSortType sortType)
         {
             switch (sortType)
@@ -370,7 +392,7 @@ namespace OrganicShop.Domain.Enums.EnumValues
 
                 case ProductSortType.RateDesc:
                     return "امتیاز بیشترین";
-                    
+
                 default:
                     throw new Exception("Enum value not found");
             }
@@ -492,7 +514,7 @@ namespace OrganicShop.Domain.Enums.EnumValues
                     throw new Exception("Enum value not found");
             }
         }
-        
+
 
         public static string ToStringValue(this VarientType varientType)
         {
@@ -503,21 +525,89 @@ namespace OrganicShop.Domain.Enums.EnumValues
 
                 case VarientType.Size:
                     return "سایز";
-                
+
                 case VarientType.Weight:
                     return "وزن";
-                
+
                 case VarientType.Volume:
                     return "حجم";
-                
+
                 default:
                     throw new Exception("Enum value not found");
             }
         }
 
 
+        public static string ToStringValue(this Province province)
+        {
+            switch (province)
+            {
+                case Province.Alborz: return "البرز";
 
+                case Province.Ardebil: return "اردبیل";
 
+                case Province.AzarbayjanGharbi: return "آذربایجان غربی";
+
+                case Province.AzarbayjanSharghi: return "آذربایجان شرقی";
+
+                case Province.Boushehr: return "بوشهر";
+
+                case Province.ChaharMahal: return "چهارمحال و بختیاری";
+
+                case Province.Esfahan: return "اصفهان";
+
+                case Province.Fars: return "فارس";
+
+                case Province.Gilan: return "گیلان";
+
+                case Province.Golestan: return "گلستان";
+
+                case Province.Hamedan: return "همدان";
+
+                case Province.Hormozgan: return "هرمزگان";
+
+                case Province.Ilam: return "ایلام";
+
+                case Province.Kerman: return "کرمان";
+
+                case Province.Kermanshah: return "کرمانشاه";
+
+                case Province.Khoozestan: return "خوزستان";
+
+                case Province.KhorasanJonoubi: return "خراسان جنوبی";
+
+                case Province.KhorasanRazavi: return "خراسان رضوی";
+
+                case Province.KhorasanShomali: return "خراسان شمالی";
+
+                case Province.Kohgilouye: return "کهگیلویه و بویراحمد";
+
+                case Province.Kordestan: return "کردستان";
+
+                case Province.Lorestan: return "لرستان";
+
+                case Province.Markazi: return "مرکزی";
+
+                case Province.Mazandaran: return "مازندران";
+
+                case Province.Qazvin: return "قزوین";
+
+                case Province.Qom: return "قم";
+
+                case Province.Semnan: return "سمنان";
+
+                case Province.Sistan: return "سیستان";
+
+                case Province.Tehran: return "تهران";
+
+                case Province.Yazd: return "یزد";
+
+                case Province.Zanjan: return "زنجان";
+
+                default:
+                    throw new Exception("Enum value not found");
+            }
+        }
 
 
 
