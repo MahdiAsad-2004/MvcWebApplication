@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OrganicShop.BLL.Mappers;
-using OrganicShop.Domain.Dtos.DeliveryDtos;
 using OrganicShop.Domain.Dtos.Page;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.IRepositories;
@@ -10,70 +9,70 @@ using OrganicShop.Domain.Response;
 using AutoMapper;
 using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
+using OrganicShop.Domain.Dtos.ShippingMethodDtos;
 
 namespace OrganicShop.BLL.Services
 {
-    public class DeliveryService : Service<Delivery>, IDeliveryService
+    public class ShippingMethodService : Service<ShippingMethod>, IShippingMethodService
     {
         #region ctor
 
         private readonly IMapper _Mapper;
-        private readonly IDeliveryRepository _DeliveryRepository;
+        private readonly IShippingMethodRepository _ShippingMethodRepository;
 
-        public DeliveryService(IApplicationUserProvider provider,IMapper mapper,IDeliveryRepository DeliveryRepository) : base(provider)
+        public ShippingMethodService(IApplicationUserProvider provider,IMapper mapper,IShippingMethodRepository ShippingMethodRepository) : base(provider)
         {
             _Mapper = mapper;
-            _DeliveryRepository = DeliveryRepository;
+            _ShippingMethodRepository = ShippingMethodRepository;
         }
 
         #endregion
 
 
-        public async Task<ServiceResponse<List<DeliveryListDto>>> GetAll()
+        public async Task<ServiceResponse<List<ShippingMethodListDto>>> GetAll()
         {
-            var query = _DeliveryRepository.GetQueryable();
+            var query = _ShippingMethodRepository.GetQueryable();
 
             var list = await query
-                .Select(a => _Mapper.Map<DeliveryListDto>(a))
+                .Select(a => _Mapper.Map<ShippingMethodListDto>(a))
                 .ToListAsync();
 
-            return new ServiceResponse<List<DeliveryListDto>>(ResponseResult.Success,list);
+            return new ServiceResponse<List<ShippingMethodListDto>>(ResponseResult.Success,list);
         }
 
 
-        public async Task<ServiceResponse<DeliveryListDto>> Get(byte deliveryId)
+        public async Task<ServiceResponse<ShippingMethodListDto>> Get(byte ShippingMethodId)
         {
-            if (deliveryId > 0 == false)
-                return new ServiceResponse<DeliveryListDto>(ResponseResult.NotFound, _Message.NotFound(), null);
+            if (ShippingMethodId > 0 == false)
+                return new ServiceResponse<ShippingMethodListDto>(ResponseResult.NotFound, _Message.NotFound(), null);
 
-            var delivery = await _DeliveryRepository.GetAsNoTracking(deliveryId);
+            var ShippingMethod = await _ShippingMethodRepository.GetAsNoTracking(ShippingMethodId);
 
-            if(delivery == null)
-                return new ServiceResponse<DeliveryListDto>(ResponseResult.NotFound, _Message.NotFound(), null);
+            if(ShippingMethod == null)
+                return new ServiceResponse<ShippingMethodListDto>(ResponseResult.NotFound, _Message.NotFound(), null);
 
-            return new ServiceResponse<DeliveryListDto>(ResponseResult.Success , _Mapper.Map<DeliveryListDto>(delivery));
+            return new ServiceResponse<ShippingMethodListDto>(ResponseResult.Success , _Mapper.Map<ShippingMethodListDto>(ShippingMethod));
         }
 
 
 
-        public async Task<ServiceResponse<Empty>> Create(CreateDeliveryDto create)
+        public async Task<ServiceResponse<Empty>> Create(CreateShippingMethodDto create)
         {
-            Delivery Delivery = _Mapper.Map<Delivery>(create);
-            await _DeliveryRepository.Add(Delivery,_AppUserProvider.User.Id);
+            ShippingMethod ShippingMethod = _Mapper.Map<ShippingMethod>(create);
+            await _ShippingMethodRepository.Add(ShippingMethod,_AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());
         }
 
 
 
-        public async Task<ServiceResponse<Empty>> Update(UpdateDeliveryDto update)
+        public async Task<ServiceResponse<Empty>> Update(UpdateShippingMethodDto update)
         {
-            Delivery? Delivery = await _DeliveryRepository.GetAsTracking(update.Id);
+            ShippingMethod? ShippingMethod = await _ShippingMethodRepository.GetAsTracking(update.Id);
             
-            if (Delivery == null)
+            if (ShippingMethod == null)
                 return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
 
-            await _DeliveryRepository.Update(_Mapper.Map<Delivery>(update), _AppUserProvider.User.Id);
+            await _ShippingMethodRepository.Update(_Mapper.Map<ShippingMethod>(update), _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
         }
 
@@ -82,12 +81,12 @@ namespace OrganicShop.BLL.Services
         public async Task<ServiceResponse<Empty>> Delete(byte delete)
         {
 
-            Delivery? Delivery = await _DeliveryRepository.GetAsTracking(delete);
+            ShippingMethod? ShippingMethod = await _ShippingMethodRepository.GetAsTracking(delete);
 
-            if (Delivery == null)
+            if (ShippingMethod == null)
                 return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
 
-            await _DeliveryRepository.SoftDelete(Delivery, _AppUserProvider.User.Id);
+            await _ShippingMethodRepository.SoftDelete(ShippingMethod, _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessDelete());
         }
 

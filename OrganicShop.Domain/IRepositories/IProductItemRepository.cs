@@ -11,6 +11,6 @@ namespace OrganicShop.Domain.IRepositories
         IReadRepository<ProductItem,long>,
         IWriteRepository<ProductItem,long>
     {
-
+        Task SaveChanges();
     }
 }

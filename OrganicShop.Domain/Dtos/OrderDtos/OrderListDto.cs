@@ -11,7 +11,7 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
         public string UserPhoneNumber { get; set; }
         public DateTime DeliveryDatePredicate { get; set; }
         public string TrackingCode { get; set; }
-        public DeliveryType DeliveryType { get; set; }
+        public string ShippingMethodName { get; set; }
         public OrderStatus OrderStatus { get; set; }
        
     }

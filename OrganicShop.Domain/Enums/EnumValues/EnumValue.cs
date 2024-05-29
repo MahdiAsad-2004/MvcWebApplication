@@ -257,6 +257,25 @@ namespace OrganicShop.Domain.Enums.EnumValues
         }
 
 
+        public static string ToStringValue(this DoneStatus doneStatus)
+        {
+            switch (doneStatus)
+            {
+                case DoneStatus.Done:
+                    return "انجام شد";
+
+                case DoneStatus.Doing:
+                    return "در حال انجام";
+
+                case DoneStatus.Waiting:
+                    return "در انتظار";
+
+                default:
+                    throw new Exception("Enum value not found");
+            }
+        }
+
+
         public static string ToStringValue(this PaymentMethod paymentMethod)
         {
             switch (paymentMethod)
@@ -392,6 +411,31 @@ namespace OrganicShop.Domain.Enums.EnumValues
 
                 case ProductSortType.RateDesc:
                     return "امتیاز بیشترین";
+
+                default:
+                    throw new Exception("Enum value not found");
+            }
+        }
+
+
+        public static string ToStringValue(this OrderStep orderStep)
+        {
+            switch (orderStep)
+            {
+                case OrderStep.Processing:
+                    return "پردازش";
+
+                case OrderStep.Packing:
+                    return "بسته بندی";
+
+                case OrderStep.DeliveredToPost:
+                    return "تحویل به شرکت حمل و نقل";
+
+                case OrderStep.Transporting:
+                    return "ارسال محصول";
+
+                case OrderStep.DeliveredToCustomer:
+                    return "تحویل مشتری";
 
                 default:
                     throw new Exception("Enum value not found");

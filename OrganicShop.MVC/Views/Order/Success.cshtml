@@ -151,7 +151,7 @@
                                 </li>
                                 <li>
                                     <h4>هزینه حمل و نقل</h4>
-                                    <h4 class="price theme-color">@Model.DeliveryPrice.ToToman()</h4>
+                                    <h4 class="price theme-color">@(Model.ShippingPrice > 0 ? Model.ShippingPrice.ToToman() : "رایگان")</h4>
                                 </li>
                             </ul>
 
@@ -172,27 +172,27 @@
 
                             <ul class="summery-contain pb-0 border-bottom-0">
                                 <li class="d-block">
-                                  <h4>@Model.Address.Province.ToStringValue() , @Model.Address.Text</h4>
+                                  <h4>@Model.OrderAddress.Province.ToStringValue() , @Model.OrderAddress.Text</h4>
                                 </li>
 
                                 <li class="pb-0">
                                     <h4> تحویل گیرنده : </h4>
                                     <h4 class="price theme-color">
-                                        @Model.Address.ReceiverName
+                                        @Model.OrderAddress.ReceiverName
                                     </h4>
                                 </li>
 
                                 <li class="pb-0">
                                     <h4>تاریخ ارسال :</h4>
                                     <h4 class="price theme-color">
-                                        @Model.DeliveryDate.ToPersianDate()
+                                        @Model.SendDate.ToPersianDate()
                                     </h4>
                                 </li>
 
                                 <li class="pb-0">
                                     <h4>روش ارسال :</h4>
                                     <h4 class="price theme-color">
-                                        @Model.DeliveryType
+                                        @Model.ShippingMethodName
                                     </h4>
                                 </li>
 

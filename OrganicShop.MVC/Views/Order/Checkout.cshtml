@@ -3,7 +3,7 @@
     <link href="~/lib/datePicker/behzadi-persianDatepicker/css/persianDatepicker-default.css" rel="stylesheet" />
 }
 @using OrganicShop.Domain.Dtos.AddressDtos
-@using OrganicShop.Domain.Dtos.DeliveryDtos
+@using OrganicShop.Domain.Dtos.ShippingMethodDtos
 @using OrganicShop.Domain.Dtos.OrderDtos
 @using OrganicShop.Domain.Dtos.ProductItemDtos
 @model CreateOrderDto
@@ -154,7 +154,7 @@
                                                                         <h5 class="charge text-content">
                                                                             @(IsFreeDelivery ? $"" : "")
                                                                             هزینه ارسال
-                                                                            @Model.DeliveryPrice.ToToman()
+                                                                            @Model.ShippingPrice.ToToman()
                                                                             <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Extra Charge">
                                                                                 <i class="fa-solid fa-circle-exclamation"></i>
                                                                             </button>
@@ -167,8 +167,8 @@
                                                         <div class="col-md-6">
                                                             <div class="form-floating theme-form-floating date-box">
                                                                 <label>انتخاب زمان </label>
-                                                                <input asp-for="DeliveryDate" class="form-control p-date-picker" type="text" autocomplete="off">
-                                                                <span asp-validation-for="DeliveryDate" class="mt-1 text-danger"></span>
+                                                                <input asp-for="ShippingPrice" class="form-control p-date-picker" type="text" autocomplete="off">
+                                                                <span asp-validation-for="ShippingPrice" class="mt-1 text-danger"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -256,7 +256,7 @@
 
                         </ul>
                         @{
-                            int finalPrice = totalPrice + Model.DeliveryPrice - Model.DiscountPrice;
+                            int finalPrice = totalPrice + Model.ShippingPrice - Model.DiscountPrice;
                         }
                         <ul class="summery-total">
                             <li>
@@ -266,7 +266,7 @@
 
                             <li>
                                 <h4>هزینه ارسال</h4>
-                                <h4 class="price">@(IsFreeDelivery ? "رایگان" : Model.DeliveryPrice.ToToman())</h4>
+                                <h4 class="price">@(IsFreeDelivery ? "رایگان" : Model.ShippingPrice.ToToman())</h4>
                             </li>
 
                             @if (Model.DiscountPrice > 0)
@@ -290,10 +290,10 @@
             <input hidden readonly asp-for="UserId" />
             <input hidden readonly asp-for="CartId" />
             <input hidden readonly asp-for="PaymentMethod" />
-            <input hidden readonly asp-for="DeliveryType" />
+            <input hidden readonly asp-for="ShippingMethodName" />
             <input hidden readonly asp-for="TotalPrice" value="@totalPrice" />
             <input hidden readonly asp-for="DiscountPrice" value="@Model.DiscountPrice" />
-            <input hidden readonly asp-for="DeliveryPrice" value="@(IsFreeDelivery ? 0 : Model.DeliveryPrice)" />
+            <input hidden readonly asp-for="ShippingPrice" value="@(IsFreeDelivery ? 0 : Model.ShippingPrice)" />
             <input hidden readonly asp-for="FinalPrice" value="@finalPrice" />
         </form>
     </div>

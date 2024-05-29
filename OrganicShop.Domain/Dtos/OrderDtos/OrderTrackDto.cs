@@ -6,7 +6,7 @@ using OrganicShop.Domain.Enums;
 
 namespace OrganicShop.Domain.Dtos.OrderDtos
 {
-    public class OrderDetailDto : BaseListDto<long>
+    public class OrderTrackDto : BaseListDto<long>
     {
         public string TrackingCode { get; set; }
         public int TotalPrice { get; set; }
@@ -14,16 +14,17 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
         public int ShippingPrice { get; set; }
         public int FinalPrice { get; set; }
         public string ShippingMethodName { get; set; }
-        public DateTime SendDate { get; set; }
+        public DateTime DeliveryDateEstimated { get; set; }
         public DateTime CreateDate { get; set; }
         public OrderStatus OrderStatus { get; set; }
-        public PaymentMethod PaymentMethod { get; set; }
         public OrderAddress OrderAddress { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public string UserName { get; set; }
+        public string UserMainImageName { get; set; }
 
 
-
-
-        public OrderItemDto[] OrderItems { get; set; }
+        public TrackingStatus[] TrackingStatuses { get; set; }
+        public TrackingDescription[] TrackingDescriptions { get; set; }
 
 
     }

@@ -8,9 +8,9 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
 {
     public class CreateOrderDto : BaseDto
     {
-        [DisplayName("حمل و نقل")]
+        [DisplayName("روش حمل و نقل")]
         [Required(ErrorMessage = "{0} ضروری است")]
-        public DeliveryType DeliveryType { get; set; }
+        public string ShippingMethodName { get; set; }
 
 
         [DisplayName("روش پرداهت")]
@@ -21,7 +21,7 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
         [DisplayName("تاریخ ارسال")]
         [Required(ErrorMessage = "{0} ضروری است")]
         [MinDateNowShamsi]
-        public DateTime DeliveryDate { get; set; }
+        public DateTime SendDate { get; set; }
 
 
         [DisplayName("مجموع هزینه محصولات")]
@@ -39,7 +39,7 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
         [DisplayName("هزینه حمل و نقل")]
         [Required(ErrorMessage = "{0} ضروری است")]
         [Range(1000, int.MaxValue, ErrorMessage = "{0} باید حداقل {2} و حداکثر {1} باشد")]
-        public int DeliveryPrice { get; set; }
+        public int ShippingPrice { get; set; }
 
 
         [DisplayName("هزینه نهایی")]

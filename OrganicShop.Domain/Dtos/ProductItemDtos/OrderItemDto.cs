@@ -2,7 +2,7 @@
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Enums;
 
-namespace OrganicShop.Domain.Dtos.OrderDtos
+namespace OrganicShop.Domain.Dtos.ProductItemDtos
 {
     public class OrderItemDto : BaseListDto<long>
     {

@@ -1,0 +1,87 @@
+﻿@using OrganicShop.Domain.Dtos.Page
+@using OrganicShop.Domain.Dtos.SellerDtos
+@using OrganicShop.Domain.Entities
+@model PageDto<Seller,SellerSummaryDto,int>
+
+
+@section Breadcrumb {
+
+    <div class="breadcrumb-contain">
+        <h2>لیست فروشندگان </h2>
+        <nav>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="/">
+                        <i class="fa-solid fa-house"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">لیست فروشندگان</li>
+            </ol>
+        </nav>
+    </div>
+
+}
+
+<form id="sellers-form" hidden action="/Sellers" method="get" >
+    <input hidden readonly type="number" name="paging.PageNumber" value="1"/>
+</form>
+
+<!-- Grid Section Start -->
+<section class="seller-grid-section">
+    <div class="container-fluid-lg">
+        <div class="row g-4">
+         
+            @foreach (var item in Model.List)
+            {
+                <div class="col-xxl-4 col-md-6">
+                    <a href="shop-left-sidebar.html" class="seller-grid-box">
+                        <div class="grid-contain">
+                            <div class="seller-contact-details">
+                                <div class="seller-contact">
+                                    <div class="seller-icon">
+                                        <i class="fa-solid fa-map-pin"></i>
+                                    </div>
+
+                                    <div class="contact-detail">
+                                        <h5>آدرس : <span>@item.AddressText , @item.AddressProvince</span></h5>
+                                    </div>
+                                </div>
+
+                                <div class="seller-contact">
+                                    <div class="seller-icon">
+                                        <i class="fa-solid fa-phone"></i>
+                                    </div>
+
+                                    <div class="contact-detail">
+                                        <h5>تلفن تماس : <span>@item.AddressPhone</span></h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="contain-name">
+                                <div>
+                                    <h6>از @item.RegisterDate.ToString("MMMM yyyy")</h6>
+                                    <h3>@item.Title</h3>
+                                    <div class="product-rating">
+                                        @await Html.PartialAsync("_RatingPartial" , item.CommentsRate)
+                                        <h6 class="theme-color ms-2">(@item.CommentsCount)</h6>
+                                    </div>
+                                    <span class="product-label">@item.ProductsCount محصول</span>
+                                </div>
+
+                                <div class="grid-image">
+                                    <img src="~/media/images/seller/@item.MainImageName" alt="@item.Title" class="img-fluid">
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            }
+         
+        </div>
+
+        <partial name="_PagerPartial" model="Model.Pager" view-data="ViewData" view-data-formId="@("sellers-form")" />
+
+    </div>
+</section>
+<!-- Grid Section End -->

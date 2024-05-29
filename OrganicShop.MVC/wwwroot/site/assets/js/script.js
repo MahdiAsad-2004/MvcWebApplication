@@ -453,7 +453,8 @@ $(".bg-overlay").click(function () {
 function GoPage(pageNumber, formId) {
     if (pageNumber && pageNumber > 0) {
         document.getElementById('pageNumber-input').ariaValueMax = pageNumber;
-        SubmitFormByIdWithButton(formId);
+        document.getElementById(id).requestSubmit();
+        //SubmitFormByIdWithButton(formId);
     }
 }
 
@@ -462,7 +463,7 @@ function SubmitFormWithButton(form) {
 }
 
 function SubmitFormByIdWithButton(id) {
-    document.getElementById(id).querySelector(`[type='submit']`).click();
+    document.getElementById(id).requestSubmit();
 }
 
 

@@ -1,0 +1,191 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.OrderDtos
+@using OrganicShop.Domain.Enums
+@using OrganicShop.Domain.Enums.EnumValues
+@model OrderTrackDto
+
+@section Breadcrumb{
+    <!-- Breadcrumb Section Start -->
+    <section class="breadcrumb-section pt-0">
+        <div class="container-fluid-lg">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumb-contain">
+                        <h2>پیگیری سفارش</h2>
+                        <nav>
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item">
+                                    <a href="/">
+                                        <i class="fa-solid fa-house"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/Orders">سفارشات</a>
+                                </li>
+                                <li class="breadcrumb-item active">پیگیری سفارش</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+}
+
+<!-- Order Detail Section Start -->
+<section class="order-detail">
+    <div class="container-fluid-lg">
+        <div class="row g-sm-4 g-3">
+
+            <div class="col-xxl-12 col-xl-12 col-lg-12">
+                <div class="row g-sm-4 g-3">
+                    <div class="col-xl-4 col-sm-6">
+                        <div class="order-details-contain">
+                            <div class="order-tracking-icon">
+                                <i data-feather="package" class="text-content"></i>
+                            </div>
+
+                            <div class="order-details-name">
+                                <h5 class="text-content">کد رهگیری</h5>
+                                <h2 class="theme-color">@Model.TrackingCode</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-sm-6">
+                        <div class="order-details-contain">
+                            <div class="order-tracking-icon">
+                                <i data-feather="truck" class="text-content"></i>
+                            </div>
+
+                            <div class="order-details-name">
+                                <h5 class="text-content">روش ارسال</h5>
+                                <h4>@Model.ShippingMethodName</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-sm-6">
+                        <div class="order-details-contain">
+                            <div class="order-tracking-icon">
+                                <i class="text-content" data-feather="info"></i>
+                            </div>
+
+                            <div class="order-details-name">
+                                <h5 class="text-content">اطلاعات بسته</h5>
+                                <h4>نامشخص</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-sm-6">
+                        <div class="order-details-contain">
+                            <div class="order-tracking-icon">
+                                <i class="text-content" data-feather="crosshair"></i>
+                            </div>
+
+                            <div class="order-details-name">
+                                <h5 class="text-content">ارسال کننده</h5>
+                                <h4>ارگانیک شاپ</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-sm-6">
+                        <div class="order-details-contain">
+                            <div class="order-tracking-icon">
+                                <i class="text-content" data-feather="map-pin"></i>
+                            </div>
+
+                            <div class="order-details-name">
+                                <h5 class="text-content">آدرس تحویل</h5>
+                                <h4>@Model.OrderAddress.Province.ToStringValue()  @Model.OrderAddress.Text </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-sm-6">
+                        <div class="order-details-contain">
+                            <div class="order-tracking-icon">
+                                <i class="text-content" data-feather="calendar"></i>
+                            </div>
+
+                            <div class="order-details-name">
+                                <h5 class="text-content">زمان تخمین زده شده</h5>
+                                <h4>7 اردیبهشت , 05:05 عصر</h4>
+                                <h4>@Model.DeliveryDateEstimated.ToPersianDate().ToString("yyyy MMMM MM, HH:mm")</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 overflow-hidden">
+                        <ol class="progtrckr">
+
+                            @foreach (var status in Model.TrackingStatuses)
+                            {
+                                @if(status.DoneStatus == DoneStatus.Done)
+                                {
+                                    <li class="progtrckr-done">
+                                        <h5>@status.Step.ToStringValue()</h5>
+                                        <h6>@status.DoneDate.Value.ToPersianDate().ToLongDateTimeString()</h6>
+                                    </li>
+                                }
+                                else if(status.DoneStatus == DoneStatus.Doing)
+                                {
+                                    <li class="progtrckr-done">
+                                        <h5>@status.Step.ToStringValue()</h5>
+                                        <h6>@status.DoneStatus.ToStringValue()</h6>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="progtrckr-todo">
+                                        <h5>@status.Step.ToStringValue()</h5>
+                                        <h6>در انتظار</h6>
+                                    </li>
+                                }
+                            }
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Order Detail Section End -->
+<!-- Order Table Section Start -->
+<section class="order-table-section section-b-space">
+    <div class="container-fluid-lg">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table order-tab-table">
+                        <thead>
+                            <tr>
+                                <th>شرح</th>
+                                <th>تاریخ</th>
+                                <th>زمان</th>
+                                <th>محل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var trackingDescription in Model.TrackingDescriptions)
+                            {
+                                <tr>
+                                    <td>@trackingDescription.Title</td>
+                                    <td>@trackingDescription.Date.ToPersianDate().ToShortDate1String()</td>
+                                    <td>@trackingDescription.Date.ToPersianDate().ToLongTimeString()</td>
+                                    <td>@trackingDescription.Location</td>
+                                </tr>
+
+                            }
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Order Table Section End -->

@@ -39,4 +39,26 @@ namespace OrganicShop.BLL.Mappers
 
 
     }
+
+
+    public static class ProductItemMappers
+    {
+        public static OrderItemDto ToOrderItemDto(this ProductItem productItem)
+        {
+            var productVarient = productItem.Product.ProductVarients.FirstOrDefault(a => a.Id == productItem.ProductVarientId);
+            return new OrderItemDto
+            {
+                Barcode = productItem.Product.BarCode,
+                Count = productItem.Count,
+                Id = productItem.Id,
+                MainImageName = productItem.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,
+                Price = productItem.Price,
+                Title = productItem.Title,
+                VarientType = productVarient?.Type.ToStringValue() ?? null,
+                VarientValue = productVarient?.Value ?? null,
+            };
+        }
+
+    }
+
 }

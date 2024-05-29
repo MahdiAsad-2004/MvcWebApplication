@@ -150,13 +150,13 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
         #region toast => redirect
 
-        public IActionResult ToastThenRedirect(HttpContext httpContext, string actionName, Toast message, bool replace)
+        public IActionResult ToastThenRedirect(HttpContext httpContext, string url, Toast message, bool replace)
         {
             message.SetToastOnResponse(httpContext.Response);
             httpContext.Response.Headers.Add("ResponseDataType", "toast-redirect");
             Redirect redirect = new Redirect()
             {
-                Url = GetUrl(actionName),
+                Url = GetUrl(url),
                 IsReplace = replace,
                 TimeOut = 0,
             };

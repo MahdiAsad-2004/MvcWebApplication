@@ -5,9 +5,9 @@ using OrganicShop.Domain.Entities.Base;
 
 namespace OrganicShop.DAL.Configurations
 {
-    public class DeliveryConfig : IEntityTypeConfiguration<Delivery>
+    public class ShippingMethodConfig : IEntityTypeConfiguration<ShippingMethod>
     {
-        public void Configure(EntityTypeBuilder<Delivery> builder)
+        public void Configure(EntityTypeBuilder<ShippingMethod> builder)
         {
 
 

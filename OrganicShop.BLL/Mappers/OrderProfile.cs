@@ -1,9 +1,10 @@
 ﻿using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Dtos.OrderDtos;
 using AutoMapper;
-using OrganicShop.Domain.Dtos.OrderDtos;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.Domain.Enums.EnumValues;
+using OrganicShop.Domain.Dtos.ProductItemDtos;
+using DryIoc.ImTools;
 
 namespace OrganicShop.BLL.Mappers
 {
@@ -18,8 +19,18 @@ namespace OrganicShop.BLL.Mappers
 
 
             CreateMap<Order, OrderDetailDto>()
-                .ForMember(m => m.Address, a => a.MapFrom(b => b.Address))
+                .ForMember(m => m.CreateDate, a => a.MapFrom(b => b.BaseEntity.CreateDate))
                 .ForMember(m => m.OrderItems, a => a.MapFrom(b => b.ProductItems.Select(p => p.ToOrderItemDto()).ToArray()));
+
+
+
+            CreateMap<Order, OrderTrackDto>()
+                .ForMember(m => m.CreateDate, a => a.MapFrom(b => b.BaseEntity.CreateDate))
+                .ForMember(m => m.UserName, a => a.MapFrom(b => b.Receiver.Name))
+                .ForMember(m => m.UserName, a => a.MapFrom(b => b.Receiver.Picture != null ? b.Receiver.Picture.Name : PathExtensions.UserDefaultImage))
+                .ForMember(m => m.TrackingStatuses, a => a.MapFrom(b => b.TrackingStatuses.ToArray()))
+                .ForMember(m => m.TrackingDescriptions, a => a.MapFrom(b => b.TrackingDescriptions.ToArray()));
+
 
 
             CreateMap<CreateOrderDto, Order>();
@@ -31,24 +42,6 @@ namespace OrganicShop.BLL.Mappers
     }
 
 
-    public static class OrderMappers
-    {
-        public static OrderItemDto ToOrderItemDto(this ProductItem productItem)
-        {
-            var productVarient = productItem.Product.ProductVarients.FirstOrDefault(a => a.Id == productItem.ProductVarientId);
-            return new OrderItemDto
-            {
-                Barcode = productItem.Product.BarCode,
-                Count = productItem.Count,
-                Id = productItem.Id,
-                MainImageName = productItem.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,
-                Price = productItem.Price,
-                Title = productItem.Title,
-                VarientType = productVarient?.Type.ToStringValue() ?? null,
-                VarientValue = productVarient?.Value ?? null,
-            };
-        }
 
-    }
 
 }

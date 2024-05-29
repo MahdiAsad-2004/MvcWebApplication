@@ -5,11 +5,11 @@ using OrganicShop.Domain.Enums.SortTypes;
 
 namespace OrganicShop.Domain.Dtos.OrderDtos
 {
-    public class FilterOrderDto : BaseFilterDto<Entities.Order, long>
+    public class FilterOrderDto : BaseFilterDto<Order, long>
     {
         public long UserId { get; set; }
         public OrderStatus? OrderStatus { get; set; }
-        public DeliveryType? DeliveryType { get; set; }
+        public string ShippingMethodName { get; set; }
         public string? UserPhoneNumber { get; set; }
         public string? TrackingCode { get; set; }
         public OrderSortType SortBy { get; set; } = OrderSortType.None;

@@ -17,11 +17,10 @@ namespace OrganicShop.DAL.Configurations
           
 
             builder.HasMany(a => a.ProductItems).WithOne(a => a.Order).HasForeignKey(a => a.OrderId);
-            builder.HasOne(a => a.Receiver).WithMany(a => a.Orders).HasForeignKey(a => a.ReceiverId);
+            builder.HasOne(a => a.Receiver).WithMany(a => a.Orders).HasForeignKey(a => a.UserId);
             //builder.HasOne(a => a.Address).WithMany(a => a.Orders).HasForeignKey(a => a.AddressId);
             builder.HasMany(a => a.TrackingStatuses).WithOne(a => a.Order).HasForeignKey(a => a.OrderId);
             builder.HasMany(a => a.TrackingDescriptions).WithOne(a => a.Order).HasForeignKey(a => a.OrderId);
-            builder.HasOne(a => a.Address).WithMany(a => a.Orders).HasForeignKey(a => a.AddressId);
 
 
             

@@ -1,11 +1,6 @@
 ﻿using OrganicShop.Domain.Entities.Base;
 using OrganicShop.Domain.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrganicShop.Domain.Entities
 {
@@ -25,8 +20,6 @@ namespace OrganicShop.Domain.Entities
 
         public User? User { get; set; }
         public Seller? Seller { get; set; }
-        public ICollection<Order> Orders { get; set; }
-
 
 
     }

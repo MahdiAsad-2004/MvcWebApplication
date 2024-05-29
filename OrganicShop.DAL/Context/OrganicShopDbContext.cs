@@ -18,7 +18,6 @@ namespace OrganicShop.DAL.Context
         public DbSet<Comment> Comments { get; set; }
         public DbSet<ContactUs> ContactUs { get; set; }
         public DbSet<ProductItem> ProductItems { get; set; }
-        public DbSet<Delivery> Deliveries { get; set; }
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<DiscountCategories> DiscountCategories { get; set; }
         public DbSet<DiscountProducts> DiscountProducts { get; set; }
@@ -29,6 +28,7 @@ namespace OrganicShop.DAL.Context
         public DbSet<Operation> Operations { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Seller> Sellers { get; set; }
+        public DbSet<ShippingMethod> ShippingMethods { get; set; }
         public DbSet<TrackingStatus> TrackingStatuses { get; set; }
         public DbSet<TrackingDescription> TrackingDescriptions { get; set; }
         public DbSet<Permission> Permissions { get; set; }

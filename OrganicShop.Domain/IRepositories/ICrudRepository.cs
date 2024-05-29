@@ -38,6 +38,7 @@ namespace OrganicShop.Domain.IRepositories
         Task SoftDelete(TKey entity, long id, string? operationDescription = null);
         Task<TEntity?> GetAsTracking(TKey key);
         IQueryable<TEntity> GetQueryableTracking();
+        //Task SaveChanges();
     }
 
 
@@ -47,7 +48,6 @@ namespace OrganicShop.Domain.IRepositories
     {
         Task Delete(TEntity entity, long id, string? operationDescription = null);
         Task Delete(TKey entity, long id, string? operationDescription = null);
-        //Task SaveChanges();
 
     }
 }
