@@ -13,6 +13,7 @@ using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Dtos.Combo;
+using OrganicShop.BLL.Extensions;
 
 namespace OrganicShop.BLL.Services
 {
@@ -112,17 +113,32 @@ namespace OrganicShop.BLL.Services
 
 
 
-        public async Task<ServiceResponse<SellerDetailDto>> GetDetail(int Id)
+        public async Task<ServiceResponse<SellerDetailDto>> GetDetail(string codedTitle)
         {
-            //if(Id < 1)
-            //    return new ServiceResponse<SellerDetailDto>(ResponseResult.NotFound,null);
+            string title = TextExtension.DecodePersianString(codedTitle);
             
-            //var Seller = await _SellerRepository.GetAsNoTracking(Id);
-            
-            //if(Seller == null)
-            //    return new ServiceResponse<SellerDetailDto>(ResponseResult.NotFound,null);
+            if(string.IsNullOrWhiteSpace(title))
+                return new ServiceResponse<SellerDetailDto>(ResponseResult.NotFound,null);
 
-            return new ServiceResponse<SellerDetailDto>(ResponseResult.Success, _Mapper.Map<SellerDetailDto>(new Seller()));
+            var query = _SellerRepository.GetQueryable();
+
+            #region includes
+
+            query = query
+                .Include(a => a.Picture)
+                .Include(a => a.Address)
+                .Include(a => a.Products)
+                .Include(a => a.Comments)
+                .AsQueryable();
+
+            #endregion
+
+            var Seller = await query.FirstOrDefaultAsync(a => a.Title == title);
+            
+            if(Seller == null)
+                return new ServiceResponse<SellerDetailDto>(ResponseResult.NotFound,null);
+
+            return new ServiceResponse<SellerDetailDto>(ResponseResult.Success, _Mapper.Map<SellerDetailDto>(Seller));
         }
 
 

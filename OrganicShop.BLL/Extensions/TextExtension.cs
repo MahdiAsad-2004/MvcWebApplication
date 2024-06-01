@@ -122,7 +122,17 @@ namespace OrganicShop.BLL.Extensions
 
         public static string DecodePersianString(string codedSttring)
         {
-            return HttpUtility.UrlDecode(codedSttring, Encoding.UTF8).Replace("+", "-");
+            try
+            {
+                return HttpUtility.UrlDecode(codedSttring, Encoding.UTF8).Replace("+", "-");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"error in DecodePersianString()");
+                Console.WriteLine(ex.Message);
+                return string.Empty;
+            }
         }
 
     }

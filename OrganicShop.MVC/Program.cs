@@ -71,6 +71,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
+
+Console.WriteLine($"Database Can Connect: {app.Services.GetRequiredService<OrganicShopDbContext>().Database.CanConnect()}");
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

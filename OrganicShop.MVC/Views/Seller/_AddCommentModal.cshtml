@@ -1,9 +1,9 @@
 ﻿@using OrganicShop.Domain.Dtos.CommentDtos
 @model CreateCommentUserDto
 @{
-    string? productImageName = ViewData["ProductImageName"] as string;
-    string? productTitle = ViewData["ProductTitle"] as string;
-    @if (Model.ProductId == null || Model.ProductId < 1 || productImageName == null || productTitle == null)
+    string? sellerImageName = ViewData["SellerImageName"] as string;
+    string? sellerTitle = ViewData["SellerTitle"] as string;
+    @if (Model.SellerId == null || Model.SellerId < 1 || sellerImageName == null || sellerTitle == null)
     {
         throw new Exception("ProductId and ProductIamgeName and ProductTitle viewdata are null in _AddCommentModal");
     }
@@ -20,19 +20,19 @@
                 </button>
             </div>
             <div class="modal-body pt-0">
-                <form class="product-comment-form" action="/Comment/CreateForUser" method="post" onsubmit="FetchRequest(event)">
-                    <input asp-for="ProductId" hidden readonly/>
+                <form class="seller-add-comment-form" action="/Comment/CreateForUser" method="post" onsubmit="FetchRequest(event)">
+                    <input asp-for="SellerId" hidden readonly />
                     <div class="product-wrapper">
                         <div class="product-image">
                             <img class="img-fluid" alt="Solid Collared Tshirts"
-                                 src="~/media/images/product/@productImageName">
+                                 src="~/media/images/product/@sellerImageName">
                         </div>
                         <div class="product-content">
-                            <h5 class="name">@productTitle</h5>
+                            <h5 class="name">@sellerTitle</h5>
                         </div>
                     </div>
                     <div class="review-box">
-                        <input asp-for="Rate" hidden/>
+                        <input asp-for="Rate" hidden />
                         <div class="product-review-rating">
                             <label>امیتاز</label>
                             <div class="product-rating">
@@ -68,7 +68,10 @@
                 <button type="button" class="btn btn-md btn-theme-outline fw-bold" data-bs-dismiss="modal">
                     بستن
                 </button>
-                <button id="product-comment-button" type="button" class="btn btn-md fw-bold text-light theme-bg-color">ثبت</button>
+                <button type="button" class="btn btn-md fw-bold text-light theme-bg-color" 
+                    onclick="document.getElementById('seller-add-comment-form').requestSubmit()">
+                    ثبت
+                </button>
             </div>
         </div>
     </div>

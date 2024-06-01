@@ -90,7 +90,7 @@
 	  <None Include="Areas\Admin\Views\_ViewImports.cshtml" />
 	  <None Include="Areas\Admin\Views\_ViewStart.cshtml" />
 	  <None Include="Views\Error\NotFound.cshtml" />
-	  <None Include="Views\Home\Seller.cshtml" />
+	  <None Include="Views\Seller\Seller.cshtml" />
 	  <None Include="Views\Home\_HomeStartSection.cshtml" />
 	  <None Include="Views\Shared\Components\CategoriesSection\CategoriesSection.cshtml" />
 	  <None Include="Views\Shared\Components\SiteFooter\SiteFooter.cshtml" />

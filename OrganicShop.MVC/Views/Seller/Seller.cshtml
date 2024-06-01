@@ -1,0 +1,288 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.CommentDtos
+@using OrganicShop.Domain.Dtos.SellerDtos
+@model SellerDetailDto
+@{
+    float commentsRatingAverage = Model.Comments.Any() ? (float)Model.Comments.Sum(a => a.Rate) / (float)Model.Comments.Count() : 0;
+    int commentsCount = Model.Comments.Count();
+}
+
+
+@section Breadcrumb{
+
+    <div class="breadcrumb-contain">
+        <h2>@(Model.Title) : لیست فروشندگان </h2>
+        <nav>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="/">
+                        <i class="fa-solid fa-house"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="/sellers">
+                        لیست فروشندگان
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">
+                    @Model.Title
+                </li>
+            </ol>
+        </nav>
+    </div>
+}
+
+
+<section class="product-section">
+    <div class="container-fluid-lg">
+        <div class="row">
+            <div class="col-xxl-12 col-xl-12 col-lg-12 wow fadeInUp">
+                <div class="row g-4">
+                    <div class="col-xl-4 wow fadeInUp">
+                        <div class="product-left-box">
+                            <div class="row g-sm-4 g-2">
+                                <div class="col-12">
+                                    <div class="product-main no-arrow">
+                                        <div>
+                                            <div class="slider-image">
+                                                <img src="~/media/images/seller/@Model.Title" id="img-1" class="img-fluid blur-up lazyload" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-8 wow fadeInUp">
+                        <div class="right-box-contain">
+                            <h2 class="name">@Model.Title</h2>
+                            <div class="price-rating">
+                                <div class="product-rating custom-rate">
+                                  
+                                    @await Html.PartialAsync("_RatingPartial" , commentsRatingAverage)
+
+                                    <span class="review">@commentsCount بازخورد</span>
+                                </div>
+                            </div>
+
+                          
+                            <div class="vendor-list">
+                                <ul>
+                                    <li>
+                                        <div class="address-contact">
+                                            <i data-feather="map-pin"></i>
+                                            <h5>آدرس : <span class="text-content">@Model.AddressProvince - @Model.AddressText</span></h5>
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="address-contact">
+                                            <i data-feather="headphones"></i>
+                                            <h5>شماره تماس : <span class="text-content">@Model.AddressPhone</span></h5>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="address-contact">
+                                            <h5>عضویت : <span class="text-content">@Model.RegisterDate.ToShortDateString()</span></h5>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+
+                            <div class="dynamic-checkout">
+                                <button class="bg-theme btn btn-md">
+                                    <div>@Model.ProductsCount محصول</div>
+                                </button>
+                                <a class="border-theme-color btn btn-md scroll-button" href="/products/seller/@TextExtension.EncodePersianString(Model.Title)">
+                                    محصولات
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container-fluid-lg">
+        <div class="row">
+            <div class="col-12">
+                <div class="product-section-box m-0">
+                    <ul class="nav nav-tabs custom-nav" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                                    data-bs-target="#description" type="button" role="tab">
+                                توضیحات
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review"
+                                    type="button" role="tab">
+                                نظرات
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content custom-tab" id="myTabContent">
+                        <div class="tab-pane fade show active" id="description" role="tabpanel">
+                            <div class="product-description">
+                                <div class="nav-desh">
+                                    <p>
+                                        @Model.Description
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="review" role="tabpanel">
+                            <div class="review-box">
+                                <div class="row">
+                                    <div class="col-xl-5">
+                                        <div class="product-rating-box">
+                                            <div class="row">
+                                                <div class="col-xl-12">
+                                                    <div class="product-main-rating">
+                                                        <h2>
+                                                            @commentsRatingAverage.ToString("0.00")
+                                                            <i data-feather="star"></i>
+                                                        </h2>
+
+                                                        <h3>از 5</h3>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xl-12">
+                                                    @{
+                                                        int RateCount1 = Model.Comments.Where(a => a.Rate == 1).Count();
+                                                        int RateCount2 = Model.Comments.Where(a => a.Rate == 2).Count();
+                                                        int RateCount3 = Model.Comments.Where(a => a.Rate == 3).Count();
+                                                        int RateCount4 = Model.Comments.Where(a => a.Rate == 4).Count();
+                                                        int RateCount5 = Model.Comments.Where(a => a.Rate == 5).Count();
+                                                    }
+                                                    <ul class="product-rating-list">
+                                                        <li>
+                                                            <div class="rating-product">
+                                                                <h5>5<i data-feather="star"></i></h5>
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount5 / commentsCount * 100} %" : "0 %");">
+                                                                    </div>
+                                                                </div>
+                                                                <h5 class="total">@RateCount5</h5>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="rating-product">
+                                                                <h5>4<i data-feather="star"></i></h5>
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount4 / commentsCount * 100} %" : "0 %");">
+                                                                    </div>
+                                                                </div>
+                                                                <h5 class="total">@RateCount4</h5>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="rating-product">
+                                                                <h5>3<i data-feather="star"></i></h5>
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount3 / commentsCount * 100} %" : "0 %");">
+                                                                    </div>
+                                                                </div>
+                                                                <h5 class="total">@RateCount3</h5>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="rating-product">
+                                                                <h5>2<i data-feather="star"></i></h5>
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount2 / commentsCount * 100} %" : "0 %");">
+                                                                    </div>
+                                                                </div>
+                                                                <h5 class="total">@RateCount2</h5>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="rating-product">
+                                                                <h5>1<i data-feather="star"></i></h5>
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount1 / commentsCount * 100} %" : "0 %");">
+                                                                    </div>
+                                                                </div>
+                                                                <h5 class="total">@RateCount1</h5>
+                                                            </div>
+                                                        </li>
+
+                                                    </ul>
+
+                                                    @if (User.Identity.IsAuthenticated)
+                                                    {
+                                                        <div class="review-title-2">
+                                                            <h4 class="fw-bold">بازخورد این فروشنده</h4>
+                                                            <p>با ثبت بازخورد خود در خرید دیگران راهنمایی خوبی باشید</p>
+                                                            <button class="btn" type="button" data-bs-toggle="modal"
+                                                                    data-bs-target="#writereview">
+                                                                ثبت دیدگاه جدید
+                                                            </button>
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-7">
+                                        <div class="review-people">
+                                            <ul class="review-list">
+
+                                                @foreach (var comment in Model.Comments)
+                                                {
+                                                    <li>
+                                                        <div class="people-box">
+                                                            <div>
+                                                                <div class="people-image people-text">
+                                                                    <img alt="user" class="img-fluid " src="~/media/images/user/@comment.AuthorImageName">
+                                                                </div>
+                                                            </div>
+                                                            <div class="people-comment">
+                                                                <div class="people-name">
+                                                                    <a href="javascript:void(0)" class="name">@comment.AuthorName</a>
+                                                                    <div class="date-time">
+                                                                        <h6 class="text-content">
+                                                                            @comment.Date.ToShortDateTimeString()
+                                                                        </h6>
+                                                                        <div class="product-rating">
+                                                                            @await Html.PartialAsync("_RatingPartial", comment.Rate)
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="reply">
+                                                                    <p>@comment.Text</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
+                                                }
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Modals{
+
+    <partial name="_AddCommetnModal" model="new CreateCommentUserDto(){SellerId = Model.Id}"
+             view-data-SellerImageName="Model.MainImageName" view-data-SellerTitle="Model.Title" />
+
+}

@@ -20,12 +20,20 @@ namespace OrganicShop.BLL.Mappers
             CreateMap<Seller, SellerSummaryDto>()
                 .ForMember(m => m.RegisterDate, a => a.MapFrom(b => b.BaseEntity.CreateDate.ToPersianDate()))
                 .ForMember(m => m.CommentsCount, a => a.MapFrom(b => b.Comments.Count()))
-                .ForMember(m => m.CommentsCount, a => a.MapFrom(b => b.Comments.Count()))
                 .ForMember(m => m.CommentsRate, a => a.MapFrom(b => b.Comments.Any() ? (float)b.Comments.Sum(c => c.Rate)/(float)b.Comments.Count : 0))
                 .ForMember(m => m.AddressProvince, a => a.MapFrom(b => b.Address.Province.ToStringValue()))
                 .ForMember(m => m.AddressPhone, a => a.MapFrom(b => b.Address.PhoneNumber))
                 .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Picture != null ? b.Picture.Name : PathExtensions.SellerDefaultImage))
                 .ForMember(m => m.AddressText, a => a.MapFrom(b => b.Address.Text));
+
+
+            CreateMap<Seller, SellerDetailDto>()
+                .ForMember(m => m.RegisterDate, a => a.MapFrom(b => b.BaseEntity.CreateDate.ToPersianDate()))
+                .ForMember(m => m.AddressProvince, a => a.MapFrom(b => b.Address.Province.ToStringValue()))
+                .ForMember(m => m.AddressPhone, a => a.MapFrom(b => b.Address.PhoneNumber))
+                .ForMember(m => m.AddressText, a => a.MapFrom(b => b.Address.Text))
+                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Picture != null ? b.Picture.Name : PathExtensions.SellerDefaultImage))
+                .ForMember(m => m.Comments, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Select(c => c.ToListDto()).ToArray()));
 
 
             CreateMap<UpdateSellerDto, Seller>() //;

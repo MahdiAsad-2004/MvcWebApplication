@@ -12,7 +12,7 @@ namespace OrganicShop.Domain.IServices
 
         Task<ServiceResponse<PageDto<Seller, SellerSummaryDto, int>>> GetAllSummary(FilterSellerDto? filter = null, PagingDto? paging = null);
 
-        Task<ServiceResponse<SellerDetailDto>> GetDetail(int Id);
+        Task<ServiceResponse<SellerDetailDto>> GetDetail(string codedTitle);
 
         Task<ServiceResponse<Empty>> Create(CreateSellerDto create);
 

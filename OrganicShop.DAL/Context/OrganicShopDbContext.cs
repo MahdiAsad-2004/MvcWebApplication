@@ -49,7 +49,7 @@ namespace OrganicShop.DAL.Context
 
         public OrganicShopDbContext(DbContextOptions<OrganicShopDbContext> options) : base(options)
         {
-
+            
         }
 
 

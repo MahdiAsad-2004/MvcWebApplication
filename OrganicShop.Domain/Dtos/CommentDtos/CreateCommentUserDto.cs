@@ -30,6 +30,11 @@ namespace OrganicShop.Domain.Dtos.CommentDtos
         public long? ProductId { get; set; }
 
 
+        [DisplayName("فروشنده")]
+        [Range(1, long.MaxValue, ErrorMessage = "{0} باید حداقل {2} و حداکثر {1} باشد")]
+        public long? SellerId { get; set; }
+
+
         [DisplayName("مطلب")]
         [Range(1, int.MaxValue, ErrorMessage = "{0} باید حداقل {2} و حداکثر {1} باشد")]
         public int? ArticleId { get; set; }
