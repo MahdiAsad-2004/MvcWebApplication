@@ -121,6 +121,7 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.Pictures)
                 .Include(a => a.Category)
                 .Include(a => a.Comments)
+                    .ThenInclude(a => a.User)
                 .Include(a => a.TagArticles)
                 .AsQueryable();
             if (id != null)

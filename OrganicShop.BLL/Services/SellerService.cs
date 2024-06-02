@@ -129,6 +129,7 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.Address)
                 .Include(a => a.Products)
                 .Include(a => a.Comments)
+                    .ThenInclude(a => a.User)
                 .AsQueryable();
 
             #endregion
