@@ -17,6 +17,7 @@ namespace OrganicShop.Domain.Entities
         public int Count { get; set; }
         public int Price { get; set; }
         public long? CartId { get; set; }
+        public long? NextCartId { get; set; }
         public long? OrderId { get; set; }
         public bool IsOrdered { get; set; }
 
@@ -25,6 +26,9 @@ namespace OrganicShop.Domain.Entities
 
         public Product Product { get; set; }
         public Cart? Cart { get; set; }
+        public NextCart? NextCart { get; set; }
         public Order? Order { get; set; }
+
+
     }
 }

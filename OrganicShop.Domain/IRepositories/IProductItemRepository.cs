@@ -11,6 +11,14 @@ namespace OrganicShop.Domain.IRepositories
         IReadRepository<ProductItem,long>,
         IWriteRepository<ProductItem,long>
     {
+
+        Task SetOrdered(long cartId, long orderId);
+
+
+        Task TransferFromNextCartToCart(long nextCartId, long cartId);
+
+
         Task SaveChanges();
+    
     }
 }

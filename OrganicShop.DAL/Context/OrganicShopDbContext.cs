@@ -22,6 +22,7 @@ namespace OrganicShop.DAL.Context
         public DbSet<DiscountCategories> DiscountCategories { get; set; }
         public DbSet<DiscountProducts> DiscountProducts { get; set; }
         public DbSet<Faq> Faqs { get; set; }
+        public DbSet<NextCart> NextCarts { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<NewsLetter> NewsLetters { get; set; }
         public DbSet<NewsLetterMember> NewsLetterMembers { get; set; }

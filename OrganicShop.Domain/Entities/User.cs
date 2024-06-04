@@ -22,7 +22,7 @@ namespace OrganicShop.Domain.Entities
         public ICollection<Address> Addresses { get; set; }
         public ICollection<BankCard> BankCards { get; set; }
         public Cart Cart { get; set; }
-        public Cart NextCart { get; set; }
+        public NextCart NextCart { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Order> Orders { get; set; }
         public ICollection<Article> Articles { get; set; }

@@ -27,10 +27,11 @@ namespace OrganicShop.BLL.Services
         private readonly IAddressRepository _AddressRepository;
         private readonly IProductItemRepository _ProductItemRepository;
         private readonly ICartRepository _CartRepository;
+        private readonly INextCartRepository _NextCartRepository;
         private readonly ITrackingStatusService _TrackingStatusesService;
 
-        public OrderService(IApplicationUserProvider provider,IMapper mapper,IOrderRepository OrderRepository, IAddressRepository AddressRepository,
-            IProductItemRepository ProductItemRepository, ICartRepository CartRepository, ITrackingStatusService trackingStatusesService) : base(provider)
+        public OrderService(IApplicationUserProvider provider, IMapper mapper, IOrderRepository OrderRepository, IAddressRepository AddressRepository,
+            IProductItemRepository ProductItemRepository, ICartRepository CartRepository, ITrackingStatusService trackingStatusesService, INextCartRepository nextCartRepository) : base(provider)
         {
             _Mapper = mapper;
             _OrderRepository = OrderRepository;
@@ -38,6 +39,7 @@ namespace OrganicShop.BLL.Services
             _ProductItemRepository = ProductItemRepository;
             _CartRepository = CartRepository;
             _TrackingStatusesService = trackingStatusesService;
+            _NextCartRepository = nextCartRepository;
         }
 
         #endregion
@@ -69,7 +71,7 @@ namespace OrganicShop.BLL.Services
                 query = query.Where(a => a.OrderStatus == filter.OrderStatus);
 
             if (string.IsNullOrWhiteSpace(filter.ShippingMethodName) == false)
-                query = query.Where(a => EF.Functions.Like(a.ShippingMethodName , $"%{filter.ShippingMethodName}%"));
+                query = query.Where(a => EF.Functions.Like(a.ShippingMethodName, $"%{filter.ShippingMethodName}%"));
 
             #endregion
 
@@ -83,14 +85,14 @@ namespace OrganicShop.BLL.Services
             pageDto.List = pageDto.SetPaging(query, paging).Select(a => _Mapper.Map<OrderListDto>(a)).ToList();
             pageDto.Pager = pageDto.SetPager(query, paging);
 
-            return new ServiceResponse<PageDto<Order, OrderListDto, long>>(ResponseResult.Success,pageDto);
+            return new ServiceResponse<PageDto<Order, OrderListDto, long>>(ResponseResult.Success, pageDto);
         }
 
 
 
         public async Task<ServiceResponse<OrderDetailDto>> GetDetail(string trackingCode)
         {
-            if(string.IsNullOrEmpty(trackingCode))
+            if (string.IsNullOrEmpty(trackingCode))
                 return new ServiceResponse<OrderDetailDto>(ResponseResult.NotFound, null);
 
             var query = _OrderRepository.GetQueryable();
@@ -104,12 +106,12 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.ProductItems)
                     .ThenInclude(a => a.Product)
                         .ThenInclude(a => a.ProductVarients)
-                .AsQueryable();                            
+                .AsQueryable();
 
             #endregion
 
             var order = await query.FirstOrDefaultAsync(a => a.TrackingCode == trackingCode);
-            
+
             if (order == null)
                 return new ServiceResponse<OrderDetailDto>(ResponseResult.NotFound, null);
 
@@ -156,7 +158,7 @@ namespace OrganicShop.BLL.Services
             var Address = await _AddressRepository.GetAsNoTracking(create.AddressId);
 
             if (Address == null)
-                return new ServiceResponse<string>(ResponseResult.NotFound, _Message.NotFound(),string.Empty);
+                return new ServiceResponse<string>(ResponseResult.NotFound, _Message.NotFound(), string.Empty);
 
             Order.OrderAddress = Address.ToOrderAddress();
             long orderId = await _OrderRepository.Add(Order, _AppUserProvider.User.Id);
@@ -165,41 +167,14 @@ namespace OrganicShop.BLL.Services
 
             // set productItems to ordered and remove from cart
             // decrease products stock
-            var ProductItems = _ProductItemRepository.GetQueryableTracking()
-                .Include(a => a.Product)
-                    .ThenInclude(a => a.ProductVarients)
-                .Where(a => a.CartId == create.CartId);
-            foreach (var item in ProductItems)
+            await _ProductItemRepository.SetOrdered(create.CartId, orderId);
+
+            // add nextCart productItems to Cart
+            var nextCartId = (await _NextCartRepository.GetQueryable().FirstOrDefaultAsync(a => a.UserId == create.UserId))?.Id;
+            if (nextCartId != null)
             {
-                item.CartId = null;
-                item.OrderId = orderId;
-                item.IsOrdered = true;
-                if(item.ProductVarientId > 0)
-                {
-                    item.Product.ProductVarients.First(a => a.Id == item.ProductVarientId).Stock--;
-                }
-                else
-                {
-                    item.Product.Stock--;
-                }
+                await _ProductItemRepository.TransferFromNextCartToCart(nextCartId.Value, create.CartId);
             }
-
-            // add nextCart productItems to mainCar
-            var nextCart = await _CartRepository.GetQueryableTracking()
-                .Include(a => a.ProductItems)
-                .FirstOrDefaultAsync(a => a.UserId == create.UserId && a.IsMain == false);
-            if (nextCart != null)
-            {
-                foreach (var item in nextCart.ProductItems)
-                {
-                    item.CartId = create.CartId;
-                    await _ProductItemRepository.Update(item, _AppUserProvider.User.Id);
-                }
-            }
-
-            //saving changes
-            await _ProductItemRepository.SaveChanges();
-
 
 
             #endregion
@@ -234,9 +209,8 @@ namespace OrganicShop.BLL.Services
             #endregion
 
             Order.OrderStatus = OrderStatus.Success;
-                return new ServiceResponse<string>(ResponseResult.NotFound, _Message.SuccessUpdate() , Order.TrackingCode);
 
-            return new ServiceResponse<string>(ResponseResult.Success, _Message.SuccessCreate(), string.Empty);
+            return new ServiceResponse<string>(ResponseResult.NotFound, _Message.SuccessUpdate(), Order.TrackingCode);
         }
 
 
