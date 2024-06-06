@@ -16,7 +16,7 @@
         <div class="form-group col-3 mb-1 ">
             <label class="form-label filter-menu-label">مرتب سازی</label>
             <select name="filter.SortBy" class="form-control filter-menu-input">
-                @foreach (var sortType in EnumExtension.GetArray<BaseSortType>())
+                @foreach (var sortType in EnumExtensions.GetArray<BaseSortType>())
                 {
                     <option value="@((byte)sortType)">@sortType.ToStringValue()</option>
                 }

@@ -15,9 +15,11 @@ namespace OrganicShop.Mvc.ViewComponents
         #region constructor
 
         private readonly ICategoryService _CategoryService;
-        public SiteFooter(ICategoryService categoryService)
+        private readonly IContactUsService _ContactUsService;
+        public SiteFooter(ICategoryService categoryService, IContactUsService contactUsService)
         {
             _CategoryService = categoryService;
+            _ContactUsService = contactUsService;
         }
 
         #endregion
@@ -29,7 +31,9 @@ namespace OrganicShop.Mvc.ViewComponents
             ViewData["NewestCategoryCombos"] = (await _CategoryService
                 .GetCombos(new FilterCategoryDto { SortBy = CategorySortType.Newest })).Data ?? new List<ComboDto<Category>>();
 
-            return View("SiteFooter");
+            var model = (await _ContactUsService.Get()).Data;
+
+            return View("SiteFooter",model);
         }
     }
 

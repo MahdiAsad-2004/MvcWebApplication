@@ -79,7 +79,7 @@ namespace OrganicShop.BLL.Services
                 return new ServiceResponse<Empty>(ResponseResult.Failed, "! وضعیت های سفارش قبلا ایجاد شده است");
 
             var TrackingStatuses = Enumerable.Empty<TrackingStatus>();
-            foreach (var orderStep in EnumExtension.GetArray<OrderStep>())
+            foreach (var orderStep in EnumExtensions.GetArray<OrderStep>())
             {
                 TrackingStatuses.Append(new TrackingStatus
                 {

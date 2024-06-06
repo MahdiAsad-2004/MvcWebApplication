@@ -70,7 +70,7 @@
                                     <label  class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
                                     <div class="col-md-7 col-lg-9">
                                         @* <select id="unit-type-select" asp-for="UnitType" class="form-select">
-                                            @foreach (var unitType in EnumExtension.GetArray<UnitType>())
+                                            @foreach (var unitType in EnumExtensions.GetArray<UnitType>())
                                             {
                                                 <option value="@((byte)unitType)">@unitType.ToStringValue()</option>
                                             }

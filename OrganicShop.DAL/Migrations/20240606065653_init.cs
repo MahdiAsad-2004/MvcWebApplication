@@ -181,6 +181,24 @@ namespace OrganicShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ShippingMethods",
+                columns: table => new
+                {
+                    Id = table.Column<byte>(type: "tinyint", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingMethods", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
@@ -321,7 +339,6 @@ namespace OrganicShop.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     TotalPrice = table.Column<int>(type: "int", nullable: false),
-                    UserrId = table.Column<long>(type: "bigint", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
@@ -334,11 +351,6 @@ namespace OrganicShop.DAL.Migrations
                     table.ForeignKey(
                         name: "FK_Carts_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Carts_Users_UserrId",
-                        column: x => x.UserrId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -369,6 +381,30 @@ namespace OrganicShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "NextCarts",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NextCarts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NextCarts_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Operations",
                 columns: table => new
                 {
@@ -391,6 +427,45 @@ namespace OrganicShop.DAL.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TrackingCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TotalPrice = table.Column<int>(type: "int", nullable: false),
+                    DiscountPrice = table.Column<int>(type: "int", nullable: false),
+                    FinalPrice = table.Column<int>(type: "int", nullable: false),
+                    ShippingPrice = table.Column<int>(type: "int", nullable: false),
+                    ShippingMethodName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SendDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeliveryDateEstimated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OrderStatus = table.Column<int>(type: "int", nullable: false),
+                    PaymentMethod = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    OrderAddress_AddressId = table.Column<long>(type: "bigint", nullable: false),
+                    OrderAddress_PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrderAddress_PostCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrderAddress_Province = table.Column<int>(type: "int", nullable: false),
+                    OrderAddress_ReceiverName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrderAddress_Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -451,6 +526,34 @@ namespace OrganicShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserMessages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IPAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<long>(type: "bigint", nullable: true),
+                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserMessages_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TagArticles",
                 columns: table => new
                 {
@@ -482,6 +585,60 @@ namespace OrganicShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TrackingDescriptions",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrderId = table.Column<long>(type: "bigint", nullable: false),
+                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrackingDescriptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrackingDescriptions_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TrackingStatuses",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DoneStatus = table.Column<int>(type: "int", nullable: false),
+                    DoneDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Step = table.Column<int>(type: "int", nullable: false),
+                    OrderId = table.Column<long>(type: "bigint", nullable: false),
+                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrackingStatuses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrackingStatuses_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Addresses",
                 columns: table => new
                 {
@@ -490,7 +647,9 @@ namespace OrganicShop.DAL.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PostCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReceiverName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Province = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<long>(type: "bigint", nullable: true),
                     SellerId = table.Column<int>(type: "int", nullable: true),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -544,42 +703,6 @@ namespace OrganicShop.DAL.Migrations
                         principalTable: "Sellers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TrackingCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TotalPrice = table.Column<int>(type: "int", nullable: false),
-                    DeliveryType = table.Column<int>(type: "int", nullable: false),
-                    OrderStatus = table.Column<int>(type: "int", nullable: false),
-                    DeliveryDatePredicate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PaymentMethod = table.Column<int>(type: "int", nullable: false),
-                    AddressId = table.Column<long>(type: "bigint", nullable: false),
-                    ReceiverId = table.Column<long>(type: "bigint", nullable: false),
-                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Orders_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Orders_Users_ReceiverId",
-                        column: x => x.ReceiverId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -737,6 +860,53 @@ namespace OrganicShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductItems",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductId = table.Column<long>(type: "bigint", nullable: false),
+                    ProductVarientId = table.Column<long>(type: "bigint", nullable: true),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    CartId = table.Column<long>(type: "bigint", nullable: true),
+                    NextCartId = table.Column<long>(type: "bigint", nullable: true),
+                    OrderId = table.Column<long>(type: "bigint", nullable: true),
+                    IsOrdered = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductItems_Carts_CartId",
+                        column: x => x.CartId,
+                        principalTable: "Carts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProductItems_NextCarts_NextCartId",
+                        column: x => x.NextCartId,
+                        principalTable: "NextCarts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProductItems_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProductItems_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductVarient",
                 columns: table => new
                 {
@@ -858,119 +1028,23 @@ namespace OrganicShop.DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "ProductItems",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProductId = table.Column<long>(type: "bigint", nullable: false),
-                    ProductVarientId = table.Column<long>(type: "bigint", nullable: true),
-                    Count = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<int>(type: "int", nullable: false),
-                    UpdatedPrice = table.Column<int>(type: "int", nullable: true),
-                    CartId = table.Column<long>(type: "bigint", nullable: true),
-                    OrderId = table.Column<long>(type: "bigint", nullable: true),
-                    IsOrdered = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductItems", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductItems_Carts_CartId",
-                        column: x => x.CartId,
-                        principalTable: "Carts",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ProductItems_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ProductItems_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TrackingDescriptions",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrderId = table.Column<long>(type: "bigint", nullable: false),
-                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TrackingDescriptions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TrackingDescriptions_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TrackingStatuses",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DoneStatus = table.Column<int>(type: "int", nullable: false),
-                    DoneDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Step = table.Column<int>(type: "int", nullable: false),
-                    OrderId = table.Column<long>(type: "bigint", nullable: false),
-                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TrackingStatuses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TrackingStatuses_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.InsertData(
                 table: "ContactUs",
                 columns: new[] { "Id", "Address", "Description", "Email1", "Email2", "Office1", "Office2", "Office3", "Phone1", "Phone2", "Phone3", "PhoneNumber1", "PhoneNumber2", "PhoneNumber3", "ShortDescription", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { (byte)1, "Address", "Descriptions", "OrganicShop@gmail.com", null, "Tehran", null, null, "02134658899", null, null, "09121234455", null, null, "ShorDescriptions", new DateTime(2024, 5, 21, 3, 2, 37, 658, DateTimeKind.Local).AddTicks(5288), null, true, false, new DateTime(2024, 5, 21, 3, 2, 37, 658, DateTimeKind.Local).AddTicks(5344) });
+                values: new object[] { (byte)1, "Address", "Descriptions", "OrganicShop@gmail.com", null, "Tehran", null, null, "02134658899", null, null, "09121234455", null, null, "ShorDescriptions", new DateTime(2024, 6, 5, 23, 56, 50, 871, DateTimeKind.Local).AddTicks(1695), null, true, false, new DateTime(2024, 6, 5, 23, 56, 50, 871, DateTimeKind.Local).AddTicks(1939) });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "EnTitle", "ParentId", "Title", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { (byte)1, "Main Admin", null, "مدیر سایت", new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1831), null, true, false, new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1899) });
+                values: new object[] { (byte)1, "Main Admin", null, "مدیر سایت", new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3621), null, true, false, new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3689) });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "Name", "Password", "PhoneNumber", "Role", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
                 values: new object[,]
                 {
-                    { 1L, "mas1379as@gmail.com", "Mahdi Asadi", "123456", "09369753041", 2, new DateTime(2024, 5, 21, 3, 2, 37, 681, DateTimeKind.Local).AddTicks(961), null, true, false, new DateTime(2024, 5, 21, 3, 2, 37, 681, DateTimeKind.Local).AddTicks(1033) },
-                    { 2L, "TestEmail@gmail.com", "AmirAli", "1234", "09331234566", 3, new DateTime(2024, 5, 21, 3, 2, 37, 681, DateTimeKind.Local).AddTicks(1392), null, true, false, new DateTime(2024, 5, 21, 3, 2, 37, 681, DateTimeKind.Local).AddTicks(1413) }
+                    { 1L, "mas1379as@gmail.com", "Mahdi Asadi", "123456", "09369753041", 2, new DateTime(2024, 6, 5, 23, 56, 50, 899, DateTimeKind.Local).AddTicks(5283), null, true, false, new DateTime(2024, 6, 5, 23, 56, 50, 899, DateTimeKind.Local).AddTicks(5345) },
+                    { 2L, "TestEmail@gmail.com", "AmirAli", "1234", "09331234566", 3, new DateTime(2024, 6, 5, 23, 56, 50, 899, DateTimeKind.Local).AddTicks(5594), null, true, false, new DateTime(2024, 6, 5, 23, 56, 50, 899, DateTimeKind.Local).AddTicks(5604) }
                 });
 
             migrationBuilder.InsertData(
@@ -978,23 +1052,23 @@ namespace OrganicShop.DAL.Migrations
                 columns: new[] { "Id", "EnTitle", "ParentId", "Title", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
                 values: new object[,]
                 {
-                    { (byte)2, "Users Admin", (byte)1, "مدیریت کاربران", new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1910), null, true, false, new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1920) },
-                    { (byte)3, "Products Admin", (byte)1, "مدیریت محصولات", new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1933), null, true, false, new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1938) },
-                    { (byte)4, "Permissions Admin", (byte)1, "مدیریت مجوز ها", new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1944), null, true, false, new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1947) },
-                    { (byte)5, "Comments Admin", (byte)1, "مدیریت نظرات", new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1956), null, true, false, new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1960) },
-                    { (byte)6, "Discounts Admin", (byte)1, "مدیریت تخفیف ها", new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1968), null, true, false, new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1972) },
-                    { (byte)7, "Categories Admin", (byte)1, "مدیریت دسته ها", new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(1978), null, true, false, new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(2028) }
+                    { (byte)2, "Users Admin", (byte)1, "مدیریت کاربران", new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3699), null, true, false, new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3710) },
+                    { (byte)3, "Products Admin", (byte)1, "مدیریت محصولات", new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3722), null, true, false, new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3727) },
+                    { (byte)4, "Permissions Admin", (byte)1, "مدیریت مجوز ها", new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3734), null, true, false, new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3739) },
+                    { (byte)5, "Comments Admin", (byte)1, "مدیریت نظرات", new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3752), null, true, false, new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3757) },
+                    { (byte)6, "Discounts Admin", (byte)1, "مدیریت تخفیف ها", new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3765), null, true, false, new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3770) },
+                    { (byte)7, "Categories Admin", (byte)1, "مدیریت دسته ها", new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3775), null, true, false, new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3805) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Picture",
                 columns: new[] { "Id", "ArticleId", "CategoryId", "IsMain", "Name", "ProductId", "SellerId", "SizeMB", "Type", "UserId", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { 1L, null, null, true, "joker.png", null, null, 0.5f, 0, 1L, new DateTime(2024, 5, 21, 3, 2, 37, 670, DateTimeKind.Local).AddTicks(9125), null, true, false, new DateTime(2024, 5, 21, 3, 2, 37, 670, DateTimeKind.Local).AddTicks(9184) });
+                values: new object[] { 1L, null, null, true, "joker.png", null, null, 0.5f, 0, 1L, new DateTime(2024, 6, 5, 23, 56, 50, 886, DateTimeKind.Local).AddTicks(7596), null, true, false, new DateTime(2024, 6, 5, 23, 56, 50, 886, DateTimeKind.Local).AddTicks(7662) });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "EnTitle", "ParentId", "Title", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { (byte)8, "Giving Permission", (byte)4, "صدور مجوز", new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(2050), null, true, false, new DateTime(2024, 5, 21, 3, 2, 37, 668, DateTimeKind.Local).AddTicks(2070) });
+                values: new object[] { (byte)8, "Giving Permission", (byte)4, "صدور مجوز", new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3812), null, true, false, new DateTime(2024, 6, 5, 23, 56, 50, 883, DateTimeKind.Local).AddTicks(3817) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_SellerId",
@@ -1027,12 +1101,6 @@ namespace OrganicShop.DAL.Migrations
                 name: "IX_Carts_UserId",
                 table: "Carts",
                 column: "UserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Carts_UserrId",
-                table: "Carts",
-                column: "UserrId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -1091,19 +1159,20 @@ namespace OrganicShop.DAL.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NextCarts_UserId",
+                table: "NextCarts",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Operations_UserId",
                 table: "Operations",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_AddressId",
+                name: "IX_Orders_UserId",
                 table: "Orders",
-                column: "AddressId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_ReceiverId",
-                table: "Orders",
-                column: "ReceiverId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Permissions_ParentId",
@@ -1155,6 +1224,11 @@ namespace OrganicShop.DAL.Migrations
                 name: "IX_ProductItems_CartId",
                 table: "ProductItems",
                 column: "CartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductItems_NextCartId",
+                table: "ProductItems",
+                column: "NextCartId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductItems_OrderId",
@@ -1223,6 +1297,11 @@ namespace OrganicShop.DAL.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserMessages_UserId",
+                table: "UserMessages",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WhishItems_ProductId",
                 table: "WhishItems",
                 column: "ProductId");
@@ -1236,6 +1315,9 @@ namespace OrganicShop.DAL.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Addresses");
+
             migrationBuilder.DropTable(
                 name: "BankCards");
 
@@ -1285,6 +1367,9 @@ namespace OrganicShop.DAL.Migrations
                 name: "Properties");
 
             migrationBuilder.DropTable(
+                name: "ShippingMethods");
+
+            migrationBuilder.DropTable(
                 name: "TagArticles");
 
             migrationBuilder.DropTable(
@@ -1297,6 +1382,9 @@ namespace OrganicShop.DAL.Migrations
                 name: "TrackingStatuses");
 
             migrationBuilder.DropTable(
+                name: "UserMessages");
+
+            migrationBuilder.DropTable(
                 name: "WhishItems");
 
             migrationBuilder.DropTable(
@@ -1307,6 +1395,9 @@ namespace OrganicShop.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Carts");
+
+            migrationBuilder.DropTable(
+                name: "NextCarts");
 
             migrationBuilder.DropTable(
                 name: "Articles");
@@ -1322,9 +1413,6 @@ namespace OrganicShop.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "Sellers");

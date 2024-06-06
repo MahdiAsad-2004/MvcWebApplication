@@ -1,6 +1,7 @@
 ﻿using OrganicShop.Domain.Entities;
+using System.Runtime.CompilerServices;
 
-namespace OrganicShop.Domain.Entities.SeedDatas
+namespace OrganicShop.DAL.SeedDatas
 {
     public class PermissionsSeed
     {
@@ -43,6 +44,10 @@ namespace OrganicShop.Domain.Entities.SeedDatas
 
             //new Permission(){ },
         };
+
+
+
+      
 
     }
 

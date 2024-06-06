@@ -18,7 +18,7 @@
         <div class="form-group col-3 mb-1 ">
             <label class="form-label filter-menu-label">نوع</label>
             <select name="filter.Type" class="form-control filter-menu-input">
-                @foreach (var categoryType in EnumExtension.GetArray<CategoryType>())
+                @foreach (var categoryType in EnumExtensions.GetArray<CategoryType>())
                 {
                     <option value="@((byte)categoryType)">@categoryType.ToStringValue()</option>
                 }
@@ -27,7 +27,7 @@
         <div class="form-group col-3 mb-1 ">
             <label class="form-label filter-menu-label">مرتب سازی</label>
             <select name="filter.SortBy" class="form-control filter-menu-input">
-                @foreach (var categoryType in EnumExtension.GetArray<CategorySortType>())
+                @foreach (var categoryType in EnumExtensions.GetArray<CategorySortType>())
                 {
                     <option value="@((byte)categoryType)">@categoryType.ToStringValue()</option>
                 }

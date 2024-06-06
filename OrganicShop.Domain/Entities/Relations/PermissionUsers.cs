@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OrganicShop.Domain.Entities.Base;
+﻿using OrganicShop.Domain.Entities.Base;
+using System.ComponentModel;
 using OrganicShop.Domain.Enums;
 
 namespace OrganicShop.Domain.Entities.Relations
 {
+    [DisplayName("مجوز کاربر")]
     public class PermissionUsers : EntityId<int>
     {
         public byte PermissionId { get; set; }

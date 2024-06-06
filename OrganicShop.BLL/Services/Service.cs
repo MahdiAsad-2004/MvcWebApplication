@@ -3,8 +3,8 @@ using OrganicShop.Domain.Response;
 using OrganicShop.Domain;
 using OrganicShop.Domain.IServices;
 using OrganicShop.Domain.IProviders;
-using OrganicShop.Domain.Entities.SeedDatas;
 using OrganicShop.Domain.Response.Messages;
+using OrganicShop.DAL.SeedDatas;
 
 namespace OrganicShop.BLL.Services
 {

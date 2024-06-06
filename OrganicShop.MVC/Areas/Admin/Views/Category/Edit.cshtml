@@ -40,7 +40,7 @@
                                     <label asp-for="ParentId" class="form-label-title col-sm-3 mb-0">نوع دسته</label>
                                     <div class="col-sm-9">
                                         <select asp-for="Type" class="form-control">
-                                            @foreach (var item in EnumExtension.GetArray<CategoryType>())
+                                            @foreach (var item in EnumExtensions.GetArray<CategoryType>())
                                             {
                                                 <option value="@((byte)item)">@item.ToStringValue()</option>
                                             }

@@ -31,7 +31,7 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<UpdateContactUsDto>> Get()
         {
-            var contactUs = await _ContactUsRepository.GetQueryable().FirstAsync();            
+            var contactUs = await _ContactUsRepository.GetQueryable().FirstAsync(a => a.Id == 1);            
             return new ServiceResponse<UpdateContactUsDto>(ResponseResult.Success, _Mapper.Map<UpdateContactUsDto>(contactUs));
         }
 

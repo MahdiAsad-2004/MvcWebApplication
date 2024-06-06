@@ -39,7 +39,7 @@
                                 @if (!string.IsNullOrEmpty(categoryTitle))
                                 {
                                     <li class="breadcrumb-item active">
-                                        <a href="/Blogs/Category/@TextExtension.EncodePersianString(categoryTitle)">
+                                        <a href="/Blogs/Category/@TextExtensions.EncodePersianString(categoryTitle)">
                                             @categoryTitle
                                         </a>
                                     </li>
@@ -78,7 +78,7 @@
                                         <h3>@item.Title</h3>
                                     </a>
                                     <p> @item.ShortDescription </p>
-                                    <button onclick="location.href = '/Blog/@TextExtension.EncodePersianString(item.Title)';" class="blog-button">
+                                    <button onclick="location.href = '/Blog/@TextExtensions.EncodePersianString(item.Title)';" class="blog-button">
                                         مطالعه بیشتر<i class="fa-solid fa-right-long"></i>
                                     </button>
                                 </div>
@@ -93,7 +93,7 @@
 
             <div class="col-xxl-3 col-xl-4 col-lg-5 order-lg-1">
                 <form class="left-sidebar-box wow fadeInUp" method="get" id="filter-articles-form"
-                      action="/Blogs@(!string.IsNullOrEmpty(categoryTitle) ? $"/Category/{TextExtension.EncodePersianString(categoryTitle)}" : "")">
+                      action="/Blogs@(!string.IsNullOrEmpty(categoryTitle) ? $"/Category/{TextExtensions.EncodePersianString(categoryTitle)}" : "")">
                     <div class="left-search-box">
                         <div class="search-box">
                             <input name="filter.Title" type="search" class="form-control" id="exampleFormControlInput1" placeholder="جستجو ...">
@@ -115,13 +115,13 @@
                                         @foreach (var blog in lastBlogs)
                                         {
                                             <div class="recent-box">
-                                                <a href="/Blogs/@TextExtension.EncodePersianString(blog.Title)" class="recent-image">
+                                                <a href="/Blogs/@TextExtensions.EncodePersianString(blog.Title)" class="recent-image">
                                                     <img src="~/media/images/article/@blog.MainImageName"
                                                          class="img-fluid blur-up lazyload" alt="">
                                                 </a>
 
                                                 <div class="recent-detail">
-                                                    <a href="/Blog/@TextExtension.EncodePersianString(blog.Title)">
+                                                    <a href="/Blog/@TextExtensions.EncodePersianString(blog.Title)">
                                                         <h5 class="recent-name">@blog.Title</h5>
                                                     </a>
                                                     <h6>@blog.CreateDate.ToString("yyyy  MMMMM  dd")<i data-feather="thumbs-up"></i></h6>
@@ -148,7 +148,7 @@
                                             @foreach (var item in categories)
                                             {
                                                 <li>
-                                                    <a href="/Blogs/Category/@TextExtension.EncodePersianString(item.Title)">
+                                                    <a href="/Blogs/Category/@TextExtensions.EncodePersianString(item.Title)">
                                                         <div class="category-name">
                                                             <h5>@item.Title</h5>
                                                             <span>@item.ArticlesCount</span>

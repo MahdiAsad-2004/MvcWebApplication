@@ -4,7 +4,7 @@
 <div class="form-group col-3 mb-1 ">
     <label class="form-label filter-menu-label">وضعیت</label>
     <select name="filter.ActiveFilter" class="form-control filter-menu-input">
-        @foreach (var isActiveFilter in EnumExtension.GetArray<IsActiveFilter>())
+        @foreach (var isActiveFilter in EnumExtensions.GetArray<IsActiveFilter>())
         {
             <option selected="@(isActiveFilter == IsActiveFilter.Active)" value="@((byte)isActiveFilter)">@isActiveFilter.ToStringValue()</option>
         }

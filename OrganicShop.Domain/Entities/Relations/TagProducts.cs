@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OrganicShop.Domain.Entities.Base;
-using OrganicShop.Domain.Enums;
+﻿using OrganicShop.Domain.Entities.Base;
+using System.ComponentModel;
 
 namespace OrganicShop.Domain.Entities.Relations
 {
+    [DisplayName("برچسب محصول")]
     public class TagProducts : EntityId<int>
     {
         public int TagId { get; set; }

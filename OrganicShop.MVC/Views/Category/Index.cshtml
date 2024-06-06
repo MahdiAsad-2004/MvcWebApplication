@@ -35,7 +35,7 @@
                                 @if (!string.IsNullOrEmpty(categoryTitle))
                                 {
                                     <li class="breadcrumb-item active">
-                                        <a href="/Category/@TextExtension.EncodePersianString(categoryTitle)">دسته ها</a>
+                                        <a href="/Category/@TextExtensions.EncodePersianString(categoryTitle)">دسته ها</a>
                                     </li>
                                     <li>
                                         @categoryTitle
@@ -70,7 +70,7 @@
                     {
                         <div>
                             <div class="shop-category-box">
-                                <a href="/Category/@TextExtension.EncodePersianString(categoryChild.Title)">
+                                <a href="/Category/@TextExtensions.EncodePersianString(categoryChild.Title)">
                                     <div class="shop-category-image">
                                         <i class="@categoryChild.IconClass"
                                            style="color:@(!string.IsNullOrEmpty(categoryChild.IconColor) ? categoryChild.IconColor : "black"); font-size:25px;"></i>
@@ -96,7 +96,7 @@
             <div class="col-custom-3">
                 <div class="left-box wow fadeInUp">
                     <form id="filter-products-form" class="shop-left-sidebar" method="get"
-                          action="/Category@(!string.IsNullOrEmpty(categoryTitle) ? $"/{TextExtension.EncodePersianString(categoryTitle)}" : "")">
+                          action="/Category@(!string.IsNullOrEmpty(categoryTitle) ? $"/{TextExtensions.EncodePersianString(categoryTitle)}" : "")">
                         <input id="pageNumber-input" value="1" type="number" hidden name="paging.PageNumber" />
 
                         <div class="back-button">

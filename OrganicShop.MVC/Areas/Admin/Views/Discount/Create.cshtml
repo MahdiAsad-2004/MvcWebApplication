@@ -252,7 +252,7 @@
                             <div class="form-group col-3 mb-1 ">
                                 <label class="form-label m-0">مرتب سازی</label>
                                 <select name="filter.Type" class="form-control m-0">
-                                    @foreach (var categoryType in EnumExtension.GetArray<ProductSortType>())
+                                    @foreach (var categoryType in EnumExtensions.GetArray<ProductSortType>())
                                     {
                                         <option value="@((byte)categoryType)">@categoryType.ToStringValue()</option>
                                     }
@@ -261,7 +261,7 @@
                             <div class="form-group col-3 mb-1 ">
                                 <label class="form-label m-0">وضعیت</label>
                                 <select name="filter.ActiveFilter" class="form-control m-0">
-                                    @foreach (var isActiveFilter in EnumExtension.GetArray<IsActiveFilter>())
+                                    @foreach (var isActiveFilter in EnumExtensions.GetArray<IsActiveFilter>())
                                     {
                                         <option value="@((byte)isActiveFilter)">@isActiveFilter.ToStringValue()</option>
                                     }

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OrganicShop.Domain.Entities.Base;
+﻿using OrganicShop.Domain.Entities.Base;
 using OrganicShop.Domain.Enums;
+using System.ComponentModel;
 
 namespace OrganicShop.Domain.Entities.Relations
 {
+    [DisplayName("تخفیف محصول")]
     public class DiscountProducts : EntityId<int>
     {
         public int DiscountId { get; set; }

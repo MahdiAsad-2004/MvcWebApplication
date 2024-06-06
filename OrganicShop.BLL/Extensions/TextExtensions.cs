@@ -7,7 +7,7 @@ using System.Web;
 
 namespace OrganicShop.BLL.Extensions
 {
-    public static class TextExtension
+    public static class TextExtensions
     {
         public static string ToText(this string text)
         {
@@ -119,8 +119,26 @@ namespace OrganicShop.BLL.Extensions
             return HttpUtility.UrlEncode(str, Encoding.UTF8).Replace("+", "-");
         }
 
+        public static string EncodePersian(this string str)
+        {
+            return HttpUtility.UrlEncode(str, Encoding.UTF8).Replace("+", "-");
+        }
 
         public static string DecodePersianString(string codedSttring)
+        {
+            try
+            {
+                return HttpUtility.UrlDecode(codedSttring, Encoding.UTF8).Replace("+", "-");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"error in DecodePersianString()");
+                Console.WriteLine(ex.Message);
+                return string.Empty;
+            }
+        }
+        public static string DecodePersian(this string codedSttring)
         {
             try
             {

@@ -183,7 +183,7 @@ namespace OrganicShop.BLL.Services
             #region create tracking statuses
 
             var TrackingStatuses = new List<TrackingStatus>();
-            foreach (var orderStep in EnumExtension.GetArray<OrderStep>())
+            foreach (var orderStep in EnumExtensions.GetArray<OrderStep>())
             {
                 TrackingStatuses.Add(new TrackingStatus
                 {

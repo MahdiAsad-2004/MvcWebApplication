@@ -30,7 +30,7 @@
             <label class="form-label filter-menu-label">نقش</label>
             <select name="filter.Role" class="form-control filter-menu-input">
                 <option value=" ">---------- همه ----------</option>
-                @foreach (var role in EnumExtension.GetArray<Role>())
+                @foreach (var role in EnumExtensions.GetArray<Role>())
                 {
                     <option value="@((byte)role)">@role.ToStringValue()</option>
                 }
@@ -39,7 +39,7 @@
         <div class="form-group col-3 mb-1 ">
             <label class="form-label filter-menu-label">مرتب سازی</label>
             <select name="filter.SortBy" class="form-control filter-menu-input">
-                @foreach (var sortType in EnumExtension.GetArray<UserSortType>())
+                @foreach (var sortType in EnumExtensions.GetArray<UserSortType>())
                 {
                     <option value="@((byte)sortType)">@sortType.ToStringValue()</option>
                 }

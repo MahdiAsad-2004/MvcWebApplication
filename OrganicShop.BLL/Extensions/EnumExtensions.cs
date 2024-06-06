@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OrganicShop.BLL.Extensions
 {
-    public static class EnumExtension
+    public static class EnumExtensions
     {
 
         public static MyEnum[] GetArray<MyEnum>() where MyEnum : Enum
