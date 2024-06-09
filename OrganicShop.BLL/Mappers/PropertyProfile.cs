@@ -22,12 +22,28 @@ namespace OrganicShop.BLL.Mappers
 
 
 
-            CreateMap<Property, ComboDto<Property>>()
-              .ForMember(m => m.Value, a => a.MapFrom(b => b.Id))
-              .ForMember(m => m.Text, a => a.MapFrom(b => b.Title));
+            //CreateMap<Property, ComboDto<Property>>()
+            //  .ForMember(m => m.Value, a => a.MapFrom(b => b.Id))
+            //  .ForMember(m => m.Text, a => a.MapFrom(b => ""));
 
         }
 
+    }
+
+
+    public static class ProperyMappers
+    {
+        public static PropertyListDto ToListDto(this Property property)
+        {
+            return new PropertyListDto
+            {
+                Id = property.Id,
+                Value = property.Value,
+                Title = property.PropertyType.Title,
+                Priority = property.PropertyType.Priority,
+            };
+        }
 
     }
+
 }

@@ -67,7 +67,7 @@ namespace OrganicShop.Mvc.Areas.Admin.Controllers
         public async Task<IActionResult> Create() 
         {
             ViewData["CategoryCombos"] = (await _CategoryService.GetCombos()).Data;
-            ViewData["PropertyCombos"] = (await _PropertyService.GetCombos(new FilterPropertyDto() { IsBase = true })).Data;
+            //ViewData["PropertyCombos"] = (await _PropertyService.GetCombos(new FilterPropertyDto() { IsBase = true })).Data;
             ViewData["TagCombos"] = (await _TagService.GetCombos()).Data;
             return View();
         }
@@ -97,7 +97,7 @@ namespace OrganicShop.Mvc.Areas.Admin.Controllers
             if (response.Result == ResponseResult.Success)
             {
                 ViewData["CategoryCombos"] = (await _CategoryService.GetCombos()).Data;
-                ViewData["PropertyCombos"] = (await _PropertyService.GetCombos(new FilterPropertyDto() { IsBase = true })).Data;
+                //ViewData["PropertyCombos"] = (await _PropertyService.GetCombos(new FilterPropertyDto() { IsBase = true })).Data;
                 ViewData["TagCombos"] = (await _TagService.GetCombos()).Data;
                 return View(response.Data);
             }

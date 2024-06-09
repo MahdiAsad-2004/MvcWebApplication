@@ -1,4 +1,5 @@
 ﻿using OrganicShop.Domain.Dtos.Base;
+using OrganicShop.Domain.Dtos.PropertyDtos;
 using OrganicShop.Domain.Entities;
 
 namespace OrganicShop.Domain.Dtos.ProductDtos
@@ -19,7 +20,7 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
         public string CategoryTitle { get; set; }
         public int CategoryId { get; set; }
         public bool IsActive { get; set; }
-        public Property[] Properties { get; set; }
+        public PropertyListDto[] Properties { get; set; }
         public ProductVarient[] Varients { get; set; }
 
 

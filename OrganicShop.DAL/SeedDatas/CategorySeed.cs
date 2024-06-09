@@ -388,14 +388,14 @@ namespace OrganicShop.DAL.SeedDatas
         public static readonly Category DriedFruitsAndSweets = new Category
         {
             BaseEntity = new BaseEntity(true),
-            Title = "",
+            Title = "خشکبار و شیرینی",
             Type = CategoryType.Product,
         };
 
 
         #region DriedFruitsAndSweets => 
 
-        public static readonly Category DriedFruitsAndSweets_Sweets = new Category
+        public static readonly Category DriedFruitsAndSweets_Sweet = new Category
         {
             BaseEntity = new BaseEntity(true),
             Title = "شیرینی",
@@ -577,7 +577,7 @@ namespace OrganicShop.DAL.SeedDatas
         public static readonly Category WarmDrinks = new Category
         {
             BaseEntity = new BaseEntity(true),
-            Title = "نوشیدنی‌های گرم ",
+            Title = "نوشیدنی‌های گرم",
             Type = CategoryType.Product,
         };
 
@@ -718,7 +718,7 @@ namespace OrganicShop.DAL.SeedDatas
             Parent = Pickles,
         };
 
-        public static readonly Category Pickles_Olives = new Category
+        public static readonly Category Pickles_Olive = new Category
         {
             BaseEntity = new BaseEntity(true),
             Title = "زیتون",
@@ -753,7 +753,7 @@ namespace OrganicShop.DAL.SeedDatas
         public static readonly Category Additives = new Category
         {
             BaseEntity = new BaseEntity(true),
-            Title = "افزودنی ها ",
+            Title = "افزودنی ها",
             Type = CategoryType.Product,
         };
 

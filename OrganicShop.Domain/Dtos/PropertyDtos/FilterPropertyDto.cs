@@ -5,9 +5,8 @@ using OrganicShop.Domain.Enums.SortTypes;
 
 namespace OrganicShop.Domain.Dtos.PropertyDtos
 {
-    public class FilterPropertyDto : BaseFilterDto<Entities.Property, int>
+    public class FilterPropertyDto : BaseFilterDto<Property, long>
     {
-        public bool? IsBase { get; set; }
         public long? ProductId { get; set; }
         public BaseSortType SortBy { get; set; } = BaseSortType.None;
 

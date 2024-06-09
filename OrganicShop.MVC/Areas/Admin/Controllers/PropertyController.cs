@@ -35,7 +35,6 @@ namespace OrganicShop.Mvc.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(FilterPropertyDto filter, PagingDto paging)
         {
-            filter.IsBase = true;
             var response = await _PropertyService.GetAll(filter, paging);
             if (response.Result == ResponseResult.Success)
             {
@@ -48,7 +47,6 @@ namespace OrganicShop.Mvc.Areas.Admin.Controllers
 
         public async Task<IActionResult> Table(FilterPropertyDto filter, PagingDto paging)
         {
-            filter.IsBase = true;
             var response = await _PropertyService.GetAll(filter, paging);
 
             if (response.Result == ResponseResult.Success)
@@ -66,26 +64,18 @@ namespace OrganicShop.Mvc.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(CreatePropertyDto? createProperty)
-        {
-            var response = await _PropertyService.Create(createProperty);
-            if (response.Result == ResponseResult.Success)
-            {
-                return _ClientHandleResult.RedirectThenToast(HttpContext, TempData, nameof(Create), new Toast(ToastType.Success, response.Message), true);
-            }
-            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
+        //[HttpPost]
+        //public async Task<IActionResult> Create(CreatePropertyDto? createProperty)
+        //{
+        //    var response = await _PropertyService.Create(createProperty);
+        //    if (response.Result == ResponseResult.Success)
+        //    {
+        //        return _ClientHandleResult.RedirectThenToast(HttpContext, TempData, nameof(Create), new Toast(ToastType.Success, response.Message), true);
+        //    }
+        //    return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
 
-            //if (!ModelState.IsValid)
-            //{
-            //    foreach (var item in ModelState)
-            //    {
-            //        await Console.Out.WriteLineAsync($"{item.Key} ----- {item.Value.Errors.First().ErrorMessage}");
-            //    }
-            //    return _ClientHandleResult.Partial(HttpContext, PartialView(createProperty), new Toast(ToastType.Error, "EEEEEE"));
-            //}
-
-        }
+          
+        //}
 
 
 
@@ -101,54 +91,36 @@ namespace OrganicShop.Mvc.Areas.Admin.Controllers
         }
 
 
-        [HttpPut]
-        public async Task<IActionResult> Edit(UpdatePropertyDto update)
-        {
-            var response = await _PropertyService.Update(update);
+        //[HttpPut]
+        //public async Task<IActionResult> Edit(UpdatePropertyDto update)
+        //{
+        //    var response = await _PropertyService.Update(update);
 
-            if (response.Result == ResponseResult.Success) 
-            {
-                return _ClientHandleResult.RedirectThenToast(HttpContext, TempData, nameof(Index),new Toast(ToastType.Success, response.Message), true);
-            }
+        //    if (response.Result == ResponseResult.Success) 
+        //    {
+        //        return _ClientHandleResult.RedirectThenToast(HttpContext, TempData, nameof(Index),new Toast(ToastType.Success, response.Message), true);
+        //    }
 
-            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
-        }
-
-
+        //    return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
+        //}
 
 
 
 
 
-        //[HttpPost]
+
+
+        //[HttpDelete]
         //public async Task<IActionResult> Delete(int Id)
         //{
         //    var response = await _PropertyService.Delete(Id);
-        //    switch (response.Result)
+        //    if (response.Result == ResponseResult.Success)
         //    {
-        //        case EntityResult.Success:
-        //            return Partial("Index" , new Toast(ToastType.Success , response.Message , 5000));
-
-        //        case EntityResult.NotFound:
-        //            return Toast(new Toast(ToastType.Error, response.Message));
-
-        //        default:
-        //            throw new Exception("Unhandled Entity Result .");
+        //        var model = (await _PropertyService.GetAll(new FilterPropertyDto() { IsBase = true })).Data;
+        //        return _ClientHandleResult.PartialThenToast(HttpContext, PartialView("_Table", model), new Toast(ToastType.Success, response.Message));
+        //        //return _ClientHandleResult.RedirectThenToast(HttpContext, TempData, "Index", new Toast(ToastType.Success, response.Message), true);
         //    }
+        //    return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
         //}
-
-        [HttpDelete]
-        //[HttpGet]
-        public async Task<IActionResult> Delete(int Id)
-        {
-            var response = await _PropertyService.Delete(Id);
-            if (response.Result == ResponseResult.Success)
-            {
-                var model = (await _PropertyService.GetAll(new FilterPropertyDto() { IsBase = true })).Data;
-                return _ClientHandleResult.PartialThenToast(HttpContext, PartialView("_Table", model), new Toast(ToastType.Success, response.Message));
-                //return _ClientHandleResult.RedirectThenToast(HttpContext, TempData, "Index", new Toast(ToastType.Success, response.Message), true);
-            }
-            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
-        }
     }
 }

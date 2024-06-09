@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace OrganicShop.Domain.IRepositories
 {
     public interface IPropertyRepository : IRepository,
-        IReadRepository<Property, int>,
-        IWriteRepository<Property, int>
+        IReadRepository<Property, long>,
+        IWriteRepository<Property, long>
     {
 
     }

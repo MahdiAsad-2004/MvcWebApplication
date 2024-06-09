@@ -1,4 +1,5 @@
-﻿using MD.PersianDateTime;
+﻿using DryIoc.FastExpressionCompiler.LightExpression;
+using MD.PersianDateTime;
 using System.Globalization;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -151,6 +152,13 @@ namespace OrganicShop.BLL.Extensions
                 Console.WriteLine(ex.Message);
                 return string.Empty;
             }
+        }
+
+
+
+        public static string GenerateProductBarcode()
+        {
+            return Guid.NewGuid().ToString().Substring(0, 13);
         }
 
     }

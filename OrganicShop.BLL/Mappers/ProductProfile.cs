@@ -31,7 +31,7 @@ namespace OrganicShop.BLL.Mappers
                     ((float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Sum(c => c.Rate) / 
                     (float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()) : 0))
                .ForMember(m => m.CommentsCount, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()))
-               .ForMember(m => m.Properties, a => a.MapFrom(b => b.Properties.OrderBy(p => p.Priority).Take(4).ToArray()))
+               .ForMember(m => m.Properties, a => a.MapFrom(b => b.Properties.Select(p => p.ToListDto()).OrderBy(o => o.Priority).ToArray()))
                .ForMember(m => m.IsActive, a => a.MapFrom(b => b.BaseEntity.IsActive))
                .ForMember(m => m.Varients, a => a.MapFrom(b => b.ProductVarients.ToArray()));
 
@@ -40,7 +40,7 @@ namespace OrganicShop.BLL.Mappers
                .ForMember(m => m.DiscountedPrice, a => a.MapFrom(b => b.DiscountedPrice))
                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
                .ForMember(m => m.ImageNames, a => a.MapFrom(b => b.Pictures.Select(p => p.Name).ToArray()))
-               .ForMember(m => m.Properties, a => a.MapFrom(b => b.Properties.OrderBy(p => p.Priority).ToArray()))
+               .ForMember(m => m.Properties, a => a.MapFrom(b => b.Properties.Select(p => p.ToListDto()).OrderBy(o => o.Priority).ToArray()))
                .ForMember(m => m.Comments, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Select(c => c.ToListDto()).ToList()))
                .ForMember(m => m.Discount, a => a.MapFrom(b => b.GetDefaultDiscount()))
                .ForMember(m => m.CategoryId, a => a.MapFrom(b => b.Categories.First().Id))
@@ -71,7 +71,7 @@ namespace OrganicShop.BLL.Mappers
                 .ForMember(m => m.UpdatedPrice, a => a.MapFrom(b => b.GetDefaultDiscountedPriceProduct()))
                 .ForMember(m => m.DiscountCount, a => a.MapFrom(b => b.GetDefaultDiscountProduct() != null ? b.GetDefaultDiscountProduct().Count : null))
                 .ForMember(m => m.DiscountId, a => a.MapFrom(b => b.GetDefaultDiscountProduct() != null ? b.GetDefaultDiscountProduct().Id : default(int?)))
-                .ForMember(m => m.PropertiesDic, a => a.MapFrom(b => b.Properties.ToDictionary(k => k.BaseId.Value,v => new EditPropertyDto {Id = v.Id ,Value = v.Value})))
+                //.ForMember(m => m.PropertiesDic, a => a.MapFrom(b => b.Properties.ToDictionary(k => k.BaseId.Value,v => new EditPropertyDto {Id = v.Id ,Value = v.Value})))
                 .ForMember(m => m.MainPictureName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
                 .ForMember(m => m.CategoryId, a => a.MapFrom(b => b.Categories.Last().Id))
                 .ForMember(m => m.OldPicturesDic, a => a.MapFrom(b => b.Pictures.Where(a => a.IsMain == false).ToDictionary(k => k.Id , v => v.Name)));

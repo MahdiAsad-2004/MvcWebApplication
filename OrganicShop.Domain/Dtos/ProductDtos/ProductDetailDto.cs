@@ -1,5 +1,6 @@
 ﻿using OrganicShop.Domain.Dtos.Base;
 using OrganicShop.Domain.Dtos.CommentDtos;
+using OrganicShop.Domain.Dtos.PropertyDtos;
 using OrganicShop.Domain.Entities;
 
 namespace OrganicShop.Domain.Dtos.ProductDtos
@@ -29,7 +30,7 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
         public List<CommentListDto> Comments { get; set; }
         public ProductVarient[] Varients { get; set; }
         public Discount? Discount { get; set; }
-        public Property[] Properties { get; set; }
+        public PropertyListDto[] Properties { get; set; }
 
 
 

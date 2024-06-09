@@ -19,7 +19,7 @@ namespace OrganicShop.Domain.Entities
         public string ShortDescription { get; set; }
         public string Description { get; set; }
         public int? DiscountedPrice { get; set; }
-        public string BarCode { get; set; } = Guid.NewGuid().ToString().Substring(0, 13);
+        public string BarCode { get; set; }
         public int? SellerId { get; set; }
 
 

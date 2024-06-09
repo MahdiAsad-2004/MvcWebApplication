@@ -2,7 +2,7 @@
 {
     public class EditPropertyDto
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Value { get; set; }
     }
 

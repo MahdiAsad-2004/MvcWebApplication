@@ -75,7 +75,7 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
 
         [DisplayName("ویژگی ها")]
         //public Dictionary<int, (int Id,string Value)> Properties { get; set; }
-        public Dictionary<int, EditPropertyDto> PropertiesDic { get; set; }
+        public Dictionary<long, EditPropertyDto> PropertiesDic { get; set; }
         //public Dictionary<int, string> Properties { get; set; }
 
 

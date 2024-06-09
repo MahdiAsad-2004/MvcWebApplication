@@ -321,11 +321,12 @@ namespace OrganicShop.BLL.Services
 
                     properties.Add(new Property
                     {
-                        Title = property.Title,
-                        Priority = property.Priority,
+                        //Title = property.Title,
+                        //Priority = property.Priority,
                         Value = propertyDic.Value,
-                        IsBase = false,
-                        BaseId = propertyDic.Key,
+                        //IsBase = false,
+                        //BaseId = propertyDic.Key,
+                        PropertyTypeId = 1,
                         BaseEntity = new BaseEntity(true),
                     });
                 }
@@ -342,6 +343,8 @@ namespace OrganicShop.BLL.Services
             Product.Categories = category.GetWithAllParents().OrderBy(a => a.Id).ToList();
 
             #endregion
+
+            Product.BarCode = TextExtensions.GenerateProductBarcode();
 
             await _ProductRepository.Add(Product, _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());
@@ -466,41 +469,41 @@ namespace OrganicShop.BLL.Services
 
             #region properties
 
-            if (update.PropertiesDic != null)
-            {
-                Property? baseProperty = null;
-                foreach (var propperty in Product.Properties.ExceptBy(update.PropertiesDic.Select(a => a.Value.Id), a => a.Id))
-                {
-                    propperty.BaseEntity.IsDelete = true;
-                    //Product.Properties.Remove(propperty);
-                }
+            //if (update.PropertiesDic != null)
+            //{
+            //    Property? baseProperty = null;
+            //    foreach (var propperty in Product.Properties.ExceptBy(update.PropertiesDic.Select(a => a.Value.Id), a => a.Id))
+            //    {
+            //        propperty.BaseEntity.IsDelete = true;
+            //        //Product.Properties.Remove(propperty);
+            //    }
 
-                foreach (var propperty in Product.Properties.IntersectBy(update.PropertiesDic.Select(a => a.Value.Id), a => a.Id))
-                {
-                    propperty.Value = update.PropertiesDic[propperty.BaseId.Value].Value;
-                    propperty.BaseEntity.LastModified = DateTime.Now;
-                }
+            //    foreach (var propperty in Product.Properties.IntersectBy(update.PropertiesDic.Select(a => a.Value.Id), a => a.Id))
+            //    {
+            //        propperty.Value = update.PropertiesDic[propperty.BaseId.Value].Value;
+            //        propperty.BaseEntity.LastModified = DateTime.Now;
+            //    }
 
-                foreach (var propertyDic in update.PropertiesDic.Where(a => a.Value.Id <= 0))
-                {
-                    baseProperty = await _PropertyRepository.GetAsNoTracking(propertyDic.Key);
-                    if (baseProperty == null)
-                        return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.NotFound(typeof(Property)));
+            //    foreach (var propertyDic in update.PropertiesDic.Where(a => a.Value.Id <= 0))
+            //    {
+            //        baseProperty = await _PropertyRepository.GetAsNoTracking(propertyDic.Key);
+            //        if (baseProperty == null)
+            //            return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.NotFound(typeof(Property)));
 
-                    Product.Properties.Add(new Property
-                    {
-                        ProductId = update.Id,
-                        Title = baseProperty.Title,
-                        Priority = baseProperty.Priority,
-                        Value = propertyDic.Value.Value,
-                        IsBase = false,
-                        BaseId = baseProperty.Id,
-                        BaseEntity = new BaseEntity(true),
-                    });
-                }
+            //        Product.Properties.Add(new Property
+            //        {
+            //            ProductId = update.Id,
+            //            Title = baseProperty.Title,
+            //            Priority = baseProperty.Priority,
+            //            Value = propertyDic.Value.Value,
+            //            IsBase = false,
+            //            BaseId = baseProperty.Id,
+            //            BaseEntity = new BaseEntity(true),
+            //        });
+            //    }
 
 
-            }
+            //}
 
             #endregion
 
