@@ -6,18 +6,18 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OrganicShop.Domain.IRepositories
+namespace OrganicShop.Domain.IRepositories.Base
 {
-    public interface ICrudRepository<TEntity, TKey> : IDisposable , IAsyncDisposable
-        where TEntity : EntityId<TKey>, IAggregateRoot 
+    public interface ICrudRepository<TEntity, TKey> : IDisposable, IAsyncDisposable
+        where TEntity : EntityId<TKey>, IAggregateRoot
         where TKey : struct
     {
 
     }
 
 
-    public interface IReadRepository<TEntity,TKey> : ICrudRepository<TEntity,TKey>
-        where TEntity : EntityId<TKey>,IAggregateRoot 
+    public interface IReadRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
+        where TEntity : EntityId<TKey>, IAggregateRoot
         where TKey : struct
     {
         IQueryable<TEntity> GetQueryable();
@@ -29,8 +29,8 @@ namespace OrganicShop.Domain.IRepositories
         where TEntity : EntityId<TKey>, IAggregateRoot
         where TKey : struct
     {
-        Task<TKey> Add(TEntity entity, long id , string? operationDescription = null);
-        Task Add(List<TEntity> entities, long id , string? operationDescription = null);
+        Task<TKey> Add(TEntity entity, long id, string? operationDescription = null);
+        Task Add(List<TEntity> entities, long id, string? operationDescription = null);
         Task Update(TEntity entity, long id, string? operationDescription = null);
         Task Update(List<TEntity> entities, long id, string? operationDescription = null);
         Task UpdateNoTrack(TEntity entity, long id, string? operationDescription = null);

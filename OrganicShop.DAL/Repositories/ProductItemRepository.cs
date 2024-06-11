@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using OrganicShop.DAL.Context;
+using OrganicShop.DAL.Repositories.Base;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.IRepositories;
 

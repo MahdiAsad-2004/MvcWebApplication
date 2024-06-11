@@ -64,12 +64,12 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
                     break;
 
                 case ProductSortType.Discount:
-                        query = query.OrderByDescending(a => a.Price - a.DiscountedPrice);
-                        break;
-                    
+                    query = query.OrderByDescending(a => a.Price - a.DiscountedPrice);
+                    break;
+
                 case ProductSortType.DiscountDesc:
-                        query = query.OrderBy(a => a.Price - a.DiscountedPrice);
-                        break;
+                    query = query.OrderBy(a => a.Price - a.DiscountedPrice);
+                    break;
 
                 case ProductSortType.Rate:
                     query = query.OrderBy(a => (float)a.Comments.Sum(b => b.Rate) / a.Comments.Count == 0 ? int.MaxValue : a.Comments.Count);
@@ -89,38 +89,35 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
 
     public static class xxx
     {
-        public static int? GetDefaultDiscountedPrice1(this Product product)
+        public static int? GetDiscountedPrice1(this Product product)
         {
             Discount? discount;
-            discount = product.DiscountProducts.Select(a => a.Discount).OrderByDescending(a => a.BaseEntity.LastModified)
-                .FirstOrDefault(a => a.IsDefault == true);
+            discount = product.DiscountProducts.Select(a => a.Discount).OrderBy(a => a.Priority)
+                .FirstOrDefault(a => true);
 
             if (discount != null)
                 return discount.GetDiscountedPrice1(product.Price);
 
-            discount = product.Categories.Last().DiscountCategories.Select(a => a.Discount).OrderByDescending(a => a.BaseEntity.LastModified)
-                .FirstOrDefault(a => a.IsDefault == true);
+            //discount = product.Categories.Last().DiscountCategories.Select(a => a.Discount).OrderByDescending(a => a.BaseEntity.LastModified)
+            //    .FirstOrDefault(a => a.IsDefault == true);
 
-            if (discount != null)
-                return discount.GetDiscountedPrice1(product.Price);
+            //if (discount != null)
+            //    return discount.GetDiscountedPrice1(product.Price);
 
             return null;
         }
 
         public static int GetDiscountedPrice1(this Discount discount, int price)
         {
-            if (discount.IsFixDiscount)
+            if (discount.Price != null)
             {
-                if (discount.FixValue != null)
-                    return price - discount.FixValue.Value;
-                throw new Exception("Discount is not valid .");
+                return price - discount.Price.Value;
             }
-            else
+            else if (discount.Percent != null)
             {
-                if (discount.Percent != null)
-                    return price - (price * discount.Percent.Value / 100);
-                throw new Exception("Discount is not valid .");
+                return price - (price * discount.Percent.Value / 100);
             }
+            throw new Exception("Discount is not valid .");
         }
     }
 

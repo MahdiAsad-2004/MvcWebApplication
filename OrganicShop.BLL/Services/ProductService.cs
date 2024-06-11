@@ -29,11 +29,11 @@ namespace OrganicShop.BLL.Services
         private readonly ICategoryRepository _CategoryRepository;
         private readonly IPropertyRepository _PropertyRepository;
         private readonly IDiscountProductsRepository _DiscountProductRepository;
-        private readonly IDiscountCategoriesRepository _DiscountCategoriesRepository;
+        private readonly ICouponCategoriesRepository _DiscountCategoriesRepository;
         private readonly IDiscountRepository _DiscountRepository;
 
         public ProductService(IApplicationUserProvider provider, IMapper mapper, IProductRepository ProductRepository, ICategoryRepository categoryRepository,
-            IDiscountProductsRepository discountProductRepository, IPropertyRepository propertyRepository, IDiscountCategoriesRepository discountCategoriesRepository, IDiscountRepository discountRepository) : base(provider)
+            IDiscountProductsRepository discountProductRepository, IPropertyRepository propertyRepository, ICouponCategoriesRepository discountCategoriesRepository, IDiscountRepository discountRepository) : base(provider)
         {
             _Mapper = mapper;
             _ProductRepository = ProductRepository;
@@ -136,8 +136,6 @@ namespace OrganicShop.BLL.Services
             var x = query
                 .Include(a => a.Pictures)
                 .Include(a => a.Categories)
-                    .ThenInclude(a => a.DiscountCategories)
-                        .ThenInclude(a => a.Discount)
                 .Include(a => a.DiscountProducts)
                     .ThenInclude(a => a.Discount)
                 .Include(a => a.Comments)
@@ -188,7 +186,7 @@ namespace OrganicShop.BLL.Services
 
 
 
-        public async Task<ServiceResponse<ProductDetailDto>> GetDetail(long? id = null, string? barcode = null , string? title = null)
+        public async Task<ServiceResponse<ProductDetailDto>> GetDetail(long? id = null, string? barcode = null, string? title = null)
         {
             if (id == null && barcode == null && title == null)
                 throw new ArgumentNullException("Id and barcode and title are null in ProductService => GetDetail()");
@@ -198,8 +196,6 @@ namespace OrganicShop.BLL.Services
             var query = _ProductRepository.GetQueryable()
                 .Include(a => a.Pictures)
                 .Include(a => a.Categories)
-                    .ThenInclude(a => a.DiscountCategories)
-                        .ThenInclude(a => a.Discount)
                 .Include(a => a.DiscountProducts)
                     .ThenInclude(a => a.Discount)
                 .Include(a => a.Comments.Where(b => b.Status == CommentStatus.Accepted))
@@ -234,7 +230,7 @@ namespace OrganicShop.BLL.Services
             if (product == null)
                 return new ServiceResponse<ProductDetailDto>(ResponseResult.NotFound, null);
 
-            return new ServiceResponse<ProductDetailDto>(ResponseResult.Success ,_Mapper.Map<ProductDetailDto>(product.ToModel()));   
+            return new ServiceResponse<ProductDetailDto>(ResponseResult.Success, _Mapper.Map<ProductDetailDto>(product.ToModel()));
         }
 
 
@@ -251,11 +247,9 @@ namespace OrganicShop.BLL.Services
             {
                 var discount = new Discount
                 {
-                    Title = "Basic",
-                    FixValue = create.Price - create.UpdatedPrice,
-                    IsFixDiscount = true,
+                    Title = "WhenCreateProduct",
+                    Price = create.Price - create.UpdatedPrice,
                     BaseEntity = new BaseEntity(true),
-                    IsDefault = true,
                 };
 
                 if (create.DiscountCount > 0)
@@ -375,7 +369,7 @@ namespace OrganicShop.BLL.Services
                 discountProduct = Product.DiscountProducts.First(a => a.DiscountId == update.DiscountId);
                 if (update.UpdatedPrice < update.Price)
                 {
-                    discountProduct.Discount.FixValue = update.UpdatedPrice;
+                    discountProduct.Discount.Price = update.UpdatedPrice;
                     discountProduct.Discount.BaseEntity.LastModified = DateTime.Now;
                     if (update.DiscountCount > 0)
                         discountProduct.Discount.Count = update.DiscountCount;
@@ -393,10 +387,8 @@ namespace OrganicShop.BLL.Services
                     discount = new Discount
                     {
                         Title = "Basic",
-                        FixValue = update.Price - update.UpdatedPrice,
-                        IsFixDiscount = true,
+                        Price = update.Price - update.UpdatedPrice,
                         BaseEntity = new BaseEntity(true),
-                        IsDefault = true,
                     };
                     discountProduct = new DiscountProducts
                     {
@@ -571,30 +563,18 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Comments)
                 .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Properties)
                 .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.TagProducts)
-                .Include(a => a.DiscountCategories).ThenInclude(a => a.Category).ThenInclude(a => a.Products)
-                .Where(a => a.IsDefault == true && a.BaseEntity.IsActive == true &&
-                        a.StartDate < DateTime.Now && a.EndDate > DateTime.Now && (a.Count == null || a.Count > 0));
+                .Where(a => a.IsDiscountValid() && a.Count! < 0);
 
             var products1 = discounts.SelectMany(a => a.DiscountProducts).Select(a => a.Product).ToArray();
-            var products2 = discounts.SelectMany(a => a.DiscountCategories).Select(a => a.Category).SelectMany(a => a.Products).ToArray();
 
-            if (products1 == null || products2 == null)
+            if (products1 == null)
             {
-                if (products1 != null)
-                    return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products1.ToList()));
-
-                else if (products2 != null)
-                    return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products2.ToList()));
-
-                return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, new List<ProductSummaryDto>());
+                return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products1.ToList()));
             }
+            return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products1.ToList()));
 
             //return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success,  new List<ProductSummaryDto>());
             //var products = products1.Union(products2);
-            var products = products1.UnionBy(products2, a => a.Id);
-
-            return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products.ToList()));
-
         }
 
     }

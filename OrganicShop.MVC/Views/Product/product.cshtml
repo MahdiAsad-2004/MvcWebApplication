@@ -94,9 +94,9 @@
                         <div class="right-box-contain">
                             @if (Model.Discount != null)
                             {
-                                if (Model.Discount.IsFixDiscount)
+                                if (Model.Discount.Price != null)
                                 {
-                                    <h6 class="offer-top">@Model.Discount.FixValue.Value.ToToman() تخفیف</h6>
+                                    <h6 class="offer-top">@Model.Discount.Price.Value.ToToman() تخفیف</h6>
                                 }
                                 else
                                 {
@@ -111,7 +111,7 @@
                                         @Model.DiscountedPrice.Value.ToToman()
                                         <del class="text-content">@Model.Price.ToMoney()</del>
                                         <span class="offer theme-color">
-                                            (@(Model.Discount.IsFixDiscount ? Model.Discount.FixValue.Value.ToMoney() : $"{Model.Discount.Percent}%") تخفیف)
+                                            (@(Model.Discount.Price != null ? Model.Discount.Price.Value.ToMoney() : $"{Model.Discount.Percent}%") تخفیف)
                                         </span>
                                     </h3>
                                 }
@@ -610,7 +610,7 @@
                                 <h6>
                                     @Model.DiscountedPrice.Value.ToToman()
                                     <del class="text-danger">@Model.Price.ToMoney()</del>
-                                    <span>@(Model.Discount.IsFixDiscount ? $"{Model.Discount.FixValue.Value.ToMoney()}" : $"{Model.Discount.Percent.Value}%") تخفیف</span>
+                                    <span>@(Model.Discount.Price != null ? $"{Model.Discount.Price.Value.ToMoney()}" : $"{Model.Discount.Percent.Value}%") تخفیف</span>
                                 </h6>
                             }
                             else

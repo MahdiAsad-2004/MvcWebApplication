@@ -16,7 +16,6 @@ namespace OrganicShop.DAL.SeedDatas
         };
 
         
-
         public static readonly PropertyType Weight = new PropertyType
         {
             Title = "وزن",
@@ -94,7 +93,7 @@ namespace OrganicShop.DAL.SeedDatas
         public static readonly PropertyType Taste = new PropertyType
         {
             Title = "طعم",
-            Priority = 5
+            Priority = 5,
             BaseEntity = new BaseEntity(true),
         };
 
@@ -105,6 +104,16 @@ namespace OrganicShop.DAL.SeedDatas
             Priority = 6,
             BaseEntity = new BaseEntity(true),
         };
+
+        
+        public static readonly PropertyType MethodOfUse = new PropertyType
+        {
+            Title = "روش مصرف",
+            Priority = 8,
+            BaseEntity = new BaseEntity(true),
+        };
+
+        
 
         
 

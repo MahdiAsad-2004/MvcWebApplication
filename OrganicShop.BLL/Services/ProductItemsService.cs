@@ -51,8 +51,6 @@ namespace OrganicShop.BLL.Services
                     .ThenInclude(a => a.Pictures)
                 .Include(a => a.Product)
                     .ThenInclude(a => a.Categories)
-                        .ThenInclude(a => a.DiscountCategories)
-                            .ThenInclude(a => a.Discount)
                 .Include(a => a.Product)
                     .ThenInclude(a => a.DiscountProducts)
                         .ThenInclude(a => a.Discount)
@@ -218,8 +216,6 @@ namespace OrganicShop.BLL.Services
             productsQuery = productsQuery
               .Include(a => a.Pictures)
               .Include(a => a.Categories)
-                  .ThenInclude(a => a.DiscountCategories)
-                      .ThenInclude(a => a.Discount)
               .Include(a => a.DiscountProducts)
                   .ThenInclude(a => a.Discount)
               .Include(a => a.ProductVarients);

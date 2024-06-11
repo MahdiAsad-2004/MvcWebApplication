@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using DryIoc;
 using DryIoc.ImTools;
-using OrganicShop.Domain.IRepositories;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.BLL.Services;
 using AutoMapper;
 using OrganicShop.BLL.Mappers;
+using OrganicShop.Domain.IRepositories.Base;
 
 
 namespace OrganicShop.Ioc

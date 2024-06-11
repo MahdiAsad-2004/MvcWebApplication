@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OrganicShop.DAL.Context;
 using OrganicShop.Domain;
 using OrganicShop.Domain.Entities.Base;
-using OrganicShop.Domain.IRepositories;
+using OrganicShop.Domain.IRepositories.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OrganicShop.DAL.Repositories
+namespace OrganicShop.DAL.Repositories.Base
 {
     public abstract class CrudRepository<TEntity, TKey> :
         IReadRepository<TEntity, TKey>
@@ -163,7 +163,7 @@ namespace OrganicShop.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public virtual async Task<TEntity?> GetAsNoTracking(TKey id) 
+        public virtual async Task<TEntity?> GetAsNoTracking(TKey id)
             => await _dbSet
             .AsNoTracking()
             .FirstOrDefaultAsync(a => a.Id.Equals(id));

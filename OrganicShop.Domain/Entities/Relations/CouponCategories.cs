@@ -4,14 +4,14 @@ using System.ComponentModel;
 
 namespace OrganicShop.Domain.Entities.Relations
 {
-    [DisplayName("تخفیف دسته بندی")]
-    public class DiscountCategories : EntityId<int>
+    [DisplayName("کد تخفیف دسته بندی")]
+    public class CouponCategories : EntityId<int>
     {
-        public int DiscountId { get; set; }
+        public int CouponId { get; set; }
         public int CategoryId { get; set; }
         
         
-        public Discount Discount { get; set; }
+        public Coupon Coupon { get; set; }
         public Category Category { get; set; }
     }
 }

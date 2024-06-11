@@ -25,16 +25,14 @@ namespace OrganicShop.BLL.Services
         private readonly IDiscountRepository _DiscountRepository;
         private readonly IProductRepository _ProductRepository;
         private readonly IDiscountProductsRepository _DiscountProductsRepository;
-        private readonly IDiscountCategoriesRepository _DiscountCategoriesRepository;
 
         public DiscountService(IApplicationUserProvider provider, IMapper mapper, IDiscountRepository discountRepository,
-            IDiscountProductsRepository discountProductsRepository, IProductRepository productRepository, IDiscountCategoriesRepository discountCategoriesRepository) : base(provider)
+            IDiscountProductsRepository discountProductsRepository, IProductRepository productRepository) : base(provider)
         {
             _Mapper = mapper;
             _DiscountRepository = discountRepository;
             _DiscountProductsRepository = discountProductsRepository;
             _ProductRepository = productRepository;
-            _DiscountCategoriesRepository = discountCategoriesRepository;
         }
 
         #endregion
@@ -61,11 +59,13 @@ namespace OrganicShop.BLL.Services
                 query = query.IntersectBy(query2.Select(a => a.Id), a => a.Id);
             }
 
-            if (filter.IsDefault != null)
-                query = query.Where(a => a.IsDefault == filter.IsDefault.Value);
-
             if (filter.IsFixDiscount != null)
-                query = query.Where(a => a.IsFixDiscount == filter.IsFixDiscount);
+            {
+                if (filter.IsFixDiscount == true)
+                    query = query.Where(a => a.Price != null && a.Percent == null);
+                else
+                    query = query.Where(a => a.Price == null && a.Percent != null);
+            }
 
             #endregion
 
@@ -90,7 +90,6 @@ namespace OrganicShop.BLL.Services
 
             var discount = await _DiscountRepository.GetQueryable()
                 .AsNoTracking()
-                .Include(a => a.DiscountCategories)
                 .Include(a => a.DiscountProducts)
                 .FirstOrDefaultAsync(a => a.Equals(Id));
 
@@ -105,13 +104,7 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateDiscountDto create)
         {
-            if (await _DiscountRepository.GetQueryable().AnyAsync(a => a.Code != null && a.Code == create.Code))
-                return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(create, a => nameof(a.Code)));
-
             Discount Discount = _Mapper.Map<Discount>(create);
-
-            if (Discount.IsFixDiscount) Discount.Percent = null;
-            else Discount.FixValue = null;
 
             #region Discount Products
 
@@ -126,19 +119,6 @@ namespace OrganicShop.BLL.Services
 
             #endregion
 
-            #region Discount Categories
-
-            foreach (var id in create.CategoryIds)
-            {
-                Discount.DiscountCategories.Add(new DiscountCategories
-                {
-                    CategoryId = id,
-                    BaseEntity = new BaseEntity(true),
-                });
-            }
-
-            #endregion
-
             await _DiscountRepository.Add(Discount, _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());
         }
@@ -147,12 +127,8 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateDiscountDto update)
         {
-            if (await _DiscountRepository.GetQueryable().AnyAsync(a => a.Code != null && a.Code == update.Code && a.Id != update.Id))
-                return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(update, a => nameof(a.Code)));
-
             Discount? Discount = await _DiscountRepository.GetQueryable()
                 .Include(a => a.DiscountProducts)
-                .Include(a => a.DiscountCategories)
                 .AsTracking()
                 .FirstOrDefaultAsync(a => a.Id == update.Id);
 
@@ -172,25 +148,6 @@ namespace OrganicShop.BLL.Services
                 {
                     DiscountId = update.Id,
                     ProductId = id,
-                    BaseEntity = new BaseEntity(true),
-                });
-            }
-
-            #endregion
-
-            #region Discount Categories
-
-            foreach (var discounCategory in Discount.DiscountCategories.ExceptBy(update.CategoryIds, a => a.CategoryId))
-            {
-                Discount.DiscountCategories.Remove(discounCategory);
-            }
-
-            foreach (var id in update.CategoryIds.ExceptBy(Discount.DiscountCategories.Select(a => a.CategoryId), a => a))
-            {
-                Discount.DiscountCategories.Add(new DiscountCategories
-                {
-                    DiscountId = update.Id,
-                    CategoryId = id,
                     BaseEntity = new BaseEntity(true),
                 });
             }
