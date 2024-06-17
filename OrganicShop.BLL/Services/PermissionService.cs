@@ -12,6 +12,7 @@ using AutoMapper;
 using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -22,13 +23,18 @@ namespace OrganicShop.BLL.Services
         private readonly IMapper _Mapper;
         private readonly IPermissionRepository _PermissionRepository;
         private readonly IPermissionUsersRepository _PermissionUsersRepository;
+        private readonly IValidator<CreatePermissionDto> _ValidatorCreatePermission;
+        private readonly IValidator<UpdatePermissionDto> _ValidatorUpdatePermission;
 
-        public PermissionService(IApplicationUserProvider provider,IMapper mapper,IPermissionRepository permissionRepository,
-            IPermissionUsersRepository permissionUsersRepository) : base(provider)
+        public PermissionService(IApplicationUserProvider provider, IMapper mapper, IPermissionRepository permissionRepository,
+            IPermissionUsersRepository permissionUsersRepository, IValidator<CreatePermissionDto> validatorCreatePermission,
+            IValidator<UpdatePermissionDto> validatorUpdatePermission) : base(provider)
         {
             _Mapper = mapper;
             _PermissionRepository = permissionRepository;
             _PermissionUsersRepository = permissionUsersRepository;
+            _ValidatorCreatePermission = validatorCreatePermission;
+            _ValidatorUpdatePermission = validatorUpdatePermission;
         }
 
         #endregion
@@ -76,6 +82,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreatePermissionDto create)
         {
+            var validationResult = await _ValidatorCreatePermission.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             Permission Permission = _Mapper.Map<Permission>(create);
 
             #region relations
@@ -97,6 +107,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdatePermissionDto update)
         {
+            var validationResult = await _ValidatorUpdatePermission.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             Permission? Permission = await _PermissionRepository.GetAsTracking(update.Id);
 
             if (Permission == null)

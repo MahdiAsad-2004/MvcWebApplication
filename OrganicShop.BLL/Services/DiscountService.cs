@@ -14,6 +14,7 @@ using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
 using OrganicShop.BLL.Extensions;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -25,14 +26,19 @@ namespace OrganicShop.BLL.Services
         private readonly IDiscountRepository _DiscountRepository;
         private readonly IProductRepository _ProductRepository;
         private readonly IDiscountProductsRepository _DiscountProductsRepository;
+        private readonly IValidator<CreateDiscountDto> _ValidatorCreateDiscount;
+        private readonly IValidator<UpdateDiscountDto> _ValidatorUpdateDiscount;
 
         public DiscountService(IApplicationUserProvider provider, IMapper mapper, IDiscountRepository discountRepository,
-            IDiscountProductsRepository discountProductsRepository, IProductRepository productRepository) : base(provider)
+            IDiscountProductsRepository discountProductsRepository, IProductRepository productRepository,
+            IValidator<CreateDiscountDto> validatorCreateDiscount, IValidator<UpdateDiscountDto> validatorUpdateDiscount) : base(provider)
         {
             _Mapper = mapper;
             _DiscountRepository = discountRepository;
             _DiscountProductsRepository = discountProductsRepository;
             _ProductRepository = productRepository;
+            _ValidatorCreateDiscount = validatorCreateDiscount;
+            _ValidatorUpdateDiscount = validatorUpdateDiscount;
         }
 
         #endregion
@@ -104,6 +110,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateDiscountDto create)
         {
+            var validationResult = await _ValidatorCreateDiscount.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             Discount Discount = _Mapper.Map<Discount>(create);
 
             #region Discount Products
@@ -127,6 +137,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateDiscountDto update)
         {
+            var validationResult = await _ValidatorUpdateDiscount.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             Discount? Discount = await _DiscountRepository.GetQueryable()
                 .Include(a => a.DiscountProducts)
                 .AsTracking()

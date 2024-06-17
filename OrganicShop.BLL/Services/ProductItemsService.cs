@@ -12,10 +12,9 @@ using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
 using OrganicShop.Domain.Enums.Response;
 using OrganicShop.Domain.Entities.Base;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.Domain.Enums.EnumValues;
-using Microsoft.AspNetCore.Http.HttpResults;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -24,17 +23,23 @@ namespace OrganicShop.BLL.Services
         #region ctor
 
         private readonly IMapper _Mapper;
-        private readonly IProductItemRepository _ProductItemRepository;
         private readonly ICartRepository _CartRepository;
         private readonly IProductRepository _ProductRepository;
+        private readonly IProductItemRepository _ProductItemRepository;
+        private readonly IValidator<CreateProductItemDto> _ValidatorCreateProductItem;
+        private readonly IValidator<UpdateProductItemDto> _ValidatorUpdateProductItem;
 
-        public ProductItemService(IApplicationUserProvider provider, IMapper mapper, IProductItemRepository ProductItemRepository, ICartRepository CartRepository, IProductRepository productRepository)
+        public ProductItemService(IApplicationUserProvider provider, IMapper mapper, IProductItemRepository ProductItemRepository,
+            ICartRepository CartRepository, IProductRepository productRepository, IValidator<CreateProductItemDto> validatorCreateProductItem, 
+            IValidator<UpdateProductItemDto> validatorUpdateProductItem)
             : base(provider)
         {
             _Mapper = mapper;
             _ProductItemRepository = ProductItemRepository;
             _CartRepository = CartRepository;
             _ProductRepository = productRepository;
+            _ValidatorCreateProductItem = validatorCreateProductItem;
+            _ValidatorUpdateProductItem = validatorUpdateProductItem;
         }
 
         #endregion
@@ -114,6 +119,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateProductItemDto create)
         {
+            var validationResult = await _ValidatorCreateProductItem.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             ProductItem? ProductItem = new();
 
             long? userCartId = _CartRepository.GetQueryable()
@@ -166,6 +175,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateProductItemDto update)
         {
+            var validationResult = await _ValidatorUpdateProductItem.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             ProductItem? ProductItem = await _ProductItemRepository.GetAsTracking(update.Id);
 
             if (ProductItem == null)

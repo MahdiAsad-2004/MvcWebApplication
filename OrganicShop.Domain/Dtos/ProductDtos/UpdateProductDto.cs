@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using OrganicShop.Domain.Dtos.Base;
 using OrganicShop.Domain.Entities;
-using OrganicShop.Domain.ValidationsAttributes;
+using OrganicShop.Domain.Validation.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using OrganicShop.Domain.Dtos.Combo;

@@ -4,7 +4,7 @@ using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
-using OrganicShop.Domain.ValidationsAttributes;
+using OrganicShop.Domain.Validation.Attributes;
 
 namespace OrganicShop.Domain.Dtos.CategoryDtos
 {

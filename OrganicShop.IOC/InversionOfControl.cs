@@ -6,6 +6,12 @@ using OrganicShop.BLL.Services;
 using AutoMapper;
 using OrganicShop.BLL.Mappers;
 using OrganicShop.Domain.IRepositories.Base;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using DryIoc.Microsoft.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel;
+using OrganicShop.Domain.Validation.Validators;
 
 
 namespace OrganicShop.Ioc
@@ -18,6 +24,7 @@ namespace OrganicShop.Ioc
         public static DryIoc.Container GetContainer()
         {
             var container = new DryIoc.Container();
+            var serviceCollecton = new ServiceCollection();
 
             IRepository repository;
             UserRepository userRepository;
@@ -53,6 +60,34 @@ namespace OrganicShop.Ioc
 
             container.RegisterInstance<IMapper>(new Mapper(MappingConfiguration.GetConfiguration()));
 
+            serviceCollecton.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+
+            //serviceCollecton.AddFluentValidation(fv =>
+            //{
+            //    fv.RegisterValidatorsFromAssemblyContaining<CreateUserValidator>();
+
+            //    ValidatorOptions.Global.DisplayNameResolver = (type, member, expression) =>
+            //    {
+            //        string? dispalyName = member?.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
+            //        if (dispalyName != null)
+            //        {
+            //            return dispalyName;
+            //        }
+            //        return null;
+            //    };
+            //    ValidatorOptions.Global.LanguageManager = new CustomLanguageManager();
+
+            //    //fv.ValidatorOptions.DisplayNameResolver = (type, member, expression) =>
+            //    //{
+            //    //    string? dispalyName = member?.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
+            //    //    if (dispalyName != null)
+            //    //    {
+            //    //        return dispalyName;
+            //    //    }
+            //    //    return null;
+            //    //}; ;
+            //});
+
 
             //container.Register<IApplicationUserProvider, ApplicationUserProvider>();
 
@@ -63,6 +98,7 @@ namespace OrganicShop.Ioc
             //}
 
            
+            container.Populate(serviceCollecton);
 
             return container;
         }

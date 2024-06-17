@@ -12,6 +12,7 @@ using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
 using OrganicShop.Domain.Enums.Response;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -21,11 +22,16 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly ICartRepository _CartRepository;
+        private readonly IValidator<CreateCartDto> _ValidatorCreateCart;
+        private readonly IValidator<UpdateCartDto> _ValidatorUpdateCart;
 
-        public CartService(IApplicationUserProvider provider,IMapper mapper,ICartRepository CartRepository) : base(provider)
+        public CartService(IApplicationUserProvider provider, IMapper mapper, ICartRepository CartRepository,
+            IValidator<UpdateCartDto> validatorUpdateCart, IValidator<CreateCartDto> validatorCreateCart) : base(provider)
         {
             _Mapper = mapper;
             _CartRepository = CartRepository;
+            _ValidatorUpdateCart = validatorUpdateCart;
+            _ValidatorCreateCart = validatorCreateCart;
         }
 
         #endregion
@@ -80,6 +86,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateCartDto create)
         {
+            var validationResult = await _ValidatorCreateCart.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create , validationResult);
+
             if (await _CartRepository.GetQueryable().Where(a => a.UserId == create.UserId).CountAsync() > 2)
                 return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.MaxCreate(2));
 
@@ -93,6 +103,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateCartDto update)
         {
+            var validationResult = await _ValidatorUpdateCart.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             Cart? Cart = await _CartRepository.GetAsTracking(update.Id);
             
             if (Cart == null)

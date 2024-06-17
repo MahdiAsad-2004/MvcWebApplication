@@ -13,6 +13,7 @@ using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Dtos.Combo;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -22,11 +23,16 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly INewsLetterMemberRepository _NewsLetterMemberRepository;
+        private readonly IValidator<CreateNewsLetterMemberDto> _ValidatorCreateNewsLetterMember;
+        private readonly IValidator<UpdateNewsLetterMemberDto> _ValidatorUpdateNewsLetterMember;
 
-        public NewsLetterMemberService(IApplicationUserProvider provider,IMapper mapper,INewsLetterMemberRepository NewsLetterMemberRepository) : base(provider)
+        public NewsLetterMemberService(IApplicationUserProvider provider, IMapper mapper, INewsLetterMemberRepository NewsLetterMemberRepository,
+            IValidator<CreateNewsLetterMemberDto> validatorCreateNewsLetterMember, IValidator<UpdateNewsLetterMemberDto> validatorUpdateNewsLetterMember) : base(provider)
         {
             _Mapper = mapper;
             _NewsLetterMemberRepository = NewsLetterMemberRepository;
+            _ValidatorCreateNewsLetterMember = validatorCreateNewsLetterMember;
+            _ValidatorUpdateNewsLetterMember = validatorUpdateNewsLetterMember;
         }
 
         #endregion
@@ -69,6 +75,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateNewsLetterMemberDto create)
         {
+            var validationResult = await _ValidatorCreateNewsLetterMember.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             NewsLetterMember NewsLetterMember = _Mapper.Map<NewsLetterMember>(create);
 
             if (await _NewsLetterMemberRepository.GetQueryable().AnyAsync(a => a.UserId != null && a.UserId == _AppUserProvider.User.Id))
@@ -88,6 +98,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateNewsLetterMemberDto update)
         {
+            var validationResult = await _ValidatorUpdateNewsLetterMember.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             NewsLetterMember? NewsLetterMember = await _NewsLetterMemberRepository.GetAsTracking(update.Id);
             
             if (NewsLetterMember == null)

@@ -10,6 +10,7 @@ using AutoMapper;
 using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Dtos.ShippingMethodDtos;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -19,11 +20,16 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly IShippingMethodRepository _ShippingMethodRepository;
+        private readonly IValidator<CreateShippingMethodDto> _ValidatorCreateShippingMethod;
+        private readonly IValidator<UpdateShippingMethodDto> _ValidatorUpdateShippingMethod;
 
-        public ShippingMethodService(IApplicationUserProvider provider,IMapper mapper,IShippingMethodRepository ShippingMethodRepository) : base(provider)
+        public ShippingMethodService(IApplicationUserProvider provider, IMapper mapper, IShippingMethodRepository ShippingMethodRepository,
+            IValidator<CreateShippingMethodDto> validatorCreateShippingMethod, IValidator<UpdateShippingMethodDto> validatorUpdateShippingMethod) : base(provider)
         {
             _Mapper = mapper;
             _ShippingMethodRepository = ShippingMethodRepository;
+            _ValidatorCreateShippingMethod = validatorCreateShippingMethod;
+            _ValidatorUpdateShippingMethod = validatorUpdateShippingMethod;
         }
 
         #endregion
@@ -58,6 +64,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateShippingMethodDto create)
         {
+            var validationResult = await _ValidatorCreateShippingMethod.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             ShippingMethod ShippingMethod = _Mapper.Map<ShippingMethod>(create);
             await _ShippingMethodRepository.Add(ShippingMethod,_AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());
@@ -67,6 +77,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateShippingMethodDto update)
         {
+            var validationResult = await _ValidatorUpdateShippingMethod.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             ShippingMethod? ShippingMethod = await _ShippingMethodRepository.GetAsTracking(update.Id);
             
             if (ShippingMethod == null)

@@ -13,6 +13,7 @@ using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Dtos.Combo;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -22,11 +23,15 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly INewsLetterRepository _NewsLetterRepository;
+        private readonly IValidator<CreateNewsLetterDto> _ValidatorCreateNewsLetter;
+        private readonly IValidator<UpdateNewsLetterDto> _ValidatorUpdateNewsLetter;
 
-        public NewsLetterService(IApplicationUserProvider provider,IMapper mapper,INewsLetterRepository NewsLetterRepository) : base(provider)
+        public NewsLetterService(IApplicationUserProvider provider, IMapper mapper, INewsLetterRepository NewsLetterRepository, IValidator<CreateNewsLetterDto> validatorCreateNewsLetter, IValidator<UpdateNewsLetterDto> validatorUpdateNewsLetter) : base(provider)
         {
             _Mapper = mapper;
             _NewsLetterRepository = NewsLetterRepository;
+            _ValidatorCreateNewsLetter = validatorCreateNewsLetter;
+            _ValidatorUpdateNewsLetter = validatorUpdateNewsLetter;
         }
 
         #endregion
@@ -79,6 +84,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateNewsLetterDto create)
         {
+            var validationResult = await _ValidatorCreateNewsLetter.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             NewsLetter NewsLetter = _Mapper.Map<NewsLetter>(create);
 
             if (await _NewsLetterRepository.GetQueryable().AnyAsync(a => EF.Functions.Like(a.Title , create.Title)))
@@ -92,6 +101,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateNewsLetterDto update)
         {
+            var validationResult = await _ValidatorUpdateNewsLetter.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             NewsLetter? NewsLetter = await _NewsLetterRepository.GetAsTracking(update.Id);
             
             if (NewsLetter == null)

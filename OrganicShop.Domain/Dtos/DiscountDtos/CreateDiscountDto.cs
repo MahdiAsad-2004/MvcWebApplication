@@ -1,5 +1,5 @@
 ﻿using OrganicShop.Domain.Dtos.Base;
-using OrganicShop.Domain.ValidationsAttributes;
+using OrganicShop.Domain.Validation.Attributes;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 

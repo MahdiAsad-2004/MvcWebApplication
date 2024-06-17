@@ -14,6 +14,7 @@ using OrganicShop.Domain.Enums;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Dtos.Combo;
 using OrganicShop.BLL.Extensions;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -23,11 +24,16 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly ISellerRepository _SellerRepository;
+        private readonly IValidator<CreateSellerDto> _ValidatorCreateSeller;
+        private readonly IValidator<UpdateSellerDto> _ValidatorUpdateSeller;
 
-        public SellerService(IApplicationUserProvider provider,IMapper mapper,ISellerRepository SellerRepository) : base(provider)
+        public SellerService(IApplicationUserProvider provider, IMapper mapper, ISellerRepository SellerRepository,
+            IValidator<CreateSellerDto> validatorCreateSeller, IValidator<UpdateSellerDto> validatorUpdateSeller) : base(provider)
         {
             _Mapper = mapper;
             _SellerRepository = SellerRepository;
+            _ValidatorCreateSeller = validatorCreateSeller;
+            _ValidatorUpdateSeller = validatorUpdateSeller;
         }
 
         #endregion
@@ -145,6 +151,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateSellerDto create)
         {
+            var validationResult = await _ValidatorCreateSeller.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             Seller Seller = _Mapper.Map<Seller>(create);
 
             if (await _SellerRepository.GetQueryable().AnyAsync(a => EF.Functions.Like(a.Title , create.Title)))
@@ -158,6 +168,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateSellerDto update)
         {
+            var validationResult = await _ValidatorUpdateSeller.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             Seller? Seller = await _SellerRepository.GetAsTracking(update.Id);
             
             if (Seller == null)

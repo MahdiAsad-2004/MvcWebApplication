@@ -12,6 +12,7 @@ using OrganicShop.Domain.Dtos.AddressDtos;
 using AutoMapper;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums.SortTypes;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -21,11 +22,16 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly IBankCardRepository _BankCardRepository;
+        private readonly IValidator<CreateBankCardDto> _ValidatorCreateBankCard;
+        private readonly IValidator<UpdateBankCardDto> _ValidatorUpdateBankCard;
 
-        public BankCardService(IApplicationUserProvider provider,IMapper mapper,IBankCardRepository BankCardRepository) : base(provider)
+        public BankCardService(IApplicationUserProvider provider, IMapper mapper, IBankCardRepository BankCardRepository,
+            IValidator<CreateBankCardDto> validatorCreateBankCard, IValidator<UpdateBankCardDto> validatorUpdateBankCard) : base(provider)
         {
             _Mapper = mapper;
             _BankCardRepository = BankCardRepository;
+            _ValidatorCreateBankCard = validatorCreateBankCard;
+            _ValidatorUpdateBankCard = validatorUpdateBankCard;
         }
 
         #endregion
@@ -66,6 +72,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateBankCardDto create)
         {
+            var validationResult = await _ValidatorCreateBankCard.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             if (await _BankCardRepository.GetQueryable().Where(a => a.UserId == create.UserId).CountAsync() > 8)
                 return new ServiceResponse<Empty>(ResponseResult.Failed , _Message.MaxCreate(8));
 
@@ -78,6 +88,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateBankCardDto update)
         {
+            var validationResult = await _ValidatorUpdateBankCard.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             BankCard? BankCard = await _BankCardRepository.GetAsTracking(update.Id);
 
             if (BankCard == null)

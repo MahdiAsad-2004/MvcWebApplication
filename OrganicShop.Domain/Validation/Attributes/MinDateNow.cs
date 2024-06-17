@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
-namespace OrganicShop.Domain.ValidationsAttributes
+namespace OrganicShop.Domain.Validation.Attributes
 {
-    public class FileSize : ValidationAttribute, IClientModelValidator
+    public class MinDateNow : ValidationAttribute, IClientModelValidator
     {
-        public int Size { get; set; }
+        public DateTime Date { get; set; }
 
-        public FileSize(int sizeKB)
+        public MinDateNow()
         {
-            Size = sizeKB;
+            Date = DateTime.Now.Date;
 
         }
 
@@ -21,10 +21,9 @@ namespace OrganicShop.Domain.ValidationsAttributes
 
         public void AddValidation(ClientModelValidationContext context)
         {
-            context.Attributes.Add("data-val-fileSize", $"حداکثر سایز {context.ModelMetadata.DisplayName} {Size} KB است");
-            context.Attributes.Add("data-val-fileSize-max", $"{Size}");
+            context.Attributes.Add("data-val-MinDate", $"{context.ModelMetadata.DisplayName} باید بعد از {Date.ToShortDateString()} باشد");
+            context.Attributes.Add("data-val-MinDate-min", $"{Date}");
             context.Attributes.TryAdd("data-val", "true");
-
         }
 
     }

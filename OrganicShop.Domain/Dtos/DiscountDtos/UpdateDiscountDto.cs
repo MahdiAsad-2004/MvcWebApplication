@@ -1,6 +1,6 @@
 ﻿using OrganicShop.Domain.Dtos.Base;
 using OrganicShop.Domain.Enums;
-using OrganicShop.Domain.ValidationsAttributes;
+using OrganicShop.Domain.Validation.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

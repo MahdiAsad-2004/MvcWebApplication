@@ -13,6 +13,7 @@ using OrganicShop.Domain.Response;
 using AutoMapper;
 using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -21,15 +22,20 @@ namespace OrganicShop.BLL.Services
         #region ctor
 
         private readonly IMapper _Mapper;
-        private readonly ITrackingStatusRepository _TrackingStatusRepository;
         private readonly IOrderRepository _OrderRepository;
+        private readonly ITrackingStatusRepository _TrackingStatusRepository;
+        private readonly IValidator<CreateTrackingStatusDto> _ValidatorCreateTrackingStatus;
+        private readonly IValidator<UpdateTrackingStatusDto> _ValidatorUpdateTrackingStatus;
 
-        public TrackingStatusService(IApplicationUserProvider provider,IMapper mapper,ITrackingStatusRepository TrackingStatusRepository,
-            IOrderRepository orderRepository) : base(provider)
+        public TrackingStatusService(IApplicationUserProvider provider, IMapper mapper, ITrackingStatusRepository TrackingStatusRepository,
+            IOrderRepository orderRepository, IValidator<CreateTrackingStatusDto> validatorCreateTrackingStatus,
+            IValidator<UpdateTrackingStatusDto> validatorUpdateTrackingStatus) : base(provider)
         {
             _Mapper = mapper;
             _TrackingStatusRepository = TrackingStatusRepository;
             _OrderRepository = orderRepository;
+            _ValidatorCreateTrackingStatus = validatorCreateTrackingStatus;
+            _ValidatorUpdateTrackingStatus = validatorUpdateTrackingStatus;
         }
 
         #endregion
@@ -70,6 +76,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateTrackingStatusDto create)
         {
+            var validationResult = await _ValidatorCreateTrackingStatus.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             //TrackingStatus TrackingStatus = create.ToModel();
 
             if (_OrderRepository.GetQueryable().Any(a => a.Id == create.OrderId) == false)
@@ -99,6 +109,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateTrackingStatusDto update)
         {
+            var validationResult = await _ValidatorUpdateTrackingStatus.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             TrackingStatus? TrackingStatus = await _TrackingStatusRepository.GetAsTracking(update.Id);
             
             if (TrackingStatus == null)

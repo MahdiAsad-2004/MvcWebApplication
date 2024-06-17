@@ -9,6 +9,8 @@ using AutoMapper;
 using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums.Response;
+using FluentValidation;
+using Microsoft.AspNetCore.Builder;
 
 namespace OrganicShop.BLL.Services
 {
@@ -18,11 +20,14 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly IContactUsRepository _ContactUsRepository;
+        private readonly IValidator<UpdateContactUsDto> _ValidatorUpdateContactUs;
 
-        public ContactUsService(IApplicationUserProvider provider,IMapper mapper,IContactUsRepository ContactUsRepository) : base(provider)
+        public ContactUsService(IApplicationUserProvider provider, IMapper mapper, IContactUsRepository ContactUsRepository,
+            IValidator<UpdateContactUsDto> validatorUpdateContactUs) : base(provider)
         {
             _Mapper = mapper;
             this._ContactUsRepository = ContactUsRepository;
+            _ValidatorUpdateContactUs = validatorUpdateContactUs;
         }
 
         #endregion
@@ -39,6 +44,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateContactUsDto update)
         {
+            var validationResult = await _ValidatorUpdateContactUs.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             ContactUs? ContactUs = await _ContactUsRepository.GetQueryableTracking()
                 .FirstAsync();
 

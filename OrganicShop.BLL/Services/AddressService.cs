@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using OrganicShop.BLL.Mappers;
 using OrganicShop.BLL.Providers;
@@ -21,13 +23,18 @@ namespace OrganicShop.BLL.Services
     {
         #region ctor
         
-        private readonly IAddressRepository _AddressRepository;
         private readonly IMapper _Mapper;
+        private readonly IAddressRepository _AddressRepository;
+        private readonly IValidator<CreateAddressDto> _ValidatorCreateAddress;
+        private readonly IValidator<UpdateAddressDto> _ValidatorUpdateAddress;
 
-        public AddressService(IApplicationUserProvider applicationUserProvider, IMapper mapper, IAddressRepository AddressRepository) : base(applicationUserProvider)
+        public AddressService(IApplicationUserProvider applicationUserProvider, IMapper mapper, IAddressRepository AddressRepository,
+            IValidator<CreateAddressDto> validatorCreateAddress, IValidator<UpdateAddressDto> validatorUpdateAddress) : base(applicationUserProvider)
         {
             _AddressRepository = AddressRepository;
             _Mapper = mapper;
+            _ValidatorCreateAddress = validatorCreateAddress;
+            _ValidatorUpdateAddress = validatorUpdateAddress;
         }
 
         #endregion
@@ -68,6 +75,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateAddressDto create)
         {
+            var validationResult = await _ValidatorCreateAddress.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             if (await _AddressRepository.GetQueryable().Where(a => a.UserId == create.UserId).CountAsync() > 4)
                 return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.MaxCreate(4));
 
@@ -81,6 +92,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateAddressDto update)
         {
+            var validationResult = await _ValidatorUpdateAddress.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             Address? Address = await _AddressRepository.GetAsTracking(update.Id);
 
             if (Address == null)

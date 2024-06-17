@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.BLL.Mappers;
 using OrganicShop.BLL.Providers;
 using OrganicShop.DAL.Repositories;
+using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.Dtos.ArticleDtos;
 using OrganicShop.Domain.Dtos.Page;
 using OrganicShop.Domain.Dtos.ProductDtos;
@@ -24,13 +26,18 @@ namespace OrganicShop.BLL.Services
     {
         #region ctor
 
-        private readonly IArticleRepository _ArticleRepository;
         private readonly IMapper _Mapper;
+        private readonly IArticleRepository _ArticleRepository;
+        private readonly IValidator<CreateArticleDto> _ValidatorCreateArticle;
+        private readonly IValidator<UpdateArticleDto> _ValidatorUpdateArticle;
 
-        public ArticleService(IApplicationUserProvider applicationUserProvider, IMapper mapper, IArticleRepository ArticleRepository) : base(applicationUserProvider)
+        public ArticleService(IApplicationUserProvider applicationUserProvider, IMapper mapper, IArticleRepository ArticleRepository,
+            IValidator<CreateArticleDto> validatorCreateArticle, IValidator<UpdateArticleDto> validatorUpdateArticle) : base(applicationUserProvider)
         {
             _ArticleRepository = ArticleRepository;
             _Mapper = mapper;
+            _ValidatorCreateArticle = validatorCreateArticle;
+            _ValidatorUpdateArticle = validatorUpdateArticle;
         }
 
         #endregion
@@ -116,7 +123,11 @@ namespace OrganicShop.BLL.Services
             Article article;
             if (id != null && string.IsNullOrEmpty(title))
                 throw new ArgumentNullException("Article Id and Article Title");
-            var query = _ArticleRepository.GetQueryable()
+            var query = _ArticleRepository.GetQueryable();
+
+            #region includes
+
+            query = query
                 .Include(a => a.User)
                 .Include(a => a.Pictures)
                 .Include(a => a.Category)
@@ -124,6 +135,9 @@ namespace OrganicShop.BLL.Services
                     .ThenInclude(a => a.User)
                 .Include(a => a.TagArticles)
                 .AsQueryable();
+
+            #endregion
+
             if (id != null)
             {
                 if (id < 1)
@@ -146,6 +160,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateArticleDto create)
         {
+            var validationResult = await _ValidatorCreateArticle.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             if (await _ArticleRepository.GetQueryable().AnyAsync(a => a.Title == create.Title))
                 return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(create, a => nameof(a.Title)));
 
@@ -159,6 +177,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateArticleDto update)
         {
+            var validationResult = await _ValidatorUpdateArticle.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             if (await _ArticleRepository.GetQueryable().AnyAsync(a => a.Id != update.Id && a.Title == update.Title))
                 return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(update, a => nameof(a.Title)));
 

@@ -13,6 +13,7 @@ using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Dtos.Combo;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -22,11 +23,16 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly ITagRepository _TagRepository;
+        private readonly IValidator<CreateTagDto> _ValidatorCreateTag;
+        private readonly IValidator<UpdateTagDto> _ValidatorUpdateTag;
 
-        public TagService(IApplicationUserProvider provider,IMapper mapper,ITagRepository TagRepository) : base(provider)
+        public TagService(IApplicationUserProvider provider, IMapper mapper, ITagRepository TagRepository,
+            IValidator<CreateTagDto> validatorCreateTag, IValidator<UpdateTagDto> validatorUpdateTag) : base(provider)
         {
             _Mapper = mapper;
             _TagRepository = TagRepository;
+            this._ValidatorCreateTag = validatorCreateTag;
+            _ValidatorUpdateTag = validatorUpdateTag;
         }
 
         #endregion
@@ -79,6 +85,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateTagDto create)
         {
+            var validationResult = await _ValidatorCreateTag.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             Tag Tag = _Mapper.Map<Tag>(create);
 
             if (await _TagRepository.GetQueryable().AnyAsync(a => EF.Functions.Like(a.Title , create.Title)))
@@ -92,6 +102,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateTagDto update)
         {
+            var validationResult = await _ValidatorUpdateTag.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             Tag? Tag = await _TagRepository.GetAsTracking(update.Id);
             
             if (Tag == null)

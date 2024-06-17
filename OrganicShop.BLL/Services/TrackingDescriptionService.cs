@@ -11,6 +11,7 @@ using AutoMapper;
 using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -19,15 +20,20 @@ namespace OrganicShop.BLL.Services
         #region ctor
 
         private readonly IMapper _Mapper;
-        private readonly ITrackingDescriptionRepository _TrackingDescriptionRepository;
         private readonly IOrderRepository _OrderRepository;
+        private readonly ITrackingDescriptionRepository _TrackingDescriptionRepository;
+        private readonly IValidator<CreateTrackingDescriptionDto> _ValidatorCreateTrackingDescription;
+        private readonly IValidator<UpdateTrackingDescriptionDto> _ValidatorUpdateTrackingDescription;
 
-        public TrackingDescriptionService(IApplicationUserProvider provider,IMapper mapper,ITrackingDescriptionRepository TrackingDescriptionRepository,
-            IOrderRepository orderRepository) : base(provider)
+        public TrackingDescriptionService(IApplicationUserProvider provider, IMapper mapper, ITrackingDescriptionRepository TrackingDescriptionRepository,
+            IOrderRepository orderRepository, IValidator<CreateTrackingDescriptionDto> validatorCreateTrackingDescription,
+            IValidator<UpdateTrackingDescriptionDto> validatorUpdateTrackingDescription) : base(provider)
         {
             _Mapper = mapper;
             _TrackingDescriptionRepository = TrackingDescriptionRepository;
             _OrderRepository = orderRepository;
+            _ValidatorCreateTrackingDescription = validatorCreateTrackingDescription;
+            _ValidatorUpdateTrackingDescription = validatorUpdateTrackingDescription;
         }
 
         #endregion
@@ -74,6 +80,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateTrackingDescriptionDto create)
         {
+            var validationResult = await _ValidatorCreateTrackingDescription.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             TrackingDescription TrackingDescription = _Mapper.Map<TrackingDescription>(create);
 
             #region relation
@@ -91,6 +101,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateTrackingDescriptionDto update)
         {
+            var validationResult = await _ValidatorUpdateTrackingDescription.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             TrackingDescription? TrackingDescription = await _TrackingDescriptionRepository.GetAsTracking(update.Id);
             
             if (TrackingDescription == null)

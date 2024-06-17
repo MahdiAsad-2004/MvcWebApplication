@@ -18,6 +18,8 @@ using Hangfire.SqlServer;
 using OrganicShop.BLL.Services.BackgroundServices;
 using System.Configuration;
 using OrganicShop.BLL.Utils;
+using Microsoft.AspNetCore.Identity;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,7 +59,7 @@ builder.Services.AddDbContext<OrganicShopDbContext>(options =>
 
 #endregion
 
-
+//builder.Services.AddValidatorsFromAssemblyContaining<>()
 
 
 var app = builder.Build();

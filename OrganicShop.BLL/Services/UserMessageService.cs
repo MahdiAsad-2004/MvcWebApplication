@@ -13,6 +13,7 @@ using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Dtos.Combo;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -22,11 +23,14 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly IUserMessageRepository _UserMessageRepository;
+        private readonly IValidator<CreateUserMessageDto> _ValidatorCreateUserMessage;
 
-        public UserMessageService(IApplicationUserProvider provider,IMapper mapper,IUserMessageRepository UserMessageRepository) : base(provider)
+        public UserMessageService(IApplicationUserProvider provider, IMapper mapper, IUserMessageRepository UserMessageRepository,
+            IValidator<CreateUserMessageDto> validatorCreateUserMessage) : base(provider)
         {
             _Mapper = mapper;
             _UserMessageRepository = UserMessageRepository;
+            _ValidatorCreateUserMessage = validatorCreateUserMessage;
         }
 
         #endregion
@@ -81,6 +85,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateUserMessageDto create)
         {
+            var validationResult = await _ValidatorCreateUserMessage.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             UserMessage UserMessage = _Mapper.Map<UserMessage>(create);
 
             if(create.UserId > 0)

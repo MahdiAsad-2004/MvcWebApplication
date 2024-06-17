@@ -8,7 +8,7 @@ namespace OrganicShop.Domain.Entities
     public class Property : EntityId<long>
     {
         public string Value { get; set; }
-        public int PropertyTypeId { get; set; }
+        public int TypeId { get; set; }
         public long? ProductId { get; set; }
 
 

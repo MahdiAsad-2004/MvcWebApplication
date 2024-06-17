@@ -22,6 +22,7 @@ namespace OrganicShop.BLL.Services
         private readonly IMapper _Mapper;
         private readonly IPictureRepository _PictureRepository;
 
+
         public PictureService(IApplicationUserProvider provider,IMapper mapper,IPictureRepository PictureRepository) : base(provider)
         {
             _Mapper = mapper;

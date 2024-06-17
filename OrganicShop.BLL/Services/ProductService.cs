@@ -17,6 +17,7 @@ using OrganicShop.Domain.Enums;
 using OrganicShop.Domain.Dtos.Combo;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Dtos.DiscountDtos;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -28,20 +29,21 @@ namespace OrganicShop.BLL.Services
         private readonly IProductRepository _ProductRepository;
         private readonly ICategoryRepository _CategoryRepository;
         private readonly IPropertyRepository _PropertyRepository;
-        private readonly IDiscountProductsRepository _DiscountProductRepository;
-        private readonly ICouponCategoriesRepository _DiscountCategoriesRepository;
         private readonly IDiscountRepository _DiscountRepository;
+        private readonly IValidator<CreateProductDto> _ValidatorCreateProduct;
+        private readonly IValidator<UpdateProductDto> _ValidatorUpdateProduct;
 
         public ProductService(IApplicationUserProvider provider, IMapper mapper, IProductRepository ProductRepository, ICategoryRepository categoryRepository,
-            IDiscountProductsRepository discountProductRepository, IPropertyRepository propertyRepository, ICouponCategoriesRepository discountCategoriesRepository, IDiscountRepository discountRepository) : base(provider)
+            IPropertyRepository propertyRepository, IDiscountRepository discountRepository, IValidator<CreateProductDto> validatorCreateProduct,
+            IValidator<UpdateProductDto> validatorUpdateProduct) : base(provider)
         {
             _Mapper = mapper;
             _ProductRepository = ProductRepository;
             _CategoryRepository = categoryRepository;
-            _DiscountProductRepository = discountProductRepository;
             _PropertyRepository = propertyRepository;
-            _DiscountCategoriesRepository = discountCategoriesRepository;
             _DiscountRepository = discountRepository;
+            _ValidatorCreateProduct = validatorCreateProduct;
+            _ValidatorUpdateProduct = validatorUpdateProduct;
         }
 
         #endregion
@@ -168,8 +170,7 @@ namespace OrganicShop.BLL.Services
             if (Id < 1)
                 return new ServiceResponse<UpdateProductDto>(ResponseResult.NotFound, null);
 
-            var product = await _ProductRepository.GetQueryable()
-                .AsNoTracking()
+            var product = await _ProductRepository.GetQueryableTracking()
                 .Include(a => a.TagProducts)
                 .Include(a => a.Properties)
                 .Include(a => a.Pictures)
@@ -239,6 +240,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateProductDto create)
         {
+            var validationResult = await _ValidatorCreateProduct.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             Product Product = _Mapper.Map<Product>(create);
 
             #region discounts
@@ -320,7 +325,7 @@ namespace OrganicShop.BLL.Services
                         Value = propertyDic.Value,
                         //IsBase = false,
                         //BaseId = propertyDic.Key,
-                        PropertyTypeId = 1,
+                        TypeId = 1,
                         BaseEntity = new BaseEntity(true),
                     });
                 }
@@ -348,6 +353,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateProductDto update)
         {
+            var validationResult = await _ValidatorUpdateProduct.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             Product? Product = await _ProductRepository.GetQueryableTracking()
                 .Include(a => a.TagProducts)
                 .Include(a => a.Properties)

@@ -14,7 +14,7 @@ using OrganicShop.Domain.Dtos.Combo;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.Domain.Enums.Response;
 using OrganicShop.Domain.Dtos.DiscountDtos;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -25,11 +25,16 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly ICategoryRepository _CategoryRepository;
+        private readonly IValidator<CreateCategoryDto> _ValidatorCreateCategory;
+        private readonly IValidator<UpdateCategoryDto> _ValidatorUpdateCategory;
 
-        public CategoryService(IApplicationUserProvider provider, IMapper mapper, ICategoryRepository CategoryRepository) : base(provider)
+        public CategoryService(IApplicationUserProvider provider, IMapper mapper, ICategoryRepository CategoryRepository,
+            IValidator<CreateCategoryDto> validatorCreateCategory, IValidator<UpdateCategoryDto> validatorUpdateCategory) : base(provider)
         {
             _Mapper = mapper;
             _CategoryRepository = CategoryRepository;
+            _ValidatorCreateCategory = validatorCreateCategory;
+            _ValidatorUpdateCategory = validatorUpdateCategory;
         }
 
         #endregion
@@ -104,6 +109,10 @@ namespace OrganicShop.BLL.Services
         {
             //HasPermission(a => a.Categories_Admin);
 
+            var validationResult = await _ValidatorCreateCategory.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             Category? Category = new Category();
 
             if (_CategoryRepository.GetQueryable().Any(a => EF.Functions.Like(a.Title, create.Title)))
@@ -125,6 +134,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateCategoryDto update)
         {
+            var validationResult = await _ValidatorUpdateCategory.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             Category? Category = new Category();
 
             if (_CategoryRepository.GetQueryable().Any(a => a.Id != update.Id && EF.Functions.Like(a.Title, update.Title)))

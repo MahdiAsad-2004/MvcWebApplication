@@ -15,6 +15,7 @@ using OrganicShop.Domain.Enums;
 using System.Text;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.Domain.Entities.Base;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -26,20 +27,21 @@ namespace OrganicShop.BLL.Services
         private readonly IOrderRepository _OrderRepository;
         private readonly IAddressRepository _AddressRepository;
         private readonly IProductItemRepository _ProductItemRepository;
-        private readonly ICartRepository _CartRepository;
         private readonly INextCartRepository _NextCartRepository;
-        private readonly ITrackingStatusService _TrackingStatusesService;
+        private readonly IValidator<CreateOrderDto> _ValidatorCreateOrder;
+        private readonly IValidator<UpdateOrderDto> _ValidatorUpdateOrder;
 
         public OrderService(IApplicationUserProvider provider, IMapper mapper, IOrderRepository OrderRepository, IAddressRepository AddressRepository,
-            IProductItemRepository ProductItemRepository, ICartRepository CartRepository, ITrackingStatusService trackingStatusesService, INextCartRepository nextCartRepository) : base(provider)
+            IProductItemRepository ProductItemRepository, INextCartRepository nextCartRepository, IValidator<CreateOrderDto> validatorCreateOrder,
+            IValidator<UpdateOrderDto> validatorUpdateOrder) : base(provider)
         {
             _Mapper = mapper;
             _OrderRepository = OrderRepository;
             _AddressRepository = AddressRepository;
             _ProductItemRepository = ProductItemRepository;
-            _CartRepository = CartRepository;
-            _TrackingStatusesService = trackingStatusesService;
             _NextCartRepository = nextCartRepository;
+            _ValidatorCreateOrder = validatorCreateOrder;
+            _ValidatorUpdateOrder = validatorUpdateOrder;
         }
 
         #endregion
@@ -154,6 +156,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<string>> Create(CreateOrderDto create)
         {
+            var validationResult = await _ValidatorCreateOrder.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<string>(create, validationResult);
+
             Order Order = _Mapper.Map<Order>(create);
             var Address = await _AddressRepository.GetAsNoTracking(create.AddressId);
 
@@ -217,6 +223,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateOrderDto update)
         {
+            var validationResult = await _ValidatorUpdateOrder.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             Order? Order = await _OrderRepository.GetAsTracking(update.Id);
 
             if (Order == null)

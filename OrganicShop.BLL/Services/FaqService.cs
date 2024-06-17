@@ -10,6 +10,7 @@ using OrganicShop.Domain.Response;
 using AutoMapper;
 using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -19,11 +20,16 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly IFaqRepository _FaqRepository;
+        private readonly IValidator<CreateFaqDto> _ValidatorCreateFaq;
+        private readonly IValidator<UpdateFaqDto> _ValidatorUpdateFaq;
 
-        public FaqService(IApplicationUserProvider provider,IMapper mapper,IFaqRepository FaqRepository) : base(provider)
+        public FaqService(IApplicationUserProvider provider, IMapper mapper, IFaqRepository FaqRepository,
+            IValidator<CreateFaqDto> validatorCreateFaq, IValidator<UpdateFaqDto> validatorUpdateFaq) : base(provider)
         {
             _Mapper = mapper;
             _FaqRepository = FaqRepository;
+            _ValidatorCreateFaq = validatorCreateFaq;
+            _ValidatorUpdateFaq = validatorUpdateFaq;
         }
 
         #endregion
@@ -65,6 +71,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateFaqDto create)
         {
+            var validationResult = await _ValidatorCreateFaq.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             Faq Faq = _Mapper.Map<Faq>(create);
             await _FaqRepository.Add(Faq,_AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());
@@ -74,6 +84,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateFaqDto update)
         {
+            var validationResult = await _ValidatorUpdateFaq.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             Faq? Faq = await _FaqRepository.GetAsTracking(update.Id);
             
             if (Faq == null)

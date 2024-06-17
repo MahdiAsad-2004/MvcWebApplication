@@ -15,6 +15,8 @@ using OrganicShop.Domain.Enums;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.Domain.Dtos.TagDtos;
 using OrganicShop.Domain.Dtos.WishItemDtos;
+using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace OrganicShop.BLL.Services
 {
@@ -24,12 +26,18 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly IUserRepository _userRepository;
-        private readonly IProductRepository _ProductRepository;
-        public UserService(IApplicationUserProvider provider, IMapper mapper, IUserRepository userRepository,IProductRepository productRepository) : base(provider)
+        private readonly IValidator<CreateUserDto> _ValidatorCreateUser;
+        private readonly IValidator<UpdateUserDto> _ValidatorUpdateUser;
+        private readonly IValidator<ChangePasswordDto> _ValidatorChangePassword;
+        public UserService(IApplicationUserProvider provider, IMapper mapper, IUserRepository userRepository,
+            IValidator<CreateUserDto> validator1CreateUser, IValidator<UpdateUserDto> validator1UpdateUser, 
+            IValidator<ChangePasswordDto> validatorChangePassword) : base(provider)
         {
             _Mapper = mapper;
             _userRepository = userRepository;
-            _ProductRepository = productRepository;
+            _ValidatorCreateUser = validator1CreateUser;
+            _ValidatorUpdateUser = validator1UpdateUser;
+            _ValidatorChangePassword = validatorChangePassword;
         }
 
         #endregion
@@ -94,6 +102,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateUserDto create)
         {
+            var validationResult = await _ValidatorCreateUser.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create,validationResult);
+
             if (await _userRepository.GetQueryable().AnyAsync(a => a.PhoneNumber == create.PhoneNumber))
                 return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(create,a => nameof(a.PhoneNumber)));
 
@@ -120,6 +132,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateUserDto update)
         {
+            var validationResult = await _ValidatorUpdateUser.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             //if (await _userRepository.GetQueryable().AnyAsync(a => a.Id != update.Id && a.Email == update.Email))
             //    return new ServiceResponse<Empty>(ResponseResult.EntityExist, _Message.EntityExist(update, a => nameof(a.Email)));
 
@@ -159,6 +175,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> ChangePassword(ChangePasswordDto changePassword)
         {
+            var validationResult = await _ValidatorChangePassword.ValidateAsync(changePassword);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(changePassword, validationResult);
+
             User? user = await _userRepository.GetAsNoTracking(changePassword.Id);
 
             if (user == null)

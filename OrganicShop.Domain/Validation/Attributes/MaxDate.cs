@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
-namespace OrganicShop.Domain.ValidationsAttributes
+namespace OrganicShop.Domain.Validation.Attributes
 {
-    public class MinDateNow : ValidationAttribute, IClientModelValidator
+    public class MaxDate : ValidationAttribute, IClientModelValidator
     {
         public DateTime Date { get; set; }
 
-        public MinDateNow()
+        public MaxDate(string dateString)
         {
-            Date = DateTime.Now.Date;
+            Date = DateTime.Parse(dateString);
 
         }
 
@@ -21,8 +21,8 @@ namespace OrganicShop.Domain.ValidationsAttributes
 
         public void AddValidation(ClientModelValidationContext context)
         {
-            context.Attributes.Add("data-val-MinDate", $"{context.ModelMetadata.DisplayName} باید بعد از {Date.ToShortDateString()} باشد");
-            context.Attributes.Add("data-val-MinDate-min", $"{Date}");
+            context.Attributes.Add("data-val-maxDate", $"{context.ModelMetadata.DisplayName} باید بعد از {Date.ToShortDateString()} باشد");
+            context.Attributes.Add("data-val-maxDate-max", $"{Date}");
             context.Attributes.TryAdd("data-val", "true");
         }
 

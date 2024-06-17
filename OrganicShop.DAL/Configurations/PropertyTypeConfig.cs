@@ -11,7 +11,7 @@ namespace OrganicShop.DAL.Configurations
         public void Configure(EntityTypeBuilder<PropertyType> builder)
         {
 
-            builder.HasMany(a => a.Properties).WithOne(a => a.PropertyType).HasForeignKey(a => a.PropertyTypeId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(a => a.Properties).WithOne(a => a.PropertyType).HasForeignKey(a => a.TypeId).OnDelete(DeleteBehavior.Cascade);
 
 
 

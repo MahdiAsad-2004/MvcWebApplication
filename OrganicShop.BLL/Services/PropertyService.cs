@@ -8,13 +8,8 @@ using OrganicShop.Domain.IServices;
 using OrganicShop.Domain.Enums.Response;
 using OrganicShop.Domain.Response;
 using AutoMapper;
-using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
-using OrganicShop.Domain.Enums;
-using OrganicShop.DAL.Repositories;
-using OrganicShop.Domain.Dtos.CategoryDtos;
-using OrganicShop.BLL.Extensions;
-using OrganicShop.Domain.Dtos.Combo;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -24,11 +19,16 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly IPropertyRepository _PropertyRepository;
+        private readonly IValidator<CreatePropertyDto> _ValidatorCreateProperty;
+        private readonly IValidator<UpdatePropertyDto> _ValidatorUpdateProperty;
 
-        public PropertyService(IApplicationUserProvider provider,IMapper mapper,IPropertyRepository PropertyRepository) : base(provider)
+        public PropertyService(IApplicationUserProvider provider, IMapper mapper, IPropertyRepository PropertyRepository,
+           IValidator<CreatePropertyDto> validatorCreateProperty, IValidator<UpdatePropertyDto> validatorUpdateProperty) : base(provider)
         {
             _Mapper = mapper;
-            this._PropertyRepository = PropertyRepository;
+            _PropertyRepository = PropertyRepository;
+            _ValidatorCreateProperty = validatorCreateProperty;
+            _ValidatorUpdateProperty = validatorUpdateProperty;
         }
 
         #endregion
@@ -77,40 +77,38 @@ namespace OrganicShop.BLL.Services
 
 
 
-        //public async Task<ServiceResponse<Empty>> Create(CreatePropertyDto create)
-        //{
-        //    if (await _PropertyRepository.GetQueryable().AnyAsync(a => a.Title == create.Title))
-        //        return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(create, a => nameof(a.Title)));
+        public async Task<ServiceResponse<Empty>> Create(CreatePropertyDto create)
+        {
+            var validationResult = await _ValidatorCreateProperty.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
 
-        //    Property Property = _Mapper.Map<Property>(create);
+            Property Property = _Mapper.Map<Property>(create);
 
-        //    Property.IsBase = true;
-        //    Property.BaseId = null;
-        //    Property.Value = string.Empty;
+            Property.Value = string.Empty;
 
-        //    await _PropertyRepository.Add(Property,_AppUserProvider.User.Id);
-        //    return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());
-        //}
-
+            await _PropertyRepository.Add(Property,_AppUserProvider.User.Id);
+            return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());
+        }
 
 
-        //public async Task<ServiceResponse<Empty>> Update(UpdatePropertyDto update)
-        //{
-        //    if (await _PropertyRepository.GetQueryable().AnyAsync(a => a.Title == update.Title && a.Id != update.Id))
-        //        return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(update, a => nameof(a.Title)));
 
-        //    Property? Property = await _PropertyRepository.GetAsTracking(update.Id);
-            
-        //    if (Property == null)
-        //        return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
+        public async Task<ServiceResponse<Empty>> Update(UpdatePropertyDto update)
+        {
+            var validationResult = await _ValidatorUpdateProperty.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
 
-        //    Property.IsBase = true;
-        //    Property.BaseId = null;
-        //    Property.Value = string.Empty;
+            Property? Property = await _PropertyRepository.GetAsTracking(update.Id);
 
-        //    await _PropertyRepository.Update(_Mapper.Map(update, Property), _AppUserProvider.User.Id);
-        //    return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
-        //}
+            if (Property == null)
+                return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
+
+            Property.Value = string.Empty;
+
+            await _PropertyRepository.Update(_Mapper.Map(update, Property), _AppUserProvider.User.Id);
+            return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
+        }
 
 
 

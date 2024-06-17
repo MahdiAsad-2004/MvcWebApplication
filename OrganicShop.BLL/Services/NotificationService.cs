@@ -13,6 +13,7 @@ using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Dtos.Combo;
+using FluentValidation;
 
 namespace OrganicShop.BLL.Services
 {
@@ -22,11 +23,16 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly INotificationRepository _NotificationRepository;
+        private readonly IValidator<CreateNotificationDto> _ValidatorCreateNotification;
+        private readonly IValidator<UpdateNotificationDto> _ValidatorUpdateNotification;
 
-        public NotificationService(IApplicationUserProvider provider,IMapper mapper,INotificationRepository NotificationRepository) : base(provider)
+        public NotificationService(IApplicationUserProvider provider, IMapper mapper, INotificationRepository NotificationRepository,
+            IValidator<CreateNotificationDto> validatorCreateNotification, IValidator<UpdateNotificationDto> validatorUpdateNotification) : base(provider)
         {
             _Mapper = mapper;
             _NotificationRepository = NotificationRepository;
+            _ValidatorCreateNotification = validatorCreateNotification;
+            _ValidatorUpdateNotification = validatorUpdateNotification;
         }
 
         #endregion
@@ -79,6 +85,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateNotificationDto create)
         {
+            var validationResult = await _ValidatorCreateNotification.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
             Notification Notification = _Mapper.Map<Notification>(create);
 
             await _NotificationRepository.Add(Notification,_AppUserProvider.User.Id);
@@ -89,6 +99,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateNotificationDto update)
         {
+            var validationResult = await _ValidatorUpdateNotification.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             Notification? Notification = await _NotificationRepository.GetAsTracking(update.Id);
             
             if (Notification == null)

@@ -11,6 +11,8 @@ using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums.Response;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace OrganicShop.BLL.Services
 {
@@ -20,14 +22,16 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly ICommentRepository _CommentRepository;
-        private readonly IUserRepository _UserRepository;
+        private readonly IValidator<CreateCommentDto> _ValidatorCreateComment;
+        private readonly IValidator<UpdateCommentDto> _ValidatorUpdateComment;
 
         public CommentService(IApplicationUserProvider provider, IMapper mapper, ICommentRepository CommentRepository,
-            IUserRepository userRepository) : base(provider)
+            IValidator<CreateCommentDto> validatorCreateComment, IValidator<UpdateCommentDto> validatorUpdateComment) : base(provider)
         {
             _Mapper = mapper;
             this._CommentRepository = CommentRepository;
-            _UserRepository = userRepository;
+            _ValidatorCreateComment = validatorCreateComment;
+            _ValidatorUpdateComment = validatorUpdateComment;
         }
 
         #endregion
@@ -85,7 +89,11 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateCommentDto? create = null , CreateCommentUserDto? createForUser = null)
         {
-            if(create == null && createForUser == null)
+            var validationResult = await _ValidatorCreateComment.ValidateAsync(create);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(create, validationResult);
+
+            if (create == null && createForUser == null)
                 throw new ArgumentNullException("CreateCommentDto and CreateCommentUserDto are null !");
 
             Comment Comment = _Mapper.Map<Comment>(create);
@@ -106,6 +114,10 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdateCommentDto update)
         {
+            var validationResult = await _ValidatorUpdateComment.ValidateAsync(update);
+            if (!validationResult.IsValid)
+                return new ServiceResponse<Empty>(update, validationResult);
+
             Comment? Comment = await _CommentRepository.GetAsTracking(update.Id);
 
             if (Comment == null)
