@@ -1,0 +1,53 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.ProductItemDtos
+@model List<ProductItemListDto>
+
+@{
+    int cartTotal = 0;
+}
+
+<li id="cart-summary-dropdown" class="onhover-dropdown">
+    <a href="/Cart" class="header-icon bag-icon">
+        <small class="badge-number">@Model.Count</small>
+        <i class="iconly-Bag-2 icli"></i>
+    </a>
+    <div class="onhover-div">
+        <ul class="cart-list">
+            @foreach (var item in Model)
+            {
+                <li>
+                    <div class="drop-cart">
+                        <a href="/product/@item.Barcode" class="drop-image">
+                            <img src="~/media/images/product/@item.MainImageName"
+                                 class="blur-up lazyload" alt="@item.Title">
+                        </a>
+
+                        <div class="drop-contain">
+                            <a href="product/@item.Barcode">
+                                <h5>@item.Title</h5>
+                            </a>
+                            <h6><span>@item.Count x</span>@(item.DiscountedPrice == null ? item.Price.ToToman() : item.DiscountedPrice.Value.ToToman())</h6>
+                            <button class="close-button">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+                cartTotal += item.DiscountedPrice == null ? (item.Price * item.Count) : (item.DiscountedPrice.Value * item.Count);
+            }
+
+            
+        </ul>
+
+
+        <div class="price-box">
+            <h5>جمع کل :</h5>
+            <h4 class="theme-color fw-bold">@cartTotal.ToToman()</h4>
+        </div>
+
+        <div class="button-group">
+            <a href="/Cart" class="btn btn-sm cart-button">سبد خرید</a>
+            <a href="@(User.Identity.IsAuthenticated ? "/Checkout" : "/Account/Login")" class="btn btn-sm cart-button theme-bg-color text-white">پرداخت</a>
+        </div>
+    </div>
+</li>

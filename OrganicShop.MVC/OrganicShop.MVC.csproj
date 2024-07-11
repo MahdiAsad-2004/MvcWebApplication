@@ -607,11 +607,6 @@
 
 
 	<ItemGroup>
-	  <Folder Include="Views\Shared\Partials\" />
-	</ItemGroup>
-
-
-	<ItemGroup>
 	  <Content Update="wwwroot\site\views\product\product.js">
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -626,6 +621,11 @@
 
 	<ItemGroup>
 	  <_ContentIncludedByDefault Remove="Views\Home\Seller.cshtml" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <Folder Include="Views\Shared\Partials\" />
 	</ItemGroup>
 
 </Project>

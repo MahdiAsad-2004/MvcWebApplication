@@ -194,17 +194,17 @@ function RedirectThenToast(response) {
     });
 }
 
-function Redirect(response) {
-    response.json().then(redirect => {
-        if (redirect.IsReplace == true) {
-            console.log("replace action");
-            location.replace(redirect.Url);
-        }
-        else {
-            location.assign(redirect.Url);
-        }
-    });
-}
+//function Redirect(response) {
+//    response.json().then(redirect => {
+//        if (redirect.IsReplace == true) {
+//            console.log("replace action");
+//            location.replace(redirect.Url);
+//        }
+//        else {
+//            location.assign(redirect.Url);
+//        }
+//    });
+//}
 
 
 

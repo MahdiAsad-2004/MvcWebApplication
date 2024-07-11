@@ -31,7 +31,7 @@ namespace OrganicShop.Domain.Dtos.UserDtos
 
         [DisplayName("ایمیل")]
         [Required(ErrorMessage = "{0} ضروری است")]
-        [EmailAddress(ErrorMessage = "{0} معتبر نیست")]
+        [RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$", ErrorMessage = "{0} معتبر نیست")]
         [DuplicateEmail(ErrorMessage = "{0} از قبل وجود دارد")]
         public string Email { get; set; }
 

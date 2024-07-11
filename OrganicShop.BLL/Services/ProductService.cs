@@ -572,9 +572,9 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Comments)
                 .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Properties)
                 .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.TagProducts)
-                .Where(a => a.IsDiscountValid() && a.Count! < 0);
+                .Where(a => a.Count! < 0);
 
-            var products1 = discounts.SelectMany(a => a.DiscountProducts).Select(a => a.Product).ToArray();
+            var products1 = discounts.AsEnumerable().Where(a => a.IsDiscountValid()).SelectMany(a => a.DiscountProducts).Select(a => a.Product).ToArray();
 
             if (products1 == null)
             {

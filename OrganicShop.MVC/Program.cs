@@ -20,6 +20,7 @@ using System.Configuration;
 using OrganicShop.BLL.Utils;
 using Microsoft.AspNetCore.Identity;
 using FluentValidation;
+using OrganicShop.DAL.SeedDatas;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,8 +75,28 @@ if (!app.Environment.IsDevelopment())
 }
 
 
+var dbContext = app.Services.GetRequiredService<OrganicShopDbContext>();
+Console.WriteLine($"Database Can Connect: {dbContext.Database.CanConnect()}");
+if(dbContext.Database.CanConnect() == false)
+{
+    Console.WriteLine("migrating database");
+    await dbContext.Database.MigrateAsync();
+}
+var productTableRowCount = await dbContext.Products.LongCountAsync();
+var categoryTableRowCount = await dbContext.Categories.CountAsync();
+Console.WriteLine($"Category Table Row Count: {categoryTableRowCount}");
+Console.WriteLine($"Product Table Row Count: {productTableRowCount}");
+if(categoryTableRowCount < 1)
+{
+    Console.WriteLine("seedign categories");
+    await dbContext.Categories.AddRangeAsync(CategorySeed.Categories);
+    await dbContext.SaveChangesAsync();
+}
+if(productTableRowCount < 1)
+{
 
-Console.WriteLine($"Database Can Connect: {app.Services.GetRequiredService<OrganicShopDbContext>().Database.CanConnect()}");
+}
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

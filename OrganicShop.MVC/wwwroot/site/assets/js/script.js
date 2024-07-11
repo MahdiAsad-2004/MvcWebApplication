@@ -486,13 +486,15 @@ Number.prototype.formatMoney = function (s, type) {
 
 
 
+// add product to cart
+
 let AddToCartForm = document.getElementById('add-to-cart-form');
-function AddProductToCart(productId, productVarientId, count, timeOut) {
+async function AddProductToCart(productId, productVarientId, count, timeOut) {
     var result = false;
     if (productId > 0 && productVarientId > 0 && count > 0) {
         if (timeOut && timeOut > 1) {
 
-            setTimeout(() => {
+            setTimeout(async () => {
                 AddToCartForm.querySelector('#add-to-cart-form-productId').value = productId;
                 AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
                 AddToCartForm.querySelector('#add-to-cart-form-count').value = count;
@@ -504,6 +506,9 @@ function AddProductToCart(productId, productVarientId, count, timeOut) {
             AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
             AddToCartForm.querySelector('#add-to-cart-form-count').value = count;
             result = await FetchRequestForm(AddToCartForm);
+        }
+        if (result) {
+            await LoadCartSummary();
         }
     }
 }
@@ -593,3 +598,18 @@ SearchHeaderFormButton.onclick = () => {
     SearchHeaderForm.submit();
 }
 
+
+
+// load product summary (dropdown icon in topmenu)
+async function LoadCartSummary() {
+    var container = document.getElementById('cart-summary-dropdown');
+    var response = await fetch('/CartSummary', {
+        method: 'get',
+    });
+    response
+        .text()
+        .then(partial => {
+            container.innerHTML = partial;
+        })
+}
+LoadCartSummary();

@@ -35,7 +35,7 @@ namespace OrganicShop.DAL.Configurations
             });
             builder.OwnsOne(a => a.BaseEntity).HasData(new
             {
-                PermissionUsersId = (long)1,
+                PermissionUsersId = 1,
                 CreateDate = DateTime.Now,
                 LastModified = DateTime.Now,
                 IsActive = true,

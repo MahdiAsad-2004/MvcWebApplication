@@ -1,4 +1,5 @@
-﻿<div class="top-nav top-header sticky-header sticky-header-3">
+﻿@using OrganicShop.Domain.Dtos.ProductItemDtos
+<div class="top-nav top-header sticky-header sticky-header-3">
     <div class="container-fluid-lg">
         <div class="row">
             <div class="col-12">
@@ -74,83 +75,7 @@
 
                                 </li>
 
-                                <li class="onhover-dropdown">
-                                    <a href="cart.html" class="header-icon bag-icon">
-                                        <small class="badge-number">2</small>
-                                        <i class="iconly-Bag-2 icli"></i>
-                                    </a>
-                                    <div class="onhover-div">
-                                        <ul class="cart-list">
-                                            <li>
-                                                <div class="drop-cart">
-                                                    <a href="product-left.html" class="drop-image">
-                                                        <img src="assets/images/vegetable/product/1.png"
-                                                             class="blur-up lazyload" alt="">
-                                                    </a>
-
-                                                    <div class="drop-contain">
-                                                        <a href="product-left.html">
-                                                            <h5>کوکی های ترد فانتزی شکلات چیپ</h5>
-                                                        </a>
-                                                        <h6><span>1 x</span> 80.250 تومان</h6>
-                                                        <button class="close-button">
-                                                            <i class="fa-solid fa-xmark"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                            <li>
-                                                <div class="drop-cart">
-                                                    <a href="product-left.html" class="drop-image">
-                                                        <img src="assets/images/vegetable/product/2.png"
-                                                             class="blur-up lazyload" alt="">
-                                                    </a>
-
-                                                    <div class="drop-contain">
-                                                        @*  @if (User.GetAppUser().Id > 0)
-                                                        {
-                                                        var cartItems = (await _ProductItemService
-                                                        .GetAll(new FilterProductItemDto() { ActiveFilter = IsActiveFilter.Active, CartId = User.GetAppUser().Id })).Data.List;
-                                                        foreach (var item in cartItems)
-                                                        {
-                                                        <a href="">
-                                                        <h5>@item.Title</h5>
-                                                        </a>
-                                                        <h6><span>@item.Count x</span>@(item.UpdatedPrice != null ? item.UpdatedPrice.Value.ToToman() : item.Price.ToToman())</h6>
-                                                        <button class="close-button">
-                                                        <i class="fa-solid fa-xmark"></i>
-                                                        </button>
-                                                        }
-                                                        } *@
-
-                                                        <a href="product-left.html">
-                                                            <h5>
-                                                                بیسکویت کره بادام زمینی پرمیوم کره 600 گرم
-                                                            </h5>
-                                                        </a>
-                                                        <h6><span>1 x</span> 40.250 تومان</h6>
-                                                        <button class="close-button">
-                                                            <i class="fa-solid fa-xmark"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-
-
-                                        <div class="price-box">
-                                            <h5>جمع کل :</h5>
-                                            <h4 class="theme-color fw-bold">106.250 تومان</h4>
-                                        </div>
-
-                                        <div class="button-group">
-                                            <a href="cart.html" class="btn btn-sm cart-button">سبد خرید</a>
-                                            <a href="checkout.html" class="btn btn-sm cart-button theme-bg-color
-                                                    text-white">پرداخت</a>
-                                        </div>
-                                    </div>
-                                </li>
+                                @await Html.PartialAsync("_CartSummary", new List<ProductItemListDto>())
 
                             </ul>
                         </div>

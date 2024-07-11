@@ -321,12 +321,7 @@
 </section>
 <!-- Shop Section End -->
 
-<form id="add-to-cart-form" hidden action="/Cart/AddProduct" onsubmit="FetchRequest(event)" method="post">
-    <input type="number" id="add-to-cart-form-productId" name="createProductItem.ProductId" hidden readonly value="" />
-    <input type="number" id="add-to-cart-form-productVarientId" name="createProductItem.ProductVarientId" hidden readonly value="" />
-    <input type="number" id="add-to-cart-form-count" name="createProductItem.Count" hidden readonly value="" />
-    <button type="submit" hidden></button>
-</form>
+@await Html.PartialAsync("_AddToCartForm") 
 <form id="preview-product-modal-request-form" hidden action="/Product/Preview" onsubmit="FetchRequest(event)" method="post" data-target-id="preview-product-modal">
     <input type="number" name="id" hidden readonly value="0" />
     <button type="submit" hidden></button>

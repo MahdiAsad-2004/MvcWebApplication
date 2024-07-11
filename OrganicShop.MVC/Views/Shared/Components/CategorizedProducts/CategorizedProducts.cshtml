@@ -93,7 +93,7 @@
                                                 <div class="qty-left-minus" data-type="minus" data-field="">
                                                     <i class="fa-solid fa-minus"></i>
                                                 </div>
-                                                <input class="form-control input-number qty-input" type="text"
+                                                <input id="product-@item.Id-quantity" class="form-control input-number qty-input" min="1" max="@item.Stock" type="text"
                                                        name="quantity" value="0">
                                                 <div class="qty-right-plus" data-type="plus" data-field="">
                                                     <i class="fa-solid fa-plus"></i>
@@ -101,7 +101,16 @@
                                             </div>
                                         </div>
 
-                                        <button class="buy-button buy-button-2 btn btn-cart">
+                                        <button class="buy-button buy-button-2 btn btn-cart" 
+                                                onclick="() => 
+                                                    {
+                                                        var quantity = +document.getElementById('product-@item.Id-quantity').value;
+                                                        console.log(quantity);
+                                                        if(false)
+                                                        {
+                                                            AddProductToCart('@(item.Id)' , '@(item != null ? item.Id : 0)' , quantity );
+                                                        }
+                                                    }">
                                             <i class="iconly-Buy icli text-white m-0"></i>
                                         </button>
                                     </div>

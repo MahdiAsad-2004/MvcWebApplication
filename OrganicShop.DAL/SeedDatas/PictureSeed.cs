@@ -7,65 +7,37 @@ namespace OrganicShop.DAL.SeedDatas
 {
     public class PictureSeed
     {
-        public readonly Picture Category_ = new Picture
-        {
-            IsMain = true,
-            Name = ".png",
-            SizeMB = (float)0.645,
-            BaseEntity = new BaseEntity(true),
-            Type = PictureType.Category,
-        };
-
-       
-        public readonly Picture Category_BasicGoods = new Picture
-        {
-            IsMain = true,
-            Name = "BasicGoods.png",
-            SizeMB = (float)0.645,
-            BaseEntity = new BaseEntity(true),
-            Type = PictureType.Category,
-        };
+        
 
 
-        public readonly Picture Category_Bread = new Picture
-        {
-            IsMain = true,
-            Name = "bread.png",
-            SizeMB = (float)0.127,
-            BaseEntity = new BaseEntity(true),
-            Type = PictureType.Category,
-         };
-
-        public readonly Picture Category_Candy = new Picture
-        {
-            IsMain = true,
-            Name = "candy.jpg",
-            SizeMB = (float)0.645,
-            BaseEntity = new BaseEntity(true),
-            Type = PictureType.Category,
-        };
 
 
-        public readonly Picture Category_Sugare = new Picture
-        {
-            IsMain = true,
-            Name = "sugare.jpg",
-            SizeMB = (float)0.645,
-            BaseEntity = new BaseEntity(true),
-            Type = PictureType.Category,
-        };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
-        public readonly Picture Category_Cereals = new Picture
-        {
-            IsMain = true,
-            Name = "cereals.jpg",
-            SizeMB = (float)0.645,
-            BaseEntity = new BaseEntity(true),
-            Type = PictureType.Category,
-        };
-
+       
+     
 
         public readonly Picture Category_Pasta = new Picture
         {
@@ -77,27 +49,7 @@ namespace OrganicShop.DAL.SeedDatas
         };
 
 
-        public readonly Picture Category_Oil = new Picture
-        {
-            IsMain = true,
-            Name = "oil.jpg",
-            SizeMB = (float)0.645,
-            BaseEntity = new BaseEntity(true),
-            Type = PictureType.Category,
-        };
-
-
-
-
-        public readonly Picture Category_Rice = new Picture
-        {
-            IsMain = true,
-            Name = "rice.png",
-            SizeMB = (float)0.645,
-            BaseEntity = new BaseEntity(true),
-            Type = PictureType.Category,
-        };
-
+      
 
         public readonly Picture Category_Dairy = new Picture
         {
@@ -223,7 +175,7 @@ namespace OrganicShop.DAL.SeedDatas
         };
 
 
-        public readonly Picture Category_ShheepMeat = new Picture
+        public readonly Picture Category_SheepMeat = new Picture
         {
             IsMain = true,
             Name = "sheep-meat.jpg",
@@ -633,7 +585,7 @@ namespace OrganicShop.DAL.SeedDatas
             Type = PictureType.Category,
         };
 
-        public readonly Picture Category_olive = new Picture
+        public readonly Picture Category_Olive = new Picture
         {
             IsMain = true,
             Name = "olive.jpg",

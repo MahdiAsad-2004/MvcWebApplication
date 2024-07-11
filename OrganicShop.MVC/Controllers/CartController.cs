@@ -103,7 +103,18 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
+        [HttpGet("/CartSummary")]
+        public async Task<IActionResult> Indexx()
+        {
+            List<ProductItemListDto> model = await GetProductItemListDtos();
+            return PartialView("_CartSummary", model);
+        }
 
+
+
+
+        [HttpPost]
+        [ActionName("/Cart/AddProduct")]
         public async Task<IActionResult> AddProductItem(CreateProductItemDto createProductItem)
         {
             if (createProductItem.ProductVarientId < 1)

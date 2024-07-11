@@ -12,6 +12,7 @@ using DryIoc.Microsoft.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using OrganicShop.Domain.Validation.Validators;
+using OrganicShop.Domain.Validation.UserValidators;
 
 
 namespace OrganicShop.Ioc
