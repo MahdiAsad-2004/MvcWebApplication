@@ -221,7 +221,7 @@ namespace OrganicShop.BLL.Services
             }
             else if (string.IsNullOrWhiteSpace(barcode) == false)
             {
-                product = await query.FirstOrDefaultAsync(a => a.BarCode == barcode);
+                product = await query.FirstOrDefaultAsync(a => a.Barcode == barcode);
             }
             else if (string.IsNullOrWhiteSpace(title) == false)
             {
@@ -343,7 +343,7 @@ namespace OrganicShop.BLL.Services
 
             #endregion
 
-            Product.BarCode = TextExtensions.GenerateProductBarcode();
+            Product.Barcode = TextExtensions.GenerateProductBarcode();
 
             await _ProductRepository.Add(Product, _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());

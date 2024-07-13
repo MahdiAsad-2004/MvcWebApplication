@@ -7,7 +7,7 @@ namespace OrganicShop.Domain.Entities.Relations
     [DisplayName("دسته بندی محصول")]
     public class CategoryProducts : EntityId<int>
     {
-        public int CategoryIdId { get; set; }
+        public int CategoryId { get; set; }
         public long ProductId { get; set; }
         
         

@@ -48,7 +48,7 @@ namespace OrganicShop.BLL.Mappers
             var productVarient = productItem.Product.ProductVarients.FirstOrDefault(a => a.Id == productItem.ProductVarientId);
             return new OrderItemDto
             {
-                Barcode = productItem.Product.BarCode,
+                Barcode = productItem.Product.Barcode,
                 Count = productItem.Count,
                 Id = productItem.Id,
                 MainImageName = productItem.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,

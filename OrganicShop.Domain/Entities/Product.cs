@@ -19,12 +19,12 @@ namespace OrganicShop.Domain.Entities
         public string ShortDescription { get; set; }
         public string Description { get; set; }
         public int? DiscountedPrice { get; set; }
-        public string BarCode { get; set; }
+        public string Barcode { get; set; }
         public int? SellerId { get; set; }
 
 
-        public ICollection<Category> Categories { get; set; }
         public ICollection<Picture> Pictures { get; set; }
+        public ICollection<Category> Categories { get; set; }
         public ICollection<DiscountProducts> DiscountProducts { get; set; }
         public ICollection<CouponProducts> CouponProducts { get; set; }
         public ICollection<ProductItem> ProductItems { get; set; }

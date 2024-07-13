@@ -1,4 +1,4 @@
-//using StructureMap.TypeRules;
+﻿//using StructureMap.TypeRules;
 using OrganicShop.Domain;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
@@ -21,6 +21,9 @@ using OrganicShop.BLL.Utils;
 using Microsoft.AspNetCore.Identity;
 using FluentValidation;
 using OrganicShop.DAL.SeedDatas;
+using OrganicShop.Domain.Entities.Base;
+using OrganicShop.Domain.Entities;
+using OrganicShop.Domain.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +32,7 @@ builder.Services.AddControllersWithViews();
 
 //builder.Services.AddScoped<ITestServ, TestServ>();
 
-builder.Services.AddSingleton<IApplicationUserProvider,ApplicationUserProvider>();
+builder.Services.AddSingleton<IApplicationUserProvider, ApplicationUserProvider>();
 
 builder.Services.Configure<AesKeys>(builder.Configuration.GetSection("AesKeys"));
 builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSetting"));
@@ -77,7 +80,7 @@ if (!app.Environment.IsDevelopment())
 
 var dbContext = app.Services.GetRequiredService<OrganicShopDbContext>();
 Console.WriteLine($"Database Can Connect: {dbContext.Database.CanConnect()}");
-if(dbContext.Database.CanConnect() == false)
+if (dbContext.Database.CanConnect() == false)
 {
     Console.WriteLine("migrating database");
     await dbContext.Database.MigrateAsync();
@@ -86,15 +89,11 @@ var productTableRowCount = await dbContext.Products.LongCountAsync();
 var categoryTableRowCount = await dbContext.Categories.CountAsync();
 Console.WriteLine($"Category Table Row Count: {categoryTableRowCount}");
 Console.WriteLine($"Product Table Row Count: {productTableRowCount}");
-if(categoryTableRowCount < 1)
+if (categoryTableRowCount < 1)
 {
-    Console.WriteLine("seedign categories");
+    Console.WriteLine("seedign categories with products");
     await dbContext.Categories.AddRangeAsync(CategorySeed.Categories);
     await dbContext.SaveChangesAsync();
-}
-if(productTableRowCount < 1)
-{
-
 }
 
 

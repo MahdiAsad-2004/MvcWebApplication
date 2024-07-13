@@ -9,6 +9,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region BasicGoods
 
+        //Id = 1
         public static readonly Category BasicGoods = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -22,12 +23,16 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
+            Products = new List<Product>
+            {
+                ProductSeed.Bread ,ProductSeed.Sugar ,ProductSeed.RedBeans ,ProductSeed.Macaroni ,ProductSeed.Oil ,ProductSeed.Rice ,ProductSeed.Nabaat
+            }
         };
 
 
         #region BasicGoods =>
 
-
+        // Id = 14
         public static readonly Category BasicGoods_Bread = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -42,8 +47,13 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
+            Products = new List<Product>
+            {
+                ProductSeed.Bread,
+            }
         };
 
+        // Id = 15
         public static readonly Category BasicGoods_Candy = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -58,24 +68,13 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
-        };
-
-        public static readonly Category BasicGoods_Sugar = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "شکر",
-            Type = CategoryType.Product,
-            Parent = BasicGoods,
-            Picture = new Picture
+            Products = new List<Product>
             {
-                IsMain = true,
-                Name = "sugare.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
+                ProductSeed.Nabaat,
+            }
         };
 
+        // Id = 16
         public static readonly Category BasicGoods_Cereals = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -90,24 +89,13 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
-        };
-
-        public static readonly Category BasicGoods_PastaAndNoodles = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "ماکارونی، پاستا، نودل",
-            Type = CategoryType.Product,
-            Parent = BasicGoods,
-            Picture = new Picture
+            Products = new List<Product>
             {
-                IsMain = true,
-                Name = "pasta.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
+                ProductSeed.RedBeans,
+            }
         };
 
+        // Id = 17
         public static readonly Category BasicGoods_Oil = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -122,9 +110,34 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
-
+            Products = new List<Product>
+            {
+                ProductSeed.Oil,
+            }
         };
 
+        // Id = 18
+        public static readonly Category BasicGoods_PastaAndNoodles = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "ماکارونی، پاستا، نودل",
+            Type = CategoryType.Product,
+            Parent = BasicGoods,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "pasta.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Macaroni,
+            }
+        };
+
+        // Id = 19
         public static readonly Category BasicGoods_Rice = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -139,7 +152,33 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
+            Products = new List<Product>
+            {
+                ProductSeed.Rice,
+            }
         };
+
+        // Id = 20
+        public static readonly Category BasicGoods_Sugar = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "شکر",
+            Type = CategoryType.Product,
+            Parent = BasicGoods,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "sugare.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Sugar,
+            }
+        };
+
 
 
         #endregion
@@ -150,6 +189,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region Dairy
 
+        // Id = 2
         public static readonly Category Dairy = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -163,139 +203,17 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
+            Products = new List<Product>
+            {
+                ProductSeed.Cheese ,ProductSeed.Cream ,ProductSeed.Dough ,ProductSeed.Butter ,ProductSeed.Milk ,ProductSeed.Jam ,
+                ProductSeed.Yogurt ,ProductSeed.Honey ,ProductSeed.BreakfastChocolate
+            }
         };
 
 
         #region Dairy =>
 
-        public static readonly Category Dairy_Cheese = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "پنیر",
-            Type = CategoryType.Product,
-            Parent = Dairy,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "cheese.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Dairy_Cream = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "خامه",
-            Type = CategoryType.Product,
-            Parent = Dairy,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "cream.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Dairy_Dough = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "دوغ",
-            Type = CategoryType.Product,
-            Parent = Dairy,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "dough.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Dairy_Milk = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "شیر",
-            Type = CategoryType.Product,
-            Parent = Dairy,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "milk.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Dairy_Butter = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "کره",
-            Type = CategoryType.Product,
-            Parent = Dairy,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "butter.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Dairy_Yogurt = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "ماست",
-            Type = CategoryType.Product,
-            Parent = Dairy,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "yogurt.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Dairy_Honey = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "عسل",
-            Type = CategoryType.Product,
-            Parent = Dairy,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "honey.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Dairy_Jam = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "مربا",
-            Type = CategoryType.Product,
-            Parent = Dairy,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "jam.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
+        // Id = 21
         public static readonly Category Dairy_BreakfastChocolate = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -310,6 +228,178 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
+            Products = new List<Product>
+            {
+                ProductSeed.BreakfastChocolate,
+            }
+        };
+
+        // Id = 22
+        public static readonly Category Dairy_Butter = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "کره",
+            Type = CategoryType.Product,
+            Parent = Dairy,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "butter.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Butter,
+            }
+        };
+
+        // Id = 23
+        public static readonly Category Dairy_Cheese = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "پنیر",
+            Type = CategoryType.Product,
+            Parent = Dairy,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "cheese.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Cheese,
+            }
+        };
+
+        // Id = 24
+        public static readonly Category Dairy_Cream = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "خامه",
+            Type = CategoryType.Product,
+            Parent = Dairy,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "cream.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Cream,
+            }
+        };
+
+        // Id = 25
+        public static readonly Category Dairy_Dough = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "دوغ",
+            Type = CategoryType.Product,
+            Parent = Dairy,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "dough.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Dough,
+            }
+        };
+
+        // Id = 26
+        public static readonly Category Dairy_Honey = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "عسل",
+            Type = CategoryType.Product,
+            Parent = Dairy,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "honey.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Honey,
+            }
+        };
+
+        // Id = 27
+        public static readonly Category Dairy_Jam = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "مربا",
+            Type = CategoryType.Product,
+            Parent = Dairy,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "jam.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Jam,
+            }
+        };
+
+        // Id = 28
+        public static readonly Category Dairy_Milk = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "شیر",
+            Type = CategoryType.Product,
+            Parent = Dairy,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "milk.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Milk,
+            }
+        };
+
+        // Id = 29
+        public static readonly Category Dairy_Yogurt = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "ماست",
+            Type = CategoryType.Product,
+            Parent = Dairy,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "yogurt.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Yogurt,
+            }
         };
 
         #endregion
@@ -320,6 +410,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region Proteins
 
+        // Id = 3
         public static readonly Category MeatAndProtein = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -333,11 +424,16 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
+            Products = new List<Product>
+            {
+                ProductSeed.Beef ,ProductSeed.Meat ,ProductSeed.Checken ,ProductSeed.Fish ,ProductSeed.Sausage ,ProductSeed.Shrimp ,ProductSeed.Egg, ProductSeed.Caviar,
+            }
         };
 
 
         #region Proteins =>
 
+        // Id = 30
         public static readonly Category Proteins_Beef = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -352,104 +448,13 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
-        };
-
-        public static readonly Category Proteins_Checken = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "گوشت مرغ",
-            Type = CategoryType.Product,
-            Parent = MeatAndProtein,
-            Picture = new Picture
+            Products = new List<Product>
             {
-                IsMain = true,
-                Name = "checken.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
+                ProductSeed.Beef,
+            }
         };
 
-        public static readonly Category Proteins_Fish = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "ماهی",
-            Type = CategoryType.Product,
-            Parent = MeatAndProtein,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "fish.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Proteins_Sausages = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "سوسیس و کالباس",
-            Type = CategoryType.Product,
-            Parent = MeatAndProtein,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "sausages.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Proteins_SheapMeat = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "گوشت گوسفند",
-            Type = CategoryType.Product,
-            Parent = MeatAndProtein,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "sheep-meat.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Proteins_BirdsMeat = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "گوشت پرندگان",
-            Type = CategoryType.Product,
-            Parent = MeatAndProtein,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "birds-meat.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Proteins_Caviar = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "خاویار",
-            Type = CategoryType.Product,
-            Parent = MeatAndProtein,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "caviar.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
+        // Id = 31
         public static readonly Category Proteins_BirdsEgg = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -464,11 +469,139 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
+            Products = new List<Product>
+            {
+                ProductSeed.Egg
+            }
         };
 
+        // Id = 32
+        public static readonly Category Proteins_Caviar = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "خاویار",
+            Type = CategoryType.Product,
+            Parent = MeatAndProtein,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "caviar.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Caviar,
+            },
+        };
+
+        // Id = 33
+        public static readonly Category Proteins_Checken = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "گوشت مرغ",
+            Type = CategoryType.Product,
+            Parent = MeatAndProtein,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "checken.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Checken,
+            },
+        };
+
+        // Id = 34
+        public static readonly Category Proteins_Fish = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "ماهی",
+            Type = CategoryType.Product,
+            Parent = MeatAndProtein,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "fish.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Fish,
+            },
+        };
+
+        // Id = 35
+        public static readonly Category Proteins_Sausages = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "سوسیس و کالباس",
+            Type = CategoryType.Product,
+            Parent = MeatAndProtein,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "sausages.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Sausage,
+            },
+        };
+
+        // Id = 36
+        public static readonly Category Proteins_SheapMeat = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "گوشت گوسفند",
+            Type = CategoryType.Product,
+            Parent = MeatAndProtein,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "sheep-meat.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Meat,
+            },
+        };
+
+        // Id = 37
+        public static readonly Category Proteins_Shrimp = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "میگو",
+            Type = CategoryType.Product,
+            Parent = MeatAndProtein,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "shrimp.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Shrimp,
+            },
+        };
 
         #endregion
-
 
 
         #endregion
@@ -476,6 +609,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region Beverages
 
+        // Id = 4
         public static readonly Category Beverages = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -489,75 +623,16 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
+            Products = new List<Product>
+            {
+                ProductSeed.EnergyDrink ,ProductSeed.Coca ,ProductSeed.Golaab ,ProductSeed.Water ,ProductSeed.Juice ,ProductSeed.Delester,
+            },
         };
 
 
         #region Beverages =>
 
-        public static readonly Category Beverages_EnergyDrink = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "نوشیدنی ورزشی و انرژی‌زا",
-            Type = CategoryType.Product,
-            Parent = Beverages,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "energy-drink.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Beverages_SoftDrink = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "نوشابه",
-            Type = CategoryType.Product,
-            Parent = Beverages,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "soft-drink.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Beverages_NonAlcoholicBeer = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "ماءالشعیر",
-            Type = CategoryType.Product,
-            Parent = Beverages,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "non-alcoholic-beer.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category Beverages_Water = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "آب و آب معدنی",
-            Type = CategoryType.Product,
-            Parent = Beverages,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "water.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            }
-        };
-
+        // Id = 38
         public static readonly Category Beverages_Distillates = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -572,8 +647,76 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
+            Products = new List<Product>
+            {
+                ProductSeed.Golaab,
+            },
         };
 
+        // Id = 39
+        public static readonly Category Beverages_EnergyDrink = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "نوشیدنی ورزشی و انرژی‌زا",
+            Type = CategoryType.Product,
+            Parent = Beverages,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "energy-drink.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.EnergyDrink,
+            },
+        };
+
+        // Id = 40
+        public static readonly Category Beverages_NonAlcoholicBeer = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "ماءالشعیر",
+            Type = CategoryType.Product,
+            Parent = Beverages,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "non-alcoholic-beer.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Delester,
+            },
+        };
+
+        // Id = 41
+        public static readonly Category Beverages_SoftDrink = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "نوشابه",
+            Type = CategoryType.Product,
+            Parent = Beverages,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "soft-drink.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Coca,
+            },
+        };
+
+        // Id = 42
         public static readonly Category Beverages_SyrupAndJuice = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -588,6 +731,31 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
+            Products = new List<Product>
+            {
+                ProductSeed.Juice,
+            },
+        };
+
+        // Id = 43
+        public static readonly Category Beverages_Water = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "آب و آب معدنی",
+            Type = CategoryType.Product,
+            Parent = Beverages,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "water.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Water,
+            },
         };
 
         #endregion
@@ -598,7 +766,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region CannedFoodAndReadyMeals
 
-
+        // Id = 5
         public static readonly Category CannedFoodAndReadyMeals = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -612,75 +780,16 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
+            Products = new List<Product>
+            {
+                ProductSeed.CannedBean ,ProductSeed.TunnaFish ,ProductSeed.Dessert ,ProductSeed.Soup ,ProductSeed.Compote ,ProductSeed.Stew,
+            },
         };
 
 
         #region CannedFoodAndReadyMeals =>
 
-        public static readonly Category CannedFoodAndReadyMeals_SemiPreparedFood = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "غذای نیمه آماده",
-            Type = CategoryType.Product,
-            Parent = CannedFoodAndReadyMeals,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "semi-prepared-food.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category CannedFoodAndReadyMeals_TunnaFish = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "کنسرو ماهی",
-            Type = CategoryType.Product,
-            Parent = CannedFoodAndReadyMeals,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "tunna-fish.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category CannedFoodAndReadyMeals_Compote = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "کمپوت",
-            Type = CategoryType.Product,
-            Parent = CannedFoodAndReadyMeals,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "compote.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category CannedFoodAndReadyMeals_ReadyFood = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "غذای آماده",
-            Type = CategoryType.Product,
-            Parent = CannedFoodAndReadyMeals,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "ready-food.png",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
+        // Id = 44
         public static readonly Category CannedFoodAndReadyMeals_CannedBeansAndVegetables = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -695,6 +804,94 @@ namespace OrganicShop.DAL.SeedDatas
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
+            Products = new List<Product>
+            {
+                ProductSeed.CannedBean,
+            },
+        };
+
+        // Id = 45
+        public static readonly Category CannedFoodAndReadyMeals_Compote = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "کمپوت",
+            Type = CategoryType.Product,
+            Parent = CannedFoodAndReadyMeals,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "compote.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Compote,
+            },
+        };
+
+        // Id = 46
+        public static readonly Category CannedFoodAndReadyMeals_ReadyFood = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "غذای آماده",
+            Type = CategoryType.Product,
+            Parent = CannedFoodAndReadyMeals,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "ready-food.png",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Stew,
+            },
+        };
+
+        // Id = 47
+        public static readonly Category CannedFoodAndReadyMeals_SemiPreparedFood = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "غذای نیمه آماده",
+            Type = CategoryType.Product,
+            Parent = CannedFoodAndReadyMeals,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "semi-prepared-food.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.Soup,
+            },
+        };
+
+        // Id = 48
+        public static readonly Category CannedFoodAndReadyMeals_TunnaFish = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "کنسرو ماهی",
+            Type = CategoryType.Product,
+            Parent = CannedFoodAndReadyMeals,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "tunna-fish.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Products = new List<Product>
+            {
+                ProductSeed.TunnaFish,
+            },
         };
 
         #endregion
@@ -705,6 +902,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region DriedFruitsAndSweets
 
+        // Id = 6
         public static readonly Category DriedFruitsAndSweets = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -723,22 +921,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region DriedFruitsAndSweets => 
 
-        public static readonly Category DriedFruitsAndSweets_Sweet = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "شیرینی",
-            Type = CategoryType.Product,
-            Parent = DriedFruitsAndSweets,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "sweet.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
+        // Id = 49
         public static readonly Category DriedFruitsAndSweets_Date = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -755,54 +938,7 @@ namespace OrganicShop.DAL.SeedDatas
             },
         };
 
-        public static readonly Category DriedFruitsAndSweets_Nuts = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "آجیل",
-            Type = CategoryType.Product,
-            Parent = DriedFruitsAndSweets,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "nuts.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category DriedFruitsAndSweets_DriedFruit = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "میوه خشک",
-            Type = CategoryType.Product,
-            Parent = DriedFruitsAndSweets,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "dried-fruit.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category DriedFruitsAndSweets_Raisins = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "کشمش و مویز",
-            Type = CategoryType.Product,
-            Parent = DriedFruitsAndSweets,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "raisins.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
+        // Id = 50
         public static readonly Category DriedFruitsAndSweets_Dessert = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -819,6 +955,74 @@ namespace OrganicShop.DAL.SeedDatas
             },
         };
 
+        // Id = 51
+        public static readonly Category DriedFruitsAndSweets_DriedFruit = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "میوه خشک",
+            Type = CategoryType.Product,
+            Parent = DriedFruitsAndSweets,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "dried-fruit.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
+        // Id = 52
+        public static readonly Category DriedFruitsAndSweets_Nuts = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "آجیل",
+            Type = CategoryType.Product,
+            Parent = DriedFruitsAndSweets,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "nuts.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
+        // Id = 53
+        public static readonly Category DriedFruitsAndSweets_Raisins = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "کشمش و مویز",
+            Type = CategoryType.Product,
+            Parent = DriedFruitsAndSweets,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "raisins.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
+        // Id = 54
+        public static readonly Category DriedFruitsAndSweets_Sweet = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "شیرینی",
+            Type = CategoryType.Product,
+            Parent = DriedFruitsAndSweets,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "sweet.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
         #endregion
 
 
@@ -827,6 +1031,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region Fruits
 
+        // Id = 7
         public static readonly Category Fruits = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -847,6 +1052,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region Vegetables
 
+        // Id = 8
         public static readonly Category Vegetables = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -867,6 +1073,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region Snacks
 
+        // Id = 9
         public static readonly Category Snacks = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -885,6 +1092,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region Snakcs => 
 
+        // Id = 55
         public static readonly Category Snacks_BiscuitsAndWafers = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -901,118 +1109,7 @@ namespace OrganicShop.DAL.SeedDatas
             }
         };
 
-        public static readonly Category Snacks_CandyAndToffee = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "آبنبات و تافی",
-            Type = CategoryType.Product,
-            Parent = Snacks,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "candy-and-toffee.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            }
-        };
-
-        public static readonly Category Snacks_PuffsAndSnacks = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "پفک و اسنک",
-            Type = CategoryType.Product,
-            Parent = Snacks,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "puffs-and-snacks.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            }
-        };
-
-        public static readonly Category Snacks_ChipsAndPopcorn = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "چیپس و پاپ کورن",
-            Type = CategoryType.Product,
-            Parent = Snacks,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "chips-and-popcorn.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            }
-        };
-
-        public static readonly Category Snacks_GummiCandy = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "پاستیل",
-            Type = CategoryType.Product,
-            Parent = Snacks,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "gummi-candy.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            }
-        };
-
-        public static readonly Category Snacks_FlavoredSeedsAndKernels = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "تخمه و مغز طعم‌دار",
-            Type = CategoryType.Product,
-            Parent = Snacks,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "flavored-seed-and-kernels.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            }
-        };
-
-        public static readonly Category Snacks_Lavashak = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "لواشک، برگه و آلوچه",
-            Type = CategoryType.Product,
-            Parent = Snacks,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "lavashak.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            }
-        };
-
-        public static readonly Category Snacks_ChewingGum = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "آدامس",
-            Type = CategoryType.Product,
-            Parent = Snacks,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "chewing-gum.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            }
-        };
-
+        // Id = 56
         public static readonly Category Snacks_CakesAndCookies = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1029,6 +1126,58 @@ namespace OrganicShop.DAL.SeedDatas
             }
         };
 
+        // Id = 57
+        public static readonly Category Snacks_CandyAndToffee = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "آبنبات و تافی",
+            Type = CategoryType.Product,
+            Parent = Snacks,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "candy-and-toffee.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            }
+        };
+
+        // Id = 58
+        public static readonly Category Snacks_ChewingGum = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "آدامس",
+            Type = CategoryType.Product,
+            Parent = Snacks,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "chewing-gum.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            }
+        };
+
+        // Id = 59
+        public static readonly Category Snacks_ChipsAndPopcorn = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "چیپس و پاپ کورن",
+            Type = CategoryType.Product,
+            Parent = Snacks,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "chips-and-popcorn.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            }
+        };
+
+        // Id = 60
         public static readonly Category Snacks_ChocolateAndCocoa = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1045,8 +1194,75 @@ namespace OrganicShop.DAL.SeedDatas
             }
         };
 
-        #endregion
+        // Id = 61
+        public static readonly Category Snacks_GummiCandy = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "پاستیل",
+            Type = CategoryType.Product,
+            Parent = Snacks,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "gummi-candy.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            }
+        };
 
+        // Id = 62
+        public static readonly Category Snacks_FlavoredSeedsAndKernels = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "تخمه و مغز طعم‌دار",
+            Type = CategoryType.Product,
+            Parent = Snacks,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "flavored-seed-and-kernels.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            }
+        };
+
+        // Id = 63
+        public static readonly Category Snacks_Lavashak = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "لواشک، برگه و آلوچه",
+            Type = CategoryType.Product,
+            Parent = Snacks,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "lavashak.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            }
+        };
+
+        // Id = 64
+        public static readonly Category Snacks_PuffsAndSnacks = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "پفک و اسنک",
+            Type = CategoryType.Product,
+            Parent = Snacks,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "puffs-and-snacks.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            }
+        };
+
+        #endregion
 
 
         #endregion
@@ -1054,6 +1270,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region WarmDrinks
 
+        // Id = 10
         public static readonly Category WarmDrinks = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1070,73 +1287,9 @@ namespace OrganicShop.DAL.SeedDatas
         };
 
 
-
         #region WarmDrinks => 
 
-        public static readonly Category WarmDrinks_Tea = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "چای",
-            Type = CategoryType.Product,
-            Parent = WarmDrinks,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "tea.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category WarmDrinks_Coffee = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "قهوه",
-            Type = CategoryType.Product,
-            Parent = WarmDrinks,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "coffee.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category WarmDrinks_InstantCoffee = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "قهوه فوری",
-            Type = CategoryType.Product,
-            Parent = WarmDrinks,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "instant-coffee.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category WarmDrinks_HotChocolate = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "هات چاکلت",
-            Type = CategoryType.Product,
-            Parent = WarmDrinks,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "hot-chocolate.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
+        // Id = 65
         public static readonly Category WarmDrinks_Cappuccino = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1153,6 +1306,24 @@ namespace OrganicShop.DAL.SeedDatas
             },
         };
 
+        // Id = 66
+        public static readonly Category WarmDrinks_Coffee = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "قهوه",
+            Type = CategoryType.Product,
+            Parent = WarmDrinks,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "coffee.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
+        // Id = 67
         public static readonly Category WarmDrinks_HerbalTea = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1169,8 +1340,58 @@ namespace OrganicShop.DAL.SeedDatas
             },
         };
 
-        #endregion
+        // Id = 68
+        public static readonly Category WarmDrinks_HotChocolate = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "هات چاکلت",
+            Type = CategoryType.Product,
+            Parent = WarmDrinks,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "hot-chocolate.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
 
+        // Id = 69
+        public static readonly Category WarmDrinks_InstantCoffee = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "قهوه فوری",
+            Type = CategoryType.Product,
+            Parent = WarmDrinks,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "instant-coffee.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
+        // Id = 70
+        public static readonly Category WarmDrinks_Tea = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "چای",
+            Type = CategoryType.Product,
+            Parent = WarmDrinks,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "tea.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
+        #endregion
 
 
         #endregion
@@ -1178,6 +1399,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region FrozenProducts
 
+        // Id = 11
         public static readonly Category FrozenProducts = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1196,70 +1418,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region FrozenProducts => 
 
-        public static readonly Category FrozenProducts_SemiFrozenFood = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "غذای نیمه آماده منجمد",
-            Type = CategoryType.Product,
-            Parent = FrozenProducts,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "semi-frozen-food.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category FrozenProducts_FrozenFruit = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "میوه منجمد",
-            Type = CategoryType.Product,
-            Parent = FrozenProducts,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "frozen-food.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category FrozenProducts_FrozenVegetables = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "سبزیجات منجمد",
-            Type = CategoryType.Product,
-            Parent = FrozenProducts,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "frozen-vegetables.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
-        public static readonly Category FrozenProducts_FrozenReadyFood = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "غذای آماده منجمد",
-            Type = CategoryType.Product,
-            Parent = FrozenProducts,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "frozen-ready-food.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
+        // Id = 71
         public static readonly Category FrozenProducts_DoughAndBread = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1276,6 +1435,74 @@ namespace OrganicShop.DAL.SeedDatas
             },
         };
 
+        // Id = 72
+        public static readonly Category FrozenProducts_FrozenFruit = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "میوه منجمد",
+            Type = CategoryType.Product,
+            Parent = FrozenProducts,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "frozen-food.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
+        // Id = 73
+        public static readonly Category FrozenProducts_FrozenReadyFood = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "غذای آماده منجمد",
+            Type = CategoryType.Product,
+            Parent = FrozenProducts,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "frozen-ready-food.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
+        // Id = 74
+        public static readonly Category FrozenProducts_FrozenVegetables = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "سبزیجات منجمد",
+            Type = CategoryType.Product,
+            Parent = FrozenProducts,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "frozen-vegetables.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
+        // Id = 75
+        public static readonly Category FrozenProducts_SemiFrozenFood = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "غذای نیمه آماده منجمد",
+            Type = CategoryType.Product,
+            Parent = FrozenProducts,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "semi-frozen-food.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
         #endregion
 
 
@@ -1284,6 +1511,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region Pickles
 
+        // Id = 12
         public static readonly Category Pickles = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1302,22 +1530,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region Pickles =>
 
-        public static readonly Category Pickles_PickledCucumber = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "خیارشور",
-            Type = CategoryType.Product,
-            Parent = Pickles,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "pickled-cucamber.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
+        // Id = 76
         public static readonly Category Pickles_Olive = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1334,22 +1547,7 @@ namespace OrganicShop.DAL.SeedDatas
             },
         };
 
-        public static readonly Category Pickles_Salty = new Category
-        {
-            BaseEntity = new BaseEntity(true),
-            Title = "شور",
-            Type = CategoryType.Product,
-            Parent = Pickles,
-            Picture = new Picture
-            {
-                IsMain = true,
-                Name = "salty.jpg",
-                SizeMB = (float)0.645,
-                BaseEntity = new BaseEntity(true),
-                Type = PictureType.Category,
-            },
-        };
-
+        // Id = 77
         public static readonly Category Pickles_Pickle = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1366,6 +1564,40 @@ namespace OrganicShop.DAL.SeedDatas
             },
         };
 
+        // Id = 78
+        public static readonly Category Pickles_PickledCucumber = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "خیارشور",
+            Type = CategoryType.Product,
+            Parent = Pickles,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "pickled-cucamber.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
+        // Id = 79
+        public static readonly Category Pickles_Salty = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "شور",
+            Type = CategoryType.Product,
+            Parent = Pickles,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "salty.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+        };
+
         #endregion
 
 
@@ -1374,6 +1606,7 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region Additives
 
+        // Id = 13
         public static readonly Category Additives = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1392,22 +1625,24 @@ namespace OrganicShop.DAL.SeedDatas
 
         #region Additives =>
 
-        public static readonly Category Additives_LiquidCondiments = new Category
+        // Id = 80
+        public static readonly Category Additives_DriedVegetablesAndSproutPowder = new Category
         {
             BaseEntity = new BaseEntity(true),
-            Title = "چاشنی‌های مایع",
+            Title = "سبزی خشک و پودر جوانه",
             Type = CategoryType.Product,
             Parent = Additives,
             Picture = new Picture
             {
                 IsMain = true,
-                Name = "liquid-condiments.jpg",
+                Name = "dried-vegetables-and-sprout-powder.jpg",
                 SizeMB = (float)0.645,
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
         };
 
+        // Id = 81
         public static readonly Category Additives_FoodDesign = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1424,22 +1659,24 @@ namespace OrganicShop.DAL.SeedDatas
             },
         };
 
-        public static readonly Category Additives_SpicesAndSeasonings = new Category
+        // Id = 82
+        public static readonly Category Additives_LiquidCondiments = new Category
         {
             BaseEntity = new BaseEntity(true),
-            Title = "ادویه و چاشنی",
+            Title = "چاشنی‌های مایع",
             Type = CategoryType.Product,
             Parent = Additives,
             Picture = new Picture
             {
                 IsMain = true,
-                Name = "spices-and-seasonsings.jpg",
+                Name = "liquid-condiments.jpg",
                 SizeMB = (float)0.645,
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
             },
         };
 
+        // Id = 83
         public static readonly Category Additives_Sauce = new Category
         {
             BaseEntity = new BaseEntity(true),
@@ -1456,16 +1693,17 @@ namespace OrganicShop.DAL.SeedDatas
             },
         };
 
-        public static readonly Category Additives_DriedVegetablesAndSproutPowder = new Category
+        // Id = 84
+        public static readonly Category Additives_SpicesAndSeasonings = new Category
         {
             BaseEntity = new BaseEntity(true),
-            Title = "سبزی خشک و پودر جوانه",
+            Title = "ادویه و چاشنی",
             Type = CategoryType.Product,
             Parent = Additives,
             Picture = new Picture
             {
                 IsMain = true,
-                Name = "dried-vegetables-and-sprout-powder.jpg",
+                Name = "spices-and-seasonsings.jpg",
                 SizeMB = (float)0.645,
                 BaseEntity = new BaseEntity(true),
                 Type = PictureType.Category,
@@ -1485,7 +1723,7 @@ namespace OrganicShop.DAL.SeedDatas
         {
             BasicGoods,BasicGoods_Bread,BasicGoods_Candy,BasicGoods_Cereals,BasicGoods_Oil,BasicGoods_PastaAndNoodles,BasicGoods_Rice,BasicGoods_Sugar,
             Dairy, Dairy_BreakfastChocolate ,Dairy_Butter ,Dairy_Cheese ,Dairy_Cream ,Dairy_Dough ,Dairy_Honey ,Dairy_Jam ,Dairy_Milk ,Dairy_Yogurt,
-            MeatAndProtein ,Proteins_Beef ,Proteins_BirdsEgg ,Proteins_BirdsMeat ,Proteins_Caviar ,Proteins_Checken ,Proteins_Fish ,Proteins_Sausages ,Proteins_SheapMeat,
+            MeatAndProtein ,Proteins_Beef ,Proteins_BirdsEgg ,Proteins_Shrimp ,Proteins_Caviar ,Proteins_Checken ,Proteins_Fish ,Proteins_Sausages ,Proteins_SheapMeat,
             Beverages ,Beverages_Distillates ,Beverages_EnergyDrink ,Beverages_NonAlcoholicBeer ,Beverages_SoftDrink ,Beverages_SyrupAndJuice ,Beverages_Water,
             CannedFoodAndReadyMeals ,CannedFoodAndReadyMeals_CannedBeansAndVegetables ,CannedFoodAndReadyMeals_Compote ,CannedFoodAndReadyMeals_ReadyFood ,CannedFoodAndReadyMeals_SemiPreparedFood ,CannedFoodAndReadyMeals_TunnaFish,
             DriedFruitsAndSweets ,DriedFruitsAndSweets_Date ,DriedFruitsAndSweets_Dessert ,DriedFruitsAndSweets_DriedFruit ,DriedFruitsAndSweets_Nuts ,DriedFruitsAndSweets_Raisins ,DriedFruitsAndSweets_Sweet,
