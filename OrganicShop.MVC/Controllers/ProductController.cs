@@ -56,7 +56,8 @@ namespace OrganicShop.Mvc.Controllers
             ViewData["Categories"] = (await _CategoryService.GetAll(new FilterCategoryDto { Type = CategoryType.Product })).Data.List;
             ViewData["FilterProductDto"] = filter;
             ViewData["PagingDto"] = paging;
-            ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
+            //ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
+            ViewData["UserWishProductIds"] = new long[11] { 1, 3, 6, 9, 12, 15, 18, 21, 24, 28, 30 };
             paging.LogAsync();
             filter.LogAsync();
 
@@ -139,7 +140,8 @@ namespace OrganicShop.Mvc.Controllers
                     return _ClientHandleResult.Partial(HttpContext, PartialView("_PreviewProductModal", model));
                 }
             }
-            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "محصول مورد نطر یافت نشد"));
+            return StatusCode(404);
+            //return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "محصول مورد نطر یافت نشد"));
         }
 
 

@@ -2,9 +2,9 @@
 @using OrganicShop.Domain.Dtos.Page
 @using OrganicShop.Domain.Dtos.ProductDtos
 @using OrganicShop.Domain.Entities
-@model PageDto<Product,ProductSummaryDto,long>
+@model List<ProductSummaryDto>
 @{
-    var CategoriesGroup = Model.List.GroupBy(a => a.CategoryTitle);
+    var CategoriesGroup = Model.GroupBy(a => a.CategoryTitle);
     List<ProductSummaryDto> productsHistory = ViewData["ProductsHistory"] as List<ProductSummaryDto>;
 }
 <section class="product-section">
@@ -32,7 +32,7 @@
                 @foreach (var keyGroupName in CategoriesGroup.Select(a => a.Key))
                 {
                     <li class="nav-item">
-                        <button class="nav-link btn" id="tab-number-@index" data-bs-toggle="tab" data-bs-target="#tab-number-@index" type="button">
+                        <button class="nav-link btn" data-bs-toggle="tab" data-bs-target="#tab-number-@index" type="button">
                             @keyGroupName
                         </button>
                     </li>
@@ -45,7 +45,7 @@
             <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
                 <div class="row g-8">
 
-                    @foreach (var item in Model.List.UnionBy(productsHistory, a => a.Id))
+                    @foreach (var item in Model.UnionBy(productsHistory, a => a.Id).Take(12))
                     {
                         <div class="col-xxl-2 col-lg-3 col-md-4 col-6 wow fadeInUp">
                             <div class="product-box-4">
@@ -62,20 +62,15 @@
 
                                     <ul class="option">
                                         <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
+                                            <a role="button" onclick="PreviewProductModalRequest('@item.Id')" >
                                                 <i class="iconly-Show icli"></i>
-                                            </a>
-                                        </li>
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
-                                            <a href="compare.html">
-                                                <i class="iconly-Swap icli"></i>
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
 
                                 <div class="product-detail">
-                                    @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                                    @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
                                     <a href="product-left.html">
                                         <h5 class="name">@item.Title</h5>
                                     </a>
@@ -95,13 +90,13 @@
                                                 </div>
                                                 <input id="product-@item.Id-quantity" class="form-control input-number qty-input" min="1" max="@item.Stock" type="text"
                                                        name="quantity" value="0">
-                                                <div class="qty-right-plus" data-type="plus" data-field="">
+                                                <div class="qty-right-plus" data-type="plus" data-field="" max="">
                                                     <i class="fa-solid fa-plus"></i>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <button class="buy-button buy-button-2 btn btn-cart" 
+                                        <button class="buy-button buy-button-2 btn " 
                                                 onclick="() => 
                                                     {
                                                         var quantity = +document.getElementById('product-@item.Id-quantity').value;
@@ -142,20 +137,15 @@
 
                                     <ul class="option">
                                         <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                            <a href="" data-bs-toggle="modal" data-bs-target="#view">
+                                            <a role="button" onclick="PreviewProductModalRequest('@item.Id')">
                                                 <i class="iconly-Show icli"></i>
-                                            </a>
-                                        </li>
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
-                                            <a href="">
-                                                <i class="iconly-Swap icli"></i>
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
 
                                 <div class="product-detail">
-                                    @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                                    @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
                                     <a href="product-left.html">
                                         <h5 class="name">@item.Title</h5>
                                     </a>
@@ -220,20 +210,15 @@
 
                                         <ul class="option">
                                             <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
+                                                <a role="button" onclick="PreviewProductModalRequest('@item.Id')">
                                                     <i class="iconly-Show icli"></i>
-                                                </a>
-                                            </li>
-                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
-                                                <a href="compare.html">
-                                                    <i class="iconly-Swap icli"></i>
                                                 </a>
                                             </li>
                                         </ul>
                                     </div>
 
                                     <div class="product-detail">
-                                        @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                                        @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
                                         <a href="product-left.html">
                                             <h5 class="name">@item.Title</h5>
                                         </a>

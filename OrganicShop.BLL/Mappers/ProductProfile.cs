@@ -110,6 +110,13 @@ namespace OrganicShop.BLL.Mappers
                 Title = product.Title,
                 //DiscountedPrice = product.GetDefaultDiscountedPrice(),
                 DiscountedPrice = product.GetDiscountedPrice(),
+                Barcode = product.Barcode,
+                CouponProducts = product.CouponProducts,
+                ProductVarients = product.ProductVarients,
+                Seller = product.Seller,
+                SellerId = product.SellerId,
+                WishItems = product.WishItems,
+
             };
         }
 

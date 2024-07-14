@@ -3,9 +3,12 @@
 @using OrganicShop.Domain.Entities
 @model ProductSummaryDto
 @{
-    Model.Varients = Model.Varients.OrderByDescending(a => a.Stock).ToArray();
-    var firstProductVarient = Model.Varients[0];
-    var userWihsIds = ViewData["UserWishProductIds"] as long[];
+    if (Model.Varients != null)
+    {
+        Model.Varients = Model.Varients.OrderByDescending(a => a.Stock).ToArray();
+    }
+    var firstProductVarient = Model.Varients != null ? Model.Varients.FirstOrDefault() : null;
+    var userWihsIds = ViewData["UserWishProductIds"] as long[] ?? new long[0];
     bool? removeButton = ViewData["RemoveButton"] as bool?;
     // int? boxMode = ViewData["ProductBox-Mode"] as int?;
     // string? classes = ViewData["ProductBox-Classes"] as string;
@@ -22,7 +25,7 @@
                     <img src="~/media/images/product/@Model.MainImageName" class="img-fluid blur-up lazyload" alt="">
                 </a>
 
-                @if(removeButton == true)
+                @if (removeButton == true)
                 {
                     <div class="product-header-top">
                         <button class="btn wishlist-button">
@@ -42,7 +45,7 @@
                         @if (userWihsIds.Contains(Model.Id))
                         {
                             <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
-                                <button class="notifi-wishlist" data-iswish="true" onclick="EditProductInWishList(event,'@Model.Id')">
+                                <button class="notifi-wishlist" data-iswish="true" onclick="EditProductInWishList1(event,'@Model.Id')">
                                     <i class="fa-solid fa-heart" style="color: #e14141;"></i>
                                 </button>
                             </li>
@@ -50,7 +53,7 @@
                         else
                         {
                             <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
-                                <button class="notifi-wishlist" data-iswish="false" onclick="EditProductInWishList(event,'@Model.Id')">
+                                <button class="notifi-wishlist" data-iswish="false" onclick="EditProductInWishList1(event,'@Model.Id')">
                                     <i class="fa-regular fa-heart" style="color: #7c7e7e;"></i>
                                 </button>
                             </li>
@@ -58,7 +61,7 @@
                     </ul>
                 }
 
-               
+
             </div>
         </div>
 
@@ -70,7 +73,7 @@
                 </a>
                 <div class="product-rating mt-2">
 
-                    @await Html.PartialAsync("_ProductRating", Model.CommentsRate)
+                    @await Html.PartialAsync("_RatingPartial", Model.CommentsRate)
 
                     <span>(@Model.CommentsRate.ToString("0.0"))</span>
                 </div>
@@ -113,7 +116,7 @@
 
 @* @if (boxMode == 3)
 {
-   
+
 }
 else if (boxMode == 4)
 {

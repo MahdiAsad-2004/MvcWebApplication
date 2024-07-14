@@ -60,14 +60,19 @@ let MessageString = null;
 
 
 
-async function HandleFetchResponse(response, ev) {
+async function HandleFetchResponse(response, form) {
+    let ResponseResult = true;
+
     if (response.status < 400) {
         ResponseDataType = response.headers.get('ResponseDataType');
+        ResponseResult = response.headers.get('ResponseResult') == 'True';
+        //console.log(`Response Result : ${ResponseResult}`);
+        //console.log(response.headers.get('ResponseResult'));
         if (ResponseDataType == 'partial') {
-            await Partial(response, ev);
+            await Partial(response, form);
         }
         else if (ResponseDataType == 'partial-toast') {
-            await PartialThenToast(response, ev);
+            await PartialThenToast(response, form);
         }
         else if (ResponseDataType == 'redirect-toast') {
             await RedirectThenToast(response);
@@ -90,10 +95,11 @@ async function HandleFetchResponse(response, ev) {
         else if (ResponseDataType == 'empty') {
             // nothing to do
         }
+        return ResponseResult;
     }
     else {
         if (response.status == 500) {
-            Toast('Warning', 'Internal Server Warning', 2, 5000);
+            Toast('Warning', 'Internal Server error', 2, 5000);
         }
         else if (response.status == 400) {
             Toast('Warning', 'Bad Request', 2, 5000);
@@ -114,6 +120,7 @@ async function HandleFetchResponse(response, ev) {
             Toast('Warning', 'Service Unavailable', 2, 5000);
         }
         console.log(response);
+        return false;
     }
 
 }
@@ -121,13 +128,30 @@ async function HandleFetchResponse(response, ev) {
 
 
 
-function Partial(response, ev) {
-    ContainerElementId = ev.target.getAttribute('data-container-id');
-    TargetElementId = ev.target.getAttribute('data-target-id');
+async function Partial(response, form) {
+    ContainerElementId = form.getAttribute('data-container-id');
+    TargetElementId = form.getAttribute('data-target-id');
     response.text().then(partial => {
         if (TargetElementId) {
+            console.log(document.getElementById(TargetElementId));
+            //console.log(partial);
+
+
             document.getElementById(TargetElementId).insertAdjacentHTML('afterend', partial);
-            document.getElementById(TargetElementId).remove();
+            //document.getElementById(TargetElementId).insertAdjacentElement('beforeend', document.createElement('h6'));
+
+
+            console.log(document.getElementById(TargetElementId));
+
+            //var template = document.createElement('div');
+            //template.append(partial);
+            //console.log(template);
+            //console.log(template.firstChild);
+            //console.log(String.toString(partial));
+            //document.getElementById(TargetElementId).replaceWith(document.createElement('h6'));
+
+
+            //document.getElementById(TargetElementId).remove();
         }
         else if (ContainerElementId) {
             document.getElementById(ContainerElementId).innerHTML = partial;
@@ -139,9 +163,9 @@ function Partial(response, ev) {
 
 }
 
-function PartialThenToast(response, ev) {
-    ContainerElementId = ev.target.getAttribute('data-container-id');
-    TargetElementId = ev.target.getAttribute('data-target-id');
+function PartialThenToast(response, form) {
+    ContainerElementId = form.getAttribute('data-container-id');
+    TargetElementId = form.getAttribute('data-target-id');
     MessageString = response.headers.get("Message");
     Message = JSON.parse(MessageString);
     response.text().then(partial => {

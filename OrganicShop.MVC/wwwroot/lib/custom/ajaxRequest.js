@@ -155,7 +155,7 @@ async function FetchRequest(e) {
                 method: formMethod,
                 body: formMethod == 'get' ? null : formData,
             });
-            HandleFetchResponse(fetchResponse, e);
+            HandleFetchResponse(fetchResponse, e.target);
             formElem.reset();
         }
         catch (er) {
@@ -187,20 +187,19 @@ async function FetchRequestForm(form) {
                 method: formMethod,
                 body: formMethod == 'get' ? null : formData,
             });
-            await HandleFetchResponse(fetchResponse, e);
+            RequestResult = await HandleFetchResponse(fetchResponse, form);
             form.reset();
-            RequestResult = true;
         }
         catch (er) {
             Toast('Warning', 'An error was thrown from client', 2, 5000);
             console.log(er);
         }
         await HideLoading();
-        //return new Promise((resolve, reject) => {
-        //    resolve(RequestResult);
-        //});
-        return RequestResult;
     }
+    return RequestResult;
+    //return new Promise((resolve, reject) => {
+    //    resolve(RequestResult);
+    //});
 }
 
 

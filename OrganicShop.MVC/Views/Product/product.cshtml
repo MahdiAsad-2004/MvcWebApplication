@@ -124,7 +124,7 @@
 
                                 <div class="product-rating custom-rate">
 
-                                    @await Html.PartialAsync("_ProductRating", commentsRatingAverage)
+                                    @await Html.PartialAsync("_RatingPartial", commentsRatingAverage)
 
                                     <span>(@(commentsCount.ToString("0.0"))) بازخورد</span>
                                 </div>
@@ -335,7 +335,7 @@
 
 
                                     <div class="product-rating mt-1">
-                                        @await Html.PartialAsync("_ProductRating", Model.SellerInfo.Value.CommentsRate)
+                                        @await Html.PartialAsync("_RatingPartial", Model.SellerInfo.Value.CommentsRate)
 
                                         <span>(@(Model.SellerInfo.Value.CommentsCount) دیدگاه)</span>
                                     </div>

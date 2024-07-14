@@ -142,6 +142,7 @@ namespace OrganicShop.BLL.Services
                     .ThenInclude(a => a.Discount)
                 .Include(a => a.Comments)
                 .Include(a => a.Properties)
+                 .ThenInclude(a => a.PropertyType)
                 .Include(a => a.ProductVarients)
                 .Select(a => a.ToModel())
                 .AsParallel();
@@ -202,6 +203,7 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.Comments.Where(b => b.Status == CommentStatus.Accepted))
                     .ThenInclude(a => a.User)
                 .Include(a => a.Properties)
+                    .ThenInclude(a => a.PropertyType)
                 .Include(a => a.ProductVarients)
                 .Include(a => a.Seller)
                     .ThenInclude(a => a.Address)

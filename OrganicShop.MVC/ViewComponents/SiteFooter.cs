@@ -28,8 +28,8 @@ namespace OrganicShop.Mvc.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            ViewData["NewestCategoryCombos"] = (await _CategoryService
-                .GetCombos(new FilterCategoryDto { SortBy = CategorySortType.Newest })).Data ?? new List<ComboDto<Category>>();
+            ViewData["NewestCategoryCombos"] = ((await _CategoryService
+                .GetCombos(new FilterCategoryDto { SortBy = CategorySortType.Newest })).Data ?? new List<ComboDto<Category>>()).Take(5).ToList();
 
             var model = (await _ContactUsService.Get()).Data;
 

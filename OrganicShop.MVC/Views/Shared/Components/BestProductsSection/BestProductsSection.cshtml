@@ -30,20 +30,15 @@
 
                         <ul class="option">
                             <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
+                                <a role="button" onclick="PreviewProductModalRequest('@item.Id')">
                                     <i class="iconly-Show icli"></i>
-                                </a>
-                            </li>
-                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
-                                <a href="compare.html">
-                                    <i class="iconly-Swap icli"></i>
                                 </a>
                             </li>
                         </ul>
                     </div>
 
                     <div class="product-detail">
-                        @await Html.PartialAsync("_ProductRating" , item.CommentsRate)
+                        @await Html.PartialAsync("_RatingPartial" , item.CommentsRate)
                         <a href="">
                             <h5 class="name">@item.Title</h5>
                         </a>
@@ -93,20 +88,15 @@
 
                             <ul class="option">
                                 <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                    <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
+                                    <a role="button" onclick="PreviewProductModalRequest('@item.Id')">
                                         <i class="iconly-Show icli"></i>
-                                    </a>
-                                </li>
-                                <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
-                                    <a href="compare.html">
-                                        <i class="iconly-Swap icli"></i>
                                     </a>
                                 </li>
                             </ul>
                         </div>
 
                         <div class="product-detail">
-                            @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                            @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
                             <a href="">
                                 <h5 class="name">@item.Title</h5>
                             </a>

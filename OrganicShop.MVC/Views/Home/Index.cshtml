@@ -1,4 +1,6 @@
-﻿@using OrganicShop.Domain.Enums.SortTypes
+﻿@using OrganicShop.Domain.Dtos.ProductDtos
+@using OrganicShop.Domain.Dtos.ProductItemDtos
+@using OrganicShop.Domain.Enums.SortTypes
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -12,7 +14,7 @@
 @await Component.InvokeAsync("DiscountedProductsSection");
 
 
-@await Component.InvokeAsync("CategorizedProducts");
+@await Component.InvokeAsync("CategorizedProducts", new { categoryIds = new int[3] { 1, 2, 3 } } );
 
 
 @await Html.PartialAsync("_BannerSection1");
@@ -33,12 +35,31 @@
 @await Html.PartialAsync("_NewsLetterSection");
 
 
+
+
+
+
+
+<form id="preview-product-modal-request-form" hidden action="/Product/Preview" method="post" data-container-id="preview-product-modal">
+    <input type="number" name="id" hidden readonly value="0" />
+</form>
 <form id="edit-product-wishlist-form" hidden action="/User/EditProductWishList" method="post">
     <input type="number" name="productId" hidden readonly value="0" />
+    <input type="number" name="isDelete" hidden readonly value="false" />
 </form>
+@await Html.PartialAsync("_AddToCartForm", new CreateProductItemDto())
 
+@section Modals {
+
+    <div class="modal fade theme-modal view-modal" id="preview-product-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        @await Html.PartialAsync("_PreviewProductModal", new ProductSummaryDto())
+    </div>
+
+}
 
 @section Scripts {
+
+    <script src="~/site/views/home/index.js"></script>
 
     <partial name="_ValidationScriptsPartial" />
 

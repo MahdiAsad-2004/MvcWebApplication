@@ -33,14 +33,29 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
-
-        public async Task<IActionResult> AddToWishList(long productId)
+        [HttpPost]
+        public async Task<IActionResult> EditProductWishList(long productId, bool isDelete)
         {
-            var response = await _WishItemService.Create(new CreateWishItemDto { ProductId = productId});
-            if (response.Result == ResponseResult.Success)
-                return _ClientHandleResult.Empty(HttpContext);
+            if(User.Identity.IsAuthenticated == false)
+            {
+                return _ClientHandleResult.Redirect(HttpContext, "/Account/Login", false);
+            }
+            if (isDelete)
+            {
+                var response = await _WishItemService.Delete(productId);
+                if (response.Result == ResponseResult.Success)
+                    return _ClientHandleResult.Empty(HttpContext);
 
-            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult:false);
+            }
+            else
+            {
+                var response = await _WishItemService.Create(new CreateWishItemDto { ProductId = productId });
+                if (response.Result == ResponseResult.Success)
+                    return _ClientHandleResult.Empty(HttpContext);
+
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message) , responseResult:false);
+            }
         }
 
 

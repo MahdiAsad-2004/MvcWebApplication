@@ -45,12 +45,12 @@ namespace OrganicShop.Domain.Validation.UserValidators
                 .IsInEnum();
 
 
-            RuleFor(a => a.ProfileImage)
-                .Must(a => true)
-                .When(file => file != null)
-                .Must(file => file.Length < FileSizeKb * 1024).WithMessage("").WithMessage($"حداکثر سایز #PropertyName {FileSizeKb} KB است")
-                .Must(file => FileFormats.Contains(Path.GetExtension(file.FileName).Replace(".", "")))
-                    .WithMessage($"فرمت #PropertyName {string.Join(" / ", FileFormats)} نیست");            
+            //RuleFor(a => a.ProfileImage)
+            //    .Must(a => true)
+            //    .When(file => file != null)
+            //    .Must(file => file.Length < FileSizeKb * 1024).WithMessage("").WithMessage($"حداکثر سایز #PropertyName {FileSizeKb} KB است")
+            //    .Must(file => FileFormats.Contains(Path.GetExtension(file.FileName).Replace(".", "")))
+            //        .WithMessage($"فرمت #PropertyName {string.Join(" / ", FileFormats)} نیست");            
 
         }
 

@@ -24,7 +24,7 @@ namespace OrganicShop.Mvc.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var paging = new PagingDto { PageItemsCount = 9 };
+            var paging = new PagingDto { PageItemsCount = 11 };
             ViewData["NewestProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { SortBy = ProductSortType.Newest }, paging))?.Data!.List;
             ViewData["SpecialProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { SortBy = ProductSortType.DiscountDesc }, paging))?.Data!.List;
             ViewData["BestSellingProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { SortBy = ProductSortType.SoldCountDesc },paging))?.Data!.List;

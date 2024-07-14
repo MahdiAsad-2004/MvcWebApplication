@@ -69,6 +69,9 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Create(CreateWishItemDto create)
         {
+            if (_AppUserProvider.User.Id < 1)
+                return new ServiceResponse<Empty>(ResponseResult.NoAccess, _Message.NoAccess());
+
             WishItem WishItem = _Mapper.Map<WishItem>(create);
 
             if (await _WishItemRepository.GetQueryable().AnyAsync(a => a.UserId == _AppUserProvider.User.Id && a.ProductId == create.ProductId) == true)
@@ -79,9 +82,25 @@ namespace OrganicShop.BLL.Services
         }
 
 
-        public async Task<ServiceResponse<Empty>> Delete(long delete)
+        //public async Task<ServiceResponse<Empty>> Delete(long delete)
+        //{
+        //    WishItem? WishItem = await _WishItemRepository.GetAsTracking(delete);
+
+        //    if (WishItem == null)
+        //        return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
+
+        //    await _WishItemRepository.SoftDelete(WishItem, _AppUserProvider.User.Id);
+        //    return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessDelete());
+        //}
+
+
+        public async Task<ServiceResponse<Empty>> Delete(long productId)
         {
-            WishItem? WishItem = await _WishItemRepository.GetAsTracking(delete);
+            if (_AppUserProvider.User.Id < 1)
+                return new ServiceResponse<Empty>(ResponseResult.NoAccess , _Message.NoAccess());
+
+            WishItem? WishItem = await _WishItemRepository.GetQueryableTracking()
+                .FirstOrDefaultAsync(a => a.ProductId == productId && a.UserId == _AppUserProvider.User.Id);
 
             if (WishItem == null)
                 return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());

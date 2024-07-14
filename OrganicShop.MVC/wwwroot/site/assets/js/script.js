@@ -452,8 +452,8 @@ $(".bg-overlay").click(function () {
 
 function GoPage(pageNumber, formId) {
     if (pageNumber && pageNumber > 0) {
-        document.getElementById('pageNumber-input').ariaValueMax = pageNumber;
-        document.getElementById(id).requestSubmit();
+        document.getElementById('pageNumber-input').value = pageNumber;
+        document.getElementById(formId).requestSubmit();
         //SubmitFormByIdWithButton(formId);
     }
 }
@@ -537,35 +537,45 @@ if (PreviewProductVarientSelect) {
 //preview product modal request
 
 const PreviewProductModalRequestForm = document.getElementById('preview-product-modal-request-form');
-const PreviewProductModalOpenButton = document.getElementById('preview-product-modal-open-button');
-function PreviewProductModalRequest(id) {
-    PreviewProductModalRequestInputId.value = id;
-    SubmitFormWithButton(PreviewProductModalRequestForm);
-    PreviewProductModalOpenButton.click();
+async function PreviewProductModalRequest(id) {
+    PreviewProductModalRequestForm.querySelector("input[name='id']").value = id;
+    FetchRequestForm(PreviewProductModalRequestForm).then(result => {
+        if (result) {
+            console.log(result);
+            const PreviewProductModalObj = new bootstrap.Modal('#preview-product-modal');
+            //PreviewProductModalObj.show();
+            PreviewProductModalObj.toggle();
+            console.log(PreviewProductModalObj);
+
+        }
+    });
+
 }
 
 
 // add product to wihslist
 
 const EditProductWishListForm = document.getElementById('edit-product-wishlist-form');
-const EditProductWishListProductIdInput = EditProductWishListForm.querySelector("input [name = 'productId']");
+const EditProductWishListProductIdInput = EditProductWishListForm.querySelector("input[name = 'productId']");
 const EmptyHeartIconElemnt = `<i class="fa-regular fa-heart" style="color: #7c7e7e;"></i>`;
 const FullHeartIconElemnt = `<i class="fa-solid fa-heart" style="color: #e14141;"></i>`;
 
 var isInWishList = false;
 async function EditProductInWishList(event, productId) {
-    if (productid > 0) {
+    if (productId > 0) {
         var btn = event.target;
-        AddProductToWishlistProductIdInput.value = productId;
+        EditProductWishListForm.querySelector("input[name = 'productId']").value = productId;
         isInWishList = btn.getAttribute('data-iswish') == 'true';
+        EditProductWishListForm.querySelector("input[name = 'isDelete']").value = isInWishList;
+        //AddProductToWishlistProductIdInput.value = productId;
         var result = await FetchRequestForm(EditProductWishListForm);
         if (result == true) {
             if (isInWishList) {
-                btn.innerHTML = EmptyHeartIconElemnt;
+                //btn.innerHTML = EmptyHeartIconElemnt;
                 btn.setAttribute('data-iswish', 'false');
             }
             else {
-                btn.innerHTML = FullHeartIconElemnt;
+                //btn.innerHTML = FullHeartIconElemnt;
                 btn.setAttribute('data-iswish', 'true');
             }
         }

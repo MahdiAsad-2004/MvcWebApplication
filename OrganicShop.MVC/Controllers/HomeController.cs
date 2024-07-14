@@ -44,7 +44,7 @@ namespace OrganicShop.Mvc.Controllers
 
         public async Task<IActionResult> Index()
         {
-
+            ViewData["UserWishProductIds"] = new long[11] { 1, 3, 6, 9, 12, 15, 18, 21, 24, 28, 30 };
             return View("Index");
         }
 

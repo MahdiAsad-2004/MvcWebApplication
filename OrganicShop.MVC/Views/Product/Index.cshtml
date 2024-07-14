@@ -2,6 +2,7 @@
 @using OrganicShop.Domain.Dtos.Combo
 @using OrganicShop.Domain.Dtos.Page
 @using OrganicShop.Domain.Dtos.ProductDtos
+@using OrganicShop.Domain.Dtos.ProductItemDtos
 @using OrganicShop.Domain.Entities
 @using OrganicShop.BLL.Extensions
 @using OrganicShop.Domain.Enums.SortTypes
@@ -321,18 +322,18 @@
 </section>
 <!-- Shop Section End -->
 
-@await Html.PartialAsync("_AddToCartForm") 
-<form id="preview-product-modal-request-form" hidden action="/Product/Preview" onsubmit="FetchRequest(event)" method="post" data-target-id="preview-product-modal">
+@await Html.PartialAsync("_AddToCartForm" ,new CreateProductItemDto()) 
+<form id="preview-product-modal-request-form" hidden action="/Product/Preview" method="post" data-target-id="preview-product-modal">
     <input type="number" name="id" hidden readonly value="0" />
-    <button type="submit" hidden></button>
 </form>
 <form id="edit-product-wishlist-form" hidden action="/User/EditProductWishList" method="post">
     <input type="number" name="productId" hidden readonly value="0" />
+    <input type="number" name="isDelete" hidden readonly value="false" />
 </form>
 
 @section Modals {
 
-    @await Html.PartialAsync("_PreviewProductModal",default(ProductSummaryDto));
+    @await Html.PartialAsync("_PreviewProductModal",new ProductSummaryDto());
 
 }
 

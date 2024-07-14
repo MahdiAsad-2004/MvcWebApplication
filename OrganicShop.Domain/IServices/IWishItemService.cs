@@ -13,7 +13,7 @@ namespace OrganicShop.Domain.IServices
 
         Task<ServiceResponse<Empty>> Create(CreateWishItemDto create);
         
-        Task<ServiceResponse<Empty>> Delete(long delete);
+        Task<ServiceResponse<Empty>> Delete(long productId);
 
         Task<ServiceResponse<long[]>> GetUserWishProductIds();
 

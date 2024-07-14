@@ -7,6 +7,11 @@
     List<ProductSummaryDto> specialProducts = ViewData["SpecialProducts"] as List<ProductSummaryDto>;
     List<ProductSummaryDto> bestSellingProducts = ViewData["BestSellingProducts"] as List<ProductSummaryDto>;
     List<ProductSummaryDto> lowestSellingProducts = ViewData["LowestSellingProducts"] as List<ProductSummaryDto>;
+    var userWihsIds = ViewData["UserWishProductIds"] as long[];
+    if(userWihsIds == null)
+    {
+        userWihsIds = new long[0];
+    }
 }
 <!-- Product Section Start -->
 <section class="product-section-2">
@@ -34,7 +39,7 @@
                                                         <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
                                                     </a>
                                                     <div class="product-details">
-                                                        @await Html.PartialAsync("_ProductRating",item.CommentsRate)
+                                                        @await Html.PartialAsync("_RatingPartial",item.CommentsRate)
                                                         <a href="">
                                                             <h4 class="name">@item.Title</h4>
                                                         </a>
@@ -55,22 +60,24 @@
                                                             </li>
                                                             <li data-bs-toggle="tooltip" data-bs-placement="top"
                                                                 title="نمایش">
-                                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                                   data-bs-target="#exampleModal">
+                                                                <a role="button" onclick="PreviewProductModalRequest('@item.Id')">
                                                                     <i class="iconly-Show icli"></i>
                                                                 </a>
                                                             </li>
-                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="افزودن به لیست علاقه‌مندی">
-                                                                <a href="wishlist.html">
-                                                                    <i class="iconly-Heart icli"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="مقایسه">
-                                                                <a href="compare.html">
-                                                                    <i class="iconly-Swap icli"></i>
-                                                                </a>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"title="افزودن به لیست علاقه‌مندی">
+                                                                @if (userWihsIds.Contains(item.Id))
+                                                                {
+                                                                    <a role="button" data-iswish="true" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                                        <i class="iconly-Heart icli" style="color:red;"></i>
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a role="button" data-iswish="false" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                                        <i class="iconly-Heart icli"></i>
+                                                                    </a>
+                                                                }
+                                                                
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -108,7 +115,7 @@
                                                         <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
                                                     </a>
                                                     <div class="product-details">
-                                                        @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                                                        @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
                                                         <a href="">
                                                             <h4 class="name">@item.Title</h4>
                                                         </a>
@@ -129,22 +136,23 @@
                                                             </li>
                                                             <li data-bs-toggle="tooltip" data-bs-placement="top"
                                                                 title="نمایش">
-                                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                                   data-bs-target="#exampleModal">
+                                                                <a role="button" onclick="PreviewProductModalRequest('@item.Id')">
                                                                     <i class="iconly-Show icli"></i>
                                                                 </a>
                                                             </li>
-                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="افزودن به لیست علاقه‌مندی">
-                                                                <a href="wishlist.html">
-                                                                    <i class="iconly-Heart icli"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="مقایسه">
-                                                                <a href="compare.html">
-                                                                    <i class="iconly-Swap icli"></i>
-                                                                </a>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="افزودن به لیست علاقه‌مندی">
+                                                                @if (userWihsIds.Contains(item.Id))
+                                                                {
+                                                                    <a role="button" data-iswish="true" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                                        <i class="iconly-Heart icli" style="color:red;"></i>
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a role="button" data-iswish="false" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                                        <i class="iconly-Heart icli"></i>
+                                                                    </a>
+                                                                }
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -182,7 +190,7 @@
                                                         <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
                                                     </a>
                                                     <div class="product-details">
-                                                        @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                                                        @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
                                                         <a href="">
                                                             <h4 class="name">@item.Title</h4>
                                                         </a>
@@ -203,22 +211,23 @@
                                                             </li>
                                                             <li data-bs-toggle="tooltip" data-bs-placement="top"
                                                                 title="نمایش">
-                                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                                   data-bs-target="#exampleModal">
+                                                                <a role="button" onclick="PreviewProductModalRequest('@item.Id')">
                                                                     <i class="iconly-Show icli"></i>
                                                                 </a>
                                                             </li>
-                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="افزودن به لیست علاقه‌مندی">
-                                                                <a href="wishlist.html">
-                                                                    <i class="iconly-Heart icli"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="مقایسه">
-                                                                <a href="compare.html">
-                                                                    <i class="iconly-Swap icli"></i>
-                                                                </a>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"title="افزودن به لیست علاقه‌مندی">
+                                                                @if (userWihsIds.Contains(item.Id))
+                                                                {
+                                                                    <a role="button" data-iswish="true" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                                        <i class="iconly-Heart icli" style="color:red;"></i>
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a role="button" data-iswish="false" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                                        <i class="iconly-Heart icli"></i>
+                                                                    </a>
+                                                                }
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -255,7 +264,7 @@
                                                         <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
                                                     </a>
                                                     <div class="product-details">
-                                                        @await Html.PartialAsync("_ProductRating", item.CommentsRate)
+                                                        @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
                                                         <a href="">
                                                             <h4 class="name">@item.Title</h4>
                                                         </a>
@@ -276,22 +285,23 @@
                                                             </li>
                                                             <li data-bs-toggle="tooltip" data-bs-placement="top"
                                                                 title="نمایش">
-                                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                                   data-bs-target="#exampleModal">
+                                                                <a role="button" onclick="PreviewProductModalRequest('@item.Id')">
                                                                     <i class="iconly-Show icli"></i>
                                                                 </a>
                                                             </li>
-                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="افزودن به لیست علاقه‌مندی">
-                                                                <a href="wishlist.html">
-                                                                    <i class="iconly-Heart icli"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="مقایسه">
-                                                                <a href="compare.html">
-                                                                    <i class="iconly-Swap icli"></i>
-                                                                </a>
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"title="افزودن به لیست علاقه‌مندی">
+                                                                @if (userWihsIds.Contains(item.Id))
+                                                                {
+                                                                    <a role="button" data-iswish="true" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                                        <i class="iconly-Heart icli" style="color:red;"></i>
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a role="button" data-iswish="false" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                                        <i class="iconly-Heart icli"></i>
+                                                                    </a>
+                                                                }
                                                             </li>
                                                         </ul>
                                                     </div>

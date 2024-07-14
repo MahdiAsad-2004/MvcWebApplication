@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using System.Text;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using OrganicShop.Domain.Enums.Response;
 
 namespace OrganicShop.Mvc.Controllers.Base.Result
 {
@@ -93,9 +94,10 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
         #region Toast
 
-        public IActionResult Toast(HttpContext httpContext, Toast message)
+        public IActionResult Toast(HttpContext httpContext, Toast message,bool responseResult = true)
         {
             httpContext.Response.Headers.Add("ResponseDataType", "toast");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
 
             var content = new ContentResult()
             {
@@ -112,9 +114,10 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
         #region partial
 
-        public IActionResult Partial(HttpContext httpContext, PartialViewResult partialView)
+        public IActionResult Partial(HttpContext httpContext, PartialViewResult partialView,bool responseResult = true )
         {
             httpContext.Response.Headers.Add("ResponseDataType", "partial");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             return partialView;
         }
 
@@ -124,9 +127,11 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
         #region partial => toast
 
-        public IActionResult PartialThenToast(HttpContext httpContext, PartialViewResult partialView, Toast message)
+        public IActionResult PartialThenToast(HttpContext httpContext, PartialViewResult partialView, Toast message,bool responseResult = true)
         {
             httpContext.Response.Headers.Add("ResponseDataType", "partial-toast");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
+
             message.SetToastOnResponse(httpContext.Response);
             return partialView;
         }
@@ -150,10 +155,11 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
         #region toast => redirect
 
-        public IActionResult ToastThenRedirect(HttpContext httpContext, string url, Toast message, bool replace)
+        public IActionResult ToastThenRedirect(HttpContext httpContext, string url, Toast message, bool replace,bool responseResult = true)
         {
             message.SetToastOnResponse(httpContext.Response);
             httpContext.Response.Headers.Add("ResponseDataType", "toast-redirect");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             Redirect redirect = new Redirect()
             {
                 Url = GetUrl(url),
@@ -163,10 +169,11 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
             return new ContentResult() {Content = redirect.GetJsonStrng()};
             //return Content(redirect.GetJsonStrng());
         }
-        public IActionResult ToastThenRedirect(HttpContext httpContext, string action, string controller, Toast message, bool replace)
+        public IActionResult ToastThenRedirect(HttpContext httpContext, string action, string controller, Toast message, bool replace,bool responseResult = true)
         {
             message.SetToastOnResponse(httpContext.Response);
             httpContext.Response.Headers.Add("ResponseDataType", "toast-redirect");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             Redirect redirect = new Redirect()
             {
                 Url = GetUrl(action, controller),
@@ -177,10 +184,11 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
             //return Content(redirect.GetJsonStrng());
         }
         public IActionResult ToastThenRedirect(HttpContext httpContext, string action, string controller, object routeValues,
-            Toast message, bool replace)
+            Toast message, bool replace,bool responseResult = true)
         {
             message.SetToastOnResponse(httpContext.Response);
             httpContext.Response.Headers.Add("ResponseDataType", "toast-redirect");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             Redirect redirect = new Redirect()
             {
                 Url = GetUrl(action, controller, routeValues),
@@ -197,10 +205,11 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
         #region redirect => toast
 
-        public IActionResult RedirectThenToast(HttpContext httpContext,ITempDataDictionary tempdata ,string action, Toast message, bool replace)
+        public IActionResult RedirectThenToast(HttpContext httpContext,ITempDataDictionary tempdata ,string action, Toast message, bool replace, bool responseResult = true)
         {
             tempdata["Toast"] = message.Serialize();
             httpContext.Response.Headers.Add("ResponseDataType", "redirect-toast");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             Redirect redirect = new Redirect()
             {
                 Url = GetUrl(action),
@@ -210,10 +219,11 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
             return new ContentResult() { Content = redirect.GetJsonStrng() };
             //return Content(redirect.GetJsonStrng());
         }
-        public IActionResult RedirectThenToast(HttpContext httpContext,ITempDataDictionary tempdata ,string action, string controller, Toast message, bool replace)
+        public IActionResult RedirectThenToast(HttpContext httpContext,ITempDataDictionary tempdata ,string action, string controller, Toast message, bool replace, bool responseResult = true)
         {
             tempdata["Toast"] = message.Serialize();
             httpContext.Response.Headers.Add("ResponseDataType", "redirect-toast");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             Redirect redirect = new Redirect()
             {
                 Url = GetUrl(action, controller),
@@ -224,10 +234,11 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
             //return Content(redirect.GetJsonStrng());
         }
         public IActionResult RedirectThenToast(HttpContext httpContext,ITempDataDictionary tempdata ,string actionName, string controller, object routeValues,
-            Toast message, bool replace)
+            Toast message, bool replace,bool responseResult = true)
         {
             tempdata["Toast"] = message.Serialize();
             httpContext.Response.Headers.Add("ResponseDataType", "redirect-toast");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             Redirect redirect = new Redirect()
             {
                 Url = GetUrl(actionName, controller, routeValues),
@@ -244,9 +255,10 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
         #region toast => refresh
 
-        public IActionResult ToastThenRfresh(HttpContext httpContext, Toast message)
+        public IActionResult ToastThenRfresh(HttpContext httpContext, Toast message,bool responseResult = true)
         {
             httpContext.Response.Headers.Add("ResponseDataType", "toast-refresh");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             return new ContentResult() { Content = message.Serialize()};
             //return Content(message.Serialize());
         }
@@ -257,9 +269,10 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
         #region json
 
-        public IActionResult Json(HttpContext httpContext, object obj)
+        public IActionResult Json(HttpContext httpContext, object obj, bool responseResult = true)
         {
             httpContext.Response.Headers.Add("ResponseDataType", "json");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             return new JsonResult(obj);
             //return Content(message.Serialize());
         }
@@ -270,9 +283,10 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
         #region redirect
 
-        public IActionResult Redirect(HttpContext httpContext, string action, bool replace)
+        public IActionResult Redirect(HttpContext httpContext, string action, bool replace,bool responseResult = true)
         {
             httpContext.Response.Headers.Add("ResponseDataType", "redirect");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             Redirect redirect = new Redirect()
             {
                 Url = GetUrl(action),
@@ -282,9 +296,10 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
             return new ContentResult() { Content = redirect.GetJsonStrng() };
             //return Content(redirect.GetJsonStrng());
         }
-        public IActionResult Redirect(HttpContext httpContext,string action, string controller,bool replace)
+        public IActionResult Redirect(HttpContext httpContext,string action, string controller,bool replace,bool responseResult = true)
         {
             httpContext.Response.Headers.Add("ResponseDataType", "redirect");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             Redirect redirect = new Redirect()
             {
                 Url = GetUrl(action, controller),
@@ -300,9 +315,10 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
 
 
-        public IActionResult Empty(HttpContext httpContext)
+        public IActionResult Empty(HttpContext httpContext,bool responseResult = true)
         {
             httpContext.Response.Headers.Add("ResponseDataType", "empty");
+            httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             return new StatusCodeResult(200);
         }
 

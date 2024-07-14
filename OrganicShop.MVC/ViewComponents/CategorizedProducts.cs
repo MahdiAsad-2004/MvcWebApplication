@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using OrganicShop.BLL.Providers;
 using OrganicShop.BLL.Utils;
 using OrganicShop.Domain.Dtos.NotificationDtos;
+using OrganicShop.Domain.Dtos.Page;
 using OrganicShop.Domain.Dtos.ProductDtos;
 using OrganicShop.Domain.Enums;
 using OrganicShop.Domain.Enums.Response;
@@ -18,7 +19,7 @@ namespace OrganicShop.Mvc.ViewComponents
 
         private readonly IProductService _ProductService;
         private readonly AesKeys _AesKeys;
-        public CategorizedProducts(IProductService productService,IOptions<AesKeys> aesKeys)
+        public CategorizedProducts(IProductService productService, IOptions<AesKeys> aesKeys)
         {
             _ProductService = productService;
             _AesKeys = aesKeys.Value;
@@ -34,7 +35,8 @@ namespace OrganicShop.Mvc.ViewComponents
                 categoryIds = ViewComponentContext.Arguments.First().Value as int[];
             string? productsHistoryStr = Request.Cookies["ProductsViewHistory"];
             List<ProductSummaryDto> productsHistory = new();
-            if(productsHistoryStr != null)
+            List<ProductSummaryDto> categoryproducts = new();
+            if (productsHistoryStr != null)
             {
                 try
                 {
@@ -48,12 +50,25 @@ namespace OrganicShop.Mvc.ViewComponents
                 }
             }
             ViewData["ProductsHistory"] = productsHistory;
-            var response = await _ProductService.GetAllSummary(new FilterProductDto {CategoryIds = categoryIds });
-            if (response.Result == ResponseResult.Success)
+
+            var products = new List<ProductSummaryDto>();
+            if (categoryIds != null)
             {
-                return View("CategorizedProducts", response.Data);
+                foreach (var item in categoryIds)
+                {
+                    products = (await _ProductService.GetAllSummary(new FilterProductDto { CategoryId = item })).Data?.List;
+                    if (products != null)
+                    {
+                        categoryproducts.AddRange(products);
+                    }
+                }
             }
-            return View("CategorizedProducts", new List<ProductSummaryDto>());
+            //var response = await _ProductService.GetAllSummary(new FilterProductDto { CategoryIds = categoryIds });
+            //if (response.Result == ResponseResult.Success)
+            //{
+            //    return View("CategorizedProducts", response.Data);
+            //}
+            return View("CategorizedProducts", categoryproducts);
         }
 
 
