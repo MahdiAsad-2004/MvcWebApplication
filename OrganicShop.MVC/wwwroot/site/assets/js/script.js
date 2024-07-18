@@ -489,11 +489,17 @@ Number.prototype.formatMoney = function (s, type) {
 // add product to cart
 
 let AddToCartForm = document.getElementById('add-to-cart-form');
-async function AddProductToCart(productId, productVarientId, count, timeOut) {
+var count = 0;
+async function AddProductToCart(productId, productVarientId, timeOut) {
     var result = false;
-    if (productId > 0 && productVarientId > 0 && count > 0) {
-        if (timeOut && timeOut > 1) {
-
+    count = +document.getElementById(`product-${productId}-quantity`).value;
+    if (Boolean(productVarientId) == false || productVarientId < 1) {
+        productVarientId = null;
+    }
+    //console.log(`${productId} - ${productVarientId} - ${count} - ${timeOut}`);
+    if (productId > 0 && count > 0) {
+        //console.log('add to cart');
+        if (timeOut && timeOut > 100) {
             setTimeout(async () => {
                 AddToCartForm.querySelector('#add-to-cart-form-productId').value = productId;
                 AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
@@ -511,6 +517,7 @@ async function AddProductToCart(productId, productVarientId, count, timeOut) {
             await LoadCartSummary();
         }
     }
+
 }
 
 

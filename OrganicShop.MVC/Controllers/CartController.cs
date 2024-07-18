@@ -113,12 +113,11 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
-        [HttpPost]
-        [ActionName("/Cart/AddProduct")]
+        [HttpPost("/Cart/AddProduct")]
         public async Task<IActionResult> AddProductItem(CreateProductItemDto createProductItem)
         {
             if (createProductItem.ProductVarientId < 1)
-                createProductItem.ProductVarientId = 0;
+                createProductItem.ProductVarientId = null;
 
             var successToast = new Toast(ToastType.Success, "محصول با موفقیت به سبد خربد افزوده شد");
             if (User.Identity.IsAuthenticated)

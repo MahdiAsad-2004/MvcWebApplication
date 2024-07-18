@@ -96,16 +96,7 @@
                                             </div>
                                         </div>
 
-                                        <button class="buy-button buy-button-2 btn " 
-                                                onclick="() => 
-                                                    {
-                                                        var quantity = +document.getElementById('product-@item.Id-quantity').value;
-                                                        console.log(quantity);
-                                                        if(false)
-                                                        {
-                                                            AddProductToCart('@(item.Id)' , '@(item != null ? item.Id : 0)' , quantity );
-                                                        }
-                                                    }">
+                                        <button class="buy-button buy-button-2 btn " onclick="AddProductToCart('@(item.Id)' , null , 0);">
                                             <i class="iconly-Buy icli text-white m-0"></i>
                                         </button>
                                     </div>

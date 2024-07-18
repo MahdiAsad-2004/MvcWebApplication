@@ -24,6 +24,8 @@ using OrganicShop.DAL.SeedDatas;
 using OrganicShop.Domain.Entities.Base;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Enums;
+using System.Diagnostics;
+using OrganicShop.BLL.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +60,7 @@ builder.Services.AddDbContext<OrganicShopDbContext>(options =>
     //options.UseSqlServer(connectionString: "Server=.;Database=OrganicShopDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True",
     //options.UseSqlServer(connectionString: "Server=.;Database=OrganicShopDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True",
     sqlServerOptions => sqlServerOptions.CommandTimeout(6000));
+
     //options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 

@@ -361,7 +361,7 @@ function HandleMessage(message) {
 
 function Toast(title, text, typeIndex, timeMs) {
     Messagetype = MessageTypes[typeIndex];
-    console.log(Messagetype);
+    //console.log(Messagetype);
     Swal.fire({
         toast: true,
         title: `<span style="color:${Messagetype.Color}; font-family: 'iransans'!important; font-size:22px; font-weight:600;">${title}</span>`,
