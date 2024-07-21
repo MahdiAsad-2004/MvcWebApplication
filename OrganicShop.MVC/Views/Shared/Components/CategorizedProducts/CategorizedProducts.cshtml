@@ -6,6 +6,7 @@
 @{
     var CategoriesGroup = Model.GroupBy(a => a.CategoryTitle);
     List<ProductSummaryDto> productsHistory = ViewData["ProductsHistory"] as List<ProductSummaryDto>;
+    var userWihsIds = ViewData["UserWishProductIds"] as long[] ?? new long[0];
 }
 <section class="product-section">
     <div class="container-fluid-lg">
@@ -51,9 +52,18 @@
                             <div class="product-box-4">
                                 <div class="product-image">
                                     <div class="label-flex">
-                                        <button class="btn p-0 wishlist btn-wishlist notifi-wishlist">
-                                            <i class="iconly-Heart icli"></i>
-                                        </button>
+                                        @if (userWihsIds.Contains(item.Id))
+                                        {
+                                            <button class="btn p-0 wishlist btn-wishlist notifi-wishlist" data-iswish="true" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                <i class="fa-solid fa-heart" style="color: #e14141;"></i>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn p-0 wishlist btn-wishlist notifi-wishlist" data-iswish="false" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                <i class="fa-regular fa-heart" style="color: #7c7e7e;"></i>
+                                            </button>
+                                        }
                                     </div>
 
                                     <a href="product-left.html">
@@ -88,15 +98,14 @@
                                                 <div class="qty-left-minus" data-type="minus" data-field="">
                                                     <i class="fa-solid fa-minus"></i>
                                                 </div>
-                                                <input id="product-@item.Id-quantity" class="form-control input-number qty-input" min="1" max="@item.Stock" type="text"
-                                                       name="quantity" value="0">
+                                                <input id="product-@item.Id-quantity-0" class="form-control input-number qty-input" min="1" max="@item.Stock" type="text" value="0">
                                                 <div class="qty-right-plus" data-type="plus" data-field="" max="">
                                                     <i class="fa-solid fa-plus"></i>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <button class="buy-button buy-button-2 btn " onclick="AddProductToCart('@(item.Id)' , null , 0);">
+                                        <button class="buy-button buy-button-2 btn" onclick="AddProductToCart('@(item.Id)' , null , 0 , 'product-@item.Id-quantity-0');">
                                             <i class="iconly-Buy icli text-white m-0"></i>
                                         </button>
                                     </div>
@@ -117,9 +126,18 @@
                             <div class="product-box-4">
                                 <div class="product-image">
                                     <div class="label-flex">
-                                        <button class="btn p-0 wishlist btn-wishlist notifi-wishlist">
-                                            <i class="iconly-Heart icli"></i>
-                                        </button>
+                                        @if (userWihsIds.Contains(item.Id))
+                                        {
+                                            <button class="btn p-0 wishlist btn-wishlist notifi-wishlist" data-iswish="true" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                <i class="fa-solid fa-heart" style="color: #e14141;"></i>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn p-0 wishlist btn-wishlist notifi-wishlist" data-iswish="false" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                <i class="fa-regular fa-heart" style="color: #7c7e7e;"></i>
+                                            </button>
+                                        }
                                     </div>
 
                                     <a href="product-left.html">
@@ -154,15 +172,15 @@
                                                 <div class="qty-left-minus" data-type="minus" data-field="">
                                                     <i class="fa-solid fa-minus"></i>
                                                 </div>
-                                                <input class="form-control input-number qty-input" type="text"
+                                                <input id="product-@item.Id-quantity-1" class="form-control input-number qty-input" min="1" max="@item.Stock" type="text"
                                                        name="quantity" value="0">
-                                                <div class="qty-right-plus" data-type="plus" data-field="">
+                                                <div class="qty-right-plus" data-type="plus" data-field="" max="">
                                                     <i class="fa-solid fa-plus"></i>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <button class="buy-button buy-button-2 btn btn-cart">
+                                        <button class="buy-button buy-button-2 btn btn-cart" onclick="AddProductToCart('@(item.Id)' , null , 0 , 'product-@item.Id-quantity-1');">
                                             <i class="iconly-Buy icli text-white m-0"></i>
                                         </button>
                                     </div>
@@ -190,9 +208,18 @@
                                 <div class="product-box-4">
                                     <div class="product-image">
                                         <div class="label-flex">
-                                            <button class="btn p-0 wishlist btn-wishlist notifi-wishlist">
-                                                <i class="iconly-Heart icli"></i>
-                                            </button>
+                                            @if (userWihsIds.Contains(item.Id))
+                                            {
+                                                <button class="btn p-0 wishlist btn-wishlist notifi-wishlist" data-iswish="true" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                    <i class="fa-solid fa-heart" style="color: #e14141;"></i>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn p-0 wishlist btn-wishlist notifi-wishlist" data-iswish="false" onclick="EditProductInWishList1(event,'@item.Id')">
+                                                    <i class="fa-regular fa-heart" style="color: #7c7e7e;"></i>
+                                                </button>
+                                            }
                                         </div>
 
                                         <a href="product-left.html">
@@ -220,22 +247,22 @@
                                         else
                                         {
                                             <h5 class="price theme-color"> @item.Price.ToToman()</h5>
-                                        }                                       
+                                        }
                                         <div class="price-qty">
                                             <div class="counter-number">
                                                 <div class="counter">
                                                     <div class="qty-left-minus" data-type="minus" data-field="">
                                                         <i class="fa-solid fa-minus"></i>
                                                     </div>
-                                                    <input class="form-control input-number qty-input" type="text"
+                                                    <input id="product-@item.Id-quantity-2" class="form-control input-number qty-input" min="1" max="@item.Stock" type="text"
                                                            name="quantity" value="0">
-                                                    <div class="qty-right-plus" data-type="plus" data-field="">
+                                                    <div class="qty-right-plus" data-type="plus" data-field="" max="">
                                                         <i class="fa-solid fa-plus"></i>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <button class="buy-button buy-button-2 btn btn-cart">
+                                            <button class="buy-button buy-button-2 btn btn-cart" onclick="AddProductToCart('@(item.Id)' , null , 0, 'product-@item.Id-quantity-2');">
                                                 <i class="iconly-Buy icli text-white m-0"></i>
                                             </button>
                                         </div>

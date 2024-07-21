@@ -507,14 +507,6 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                     Type = PictureType.Product,
                 }
-                ,new Picture
-                {
-                    IsMain = false,
-                    Name = "cheese-1-4.jpg",
-                    SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
-                    Type = PictureType.Product,
-                },
             },
             Properties = new List<Property>
             {

@@ -55,8 +55,10 @@ namespace OrganicShop.Mvc.Controllers
             {
                 if (create.SaveNameAndEmail)
                 {
-                    HttpContext.Response.Cookies.Append("NameSavedForComment" ,AesOperation.Encrypt(create.AuthorName ,_AesKeys.Cookie ));
-                    HttpContext.Response.Cookies.Append("EmailSavedForComment" ,AesOperation.Encrypt(create.Email ,_AesKeys.Cookie ));
+                    string CryptedVlaue = AesOperation.Encrypt(AppCookies.NameAndEmailForComment.GenerateJsonValue(new(create.AuthorName, create.Email)), _AesKeys.Cookie);
+                    HttpContext.Response.Cookies.Append(AppCookies.NameAndEmailForComment.Key, CryptedVlaue, AppCookies.NameAndEmailForComment.Options);
+                    //HttpContext.Response.Cookies.Append("NameSavedForComment" ,AesOperation.Encrypt(create.AuthorName ,_AesKeys.Cookie ));
+                    //HttpContext.Response.Cookies.Append("EmailSavedForComment" ,AesOperation.Encrypt(create.Email ,_AesKeys.Cookie ));
                 }
                 return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, "دیدگاه شما با موفقیت ارسال شد"));
             }

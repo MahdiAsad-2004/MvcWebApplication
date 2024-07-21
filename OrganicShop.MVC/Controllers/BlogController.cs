@@ -35,7 +35,7 @@ namespace OrganicShop.Mvc.Controllers
         [HttpGet("Blogs")]
         public async Task<IActionResult> Index(FilterArticleDto filter)
         {
-            ViewData["Categories"] = (await _CategoryService.GetAll(new FilterCategoryDto { Type = CategoryType.Article })).Data!.List;
+            ViewData["Categories"] = (await _CategoryService.GetAllSummary(new FilterCategoryDto { Type = CategoryType.Article })).Data!.List;
             ViewData["TagCombos"] = (await _TagService.GetCombos()).Data;
             ViewData["MostSellProducts"] = (await _ProductService
                 .GetAll(new FilterProductDto { SortBy = ProductSortType.SoldCountDesc }, new PagingDto { PageItemsCount = 3 })).Data!.List;
@@ -52,7 +52,7 @@ namespace OrganicShop.Mvc.Controllers
         public async Task<IActionResult> Index1(FilterArticleDto filter,[FromRoute]string categoryTitle)
         {
             categoryTitle = TextExtensions.DecodePersianString(categoryTitle);
-            var allCategories = (await _CategoryService.GetAll(new FilterCategoryDto { Type = CategoryType.Article })).Data!.List;
+            var allCategories = (await _CategoryService.GetAllSummary(new FilterCategoryDto { Type = CategoryType.Article })).Data!.List;
             int? categoryId = allCategories.FirstOrDefault(a => a.Title == categoryTitle)?.Id;
             
             if(categoryId == null)
@@ -79,7 +79,7 @@ namespace OrganicShop.Mvc.Controllers
             var response = await _ArticleService.GetDetail(title: title);
             if(response.Result == ResponseResult.Success)
             {
-                ViewData["Categories"] = (await _CategoryService.GetAll(new FilterCategoryDto { Type = CategoryType.Article})).Data!.List;
+                ViewData["Categories"] = (await _CategoryService.GetAllSummary(new FilterCategoryDto { Type = CategoryType.Article})).Data!.List;
                 ViewData["TagCombos"] = (await _TagService.GetCombos()).Data;
                 ViewData["MostSellProducts"] = (await _ProductService
                     .GetAll(new FilterProductDto { SortBy = ProductSortType.SoldCountDesc }, new PagingDto { PageItemsCount = 3 })).Data!.List;

@@ -1,4 +1,5 @@
 ﻿@using OrganicShop.Domain.Dtos.ProductDtos
+@using OrganicShop.Domain.Dtos.ProductItemDtos
 @model List<ProductSummaryDto>
 @{
     string searchText = ViewBag.SearchText;
@@ -62,16 +63,11 @@
 @await Html.PartialAsync("_Search" , Model);
 
 
-<form id="add-to-cart-form" hidden action="/Cart/AddProduct" onsubmit="FetchRequest(event)" method="post">
-    <input type="number" id="add-to-cart-form-productId" name="createProductItem.ProductId" hidden readonly value="" />
-    <input type="number" id="add-to-cart-form-productVarientId" name="createProductItem.ProductVarientId" hidden readonly value="" />
-    <input type="number" id="add-to-cart-form-count" name="createProductItem.Count" hidden readonly value="" />
-    <button type="submit" hidden></button>
-</form>
-<form id="preview-product-modal-request-form" hidden action="/Product/Preview" onsubmit="FetchRequest(event)" method="post" data-target-id="preview-product-modal">
+<form id="preview-product-modal-request-form" hidden action="/Product/Preview" method="post" data-target-id="preview-product-modal">
     <input type="number" name="id" hidden readonly value="0" />
-    <button type="submit" hidden></button>
 </form>
 <form id="edit-product-wishlist-form" hidden action="/User/EditProductWishList" method="post">
     <input type="number" name="productId" hidden readonly value="0" />
+    <input type="number" name="isDelete" hidden readonly value="false" />
 </form>
+@await Html.PartialAsync("_AddToCartForm", new CreateProductItemDto()) >

@@ -33,24 +33,16 @@ namespace OrganicShop.Mvc.ViewComponents
             int[]? categoryIds = null;
             if (ViewComponentContext.Arguments.ContainsKey("categoryIds"))
                 categoryIds = ViewComponentContext.Arguments.First().Value as int[];
-            string? productsHistoryStr = Request.Cookies["ProductsViewHistory"];
-            List<ProductSummaryDto> productsHistory = new();
+            string? productsHistoryCryptedStr = Request.Cookies[AppCookies.ProductViewHistory.Key];
+            List<ProductSummaryDto>? productsHistory = new();
+            long[] productsHistoryIds;
             List<ProductSummaryDto> categoryproducts = new();
-            if (productsHistoryStr != null)
+            if (productsHistoryCryptedStr != null)
             {
-                try
-                {
-                    productsHistory = JsonSerializer.Deserialize<List<ProductSummaryDto>>(AesOperation.Decrypt(productsHistoryStr, _AesKeys.Cookie)) ?? new();
-                }
-                catch (Exception ex)
-                {
-                    productsHistory = new();
-                    Console.WriteLine("Error: an error in 'ProductsMenuSection' component");
-                    await Console.Out.WriteLineAsync(ex.Message);
-                }
+                productsHistoryIds = AppCookies.ProductViewHistory.GetModel(AesOperation.Decrypt(productsHistoryCryptedStr, _AesKeys.Cookie)) ?? new long[0];
+                productsHistory = (await _ProductService.GetAllSummary(new FilterProductDto { Ids = productsHistoryIds }, new PagingDto { PageItemsCount = -1 })).Data?.List;
             }
             ViewData["ProductsHistory"] = productsHistory;
-
             var products = new List<ProductSummaryDto>();
             if (categoryIds != null)
             {

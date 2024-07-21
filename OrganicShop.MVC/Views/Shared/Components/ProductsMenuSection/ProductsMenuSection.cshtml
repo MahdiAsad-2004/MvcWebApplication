@@ -7,11 +7,11 @@
     List<ProductSummaryDto> specialProducts = ViewData["SpecialProducts"] as List<ProductSummaryDto>;
     List<ProductSummaryDto> bestSellingProducts = ViewData["BestSellingProducts"] as List<ProductSummaryDto>;
     List<ProductSummaryDto> lowestSellingProducts = ViewData["LowestSellingProducts"] as List<ProductSummaryDto>;
-    var userWihsIds = ViewData["UserWishProductIds"] as long[];
-    if(userWihsIds == null)
-    {
-        userWihsIds = new long[0];
-    }
+    var userWihsIds = ViewData["UserWishProductIds"] as long[] ?? new long[0];
+    // if(userWihsIds == null)
+    // {
+    //     userWihsIds = new long[0];
+    // }
 }
 <!-- Product Section Start -->
 <section class="product-section-2">
@@ -52,9 +52,8 @@
                                                             <h5 class="price theme-color"> @item.Price.ToToman()</h5>
                                                         }
                                                         <ul class="option">
-                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="افزودن به سبد خرید">
-                                                                <a href="cart.html">
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="افزودن به سبد خرید">
+                                                                <a role="button" onclick="AddProductToCartWithCount('@(item.Id)' , null , 1,0);">
                                                                     <i class="iconly-Buy icli"></i>
                                                                 </a>
                                                             </li>
@@ -128,9 +127,8 @@
                                                             <h5 class="price theme-color"> @item.Price.ToToman()</h5>
                                                         }
                                                         <ul class="option">
-                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="افزودن به سبد خرید">
-                                                                <a href="cart.html">
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="افزودن به سبد خرید">
+                                                                <a role="button" onclick="AddProductToCartWithCount('@(item.Id)' , null , 1,0);">
                                                                     <i class="iconly-Buy icli"></i>
                                                                 </a>
                                                             </li>
@@ -203,9 +201,8 @@
                                                             <h5 class="price theme-color"> @item.Price.ToToman()</h5>
                                                         }
                                                         <ul class="option">
-                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="افزودن به سبد خرید">
-                                                                <a href="cart.html">
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="افزودن به سبد خرید">
+                                                                <a role="button" onclick="AddProductToCartWithCount('@(item.Id)' , null , 1,0);">
                                                                     <i class="iconly-Buy icli"></i>
                                                                 </a>
                                                             </li>
@@ -277,9 +274,8 @@
                                                             <h5 class="price theme-color"> @item.Price.ToToman()</h5>
                                                         }
                                                         <ul class="option">
-                                                            <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="افزودن به سبد خرید">
-                                                                <a href="cart.html">
+                                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="افزودن به سبد خرید">
+                                                                <a role="button" onclick="AddProductToCartWithCount('@(item.Id)' , null , 1,0);">
                                                                     <i class="iconly-Buy icli"></i>
                                                                 </a>
                                                             </li>

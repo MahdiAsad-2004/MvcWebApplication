@@ -22,7 +22,7 @@
         <div class="product-header">
             <div class="product-image">
                 <a href="/Product/@Model.Barcode">
-                    <img src="~/media/images/product/@Model.MainImageName" class="img-fluid blur-up lazyload" alt="">
+                    <img src="~/media/images/product/@Model.MainImageName" class="img-fluid blur-up lazyload rounded-2" style="width:100%; height:100%;" alt="">
                 </a>
 
                 @if (removeButton == true)
@@ -37,27 +37,35 @@
                 {
                     <ul class="product-option">
                         <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                            <button onclick="PreviewProductModalRequest('@Model.Id')">
+                            <a role="button" onclick="PreviewProductModalRequest('@Model.Id')">
                                 <i class="fa-regular fa-eye" style="color: #7c7e7e;"></i>
-                            </button>
+                            </a>
                         </li>
 
                         @if (userWihsIds.Contains(Model.Id))
                         {
                             <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
-                                <button class="notifi-wishlist" data-iswish="true" onclick="EditProductInWishList1(event,'@Model.Id')">
+                                <a role="button" class="notifi-wishlist" data-iswish="true" onclick="EditProductInWishList1(event,'@Model.Id')">
                                     <i class="fa-solid fa-heart" style="color: #e14141;"></i>
-                                </button>
+                                </a>
                             </li>
                         }
                         else
                         {
                             <li data-bs-toggle="tooltip" data-bs-placement="top" title="لیست علاقه‌مندی">
-                                <button class="notifi-wishlist" data-iswish="false" onclick="EditProductInWishList1(event,'@Model.Id')">
+                                <a role="button" class="notifi-wishlist" data-iswish="false" onclick="EditProductInWishList1(event,'@Model.Id')">
                                     <i class="fa-regular fa-heart" style="color: #7c7e7e;"></i>
-                                </button>
+                                </a>
                             </li>
                         }
+
+
+                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="مقایسه">
+                            <a href="compare.html">
+                                <i data-feather="refresh-cw"></i>
+                            </a>
+                        </li>
+
                     </ul>
                 }
 
@@ -96,7 +104,7 @@
                 }
                 <div class="add-to-cart-box bg-white">
                     <button class="btn btn-add-cart addcart-button"
-                            onclick="AddProductToCart('@(Model.Id)' , '@(Model != null ? Model.Id : 0)' , '1' )">
+                            onclick="AddProductToCartWithCount('@(Model.Id)' , null , 1 , 0)">
                         افزودن
                         <span class="add-icon bg-light-gray">
                             <i class="fa-solid fa-plus"></i>

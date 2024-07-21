@@ -20,6 +20,8 @@ namespace OrganicShop.Domain.Dtos.Page
         public IQueryable<Entity> SetPaging(IQueryable<Entity> query , PagingDto pagingDto)
         {
             //Pager = new Pager<Entity>(pagingDto.PageNumber, pagingDto.PageItemsCount, query);
+            if (pagingDto.PageItemsCount < 0)
+                return query;
             return query.Skip((pagingDto.PageNumber - 1) * pagingDto.PageItemsCount).Take(pagingDto.PageItemsCount);
         }
 

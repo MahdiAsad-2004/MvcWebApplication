@@ -34,8 +34,10 @@ namespace OrganicShop.BLL.Providers
             return Convert.ToBase64String(array);
         }
 
-        public static string? Decrypt(string cipherText, string key)
+        public static string? Decrypt(string? cipherText, string key)
         {
+            if(string.IsNullOrWhiteSpace(cipherText))
+                return null;
             try
             {
                 byte[] iv = new byte[16];

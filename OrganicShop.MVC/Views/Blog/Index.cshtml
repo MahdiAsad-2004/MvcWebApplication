@@ -8,7 +8,7 @@
 @using OrganicShop.BLL.Extensions
 @model PageDto<Article,ArticleListDto,int>
 @{
-    var categories = ViewData["Categories"] as List<CategoryListDto>;
+    var categories = ViewData["Categories"] as List<CategorySummaryDto>;
     var tagCombos = ViewData["TagCombos"] as List<ComboDto<Tag>>;
     var mostSellProducts = ViewData["MostSellProducts"] as List<ProductListDto>;
     var lastBlogs = ViewData["LastBlogs"] as List<ArticleListDto>;

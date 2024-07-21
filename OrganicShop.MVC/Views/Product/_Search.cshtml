@@ -1,7 +1,7 @@
 ﻿@using OrganicShop.Domain.Dtos.ProductDtos
 @model List<ProductSummaryDto>  
 @{
-    var userWihsIds = ViewData["UserWishProductIds"] as long[];
+    var userWihsIds = ViewData["UserWishProductIds"] as long[] ?? new long[0];
 }
 
 <!-- Product Section Start -->

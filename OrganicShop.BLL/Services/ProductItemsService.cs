@@ -249,12 +249,12 @@ namespace OrganicShop.BLL.Services
                 list.Add(new ProductItemListDto
                 {
                     Title = product.Title,
-                    Count = create.Count,
                     Price = product.Price,
                     ProductId = product.Id,
                     DiscountedPrice = product.DiscountedPrice,
                     Stock = product.Stock,
                     MainImageName = product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,
+                    Count = create.Count,
                     VarientType = create.ProductVarientId > 0 ? product.ProductVarients.First(a => a.Id == create.ProductVarientId).Type.ToStringValue() : null,
                     VarientValue = create.ProductVarientId > 0 ? product.ProductVarients.First(a => a.Id == create.ProductVarientId).Value : null,
                 });

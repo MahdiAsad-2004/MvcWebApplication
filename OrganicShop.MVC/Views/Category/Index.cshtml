@@ -8,7 +8,7 @@
 @using OrganicShop.Domain.Enums.EnumValues
 @model PageDto<Product,ProductSummaryDto,long>
 @{
-    var categories = ViewData["Categories"] as List<CategoryListDto>;
+    var categories = ViewData["Categories"] as List<CategorySummaryDto>;
     var categoryChilds = ViewData["CategoryChilds"] as List<CategoryListDto>;
     var filter = ViewData["FilterProductDto"] as FilterProductDto;
     var paging = ViewData["PagingDto"] as PagingDto;

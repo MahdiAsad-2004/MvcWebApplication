@@ -44,8 +44,7 @@ namespace OrganicShop.BLL.Services
         {
             var query = _CategoryRepository.GetQueryable()
                 .Include(a => a.Picture)
-                .Include(a => a.Products)
-                .Include(a => a.Articles)
+                .Include(a => a.Parent)
                 .AsQueryable();
 
             if (filter == null) filter = new FilterCategoryDto();
@@ -87,6 +86,55 @@ namespace OrganicShop.BLL.Services
 
             return new ServiceResponse<PageDto<Category, CategoryListDto, int>>(ResponseResult.Success, pageDto);
         }
+
+        public async Task<ServiceResponse<PageDto<Category, CategorySummaryDto, int>>> GetAllSummary(FilterCategoryDto? filter = null, PagingDto? paging = null)
+        {
+            var query = _CategoryRepository.GetQueryable()
+                .Include(a => a.Picture)
+                .Include(a => a.Products)
+                .Include(a => a.Articles)
+                .AsQueryable();
+
+            if (filter == null) filter = new FilterCategoryDto();
+            if (paging == null) paging = new PagingDto();
+
+            #region filter
+
+            query = filter.ApplyBaseFilters(query);
+
+            if (filter.Title != null)
+                query = query.Where(q => EF.Functions.Like(q.Title, $"%{filter.Title}%"));
+
+            if (filter.ParentId != null)
+            {
+                if (filter.ParentId != 0) query = query.Where(q => q.ParentId == filter.ParentId);
+                else query = query.Where(q => q.ParentId == null);
+            }
+
+            if (filter.Type != CategoryType.All)
+            {
+                if (filter.Type == CategoryType.Product)
+                    query = query.Where(q => q.Type == CategoryType.All || q.Type == CategoryType.Product);
+
+                if (filter.Type == CategoryType.Article)
+                    query = query.Where(q => q.Type == CategoryType.All || q.Type == CategoryType.Article);
+            }
+
+            #endregion
+
+            #region sort
+
+            query = filter.ApplySortType(query);
+
+            #endregion
+
+            PageDto<Category, CategorySummaryDto, int> pageDto = new();
+            pageDto.List = pageDto.SetPaging(query, paging).Select(a => _Mapper.Map<CategorySummaryDto>(a)).ToList();
+            pageDto.Pager = pageDto.SetPager(query, paging);
+
+            return new ServiceResponse<PageDto<Category, CategorySummaryDto, int>>(ResponseResult.Success, pageDto);
+        }
+
 
 
         public async Task<ServiceResponse<UpdateCategoryDto>> Get(int Id)

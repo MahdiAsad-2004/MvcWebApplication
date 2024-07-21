@@ -117,19 +117,19 @@ namespace OrganicShop.BLL.Extensions
 
         public static string EncodePersianString(string str)
         {
-            return HttpUtility.UrlEncode(str, Encoding.UTF8).Replace("+", "-");
+            return HttpUtility.UrlEncode(str.Trim().Replace(" " , "-"), Encoding.UTF8).Replace("+", "-");
         }
 
         public static string EncodePersian(this string str)
         {
-            return HttpUtility.UrlEncode(str, Encoding.UTF8).Replace("+", "-");
+            return HttpUtility.UrlEncode(str.Trim().Replace(" " , "-"), Encoding.UTF8).Replace("+", "-");
         }
 
         public static string DecodePersianString(string codedSttring)
         {
             try
             {
-                return HttpUtility.UrlDecode(codedSttring, Encoding.UTF8).Replace("+", "-");
+                return HttpUtility.UrlDecode(codedSttring, Encoding.UTF8).Replace("+", "-").Replace("-", " ");
 
             }
             catch (Exception ex)
@@ -143,7 +143,7 @@ namespace OrganicShop.BLL.Extensions
         {
             try
             {
-                return HttpUtility.UrlDecode(codedSttring, Encoding.UTF8).Replace("+", "-");
+                return HttpUtility.UrlDecode(codedSttring, Encoding.UTF8).Replace("+", "-").Replace("-" , " ");
 
             }
             catch (Exception ex)

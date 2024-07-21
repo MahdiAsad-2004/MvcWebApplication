@@ -28,22 +28,19 @@ namespace OrganicShop.MVC.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            string NameSavedForCommentCoded = HttpContext.Request.Cookies["NameSavedForComment"];
-            string EmailSavedForCommentCoded = HttpContext.Request.Cookies["EmailSavedForComment"];
+            string? NameAndEmailSavedForCommentCrypted = HttpContext.Request.Cookies[AppCookies.NameAndEmailForComment.Key];
+            string? NameAndEmailSavedForCommentJsonStr = AesOperation.Decrypt(NameAndEmailSavedForCommentCrypted, _AesKeys.Cookie);
+            (string Name, string Email)? NameAndEmailSavedForComment = AppCookies.NameAndEmailForComment.GetModel(NameAndEmailSavedForCommentJsonStr);
+
             var createComment = new CreateCommentDto();
-            if(string.IsNullOrEmpty(NameSavedForCommentCoded) == false)
+            if (NameAndEmailSavedForComment != null)
             {
-                createComment.AuthorName = AesOperation.Decrypt(NameSavedForCommentCoded, _AesKeys.Cookie) ?? string.Empty;
-                //ViewBag.NameSavedForComment = AesOperation.Decrypt(NameSavedForCommentCoded, _AesKeys.Cookie);
-            }
-            if (string.IsNullOrEmpty(EmailSavedForCommentCoded) == false)
-            {
-                createComment.Email = AesOperation.Decrypt(EmailSavedForCommentCoded, _AesKeys.Cookie) ?? string.Empty;
-                //ViewBag.EmailSavedForComment = AesOperation.Decrypt(EmailSavedForCommentCoded, _AesKeys.Cookie);
+                createComment.AuthorName = NameAndEmailSavedForComment.Value.Name;
+                createComment.Email = NameAndEmailSavedForComment.Value.Email;
             }
             createComment.ProductId = ViewComponentContext.Arguments["ProductId"] as long?;
             createComment.ArticleId = ViewComponentContext.Arguments["ArticleId"] as int?;
-            return View("SendCommentSection" , createComment);
+            return View("SendCommentSection", createComment);
         }
 
     }

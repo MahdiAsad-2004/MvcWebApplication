@@ -5,7 +5,7 @@ $('.qty-right-plus').click(function () {
     var maxQuantity = +$(this).prev().attr('max');
     //console.log(maxQuantity);
     //console.log(+$(this).prev().val() + 1);
-    if (maxQuantity) {
+    if (maxQuantity >= 0) {
         if (+$(this).prev().val() + 1 <= maxQuantity) {
             $(this).prev().val(+$(this).prev().val() + 1);
             //console.log('plus 1')

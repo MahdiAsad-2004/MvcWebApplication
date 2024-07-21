@@ -12,15 +12,25 @@
 <nav class="custom-pagination">
     <ul class="pagination justify-content-center">
 
-        <li class="page-item disabled">
-            <a class="page-link" onclick="GoPage('@(Model.CurrentPage-1 < 1 ? 0 : Model.CurrentPage-1)','@formId') tabindex="-1">
+        <li style="cursor:@(Model.CurrentPage-1 < 1 ? "default" : "pointer");" class="page-item @(Model.CurrentPage-1 < 1 ? "disabled" : "")">
+            <a  role="button" class="page-link" onclick="GoPage('@(Model.CurrentPage-1 < 1 ? 0 : Model.CurrentPage-1)','@formId') tabindex="-1">
                 <i class="fa-solid fa-angles-right"></i>
             </a>
         </li>
 
-        <li class="page-item @(Model.CurrentPage == 1 ? "active" : "")">
-            <a class="page-link" onclick="GoPage('1','@formId')">1</a>
-        </li>
+        @if (Model.CurrentPage == 1)
+        {
+            <li style="cursor:default;" class="page-item active">
+                <a style="cursor:default;" role="button" class="page-link">1</a>
+            </li>
+        }
+        else
+        {
+            <li style="cursor:pointer;" class="page-item">
+                <a role="button" class="page-link" onclick="GoPage('1','@formId')">1</a>
+            </li>
+        }
+
         @if (Model.CurrentPage - Model.PageShowAfterAndBeforeCurrent > 2)
         {
             <p><i style="padding-top: 5px;" class="fa-solid fa-ellipsis"></i></p>
@@ -29,23 +39,23 @@
         {
             if (i > 1 && i < Model.LastPageNumber)
             {
-                <li class="page-item">
-                    <a class="page-link" onclick="GoPage('@i','@formId')">@i</a>
+                <li style="cursor:pointer;" class="page-item">
+                    <a role="button" class="page-link" onclick="GoPage('@i','@formId')">@i</a>
                 </li>
             }
         }
         @if (Model.CurrentPage > 1 && Model.CurrentPage < Model.LastPageNumber)
         {
-            <li class="page-item active">
-                <a class="page-link" onclick="GoPage('@Model.CurrentPage','@formId')">@Model.CurrentPage</a>
+            <li style="cursor:pointer;" class="page-item active">
+                <a role="button" class="page-link" onclick="GoPage('@Model.CurrentPage','@formId')">@Model.CurrentPage</a>
             </li>
         }
         @for (int i = Model.CurrentPage + 1; i <= Model.CurrentPage + Model.PageShowAfterAndBeforeCurrent; i++)
         {
             if (i < Model.LastPageNumber)
             {
-                <li class="page-item">
-                    <a class="page-link" onclick="GoPage('@i','@formId')">@i</a>
+                <li style="cursor:pointer;" class="page-item">
+                    <a role="button" class="page-link" onclick="GoPage('@i','@formId')">@i</a>
                 </li>
             }
         }
@@ -55,13 +65,22 @@
         }
         @if (Model.LastPageNumber > 1)
         {
-            <li class="page-item @(Model.CurrentPage == Model.LastPageNumber ? "active" : "")">
-                <a class="page-link" onclick="GoPage('@Model.LastPageNumber','@formId')">@Model.LastPageNumber</a>
-            </li>
+            @if (Model.CurrentPage == Model.LastPageNumber)
+            {
+                <li style="cursor:default;" class="page-item active">
+                    <a style="cursor:default;" role="button" class="page-link">@Model.LastPageNumber</a>
+                </li>
+            }
+            else
+            {
+                <li style="cursor:pointer;" class="page-item">
+                    <a role="button" class="page-link" onclick="GoPage('@Model.LastPageNumber','@formId')">@Model.LastPageNumber</a>
+                </li>
+            }
         }
 
-        <li class="page-item">
-            <a class="page-link" onclick="GoPage('@(Model.CurrentPage+1 > Model.LastPageNumber ? 0 : Model.CurrentPage+1)','@formId')">
+        <li style="cursor:@(Model.CurrentPage+1 > Model.LastPageNumber ? "default" : "pointer")" class="page-item @(Model.CurrentPage+1 > Model.LastPageNumber ? "disabled" : "")">
+            <a role="button" class="page-link" onclick="GoPage('@(Model.CurrentPage+1 > Model.LastPageNumber ? 0 : Model.CurrentPage+1)','@formId')">
                 <i class="fa-solid fa-angles-left"></i>
             </a>
         </li>
@@ -71,7 +90,7 @@
 
 
 
-@* 
+@*
 <div class="pagination">
     <a class="pagination-arrow" onclick="GoPage('@(Model.CurrentPage-1 < 1 ? 0 : Model.CurrentPage-1)','@formId')"><i class="fa-solid fa-arrow-left"></i></a>
 
@@ -108,7 +127,7 @@
     }
 
     <a class="pagination-arrow" onclick="GoPage('@(Model.CurrentPage+1 > Model.LastPageNumber ? 0 : Model.CurrentPage+1)','@formId')"><i class="fa-solid fa-arrow-right"></i></a>
-</div> 
+</div>
 *@
 
 

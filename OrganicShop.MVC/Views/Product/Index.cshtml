@@ -9,23 +9,23 @@
 @using OrganicShop.Domain.Enums.EnumValues
 @model PageDto<Product,ProductSummaryDto,long>
 @{
-    var categories = ViewData["Categories"] as List<CategoryListDto>;
-    var categoryChilds = ViewData["CategoryChilds"] as List<CategoryListDto>;
+    var categories = ViewData["Categories"] as List<CategorySummaryDto>;
+    var categoryChilds = ViewData["CategoryChilds"] as List<CategorySummaryDto>;
     var filter = ViewData["FilterProductDto"] as FilterProductDto;
     var paging = ViewData["PagingDto"] as PagingDto;
     string? categoryTitle = ViewBag.CategoryTitle;
     ProductSortType sortBy = filter.SortBy;
-    bool IsPageWithCategory = categoryChilds != null;
-    var userWihsIds = ViewData["UserWishProductIds"] as long[];
+    bool IsPageWithCategory = !string.IsNullOrEmpty(categoryTitle);
+    var userWihsIds = ViewData["UserWishProductIds"] as long[] ?? new long[0];
 }
 
-@section Breadcrumb{
+@section Breadcrumb {
     <section class="breadcrumb-section pt-0">
         <div class="container-fluid-lg">
             <div class="row">
                 <div class="col-12">
                     <div class="breadcrumb-contain">
-                        <h2> محصولات : @(!string.IsNullOrEmpty(categoryTitle) ? $"دسته بندی ها : {categoryTitle}" : "")</h2>
+                        <h2> محصولات : @(categoryChilds != null ? $"دسته بندی ها" : "") @(!string.IsNullOrEmpty(categoryTitle) ? categoryTitle : "")</h2>
                         <nav>
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item">
@@ -36,11 +36,13 @@
                                 <li class="breadcrumb-item">
                                     <a href="/Products">محصولات</a>
                                 </li>
+                                @if(categoryChilds != null){
+                                    <li class="breadcrumb-item active">
+                                        <a href="/Products/Category/">دسته بندی ها</a>
+                                    </li>
+                                }
                                 @if (!string.IsNullOrEmpty(categoryTitle))
                                 {
-                                    <li class="breadcrumb-item active">
-                                        <a href="/Category/@TextExtensions.EncodePersianString(categoryTitle)">دسته بندی ها</a>
-                                    </li>
                                     <li class="breadcrumb-item">
                                         @categoryTitle
                                     </li>
@@ -55,7 +57,7 @@
     </section>
 }
 
-@if(categoryChilds != null)
+@if (categoryChilds != null)
 {
     <!-- Category Section Start -->
     <section class="wow fadeInUp">
@@ -70,8 +72,9 @@
                                 <div class="shop-category-box">
                                     <a href="/Products/Category/@TextExtensions.EncodePersianString(categoryChild.Title)">
                                         <div class="shop-category-image">
-                                            <i class="@categoryChild.IconClass"
-                                               style="color:@(!string.IsNullOrEmpty(categoryChild.IconColor) ? categoryChild.IconColor : "black"); font-size:25px;"></i>
+                                            <img src="~/media//images/category/@categoryChild.ImageName" class="rounded-2"/>
+                                           @* <i class="@categoryChild.IconClass"
+                                               style="color:@(!string.IsNullOrEmpty(categoryChild.IconColor) ? categoryChild.IconColor : "black"); font-size:25px;"></i>*@
                                         </div>
                                         <div class="category-box-name">
                                             <h6>@categoryChild.Title</h6>
@@ -96,10 +99,10 @@
         <div class="row">
             <div class="col-custom-3">
                 <div class="left-box wow fadeInUp">
-                    <form id="filter-products-form" class="shop-left-sidebar"  method="get"
-                          action="/Products/@(IsPageWithCategory ? $"/Category{(!string.IsNullOrEmpty(categoryTitle) ? $"/{TextExtensions.EncodePersianString(categoryTitle)}" : "")}" : "")">
-                        <input id="pageNumber-input" value="1" type="number" hidden name="paging.PageNumber"/>
-                        
+                    <form id="filter-products-form" class="shop-left-sidebar" method="get"
+                          action="/Products/@(IsPageWithCategory ? $"Category/{TextExtensions.EncodePersianString(categoryTitle)}" : "")">
+                        <input id="pageNumber-input" value="1" type="number" hidden name="paging.PageNumber" />
+
                         <div class="back-button">
                             <h3><i class="fa-solid fa-arrow-right"></i> بازگشت</h3>
                         </div>
@@ -107,10 +110,10 @@
                         <div class="filter-category">
                             <div class="filter-title">
                                 <h2>فیلتر</h2>
-                                <a>حذف فیلتر</a>
+                                <a href="/products">حذف فیلتر</a>
                             </div>
-                            <div class="filter-remove" >
-                                @if(filter.MinPrice != null && filter.MinPrice > 0)
+                            <div class="filter-remove">
+                                @if (filter.MinPrice != null && filter.MinPrice > 0)
                                 {
                                     <div style="">
                                         <i onclick="RemoveMinPriceFilter()" class="fa-solid fa-xmark"></i>
@@ -124,16 +127,16 @@
                                         <span>حداکثر قیمت: @filter.MaxPrice.Value.ToMoney()</span>
                                     </div>
                                 }
-                                @if(filter.Rate != null)
+                                @if (filter.Rate != null)
                                 {
                                     <div style="">
                                         <i onclick="RemoveRateFilter()" class="fa-solid fa-xmark"></i>
                                         <span>امتیاز: @filter.Rate.Value</span>
                                     </div>
                                 }
-                                @if(filter.CategoryIds != null)
+                                @if (filter.CategoryIds != null)
                                 {
-                                    @foreach (var category in categories.IntersectBy(filter.CategoryIds , a => a.Id))
+                                    @foreach (var category in categories.IntersectBy(filter.CategoryIds, a => a.Id))
                                     {
                                         <div style="">
                                             <i onclick="RemoveCategoryFilter('@category.Id')" class="fa-solid fa-xmark"></i>
@@ -144,58 +147,67 @@
                             </div>
                         </div>
 
+
                         <div class="accordion custom-accordion" id="accordionExample">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingOne">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapseOne">
-                                        <span>دسته ها</span>
-                                    </button>
-                                </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse show">
-                                    <div class="accordion-body">
-                                        <div class="form-floating theme-form-floating-2 search-box">
-                                            <input type="search" class="form-control" id="search"
-                                                   placeholder="جستجو ..">
-                                            <label for="search">جستجو</label>
+
+                            @if (IsPageWithCategory == false)
+                            {
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseOne">
+                                            <span>دسته ها</span>
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show">
+                                        <div class="accordion-body">
+                                            <!--
+                                            <div class="form-floating theme-form-floating-2 search-box">
+                                                 <input type="search" class="form-control" id="search"
+                                                        placeholder="جستجو ..">
+                                                 <label for="search">جستجو</label>
+
+                                            </div>
+                                            -->
+
+                                            <ul class="category-list custom-padding custom-height">
+
+                                                @foreach (var category in categories)
+                                                {
+                                                    if (filter.CategoryIds != null)
+                                                    {
+                                                        <li>
+                                                            <div class="form-check ps-0 m-0 category-list-box">
+                                                                <input onchange="ChangeCategoryCheckbox(event)" id="category-id-@category.Id" name="filter.CategoryIds" value="@category.Id"
+                                                                       checked="@(filter.CategoryIds.Any(a => a == category.Id))" class="checkbox_animated" type="checkbox">
+                                                                <label class="form-check-label" for="fruit">
+                                                                    <span class="name">@category.Title</span>
+                                                                    <span class="number">(@category.ProductsCount)</span>
+                                                                </label>
+                                                            </div>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>
+                                                            <div class="form-check ps-0 m-0 category-list-box">
+                                                                <input onchange="ChangeCategoryCheckbox(event)" id="category-id-@category.Id" name="filter.CategoryIds" value="@category.Id" class="checkbox_animated" type="checkbox">
+                                                                <label class="form-check-label" for="fruit">
+                                                                    <span class="name">@category.Title</span>
+                                                                    <span class="number">(@category.ProductsCount)</span>
+                                                                </label>
+                                                            </div>
+                                                        </li>
+                                                    }
+
+                                                }
+
+                                            </ul>
                                         </div>
-
-                                        <ul class="category-list custom-padding custom-height">
-                                            
-                                            @foreach (var category in categories)
-                                            {
-                                                if(filter.CategoryIds != null)
-                                                {
-                                                    <li>
-                                                        <div class="form-check ps-0 m-0 category-list-box">
-                                                            <input onchange="ChangeCategoryCheckbox(event)" id="category-id-@category.Id" name="filter.CategoryIds" value="@category.Id"
-                                                                   checked="@(filter.CategoryIds.Any(a => a == category.Id))" class="checkbox_animated" type="checkbox">
-                                                            <label class="form-check-label" for="fruit">
-                                                                <span class="name">@category.Title</span>
-                                                                <span class="number">(@category.ProductsCount)</span>
-                                                            </label>
-                                                        </div>
-                                                    </li>
-                                                }
-                                                else
-                                                {
-                                                    <li>
-                                                        <div class="form-check ps-0 m-0 category-list-box">
-                                                            <input onchange="SubmitOnChange(event)" id="category-id-@category.Id" name="filter.CategoryIds" value="@category.Id" class="checkbox_animated" type="checkbox">
-                                                            <label class="form-check-label" for="fruit">
-                                                                <span class="name">@category.Title</span>
-                                                                <span class="number">(@category.ProductsCount)</span>
-                                                            </label>
-                                                        </div>
-                                                    </li>
-                                                }
-
-                                            }
-                                            
-                                        </ul>
                                     </div>
+
                                 </div>
-                            </div>
+                            }
 
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingThree">
@@ -212,8 +224,8 @@
                                     <div class="accordion-body">
                                         <div class="form-group mb-2 row">
                                             <label class="form-lable col-12">حداقل قیمت</label>
-                                            <input type="range" class="form-contorl col-8" min="0" max="10000000" 
-                                                name="filter.MinPrice" value="@(minPrice)" step="1000" />
+                                            <input type="range" class="form-contorl col-8" min="0" max="10000000"
+                                                   name="filter.MinPrice" value="@(minPrice)" step="1000" />
                                             <span class="col-4" id="minPrice-value">@minPrice.ToMoney()</span>
                                         </div>
                                         <div class="form-group mb-2 row">
@@ -245,10 +257,10 @@
                                                 <li>
                                                     <div class="form-check ps-0 m-0 category-list-box">
                                                         <input onchange="ChangeRateCheckbox(event)" class="checkbox_animated" name="filter.Rate" value="@i"
-                                                            type="checkbox" checked="@(rate == i)">
+                                                               type="checkbox" checked="@(rate == i)">
                                                         <div class="form-check-label">
                                                             <ul class="rating">
-                                                                @for (j = 1 ; j <= i; j++)
+                                                                @for (j = 1; j <= i; j++)
                                                                 {
                                                                     <li>
                                                                         <i data-feather="star" class="fill"></i>
@@ -272,7 +284,7 @@
                             </div>
 
                         </div>
-                        <input hidden name="filter.SortBy" value="@sortBy"/>
+                        <input hidden name="filter.SortBy" value="@sortBy" />
                         <button type="submit" hidden></button>
                     </form>
                 </div>
@@ -322,22 +334,26 @@
 </section>
 <!-- Shop Section End -->
 
-@await Html.PartialAsync("_AddToCartForm" ,new CreateProductItemDto()) 
-<form id="preview-product-modal-request-form" hidden action="/Product/Preview" method="post" data-target-id="preview-product-modal">
+
+
+<form id="preview-product-modal-request-form" hidden action="/Product/Preview" method="post" data-container-id="preview-product-modal">
     <input type="number" name="id" hidden readonly value="0" />
 </form>
 <form id="edit-product-wishlist-form" hidden action="/User/EditProductWishList" method="post">
     <input type="number" name="productId" hidden readonly value="0" />
     <input type="number" name="isDelete" hidden readonly value="false" />
 </form>
+@await Html.PartialAsync("_AddToCartForm", new CreateProductItemDto())
 
 @section Modals {
 
-    @await Html.PartialAsync("_PreviewProductModal",new ProductSummaryDto());
+    <div class="modal fade theme-modal view-modal" id="preview-product-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        @await Html.PartialAsync("_PreviewProductModal", new ProductSummaryDto())
+    </div>
 
 }
 
-@section Scripts{
+@section Scripts {
 
     <!-- Price Range Js -->
     <script src="~/site/assets/js/ion.rangeSlider.min.js"></script>

@@ -4,19 +4,8 @@ using Microsoft.Extensions.Options;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.BLL.Providers;
 using OrganicShop.BLL.Utils;
-using OrganicShop.Domain.Dtos.AddressDtos;
-using OrganicShop.Domain.Dtos.CategoryDtos;
-using OrganicShop.Domain.Dtos.NewsLetterMemberDtos;
-using OrganicShop.Domain.Dtos.OrderDtos;
-using OrganicShop.Domain.Dtos.Page;
-using OrganicShop.Domain.Dtos.ProductDtos;
 using OrganicShop.Domain.Dtos.ProductItemDtos;
-using OrganicShop.Domain.Dtos.TagDtos;
-using OrganicShop.Domain.Dtos.WishItemDtos;
-using OrganicShop.Domain.Entities;
-using OrganicShop.Domain.Enums;
 using OrganicShop.Domain.Enums.Response;
-using OrganicShop.Domain.IRepositories;
 using OrganicShop.Domain.IServices;
 using OrganicShop.Mvc.Controllers.Base;
 using OrganicShop.Mvc.Extensions;
@@ -53,7 +42,7 @@ namespace OrganicShop.Mvc.Controllers
         private List<ProductItemCookieDto> GetCookieProductItems()
         {
             List<ProductItemCookieDto> previousProductItems = new();
-            var CookieCartItemsStrCoded = Request.Cookies["OrganocShopUnknownUserCartItems"];
+            var CookieCartItemsStrCoded = Request.Cookies[AppCookies.UnknownUserCartItems.Key];
             if (string.IsNullOrEmpty(CookieCartItemsStrCoded) == false)
             {
                 var CookieCartItemsStr = AesOperation.Decrypt(CookieCartItemsStrCoded, _AesKeys.Cookie);
@@ -119,7 +108,7 @@ namespace OrganicShop.Mvc.Controllers
             if (createProductItem.ProductVarientId < 1)
                 createProductItem.ProductVarientId = null;
 
-            var successToast = new Toast(ToastType.Success, "محصول با موفقیت به سبد خربد افزوده شد");
+            var successToast = new Toast(ToastType.Success, "محصول با موفقیت به سبد خربد افزوده شد",3000);
             if (User.Identity.IsAuthenticated)
             {
                 var response = await _ProductItemService.Create(createProductItem);
@@ -135,8 +124,8 @@ namespace OrganicShop.Mvc.Controllers
 
                 var response = await _ProductItemService.CreateForCookie(createProductItem, previousProductItems);
 
-                var jsonData = JsonSerializer.Serialize(response.Data);
-                Response.Cookies.Append("OrganocShopUnknownUserCartItems", AesOperation.Encrypt(jsonData, _AesKeys.Cookie));
+                Response.Cookies.Append(AppCookies.UnknownUserCartItems.Key,
+                    AesOperation.Encrypt(AppCookies.UnknownUserCartItems.GenerateJsonValue(response.Data), _AesKeys.Cookie), AppCookies.UnknownUserCartItems.Options);
                 return _ClientHandleResult.Toast(HttpContext, successToast);
             }
         }

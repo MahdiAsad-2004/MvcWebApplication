@@ -38,7 +38,7 @@ namespace OrganicShop.Mvc.Controllers
         {
             if(User.Identity.IsAuthenticated == false)
             {
-                return _ClientHandleResult.Redirect(HttpContext, "/Account/Login", false);
+                return _ClientHandleResult.Redirect(HttpContext, "Login" ,"Account", false);
             }
             if (isDelete)
             {

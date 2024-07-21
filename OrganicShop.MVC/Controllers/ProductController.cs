@@ -52,8 +52,8 @@ namespace OrganicShop.Mvc.Controllers
         public async Task<IActionResult> Index(FilterProductDto filter, PagingDto paging)
         {
             paging.PageItemsCount = 24;
-            var response = await _ProductService.GetAllSummary();
-            ViewData["Categories"] = (await _CategoryService.GetAll(new FilterCategoryDto { Type = CategoryType.Product })).Data.List;
+            var response = await _ProductService.GetAllSummary(filter, paging);
+            ViewData["Categories"] = (await _CategoryService.GetAllSummary(new FilterCategoryDto { Type = CategoryType.Product })).Data.List;
             ViewData["FilterProductDto"] = filter;
             ViewData["PagingDto"] = paging;
             //ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
@@ -67,10 +67,10 @@ namespace OrganicShop.Mvc.Controllers
         }
 
 
-        [HttpGet("/Category")]
+        [HttpGet("/Products/Category")]
         public async Task<IActionResult> Index1(FilterProductDto filter, PagingDto paging)
         {
-            var allCategories = (await _CategoryService.GetAll(new FilterCategoryDto { Type = CategoryType.Product })).Data.List;
+            var allCategories = (await _CategoryService.GetAllSummary(new FilterCategoryDto { Type = CategoryType.Product })).Data.List;
 
             paging.PageItemsCount = 24;
             var response = await _ProductService.GetAllSummary(filter, paging);
@@ -85,11 +85,11 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
-        [HttpGet("/Category/{categoryTitle}")]
+        [HttpGet("/Products/Category/{categoryTitle}")]
         public async Task<IActionResult> Index2(FilterProductDto filter, PagingDto paging, string categoryTitle)
         {
             categoryTitle = TextExtensions.DecodePersianString(categoryTitle);
-            var allCategories = (await _CategoryService.GetAll(new FilterCategoryDto { Type = CategoryType.Product })).Data.List;
+            var allCategories = (await _CategoryService.GetAllSummary(new FilterCategoryDto { Type = CategoryType.Product })).Data.List;
             filter.CategoryId = allCategories.FirstOrDefault(c => c.Title == categoryTitle)?.Id;
 
             if (filter.CategoryId == null)
@@ -115,6 +115,26 @@ namespace OrganicShop.Mvc.Controllers
 
             if (response.Result == ResponseResult.Success)
             {
+                #region add product to view history
+
+                List<long>? productViewHistoryIdsList = null;
+                var productViewHistoryIds = AppCookies.ProductViewHistory.GetModel(AesOperation.Decrypt(HttpContext.Request.Cookies[AppCookies.ProductViewHistory.Key], _AesKeys.Cookie));
+                if (productViewHistoryIds != null)
+                {
+                    productViewHistoryIdsList = productViewHistoryIds.ToList();
+                    productViewHistoryIdsList.Add(response.Data.Id);
+                }
+                else
+                {
+                    productViewHistoryIdsList = new List<long> { response.Data.Id };
+                }
+                HttpContext.Response.Cookies.Append(
+                    AppCookies.ProductViewHistory.Key,
+                    AesOperation.Encrypt(AppCookies.ProductViewHistory.GenerateJsonValue(productViewHistoryIdsList.ToArray()), _AesKeys.Cookie),
+                    AppCookies.ProductViewHistory.Options);
+
+                #endregion
+
                 ViewData["SimilarProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { CategoryId = response.Data.CategoryId })).Data!.List;
                 ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
                 return View("Product", response.Data);
@@ -159,13 +179,13 @@ namespace OrganicShop.Mvc.Controllers
             ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
             ViewBag.SearchText = searchText;
 
-            return View("Search",model);
+            return View("Search", model);
         }
 
 
 
 
-        [HttpPost("products/search/{any}")]
+        [HttpPost("products/search/{searchText}")]
         public async Task<IActionResult> Search_Post(string searchText)
         {
             if (string.IsNullOrWhiteSpace(searchText))
@@ -173,7 +193,7 @@ namespace OrganicShop.Mvc.Controllers
 
             var model = (await _ProductService.GetAllSummary
                 (new FilterProductDto { Title = searchText }, new PagingDto { PageItemsCount = 20 })).Data?.List ?? new List<ProductSummaryDto>();
-            
+
             ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
 
             return _ClientHandleResult.Partial(HttpContext, PartialView("_Search", model));

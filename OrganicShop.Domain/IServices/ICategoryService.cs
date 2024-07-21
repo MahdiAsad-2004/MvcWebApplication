@@ -10,6 +10,8 @@ namespace OrganicShop.Domain.IServices
     {
         Task<ServiceResponse<PageDto<Category, CategoryListDto, int>>> GetAll(FilterCategoryDto? filter = null,PagingDto? paging = null);
 
+        Task<ServiceResponse<PageDto<Category, CategorySummaryDto, int>>> GetAllSummary(FilterCategoryDto? filter = null, PagingDto? paging = null);
+
         Task<ServiceResponse<Empty>> Create(CreateCategoryDto create);
 
         Task<ServiceResponse<Empty>> Update(UpdateCategoryDto update);

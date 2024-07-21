@@ -490,9 +490,9 @@ Number.prototype.formatMoney = function (s, type) {
 
 let AddToCartForm = document.getElementById('add-to-cart-form');
 var count = 0;
-async function AddProductToCart(productId, productVarientId, timeOut) {
+async function AddProductToCart(productId, productVarientId, timeOut,inputId) {
     var result = false;
-    count = +document.getElementById(`product-${productId}-quantity`).value;
+    count = +document.getElementById(inputId).value;
     if (Boolean(productVarientId) == false || productVarientId < 1) {
         productVarientId = null;
     }
@@ -519,6 +519,34 @@ async function AddProductToCart(productId, productVarientId, timeOut) {
     }
 
 }
+async function AddProductToCartWithCount(productId, productVarientId, count, timeOut) {
+    var result = false;
+    if (Boolean(productVarientId) == false || productVarientId < 1) {
+        productVarientId = null;
+    }
+    //console.log(`${productId} - ${productVarientId} - ${count} - ${timeOut}`);
+    if (productId > 0 && count > 0) {
+        //console.log('add to cart');
+        if (timeOut && timeOut > 100) {
+            setTimeout(async () => {
+                AddToCartForm.querySelector('#add-to-cart-form-productId').value = productId;
+                AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
+                AddToCartForm.querySelector('#add-to-cart-form-count').value = count;
+                result = await FetchRequestForm(AddToCartForm);
+            }, timeOut);
+        }
+        else {
+            AddToCartForm.querySelector('#add-to-cart-form-productId').value = productId;
+            AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
+            AddToCartForm.querySelector('#add-to-cart-form-count').value = count;
+            result = await FetchRequestForm(AddToCartForm);
+        }
+        if (result) {
+            await LoadCartSummary();
+        }
+    }
+}
+
 
 
 
