@@ -90,12 +90,20 @@ if (dbContext.Database.CanConnect() == false)
 }
 var productTableRowCount = await dbContext.Products.LongCountAsync();
 var categoryTableRowCount = await dbContext.Categories.CountAsync();
+var UserTableCustomerRowCount = await dbContext.Users.CountAsync(a => (int)a.Role == (int)Role.Customer);
 Console.WriteLine($"Category Table Row Count: {categoryTableRowCount}");
 Console.WriteLine($"Product Table Row Count: {productTableRowCount}");
+Console.WriteLine($"User(Customer) Table Row Count: {UserTableCustomerRowCount}");
 if (categoryTableRowCount < 1)
 {
     Console.WriteLine("seedign categories with products");
     await dbContext.Categories.AddRangeAsync(CategorySeed.Categories);
+    await dbContext.SaveChangesAsync();
+}
+if(UserTableCustomerRowCount < 1)
+{
+    Console.WriteLine("seedign users(customers)");
+    await dbContext.Users.AddRangeAsync(UserSeed.RandomUsers());
     await dbContext.SaveChangesAsync();
 }
 

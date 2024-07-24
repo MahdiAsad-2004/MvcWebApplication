@@ -27,7 +27,7 @@ namespace OrganicShop.Domain.Entities
             {
                 if (DiscountProducts != null)
                 {
-                    return this.GetDiscountedPrice1();
+                    return this.GetDiscountedPrice();
                 }
                 return null;
             }
@@ -66,8 +66,7 @@ namespace OrganicShop.Domain.Entities
 
 
 
-
-
+        #region realtions
 
         public ICollection<Picture> Pictures { get; set; }
         public ICollection<Category> Categories { get; set; }
@@ -80,6 +79,38 @@ namespace OrganicShop.Domain.Entities
         public ICollection<ProductVarient> ProductVarients { get; set; }
         public Seller? Seller { get; set; }
         public ICollection<WishItem> WishItems { get; set; }
+
+
+        #endregion
+
+
+
+
+
+        #region methods
+
+        public int? GetDiscountedPrice()
+        {
+            Discount? discount;
+            discount = this.DiscountProducts
+                .Select(a => a.Discount)
+                .Where(a => a.IsValid())
+                .OrderBy(a => a.Priority)
+                .FirstOrDefault(a => true);
+
+            if (discount != null)
+                return discount.CalculateDiscountedPrice(this.Price);
+
+            return null;
+        }
+
+
+        #endregion
+
+
+
+
+
 
     }
 }

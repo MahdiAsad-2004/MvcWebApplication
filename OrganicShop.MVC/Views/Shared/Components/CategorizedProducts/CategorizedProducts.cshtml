@@ -8,6 +8,7 @@
     var userWihsIds = ViewData["UserWishProductIds"] as long[] ?? new long[0];
     var categoryIds = ViewData["CategoryIds"] as int[] ?? new int[0];
     var categories = Model.SelectMany(a => a.Categories);
+    float? discountPercent = null;
     //var CategoriesGroup = Model.GroupBy(a => a.Categories.Any(a => categoryIds.con));
 }
 <section class="product-section">
@@ -50,10 +51,20 @@
 
                     @foreach (var item in Model.UnionBy(productsHistory, a => a.Id).Take(12))
                     {
+                        if (item.DiscountedPrice != null)
+                        {
+                            discountPercent = (float)(item.Price - item.DiscountedPrice) * 100f / (float)item.Price;
+                        }
                         <div class="col-xxl-2 col-lg-3 col-md-4 col-6 wow fadeInUp">
                             <div class="product-box-4">
                                 <div class="product-image">
                                     <div class="label-flex">
+                                        @if (discountPercent != null)
+                                        {
+                                            <div class="discount">
+                                                <label>@discountPercent.Value.ToString("0.0")%</label>
+                                            </div>
+                                        }
                                         @if (userWihsIds.Contains(item.Id))
                                         {
                                             <button class="btn p-0 wishlist btn-wishlist notifi-wishlist" data-iswish="true" onclick="EditProductInWishList1(event,'@item.Id')">
@@ -74,7 +85,7 @@
 
                                     <ul class="option">
                                         <li data-bs-toggle="tooltip" data-bs-placement="top" title="نمایش">
-                                            <a role="button" onclick="PreviewProductModalRequest('@item.Id')" >
+                                            <a role="button" onclick="PreviewProductModalRequest('@item.Id')">
                                                 <i class="iconly-Show icli"></i>
                                             </a>
                                         </li>
@@ -82,7 +93,9 @@
                                 </div>
 
                                 <div class="product-detail">
-                                    @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                    <div style="display:flex; flex-direction:row;">
+                                        @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                    </div>
                                     <a href="/Product/@item.Barcode">
                                         <h5 class="name">@item.Title</h5>
                                     </a>
@@ -114,6 +127,7 @@
                                 </div>
                             </div>
                         </div>
+                        discountPercent = null;
                     }
 
                 </div>
@@ -124,10 +138,20 @@
 
                     @foreach (var item in productsHistory)
                     {
+                        if (item.DiscountedPrice != null)
+                        {
+                            discountPercent = (float)(item.Price - item.DiscountedPrice) * 100f / (float)item.Price;
+                        }
                         <div class="col-xxl-2 col-lg-3 col-md-4 col-6">
                             <div class="product-box-4">
                                 <div class="product-image">
                                     <div class="label-flex">
+                                        @if (discountPercent != null)
+                                        {
+                                            <div class="discount">
+                                                <label>@discountPercent.Value.ToString("0.0")%</label>
+                                            </div>
+                                        }
                                         @if (userWihsIds.Contains(item.Id))
                                         {
                                             <button class="btn p-0 wishlist btn-wishlist notifi-wishlist" data-iswish="true" onclick="EditProductInWishList1(event,'@item.Id')">
@@ -156,7 +180,9 @@
                                 </div>
 
                                 <div class="product-detail">
-                                    @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                    <div style="display:flex; flex-direction:row;">
+                                        @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                    </div>
                                     <a href="/Product/@item.Barcode">
                                         <h5 class="name">@item.Title</h5>
                                     </a>
@@ -189,6 +215,7 @@
                                 </div>
                             </div>
                         </div>
+                        discountPercent = null;
                     }
 
                 </div>
@@ -201,15 +228,25 @@
             @foreach (var categoryId in categoryIds)
             {
                 <div class="tab-pane fade" id="tab-number-@index" role="tabpanel" aria-labelledby>
-                    
+
                     <div class="row g-8">
 
                         @foreach (var item in Model.Where(a => a.Categories.Any(a => a.Id == categoryId)))
                         {
+                            if (item.DiscountedPrice != null)
+                            {
+                                discountPercent = (float)(item.Price - item.DiscountedPrice) * 100f / (float)item.Price;
+                            }
                             <div class="col-xxl-2 col-lg-3 col-md-4 col-6">
                                 <div class="product-box-4">
                                     <div class="product-image">
                                         <div class="label-flex">
+                                            @if (discountPercent != null)
+                                            {
+                                                <div class="discount">
+                                                    <label>@discountPercent.Value.ToString("0.0")%</label>
+                                                </div>
+                                            }
                                             @if (userWihsIds.Contains(item.Id))
                                             {
                                                 <button class="btn p-0 wishlist btn-wishlist notifi-wishlist" data-iswish="true" onclick="EditProductInWishList1(event,'@item.Id')">
@@ -238,7 +275,9 @@
                                     </div>
 
                                     <div class="product-detail">
-                                        @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                        <div style="display:flex; flex-direction:row;">
+                                            @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                        </div>
                                         <a href="/Product/@item.Barcode">
                                             <h5 class="name">@item.Title</h5>
                                         </a>
@@ -271,10 +310,10 @@
                                     </div>
                                 </div>
                             </div>
+                            discountPercent = null;
                         }
-
                     </div>
-                    
+
                 </div>
                 index++;
             }

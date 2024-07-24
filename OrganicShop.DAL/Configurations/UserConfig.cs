@@ -42,7 +42,8 @@ namespace OrganicShop.DAL.Configurations
                     Password = "123456",
                     PhoneNumber = "09369753041",
                     Email = "mas1379as@gmail.com",
-                    Role = Role.Admin,
+                    Role = Role.Manager,
+                    IsEmailVerified = true,
                 },
                 new User
                 {
@@ -51,7 +52,9 @@ namespace OrganicShop.DAL.Configurations
                     Password = "1234",
                     PhoneNumber = "09331234566",
                     Email = "TestEmail@gmail.com",
-                    Role = Role.Customer,
+                    Role = Role.Admin,
+                    IsEmailVerified = false,
+
                 });
 
             builder.OwnsOne(a => a.BaseEntity).HasData(new

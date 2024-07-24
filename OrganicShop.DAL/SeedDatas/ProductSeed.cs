@@ -7,6 +7,105 @@ namespace OrganicShop.DAL.SeedDatas
 {
     public class ProductSeed
     {
+        private static List<DiscountProducts> GenerateDiscountProducts()
+        {
+            List<DiscountProducts> discountProducts = new List<DiscountProducts>();
+            Discount? discount = null;
+            if (Random.Shared.Next(1, 6) <= 2)
+            {
+                if (Random.Shared.Next(1, 5) == 1)
+                {
+                    for (int i = 1; i <= Random.Shared.Next(1, 4); i++)
+                    {
+                        discountProducts.Add(new DiscountProducts
+                        {
+                            BaseEntity = new BaseEntity(true),
+                            Discount = GenerateRndomDiscount(),
+                        });
+                    }
+                }
+                else
+                {
+                    discountProducts.Add(new DiscountProducts
+                    {
+                        BaseEntity = new BaseEntity(true),
+                        Discount = GenerateRndomDiscount(),
+                    });
+                }
+            }
+            return discountProducts;
+        }
+
+
+        private static Discount GenerateRndomDiscount()
+        {
+            bool isPercent = Random.Shared.Next(1, 4) <= 2;
+            bool hasCount = Random.Shared.Next(1, 6) >= 3;
+            bool hasStartDate = Random.Shared.Next(1, 6) >= 4;
+            bool hasEndDate = Random.Shared.Next(1, 6) >= 4;
+
+            Discount discount = new Discount()
+            {
+                BaseEntity = new BaseEntity(true),
+                Priority = Random.Shared.Next(1, 5),
+            };
+            discount.Title = $"Discount-";
+
+            if (isPercent)
+            {
+                discount.Percent = Random.Shared.Next(1, 80);
+                discount.Title = discount.Title + $"Percent:{discount.Percent}%-";
+            }
+            else
+            {
+                discount.Price = Random.Shared.Next(1_000, 10_000);
+                discount.Title = discount.Title + $"Price:{discount.Price}-";
+            }
+
+
+            if (hasCount)
+            {
+                discount.Count = Random.Shared.Next(0, 11);
+                discount.Title = discount.Title + $"Count:{discount.Count}-";
+            }
+            else
+            {
+                discount.Title = discount.Title + $"NoCount-";
+            }
+
+            if (hasStartDate)
+            {
+                discount.StartDate = DateTime.Now.AddHours(Random.Shared.Next(1, 24 * 7));
+                discount.Title = discount.Title + $"StartDate::{discount.StartDate}-";
+            }
+            else
+            {
+                discount.Title = discount.Title + $"NoStartDate-";
+            }
+
+            if (hasEndDate)
+            {
+                if (discount.StartDate != null)
+                {
+                    discount.EndDate = discount.StartDate.Value.AddHours(Random.Shared.Next(1, 24 * 7));
+                }
+                else
+                {
+                    discount.EndDate = DateTime.Now.AddHours(Random.Shared.Next(1, 24 * 7));
+                }
+                discount.Title = discount.Title + $"EndDate::{discount.EndDate}-";
+            }
+            else
+            {
+                discount.Title = discount.Title + $"NoEndDate-";
+            }
+
+            return discount;
+        }
+
+
+
+
         public static readonly Product p = new Product
         {
             Title = "",
@@ -60,7 +159,7 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
@@ -71,7 +170,7 @@ namespace OrganicShop.DAL.SeedDatas
         public static readonly Product Bread = new Product
         {
             Title = "نان پیتا سه نان مقدار 370 گرم",
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
@@ -125,20 +224,8 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            DiscountProducts = new List<DiscountProducts>()
-            {
-                new DiscountProducts
-                {
-                    BaseEntity = new BaseEntity(true),
-                    Discount = new Discount()
-                    {
-                        BaseEntity = new BaseEntity(true),
-                        Title = "bread-discount",
-                        Price = 6_000,
-                        Priority = 1,
-                    }
-                }
-            }
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Sugar = new Product
@@ -196,24 +283,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
-            DiscountProducts = new List<DiscountProducts>()
-            {
-                new DiscountProducts
-                {
-                    BaseEntity = new BaseEntity(true),
-                    Discount = new Discount()
-                    {
-                        BaseEntity = new BaseEntity(true),
-                        Title = "sugar-discount",
-                        Percent = 25,
-                        Priority = 1,
-                    }
-                }
-            }
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product RedBeans = new Product
@@ -271,10 +346,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Macaroni = new Product
@@ -324,10 +401,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Oil = new Product
@@ -391,10 +470,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Rice = new Product
@@ -450,10 +531,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Nabaat = new Product
@@ -495,12 +578,14 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
-        
+
 
 
         public static readonly Product Cheese = new Product
@@ -570,10 +655,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Cream = new Product
@@ -637,10 +724,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Dough = new Product
@@ -704,10 +793,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Milk = new Product
@@ -758,10 +849,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Butter = new Product
@@ -803,10 +896,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Yogurt = new Product
@@ -870,10 +965,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Jam = new Product
@@ -931,10 +1028,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Honey = new Product
@@ -992,10 +1091,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product BreakfastChocolate = new Product
@@ -1053,14 +1154,16 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
 
-        
+
         public static readonly Product Beef = new Product
         {
             Title = "مخلوط گوساله پویا پروتئین - 1 کیلوگرم",
@@ -1106,10 +1209,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Checken = new Product
@@ -1171,10 +1276,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Fish = new Product
@@ -1230,10 +1337,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Sausage = new Product
@@ -1295,10 +1404,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Meat = new Product
@@ -1354,10 +1465,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Caviar = new Product
@@ -1399,10 +1512,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Egg = new Product
@@ -1461,10 +1576,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Shrimp = new Product
@@ -1506,10 +1623,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
 
@@ -1565,10 +1684,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Coca = new Product
@@ -1622,10 +1743,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Delester = new Product
@@ -1693,10 +1816,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Water = new Product
@@ -1766,10 +1891,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Golaab = new Product
@@ -1825,10 +1952,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Juice = new Product
@@ -1890,10 +2019,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
 
@@ -1953,10 +2084,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product TunnaFish = new Product
@@ -2014,10 +2147,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Compote = new Product
@@ -2081,10 +2216,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product Stew = new Product
@@ -2132,10 +2269,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
         public static readonly Product CannedBean = new Product
@@ -2177,10 +2316,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
 
@@ -2238,10 +2379,12 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                 },
             },
-            SoldCount = 0,
+            SoldCount = Random.Shared.Next(0 , 30),
             Stock = Random.Shared.Next(0, 10),
             BaseEntity = new BaseEntity(true),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
+            DiscountProducts = GenerateDiscountProducts(),
+            Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
         };
 
 
@@ -2255,7 +2398,15 @@ namespace OrganicShop.DAL.SeedDatas
 
 
 
-
+        public static readonly List<Product> Products = new List<Product>
+        {
+            Bread ,Sugar ,RedBeans ,Macaroni ,Oil ,Rice ,Nabaat ,
+            Cheese ,Cream ,Dough ,Milk ,Butter ,Yogurt ,Jam ,Honey ,BreakfastChocolate ,
+            Beef ,Checken ,Fish ,Sausage ,Meat ,Caviar ,Egg ,Shrimp ,
+            EnergyDrink ,Coca ,Delester ,Water ,Golaab ,Juice ,
+            Soup ,TunnaFish ,Compote ,Stew ,CannedBean ,
+            Dessert,
+        };
 
 
     }

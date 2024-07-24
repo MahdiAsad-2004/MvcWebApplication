@@ -25,12 +25,11 @@ namespace OrganicShop.BLL.Mappers
                .ForMember(m => m.DiscountedPrice, a => a.MapFrom(b => b.DiscountedPrice))
                .ForMember(m => m.Categories, a => a.MapFrom(b => b.Categories.OrderBy(a => a.Id).ToArray()))
                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
-               .ForMember(m => m.ImageNames, a => a.MapFrom(b => b.Pictures.Select(p => p.Name).ToArray()))
-               //.ForMember(m => m.CommentsRate, a => a.MapFrom(b => 
-               //     b.Comments.Where(c => c.Status == CommentStatus.Accepted).Any() ?   
-               //     ((float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Sum(c => c.Rate) / 
-               //     (float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()) : 0))
-               .ForMember(m => m.CommentsRate, a => a.MapFrom(b => 0))
+               //.ForMember(m => m.ImageNames, a => a.MapFrom(b => b.Pictures.Select(p => p.Name).ToArray()))
+               //.ForMember(m => m.DiscountValue, a => a.MapFrom(b => b.GetDiscount() != null))
+               .ForMember(m => m.CommentsRate, a => a.MapFrom(b =>
+                    b.Comments.Where(c => c.Status == CommentStatus.Accepted).Any() ?
+                    ((float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Sum(c => c.Rate) /(float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()) : 0))
                .ForMember(m => m.CommentsCount, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()))
                .ForMember(m => m.Properties, a => a.MapFrom(b => b.Properties.Select(p => p.ToListDto()).OrderBy(o => o.Priority).ToArray()))
                .ForMember(m => m.IsActive, a => a.MapFrom(b => b.BaseEntity.IsActive))

@@ -146,10 +146,41 @@
                                 }
 
                                 <div class="product-rating custom-rate">
+                                    <ul class="rating" style="display:flex; flex-direction:row-reverse;">
+                                        @{
+                                            int i = 0;
+                                            float decimalValue = (commentsRatingAverage * 10) % 10;
+                                            for (i = 0; i < float.Floor(commentsRatingAverage); i++)
+                                            {
+                                                <li>
+                                                    <i style="color:#ffb321; font-size:18px;" class="fa-solid fa-star"></i>
+                                                </li>
 
-                                    @await Html.PartialAsync("_RatingPartial", commentsRatingAverage)
-
-                                    <span>(@(commentsCount.ToString("0.0"))) بازخورد</span>
+                                            }
+                                            if (decimalValue >= 5)
+                                            {
+                                                <li>
+                                                    <i style="color:#ffb321; font-size:18px;" class="fa-solid fa-star-half-stroke"></i>
+                                                </li>
+                                                for (int j = 5 - i - 1; j >= 1; j--)
+                                                {
+                                                    <li>
+                                                        <i style="color:#ffb321; font-size:18px;" class="fa-regular fa-star"></i>
+                                                    </li>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int j = 5 - i; j >= 1; j--)
+                                                {
+                                                    <li>
+                                                        <i style="color:#ffb321; font-size:18px;" class="fa-regular fa-star"></i>
+                                                    </li>
+                                                }
+                                            }
+                                        }
+                                    </ul>
+                                    <span>بازخورد (@(commentsCount))</span>
                                 </div>
                             </div>
 
@@ -500,7 +531,7 @@
                                                             <div class="rating-product">
                                                                 <h5>5<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount5 / commentsCount * 100} %" : "0 %");">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount5 / commentsCount * 100}%" : "0%");">
                                                                     </div>
                                                                 </div>
                                                                 <h5 class="total">@RateCount5</h5>
@@ -510,7 +541,7 @@
                                                             <div class="rating-product">
                                                                 <h5>4<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount4 / commentsCount * 100} %" : "0 %");">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount4 / commentsCount * 100}%" : "0%");">
                                                                     </div>
                                                                 </div>
                                                                 <h5 class="total">@RateCount4</h5>
@@ -520,7 +551,7 @@
                                                             <div class="rating-product">
                                                                 <h5>3<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount3 / commentsCount * 100} %" : "0 %");">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount3 / commentsCount * 100}%" : "0%");">
                                                                     </div>
                                                                 </div>
                                                                 <h5 class="total">@RateCount3</h5>
@@ -530,7 +561,7 @@
                                                             <div class="rating-product">
                                                                 <h5>2<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount2 / commentsCount * 100} %" : "0 %");">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount2 / commentsCount * 100}%" : "0%");">
                                                                     </div>
                                                                 </div>
                                                                 <h5 class="total">@RateCount2</h5>
@@ -540,7 +571,7 @@
                                                             <div class="rating-product">
                                                                 <h5>1<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount1 / commentsCount * 100} %" : "0 %");">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount1 / commentsCount * 100}%" : "0%");">
                                                                     </div>
                                                                 </div>
                                                                 <h5 class="total">@RateCount1</h5>
@@ -587,7 +618,7 @@
                                                                             @comment.Date.ToShortDateTimeString()
                                                                         </h6>
                                                                         <div class="product-rating">
-                                                                            @await Html.PartialAsync("_RatingPartial", comment.Rate)
+                                                                            @await Html.PartialAsync("_RatingPartial", (float)comment.Rate)
                                                                         </div>
                                                                     </div>
                                                                 </div>

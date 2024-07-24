@@ -39,7 +39,9 @@
                                                         <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
                                                     </a>
                                                     <div class="product-details">
-                                                        @await Html.PartialAsync("_RatingPartial",item.CommentsRate)
+                                                        <div style="display:flex; flex-direction:row;">
+                                                            @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                                        </div>     
                                                         <a href="/Product/@item.Barcode">
                                                             <h4 class="name">@item.Title</h4>
                                                         </a>
@@ -114,7 +116,9 @@
                                                         <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
                                                     </a>
                                                     <div class="product-details">
-                                                        @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                                        <div style="display:flex; flex-direction:row;">
+                                                            @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                                        </div>    
                                                         <a href="/Product/@item.Barcode">
                                                             <h4 class="name">@item.Title</h4>
                                                         </a>
@@ -188,7 +192,9 @@
                                                         <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
                                                     </a>
                                                     <div class="product-details">
-                                                        @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                                        <div style="display:flex; flex-direction:row;">
+                                                            @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                                        </div>
                                                         <a href="/Product/@item.Barcode">
                                                             <h4 class="name">@item.Title</h4>
                                                         </a>
@@ -261,7 +267,9 @@
                                                         <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
                                                     </a>
                                                     <div class="product-details">
-                                                        @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                                        <div style="display:flex; flex-direction:row;">
+                                                            @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                                                        </div>               
                                                         <a href="/Product/@item.Barcode">
                                                             <h4 class="name">@item.Title</h4>
                                                         </a>

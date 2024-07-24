@@ -10,7 +10,7 @@ namespace OrganicShop.DAL.Configurations
         public void Configure(EntityTypeBuilder<Category> builder)
         {
            
-            builder.HasMany(a =>a.Subs).WithOne(a => a.Parent).HasForeignKey(a => a.ParentId).OnDelete(DeleteBehavior.SetNull);
+            builder.HasMany(a =>a.Subs).WithOne(a => a.Parent).HasForeignKey(a => a.ParentId).OnDelete(DeleteBehavior.NoAction);
             //builder.HasMany(a =>a.CategoryProducts).WithOne(a => a.Category).HasForeignKey(a => a.CategoryId);
             builder.HasMany(a => a.Products).WithMany(a => a.Categories);
             builder.HasMany(a =>a.Articles).WithOne(a => a.Category).HasForeignKey(a => a.CategoryId);

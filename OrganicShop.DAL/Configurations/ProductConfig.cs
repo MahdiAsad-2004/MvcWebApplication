@@ -49,29 +49,4 @@ namespace OrganicShop.DAL.Configurations
         }
     }
 
-
-    public class Asd : ValueGenerator<int?>
-    {
-        public override bool GeneratesTemporaryValues => false;
-
-        public override int? Next(EntityEntry entry)
-        {
-            Console.WriteLine($"ValueGenrator is runing");
-            var product = entry.Entity as Product;
-            if (product != null)
-            {
-                Console.WriteLine($"product isnot null");
-                if (product.DiscountProducts != null)
-                {
-                    Console.WriteLine($"product is not null");
-                    Console.WriteLine($"discountedProducts is not null");
-
-                    return product.GetDiscountedPrice1();
-                }
-            }
-            return null;
-        }
-    }
-
-
 }

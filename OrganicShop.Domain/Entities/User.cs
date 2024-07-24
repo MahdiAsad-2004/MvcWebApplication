@@ -12,6 +12,7 @@ namespace OrganicShop.Domain.Entities
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
+        public bool IsEmailVerified { get; set; }
         public Role Role { get; set; }
 
 

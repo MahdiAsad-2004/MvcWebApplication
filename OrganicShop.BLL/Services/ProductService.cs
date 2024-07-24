@@ -203,6 +203,7 @@ namespace OrganicShop.BLL.Services
                     .ThenInclude(a => a.Discount)
                 .Include(a => a.Comments.Where(b => b.Status == CommentStatus.Accepted))
                     .ThenInclude(a => a.User)
+                        .ThenInclude(a => a.Picture)
                 .Include(a => a.Properties)
                     .ThenInclude(a => a.PropertyType)
                 .Include(a => a.ProductVarients)

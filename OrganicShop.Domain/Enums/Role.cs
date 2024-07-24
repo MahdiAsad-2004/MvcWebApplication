@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace OrganicShop.Domain.Enums
 {
     public enum Role
@@ -14,7 +8,9 @@ namespace OrganicShop.Domain.Enums
 
         Admin = 2,
 
-        Customer = 3,
+        Seller = 3,
+
+        Customer = 4,
 
 
     }

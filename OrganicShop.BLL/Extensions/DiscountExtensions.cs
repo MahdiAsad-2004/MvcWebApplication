@@ -25,6 +25,10 @@ namespace OrganicShop.BLL.Extensions
             if (discount.BaseEntity.IsActive == false)
                 return false;
 
+            if (discount.Count != null)
+                if (discount.Count < 1)
+                    return false;
+
             if (discount.StartDate != null)
                 if (discount.StartDate.Value > DateTime.Now)
                     return false;
@@ -33,7 +37,7 @@ namespace OrganicShop.BLL.Extensions
                 if (discount.EndDate.Value < DateTime.Now)
                     return false;
 
-            if(discount.Price == null && discount.Percent == null)
+            if (discount.Price == null && discount.Percent == null)
                 return false;
 
             return true;
@@ -42,7 +46,11 @@ namespace OrganicShop.BLL.Extensions
         public static int? GetDiscountedPrice(this Product product)
         {
             Discount? discount;
-            discount = product.DiscountProducts.Select(a => a.Discount).OrderBy(a => a.Priority).FirstOrDefault(a => true);
+            discount = product.DiscountProducts
+                .Select(a => a.Discount)
+                .Where(a => a.IsValid())
+                .OrderBy(a => a.Priority)
+                .FirstOrDefault(a => true);
 
             if (discount != null)
                 if (discount.IsDiscountValid())
@@ -54,13 +62,42 @@ namespace OrganicShop.BLL.Extensions
         public static Discount? GetDiscount(this Product product)
         {
             Discount? discount;
-            discount = product.DiscountProducts.Select(a => a.Discount).OrderBy(a => a.Priority).FirstOrDefault(a => true);
+            discount = product.DiscountProducts
+                .Select(a => a.Discount)
+                .Where(a => a.IsValid())
+                .OrderBy(a => a.Priority)
+                .FirstOrDefault(a => true);
 
             if (discount != null)
                 return discount;
 
             return null;
         }
+
+
+        //public static string? GetDiscountValue(this Product product)
+        //{
+        //    Discount? discount;
+        //    discount = product.DiscountProducts
+        //        .Select(a => a.Discount)
+        //        .Where(a => a.IsValid())
+        //        .OrderBy(a => a.Priority)
+        //        .FirstOrDefault(a => true);
+
+        //    if (discount != null)
+        //    {
+        //        if (discount.Price != null)
+        //            return discount.Price.Value.ToMoney();
+
+        //        if (discount.Percent != null)
+        //            return $"{discount.Percent.Value}%";
+
+        //        throw new Exception("Discount is not valid .");
+        //    }
+
+        //    return null;
+        //}
+
 
     }
 }

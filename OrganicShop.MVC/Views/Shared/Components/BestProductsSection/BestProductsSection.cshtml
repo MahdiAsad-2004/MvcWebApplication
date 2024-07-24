@@ -3,6 +3,7 @@
 @model List<ProductSummaryDto>
 @{
     var userWihsIds = ViewData["UserWishProductIds"] as long[] ?? new long[0];
+    float? discountPercent = null;
 }
 
 <!-- Product Sction Start -->
@@ -20,9 +21,19 @@
             @for (int i = 0; i < Model.Count; i += 2)
             {
                 item = Model[i];
+                if (item.DiscountedPrice != null)
+                {
+                    discountPercent = (float)(item.Price - item.DiscountedPrice) * 100f / (float)item.Price;
+                }
                 <div class="product-box-4 wow fadeInUp">
                     <div class="product-image">
                         <div class="label-flex">
+                            @if (discountPercent != null)
+                            {
+                                <div class="discount">
+                                    <label>@discountPercent.Value.ToString("0.0")%</label>
+                                </div>
+                            }
                             @if (userWihsIds.Contains(item.Id))
                             {
                                 <button class="btn p-0 wishlist btn-wishlist notifi-wishlist" data-iswish="false" onclick="EditProductInWishList1(event,'@item.Id')">
@@ -51,7 +62,9 @@
                     </div>
 
                     <div class="product-detail">
-                        @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                        <div style="display:flex; flex-direction:row;">
+                            @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                        </div>
                         <a href="/Product/@item.Barcode">
                             <h5 class="name">@item.Title</h5>
                         </a>
@@ -87,9 +100,19 @@
                 @if (i + 1 < Model.Count)
                 {
                     item = Model[i + 1];
+                    if (item.DiscountedPrice != null)
+                    {
+                        discountPercent = (float)(item.Price - item.DiscountedPrice) * 100f / (float)item.Price;
+                    }
                     <div class="product-box-4 wow fadeInUp">
                         <div class="product-image">
                             <div class="label-flex">
+                                @if (discountPercent != null)
+                                {
+                                    <div class="discount">
+                                        <label>@discountPercent.Value.ToString("0.0")%</label>
+                                    </div>
+                                }
                                 @if (userWihsIds.Contains(item.Id))
                                 {
                                     <button class="btn p-0 wishlist btn-wishlist notifi-wishlist" data-iswish="true" onclick="EditProductInWishList1(event,'@item.Id')">
@@ -118,7 +141,9 @@
                         </div>
 
                         <div class="product-detail">
-                            @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                            <div style="display:flex; flex-direction:row;">
+                                @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
+                            </div>
                             <a href="/Product/@item.Barcode">
                                 <h5 class="name">@item.Title</h5>
                             </a>
@@ -151,6 +176,7 @@
                         </div>
                     </div>
                 }
+                discountPercent = null;
             }
 
         </div>
