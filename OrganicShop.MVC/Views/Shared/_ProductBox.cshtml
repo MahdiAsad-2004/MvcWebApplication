@@ -75,7 +75,7 @@
 
         <div class="product-footer">
             <div class="product-detail">
-                <span class="span-name">@Model.CategoryTitle</span>
+                <span class="span-name">@Model.Categories.LastOrDefault()?.Title</span>
                 <a href="/Product/@Model.Barcode">
                     <h5 class="name">@Model.Title</h5>
                 </a>

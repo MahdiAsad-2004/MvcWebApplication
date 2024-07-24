@@ -1,15 +1,23 @@
 ﻿@using OrganicShop.BLL.Extensions
 @using OrganicShop.Domain.Dtos.CommentDtos
 @using OrganicShop.Domain.Dtos.ProductDtos
+@using OrganicShop.Domain.Dtos.ProductItemDtos
 @using OrganicShop.Domain.Entities
 @using OrganicShop.Domain.Enums.EnumValues
 @model ProductDetailDto
 @{
     var similarProducts = ViewData["SimilarProducts"] as List<ProductSummaryDto>;
-    Model.Varients = Model.Varients.OrderByDescending(a => a.Stock).ToArray();
+    if (Model.Varients != null)
+    {
+        Model.Varients = Model.Varients.OrderByDescending(a => a.Stock).ToArray();
+    }
+    else
+    {
+        Model.Varients = new ProductVarient[0];
+    }
     float commentsRatingAverage = Model.Comments.Any() ? (float)Model.Comments.Sum(a => a.Rate) / (float)Model.Comments.Count : 0;
     float commentsCount = Model.Comments.Count;
-    var firstProductVarient = Model.Varients[0];
+    var firstProductVarient = Model.Varients.FirstOrDefault();
     var IsAvailable = Model.Stock > 0;
     var userWihsIds = ViewData["UserWishProductIds"] as long[];
 }
@@ -23,7 +31,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="breadcrumb-contain">
-                        <h2>@Model.Title : محصولات</h2>
+                        <h2>محصولات : @Model.Title</h2>
                         <nav>
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item">
@@ -31,10 +39,25 @@
                                         <i class="fa-solid fa-house"></i>
                                     </a>
                                 </li>
-                                <li>
+                                <li class="breadcrumb-item">
                                     <a href="/Products">محصولات</a>
                                 </li>
-                                <li class="breadcrumb-item active">@Model.Title</li>
+                                <li class="breadcrumb-item active">
+                                    @Model.Title
+                                </li>
+
+
+                                @*
+                            <li class="breadcrumb-item">
+                            <a href="/">
+                            <i class="fa-solid fa-house"></i>
+                            </a>
+                            </li>
+                            <li>
+                            <a href="/Products">محصولات</a>
+                            </li>
+                            <li class="breadcrumb-item active">@Model.Title</li>
+                            *@
                             </ol>
                         </nav>
                     </div>
@@ -184,89 +207,111 @@
                                 }
                             }
 
-
-                            @if (Model.Discount.StartDate > DateTime.Now && Model.Discount.EndDate > DateTime.Now && IsAvailable == true)
+                            @if (Model.Discount != null)
                             {
-                                <div class="time deal-timer product-deal-timer mx-md-0 mx-auto" id="clockdiv-1"
-                                     data-hours="1" data-minutes="2" data-seconds="3" data-deadline="@(Model.Discount.EndDate.Value)">
-                                    <div class="product-title">
-                                        <h4>عجله کنید! زمان محدود است</h4>
+                                if (Model.Discount.StartDate > DateTime.Now && Model.Discount.EndDate > DateTime.Now && IsAvailable == true)
+                                {
+                                    <div class="time deal-timer product-deal-timer mx-md-0 mx-auto" id="clockdiv-1"
+                                         data-hours="1" data-minutes="2" data-seconds="3" data-deadline="@(Model.Discount.EndDate.Value)">
+                                        <div class="product-title">
+                                            <h4>عجله کنید! زمان محدود است</h4>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <div class="counter d-block">
+                                                    <div class="seconds d-block">
+                                                        <h5>@(Model.Discount.EndDate.Value.Subtract(DateTime.Now).Seconds)</h5>
+                                                    </div>
+                                                    <h6>ثانیه</h6>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="counter d-block">
+                                                    <div class="minutes d-block">
+                                                        <h5>@(Model.Discount.EndDate.Value.Subtract(DateTime.Now).Minutes)</h5>
+                                                    </div>
+                                                    <h6>دقیقه</h6>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="counter d-block">
+                                                    <div class="hours d-block">
+                                                        <h5>@(Model.Discount.EndDate.Value.Subtract(DateTime.Now).Hours)</h5>
+                                                    </div>
+                                                    <h6>ساعت</h6>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="counter d-block">
+                                                    <div class="days d-block">
+                                                        <h5>@(Model.Discount.EndDate.Value.Subtract(DateTime.Now).Days)</h5>
+                                                    </div>
+                                                    <h6>روز</h6>
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    <ul>
-                                        <li>
-                                            <div class="counter d-block">
-                                                <div class="seconds d-block">
-                                                    <h5>@(Model.Discount.EndDate.Value.Subtract(DateTime.Now).Seconds)</h5>
-                                                </div>
-                                                <h6>ثانیه</h6>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="counter d-block">
-                                                <div class="minutes d-block">
-                                                    <h5>@(Model.Discount.EndDate.Value.Subtract(DateTime.Now).Minutes)</h5>
-                                                </div>
-                                                <h6>دقیقه</h6>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="counter d-block">
-                                                <div class="hours d-block">
-                                                    <h5>@(Model.Discount.EndDate.Value.Subtract(DateTime.Now).Hours)</h5>
-                                                </div>
-                                                <h6>ساعت</h6>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="counter d-block">
-                                                <div class="days d-block">
-                                                    <h5>@(Model.Discount.EndDate.Value.Subtract(DateTime.Now).Days)</h5>
-                                                </div>
-                                                <h6>روز</h6>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
+                                }
                             }
 
 
                             <div class="note-box product-package">
-                                <form id="add-product-to-cart-form" class="cart_qty qty-box product-qty" action="/Product/AddToCart"
-                                      method="post" onsubmit="FetchRequest(event)">
-                                    <input name="createProductItem.ProductId" value="@Model.Id" hidden readonly />
-                                    <input name="createProductItem.ProductVarientId" value="@(firstProductVarient != null ? firstProductVarient.Id : null)" hidden readonly />
+                                <div class="cart_qty qty-box product-qty">
                                     <div class="input-group">
-                                        <div class="input-group">
-                                            <button type="button" id="product-cart-count-minus" disabled="@(!IsAvailable)">
-                                                <i class="fa fa-minus"></i>
-                                            </button>
-                                            <input class="form-control" name="createProductItem.Count" type="text" value="1"
-                                                   max="@(firstProductVarient == null ? Model.Stock : firstProductVarient.Stock)">
-                                            <button type="button" id="product-cart-count-plus" disabled="@(!IsAvailable)">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
+                                        <button type="button" class="qty-left-minus" data-type="minus" data-field="">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                        <input id="product-main-quantity-0" class="form-control input-number qty-input" type="text" value="0" max="@Model.Stock">
+                                        <button type="button" class="qty-right-plus" data-type="plus" data-field="">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
                                     </div>
-                                    <button type="submit" hidden></button>
+                                </div>
+                                @*
+                                <form id="add-product-to-cart-form" class="cart_qty qty-box product-qty" action="/Product/AddToCart"
+                                method="post" onsubmit="FetchRequest(event)">
+                                <input name="createProductItem.ProductId" value="@Model.Id" hidden readonly />
+                                <input name="createProductItem.ProductVarientId" value="@(firstProductVarient != null ? firstProductVarient.Id : null)" hidden readonly />
+                                <div class="input-group">
+                                <div class="input-group">
+                                <button type="button" id="product-cart-count-minus" disabled="@(!IsAvailable)">
+                                <i class="fa fa-minus"></i>
+                                </button>
+                                <input class="form-control" name="createProductItem.Count" type="text" value="1"
+                                max="@(firstProductVarient == null ? Model.Stock : firstProductVarient.Stock)">
+                                <button type="button" id="product-cart-count-plus" disabled="@(!IsAvailable)">
+                                <i class="fa fa-plus"></i>
+                                </button>
+                                </div>
+                                </div>
+                                <button type="submit" hidden></button>
                                 </form>
-
-                                <button type="button" id="add-product-to-cart-button" class="btn btn-md bg-dark cart-button text-white w-100" disabled="@(!IsAvailable)">
+                                *@
+                                <button type="button" id="add-product-to-cart-button" onclick="AddProductToCart('@Model.Id' , null , 0 , 'product-main-quantity-0')"
+                                        class="btn btn-md bg-dark cart-button text-white w-100" disabled="@(!IsAvailable)">
                                     افزودن به سبد خرید
                                 </button>
                             </div>
 
-                            <div class="buy-box">
-                                <a href="wishlist.html">
-                                    <i data-feather="heart"></i>
-                                    <span>علاقه‌مندی‌ها</span>
-                                </a>
 
-                                <a href="compare.html">
-                                    <i data-feather="shuffle"></i>
-                                    <span>مقایسه</span>
-                                </a>
-                            </div>
-
+                            @if (userWihsIds.Contains(Model.Id))
+                            {
+                                <div class="buy-box">
+                                    <a role="button" class="notifi-wishlist" data-iswish="true" onclick="EditProductInWishList(event,'@Model.Id')">
+                                        <i class="fa-solid fa-heart" style="color: #e14141; font-size:18px;"></i>
+                                        <span>علاقه‌مندی‌ها</span>
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="buy-box">
+                                    <a role="button" class="notifi-wishlist" data-iswish="false" onclick="EditProductInWishList(event,'@Model.Id')">
+                                        <i class="fa-regular fa-heart" style="color: #7c7e7e; font-size:18px;"></i>
+                                        <span>علاقه‌مندی‌ها</span>
+                                    </a>
+                                </div>
+                            }
                             <div class="pickup-box">
                                 <div class="product-info">
                                     <ul class="product-info-list product-info-list-2">
@@ -285,31 +330,31 @@
                                 <ul>
                                     <li>
                                         <a href="javascript:void(0)">
-                                            <img src="../assets/images/product/payment/1.svg"
+                                            <img src="~/site/assets/images/product/payment/1.svg"
                                                  class="blur-up lazyload" alt="">
                                         </a>
                                     </li>
                                     <li>
                                         <a href="javascript:void(0)">
-                                            <img src="../assets/images/product/payment/2.svg"
+                                            <img src="~/site/assets/images/product/payment/2.svg"
                                                  class="blur-up lazyload" alt="">
                                         </a>
                                     </li>
                                     <li>
                                         <a href="javascript:void(0)">
-                                            <img src="../assets/images/product/payment/3.svg"
+                                            <img src="~/site/assets/images/product/payment/3.svg"
                                                  class="blur-up lazyload" alt="">
                                         </a>
                                     </li>
                                     <li>
                                         <a href="javascript:void(0)">
-                                            <img src="../assets/images/product/payment/4.svg"
+                                            <img src="~/site/assets/images/product/payment/4.svg"
                                                  class="blur-up lazyload" alt="">
                                         </a>
                                     </li>
                                     <li>
                                         <a href="javascript:void(0)">
-                                            <img src="../assets/images/product/payment/5.svg"
+                                            <img src="~/site/assets/images/product/payment/5.svg"
                                                  class="blur-up lazyload" alt="">
                                         </a>
                                     </li>
@@ -585,7 +630,7 @@
 
                     @foreach (var similarProduct in similarProducts)
                     {
-                        <partial name="_ProductBox" model="similarProduct" view-data="ViewData" view-data-UserWishProductIds="userWihsIds" view-data-RemoveButton="false"/>
+                        <partial name="_ProductBox" model="similarProduct" view-data="ViewData" view-data-UserWishProductIds="userWihsIds" view-data-RemoveButton="false" />
                     }
 
                 </div>
@@ -601,7 +646,7 @@
             <div class="col-12">
                 <div class="cart-content">
                     <div class="product-image">
-                        <img src="../assets/images/product/category/1.jpg" class="img-fluid blur-up lazyload"
+                        <img src="~/media/images/product/@Model.MainImageName" class="img-fluid blur-up lazyload"
                              alt="">
                         <div class="content">
                             <h5>@Model.Title</h5>
@@ -632,24 +677,37 @@
                                 </select>
                             </div>
                         }
-                        <form id="stick-add-product-to-cart-form" class="cart_qty qty-box product-qty m-0">
-                            <input name="createProductItem.ProductId" value="@Model.Id" hidden readonly />
-                            <input name="createProductItem.ProductVarientId" value="@(firstProductVarient != null ? firstProductVarient.Id : null)" hidden readonly />
+
+                        <div class="cart_qty qty-box product-qty m-0">
                             <div class="input-group h-100">
-                                <button type="button" class="qty-left-minus" id="stick-product-cart-count-minus" disabled="@(!IsAvailable)">
+                                <button type="button" class="qty-left-minus" data-type="minus" data-field="">
                                     <i class="fa fa-minus"></i>
                                 </button>
-                                <input class="form-control" name="createProductItem.Count" type="text" value="1" min="0"
-                                       max="@(firstProductVarient == null ? Model.Stock : firstProductVarient.Stock)">
-                                <button type="button" class="qty-right-plus" id="stick-product-cart-count-plus" disabled="@(!IsAvailable)">
+                                <input id="product-main-quantity-1" class="form-control input-number qty-input" max="@Model.Stock" type="text" value="0">
+                                <button type="button" class="qty-right-plus" data-type="plus" data-field="">
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </div>
-                            <button type="submit" hidden></button>
-                        </form>
+                        </div>
+
+                        @*   <form id="stick-add-product-to-cart-form" class="cart_qty qty-box product-qty m-0">
+                        <input name="createProductItem.ProductId" value="@Model.Id" hidden readonly />
+                        <input name="createProductItem.ProductVarientId" value="@(firstProductVarient != null ? firstProductVarient.Id : null)" hidden readonly />
+                        <div class="input-group h-100">
+                        <button type="button" class="qty-left-minus" id="stick-product-cart-count-minus" disabled="@(!IsAvailable)">
+                        <i class="fa fa-minus"></i>
+                        </button>
+                        <input class="form-control" name="createProductItem.Count" type="text" value="1" min="0"
+                        max="@(firstProductVarient == null ? Model.Stock : firstProductVarient.Stock)">
+                        <button type="button" class="qty-right-plus" id="stick-product-cart-count-plus" disabled="@(!IsAvailable)">
+                        <i class="fa fa-plus"></i>
+                        </button>
+                        </div>
+                        <button type="submit" hidden></button>
+                        </form> *@
                     </div>
                     <div class="add-btn">
-                        <button class="btn theme-bg-color text-white" id="stick-add-product-to-cart-button" disabled="@(!IsAvailable)">
+                        <button class="btn theme-bg-color text-white" onclick="AddProductToCart('@Model.Id' , null , 0 , 'product-main-quantity-1')" disabled="@(!IsAvailable)">
                             <i class="fas fa-shopping-cart"></i> افزودن به سبد خرید
                         </button>
                     </div>
@@ -660,29 +718,30 @@
 </div>
 <!-- Sticky Cart Box End -->
 
-<form id="add-to-cart-form" hidden action="/Cart/AddProductItem" onsubmit="FetchRequest(event)" method="post">
-    <input type="number" id="add-to-cart-form-productId" name="createProductItem.ProductId" hidden readonly value="" />
-    <input type="number" id="add-to-cart-form-productVarientId" name="createProductItem.ProductVarientId" hidden readonly value="" />
-    <input type="number" id="add-to-cart-form-count" name="createProductItem.Count" hidden readonly value="" />
-</form>
-<form id="preview-product-modal-request-form" hidden action="/Product/Preview" onsubmit="FetchRequest(event)" method="post" data-target-id="preview-product-modal">
+
+
+
+
+<form id="preview-product-modal-request-form" hidden action="/Product/Preview" method="post" data-container-id="preview-product-modal">
     <input type="number" name="id" hidden readonly value="0" />
 </form>
 <form id="edit-product-wishlist-form" hidden action="/User/EditProductWishList" method="post">
     <input type="number" name="productId" hidden readonly value="0" />
+    <input type="number" name="isDelete" hidden readonly value="false" />
 </form>
+@await Html.PartialAsync("_AddToCartForm", new CreateProductItemDto())
 
 @section Modals {
 
-    @await Html.PartialAsync("_PreviewProductModal");
+    <div class="modal fade theme-modal view-modal" id="preview-product-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        @await Html.PartialAsync("_PreviewProductModal", new ProductSummaryDto())
+    </div>
 
-    <partial name="_AddCommetnModal" model="new CreateCommentUserDto(){ProductId = Model.Id}" 
-        view-data-ProductImageName="Model.MainImageName" view-data-ProductTitle="Model.Title"/>
-
+    <partial name="_AddCommentModal" model="new CreateCommentUserDto(){ProductId = Model.Id}" view-data="ViewData"
+             view-data-ProductImageName="Model.MainImageName" view-data-ProductTitle="Model.Title" />
 }
 
-
-@section Scripts{
+@section Scripts {
 
     <script src="~/site/views/product/product.js"></script>
 

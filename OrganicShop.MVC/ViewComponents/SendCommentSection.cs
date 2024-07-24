@@ -28,15 +28,15 @@ namespace OrganicShop.MVC.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            string? NameAndEmailSavedForCommentCrypted = HttpContext.Request.Cookies[AppCookies.NameAndEmailForComment.Key];
-            string? NameAndEmailSavedForCommentJsonStr = AesOperation.Decrypt(NameAndEmailSavedForCommentCrypted, _AesKeys.Cookie);
-            (string Name, string Email)? NameAndEmailSavedForComment = AppCookies.NameAndEmailForComment.GetModel(NameAndEmailSavedForCommentJsonStr);
+            string? credentialForCommentCrypted = HttpContext.Request.Cookies[AppCookies.NameAndEmailForComment.Key];
+            CredentialForCommentDto? credentialForCommentDto = AppCookies.NameAndEmailForComment
+                .GetModel(AesOperation.Decrypt(credentialForCommentCrypted, _AesKeys.Cookie));
 
             var createComment = new CreateCommentDto();
-            if (NameAndEmailSavedForComment != null)
+            if (credentialForCommentDto != null)
             {
-                createComment.AuthorName = NameAndEmailSavedForComment.Value.Name;
-                createComment.Email = NameAndEmailSavedForComment.Value.Email;
+                createComment.AuthorName = credentialForCommentDto.AuthorName;
+                createComment.Email = credentialForCommentDto.Email;
             }
             createComment.ProductId = ViewComponentContext.Arguments["ProductId"] as long?;
             createComment.ArticleId = ViewComponentContext.Arguments["ArticleId"] as int?;

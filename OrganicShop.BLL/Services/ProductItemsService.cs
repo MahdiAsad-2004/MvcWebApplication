@@ -72,7 +72,8 @@ namespace OrganicShop.BLL.Services
                     CartId = a.CartId,
                     OrderId = a.OrderId,
                     Price = a.Price,
-                    Product = a.Product.ToModel(),
+                    //Product = a.Product.ToModel(),
+                    Product = a.Product,
                     ProductId = a.ProductId,
                     ProductVarientId = a.ProductVarientId,
                     Title = a.Title,
@@ -107,7 +108,7 @@ namespace OrganicShop.BLL.Services
 
             #endregion
 
-            var productsQuery = query.Select(a => a.Product.ToModel());
+            //var productsQuery = query.Select(a => a.Product.ToModel());
 
             List<ProductItemListDto> list = new();
             list = await query.Select(a => _Mapper.Map<ProductItemListDto>(a)).ToListAsync();
@@ -237,26 +238,28 @@ namespace OrganicShop.BLL.Services
 
             var products = await productsQuery
                 .Where(a => productIds.Contains(a.Id))
-                .Select(a => a.ToModel())
+                //.Select(a => a.ToModel())
                 .ToArrayAsync();
 
             var list = new List<ProductItemListDto>();
             Product product;
 
-            foreach (var create in productItemCookieDtos)
+            foreach (var productItemCookieDto in productItemCookieDtos)
             {
-                product = products.First(a => a.Id == create.ProductId);
+                product = products.First(a => a.Id == productItemCookieDto.ProductId);
                 list.Add(new ProductItemListDto
                 {
+                    Id = product.Id,
+                    Barcode = product.Barcode,
                     Title = product.Title,
                     Price = product.Price,
                     ProductId = product.Id,
                     DiscountedPrice = product.DiscountedPrice,
                     Stock = product.Stock,
                     MainImageName = product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,
-                    Count = create.Count,
-                    VarientType = create.ProductVarientId > 0 ? product.ProductVarients.First(a => a.Id == create.ProductVarientId).Type.ToStringValue() : null,
-                    VarientValue = create.ProductVarientId > 0 ? product.ProductVarients.First(a => a.Id == create.ProductVarientId).Value : null,
+                    Count = productItemCookieDto.Count > product.Stock ? product.Stock :productItemCookieDto.Count,
+                    VarientType = productItemCookieDto.ProductVarientId > 0 ? product.ProductVarients.First(a => a.Id == productItemCookieDto.ProductVarientId).Type.ToStringValue() : null,
+                    VarientValue = productItemCookieDto.ProductVarientId > 0 ? product.ProductVarients.First(a => a.Id == productItemCookieDto.ProductVarientId).Value : null,
                 });
             }
             return new ServiceResponse<List<ProductItemListDto>>(ResponseResult.Success, list);
@@ -267,6 +270,9 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<List<ProductItemCookieDto>>> CreateForCookie(CreateProductItemDto create, List<ProductItemCookieDto> previousProductItems)
         {
+            if (create.Count < 1)
+                return new ServiceResponse<List<ProductItemCookieDto>>(ResponseResult.Failed, "تعداد محصول باید بیشتر از صفر باشد !");
+
             var productStock = 0;
 
             if (create.ProductVarientId > 0)
@@ -309,14 +315,17 @@ namespace OrganicShop.BLL.Services
 
 
 
-        public async Task<ServiceResponse<List<ProductItemCookieDto>>> UpdateForCookie(long productItemId , int count, List<ProductItemCookieDto> previousProductItems)
+        public async Task<ServiceResponse<List<ProductItemCookieDto>>> UpdateForCookie(long productId , int count, List<ProductItemCookieDto> previousProductItems)
         {
-            var productItem = previousProductItems.FirstOrDefault(a => a.Id == productItemId);
+            var productItem = previousProductItems.FirstOrDefault(a => a.ProductId == productId);
             
             if (productItem == null)
                 return new ServiceResponse<List<ProductItemCookieDto>>(ResponseResult.NotFound, _Message.NotFound());
+
             var productStock = 0;
 
+            #region get product stock
+            
             if (productItem.ProductVarientId > 0)
             {
                 productStock = _ProductRepository.GetQueryable()
@@ -329,10 +338,17 @@ namespace OrganicShop.BLL.Services
                 productStock = _ProductRepository.GetQueryable()
                     .FirstAsync(a => a.Id == productItem.ProductId).Result.Stock;
             }
-            productItem.Count += count;
+
+            #endregion
+
+            productItem.Count = count;
             if(productItem.Count > productStock)
             {
                 productItem.Count = productStock;
+            }
+            if(productItem.Count < 1)
+            {
+                previousProductItems.Remove(productItem);
             }
 
             return new ServiceResponse<List<ProductItemCookieDto>>(ResponseResult.Success, _Message.SuccessUpdate(), previousProductItems);

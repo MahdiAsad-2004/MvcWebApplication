@@ -13,7 +13,7 @@ namespace OrganicShop.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
-           
+
 
 
             builder.HasMany(a => a.Pictures).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
@@ -30,8 +30,46 @@ namespace OrganicShop.DAL.Configurations
 
 
 
+
+            builder.Property(a => a.Stock).HasField("_Stock");
+
+
+
+            //builder.Property(a => a.DiscountedPrice).HasValueGenerator(typeof(Asd));
+            //builder.Property(a => a.DiscountedPrice).ValueGeneratedOnAddOrUpdate();
+            //builder.Property(a => a.DiscountedPrice).HasField();
+
+
+            //builder.Property(a => a.DiscountedPrice).HasComputedColumnSql();
+
+
+
             builder.HasQueryFilter(a => a.BaseEntity.IsDelete == false);
 
+        }
+    }
+
+
+    public class Asd : ValueGenerator<int?>
+    {
+        public override bool GeneratesTemporaryValues => false;
+
+        public override int? Next(EntityEntry entry)
+        {
+            Console.WriteLine($"ValueGenrator is runing");
+            var product = entry.Entity as Product;
+            if (product != null)
+            {
+                Console.WriteLine($"product isnot null");
+                if (product.DiscountProducts != null)
+                {
+                    Console.WriteLine($"product is not null");
+                    Console.WriteLine($"discountedProducts is not null");
+
+                    return product.GetDiscountedPrice1();
+                }
+            }
+            return null;
         }
     }
 

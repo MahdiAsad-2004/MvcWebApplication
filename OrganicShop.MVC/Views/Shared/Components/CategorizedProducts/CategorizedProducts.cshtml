@@ -4,9 +4,11 @@
 @using OrganicShop.Domain.Entities
 @model List<ProductSummaryDto>
 @{
-    var CategoriesGroup = Model.GroupBy(a => a.CategoryTitle);
     List<ProductSummaryDto> productsHistory = ViewData["ProductsHistory"] as List<ProductSummaryDto>;
     var userWihsIds = ViewData["UserWishProductIds"] as long[] ?? new long[0];
+    var categoryIds = ViewData["CategoryIds"] as int[] ?? new int[0];
+    var categories = Model.SelectMany(a => a.Categories);
+    //var CategoriesGroup = Model.GroupBy(a => a.Categories.Any(a => categoryIds.con));
 }
 <section class="product-section">
     <div class="container-fluid-lg">
@@ -30,11 +32,11 @@
                 @{
                     byte index = 1;
                 }
-                @foreach (var keyGroupName in CategoriesGroup.Select(a => a.Key))
+                @foreach (var categoryId in categoryIds)
                 {
                     <li class="nav-item">
                         <button class="nav-link btn" data-bs-toggle="tab" data-bs-target="#tab-number-@index" type="button">
-                            @keyGroupName
+                            @categories.FirstOrDefault(a => a.Id == categoryId).Title
                         </button>
                     </li>
                     index++;
@@ -66,7 +68,7 @@
                                         }
                                     </div>
 
-                                    <a href="product-left.html">
+                                    <a href="/Product/@item.Barcode">
                                         <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
                                     </a>
 
@@ -81,7 +83,7 @@
 
                                 <div class="product-detail">
                                     @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
-                                    <a href="product-left.html">
+                                    <a href="/Product/@item.Barcode">
                                         <h5 class="name">@item.Title</h5>
                                     </a>
                                     @if (item.DiscountedPrice != null)
@@ -140,7 +142,7 @@
                                         }
                                     </div>
 
-                                    <a href="product-left.html">
+                                    <a href="/Product/@item.Barcode">
                                         <img src="~/media/images/product/@item.MainImageName" class="img-fluid" alt="">
                                     </a>
 
@@ -155,7 +157,7 @@
 
                                 <div class="product-detail">
                                     @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
-                                    <a href="product-left.html">
+                                    <a href="/Product/@item.Barcode">
                                         <h5 class="name">@item.Title</h5>
                                     </a>
                                     @if (item.DiscountedPrice != null)
@@ -196,13 +198,13 @@
             @{
                 index = 1;
             }
-            @foreach (var categoryGroup in CategoriesGroup)
+            @foreach (var categoryId in categoryIds)
             {
                 <div class="tab-pane fade" id="tab-number-@index" role="tabpanel" aria-labelledby>
                     
                     <div class="row g-8">
 
-                        @foreach (var item in categoryGroup)
+                        @foreach (var item in Model.Where(a => a.Categories.Any(a => a.Id == categoryId)))
                         {
                             <div class="col-xxl-2 col-lg-3 col-md-4 col-6">
                                 <div class="product-box-4">
@@ -222,7 +224,7 @@
                                             }
                                         </div>
 
-                                        <a href="product-left.html">
+                                        <a href="/Product/@item.Barcode">
                                             <img src="~/media//images/product/@item.MainImageName" class="img-fluid" alt="">
                                         </a>
 
@@ -237,7 +239,7 @@
 
                                     <div class="product-detail">
                                         @await Html.PartialAsync("_RatingPartial", item.CommentsRate)
-                                        <a href="product-left.html">
+                                        <a href="/Product/@item.Barcode">
                                             <h5 class="name">@item.Title</h5>
                                         </a>
                                         @if (item.DiscountedPrice != null)

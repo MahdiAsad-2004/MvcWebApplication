@@ -72,11 +72,11 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
                     break;
 
                 case ProductSortType.Rate:
-                    query = query.OrderBy(a => (float)a.Comments.Sum(b => b.Rate) / a.Comments.Count == 0 ? int.MaxValue : a.Comments.Count);
+                    query = query.OrderBy(a => (float)a.Comments.Sum(b => b.Rate) / (a.Comments.Count == 0 ? int.MaxValue : a.Comments.Count));
                     break;
 
                 case ProductSortType.RateDesc:
-                    query = query.OrderByDescending(a => (float)a.Comments.Sum(b => b.Rate) / a.Comments.Count == 0 ? int.MaxValue : a.Comments.Count);
+                    query = query.OrderByDescending(a => (float)a.Comments.Sum(b => b.Rate) / (a.Comments.Count == 0 ? int.MaxValue : a.Comments.Count));
                     break;
             }
 

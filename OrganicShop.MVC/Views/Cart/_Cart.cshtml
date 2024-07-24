@@ -30,7 +30,7 @@
                                                 <div class="product-detail">
                                                     <ul>
                                                         <li class="name">
-                                                            <a href="/Product/@item.Barcode">@item.Title</a>
+                                                            <a href="/Product/@item.Barcode" style="width:100px !important; display:block; font-size:12px; text-overflow:ellipsis !important; ">@item.Title</a>
                                                         </li>
 
                                                         @if (item.VarientType != null && item.VarientValue != null)
@@ -50,7 +50,7 @@
                                             @if (item.DiscountedPrice != null)
                                             {
                                                 <h5>@item.DiscountedPrice.Value.ToMoney()<del class="text-content mr-2">@item.Price.ToMoney()</del></h5>
-                                                <h6 class="theme-color">سود شما : @((item.Price - item.DiscountedPrice.Value).ToMoney())</h6>
+                                                <h6 class="theme-color">سود شما : @(((item.Price - item.DiscountedPrice.Value) * item.Count).ToMoney())</h6>
                                             }
                                             else
                                             {
@@ -64,11 +64,11 @@
                                             <div class="quantity-price">
                                                 <div class="cart_qty">
                                                     <div class="input-group">
-                                                        <button type="button" class="btn qty-left-minus" onclick="DecreaseProductItemCount('@item.Id')">
+                                                        <button type="button" class="btn" onclick="DecreaseProductItemCount('@item.Id')">
                                                             <i class="fa fa-minus ms-0"></i>
                                                         </button>
                                                         <input class="form-control" id="productItem-@item.Id-count" max="@item.Stock" type="text" value="@item.Count">
-                                                        <button type="button" class="btn qty-right-plus" onclick="IncreaseProductItemCount('@item.Id')">
+                                                        <button type="button" class="btn" onclick="IncreaseProductItemCount('@item.Id')">
                                                             <i class="fa fa-plus ms-0"></i>
                                                         </button>
                                                     </div>
@@ -86,10 +86,10 @@
 
                                         <td class="save-remove">
                                             <h4 class="table-title text-content">عملیات</h4>
-                                            <a class="save notifi-wishlist" href="javascript:void(0)">
+                                            <a class="save notifi-wishlist">
                                                 افزودن به سبد خرید بعدی
                                             </a>
-                                            <a class="remove close_button" href="javascript:void(0)" onclick="RemoveProductItem('@item.Id')">
+                                            <a role="button" class="remove" onclick="RemoveProductItem('@item.Id')">
                                                 حذف
                                             </a>
                                         </td>

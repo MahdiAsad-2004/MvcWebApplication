@@ -41,7 +41,7 @@ namespace OrganicShop.Mvc.Controllers
             if(response.Result == ResponseResult.Success)
                 return _ClientHandleResult.Toast(HttpContext ,new Toast(ToastType.Success, "دیدگاه شما با موفقیت ارسال شد"));
             
-            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message) , responseResult:false);
         }
 
 
@@ -55,15 +55,15 @@ namespace OrganicShop.Mvc.Controllers
             {
                 if (create.SaveNameAndEmail)
                 {
-                    string CryptedVlaue = AesOperation.Encrypt(AppCookies.NameAndEmailForComment.GenerateJsonValue(new(create.AuthorName, create.Email)), _AesKeys.Cookie);
-                    HttpContext.Response.Cookies.Append(AppCookies.NameAndEmailForComment.Key, CryptedVlaue, AppCookies.NameAndEmailForComment.Options);
-                    //HttpContext.Response.Cookies.Append("NameSavedForComment" ,AesOperation.Encrypt(create.AuthorName ,_AesKeys.Cookie ));
-                    //HttpContext.Response.Cookies.Append("EmailSavedForComment" ,AesOperation.Encrypt(create.Email ,_AesKeys.Cookie ));
+                    HttpContext.Response.Cookies.Append
+                        (AppCookies.NameAndEmailForComment.Key,
+                        AesOperation.Encrypt(AppCookies.NameAndEmailForComment.GenerateJsonValue(new CredentialForCommentDto { AuthorName = create.AuthorName, Email = create.Email }), _AesKeys.Cookie), 
+                        AppCookies.NameAndEmailForComment.Options);
                 }
                 return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, "دیدگاه شما با موفقیت ارسال شد"));
             }
 
-            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message) , responseResult:false);
         }
 
 

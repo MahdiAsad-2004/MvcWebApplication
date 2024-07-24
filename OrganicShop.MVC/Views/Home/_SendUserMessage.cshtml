@@ -6,7 +6,7 @@
         <h2>تماس با ما</h2>
     </div>
     <div class="right-sidebar-box">
-        <form class="row" action="/Home/SendUserMessage" method="post" onsubmit="FetchRequest(event)">
+        <form id="send-user-message-form" class="row" action="/Contact-Us/SendUserMessage" method="post" >
             @if (User.GetAppUser().Id > 0)
             {
                 <input hidden asp-for="FirstName" disabled />
@@ -83,8 +83,10 @@
                     </div>
                 </div>
             }
-
         </form>
-        <button type="submit" class="btn btn-animation btn-md fw-bold ms-auto">ارسال پیام</button>
+        <button type="submit" class="btn btn-animation btn-md fw-bold ms-auto"
+                onclick="FetchRequestForm(document.getElementById('send-user-message-form'))">
+            ارسال پیام
+        </button>
     </div>
 </div>

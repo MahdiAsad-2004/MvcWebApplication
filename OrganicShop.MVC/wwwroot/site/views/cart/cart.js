@@ -1,33 +1,34 @@
 let ProductItemCount = 0;
 let ProductItemCountInput;
 let EditProductitemForm = document.getElementById('edit-productitem-form')
-let EditProductitemIdInput = document.getElementById('edit-productitem-count-input');
-let EditProductitemCountInput = document.getElementById('edit-productitem-id-input')
+let EditProductitemIdInput = document.getElementById('edit-productitem-id-input');
+let EditProductitemCountInput = document.getElementById('edit-productitem-count-input')
 async function IncreaseProductItemCount(productItemId) {
     ProductItemCountInput = document.getElementById(`productItem-${productItemId}-count`);
-    ProductItemCount = Number(ProductItemCountInput.value) + 1;
-    if (productCartCount && productCartCount <= ProductItemCountInput.max) {
-        EditProductitemIdInput.value = productItemId;
+    ProductItemCount = +ProductItemCountInput.value + 1;
+    if (ProductItemCount && ProductItemCount <= ProductItemCountInput.max) {
+        EditProductitemIdInput.value = +productItemId;
         EditProductitemCountInput.value = ProductItemCount;
-        await FetchRequestForm(EditProductitemForm);
+        if (await FetchRequestForm(EditProductitemForm)) {
+            await LoadCartSummary();
+        }
     }
 }
 async function DecreaseProductItemCount(productItemId) {
     ProductItemCountInput = document.getElementById(`productItem-${productItemId}-count`);
-    ProductItemCount = Number(ProductItemCountInput.value) - 1;
-    if (Number(productCartCount)) {
-        if (productCartCount >= 1) {
-            EditProductitemIdInput.value = productItemId;
-            EditProductitemCountInput.value = ProductItemCount;
-            var result = await FetchRequestForm(EditProductitemForm);
-            if (result) {
-                ProductItemCountInput.value = ProductItemCount;
-            }
+    ProductItemCount = +ProductItemCountInput.value - 1;
+    if (ProductItemCount >= 1) {
+        EditProductitemIdInput.value = +productItemId;
+        EditProductitemCountInput.value = ProductItemCount;
+        if (await FetchRequestForm(EditProductitemForm)) {
+            await LoadCartSummary();
         }
-        else {
-            await RemoveProductItem(productItemId);
-        }   
     }
+    //if (ProductItemCount <= 0) {
+    //    if (await RemoveProductItem(productItemId)) {
+    //        await LoadCartSummary();
+    //    }
+    //}
 }
 
 
@@ -37,9 +38,13 @@ async function DecreaseProductItemCount(productItemId) {
 let RemoveProductItemForm = document.getElementById('remove-productitem-form');
 let RemoveProductItemFormIdInput = document.getElementById('remove-productitem-form-id-input');
 async function RemoveProductItem(productItemId) {
-    if (Number(productItemId) && productItemId > 0) {
+    productItemId = +productItemId;
+    if (productItemId > 0) {
         RemoveProductItemFormIdInput.value = productItemId;
-        await FetchRequestForm(RemoveProductItemForm);
+        if (await FetchRequestForm(RemoveProductItemForm)) {
+            await LoadCartSummary();
+        }
+        
     }
 }
 

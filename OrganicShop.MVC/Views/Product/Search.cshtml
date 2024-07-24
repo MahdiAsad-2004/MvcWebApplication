@@ -19,7 +19,7 @@
                                     <i class="fa-solid fa-house"></i>
                                 </a>
                             </li>
-                            <li>
+                            <li class="breadcrumb-item">
                                 <a href="/Products">محصولات</a>
                             </li>
                             <li class="breadcrumb-item active">جستجو</li>
@@ -40,14 +40,14 @@
                     <h2>جستجو برای محصولات</h2>
                     <span class="title-leaf">
                         <svg class="icon-width">
-                            <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
+                            <use xlink:href="~/site/assets/svg/leaf.svg#leaf"></use>
                         </svg>
                     </span>
                 </div>
 
-                <form class="search-box" id="search-box-form" action="/product/search/" method="post" data-target-id="search-result-products-container" >
+                <form class="search-box" id="search-box-form" action="/product/search/t" method="post" >
                     <div class="input-group">
-                        <span hidden id="searchText-span">@searchText</span>
+                        @* <span hidden id="searchText-span">@searchText</span> *@
                         <input id="search-box-form-input" name="searchText" type="text" class="form-control" placeholder="عبارت موردنظر را تایپ کنید" value="@searchText">
                         <button class="btn theme-bg-color text-white m-0" type="button" id="search-box-form-button">
                             جستجو
@@ -60,14 +60,38 @@
 </section>
 <!-- Search Bar Section End -->
 
-@await Html.PartialAsync("_Search" , Model);
+<div id="search-result-products-container">
+    @await Html.PartialAsync("_Search", Model);
+</div>
 
 
-<form id="preview-product-modal-request-form" hidden action="/Product/Preview" method="post" data-target-id="preview-product-modal">
+
+
+
+
+
+
+<form id="preview-product-modal-request-form" hidden action="/Product/Preview" method="post" data-container-id="preview-product-modal">
     <input type="number" name="id" hidden readonly value="0" />
 </form>
 <form id="edit-product-wishlist-form" hidden action="/User/EditProductWishList" method="post">
     <input type="number" name="productId" hidden readonly value="0" />
     <input type="number" name="isDelete" hidden readonly value="false" />
 </form>
-@await Html.PartialAsync("_AddToCartForm", new CreateProductItemDto()) >
+@await Html.PartialAsync("_AddToCartForm", new CreateProductItemDto())
+
+@section Modals {
+
+    <div class="modal fade theme-modal view-modal" id="preview-product-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        @await Html.PartialAsync("_PreviewProductModal", new ProductSummaryDto())
+    </div>
+
+}
+
+@section Scripts {
+
+    <script src="~/site/views/product/search.js"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

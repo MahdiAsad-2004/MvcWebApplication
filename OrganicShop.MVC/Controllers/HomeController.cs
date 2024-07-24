@@ -78,7 +78,7 @@ namespace OrganicShop.Mvc.Controllers
         }
 
 
-
+        [HttpPost("/Contact-Us/SendUserMessage")]
         public async Task<IActionResult> SendUserMessage(CreateUserMessageDto createUserMessage)
         {
             if (User.GetAppUser().Id > 0)

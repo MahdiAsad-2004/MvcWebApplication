@@ -133,15 +133,16 @@ async function Partial(response, form) {
     TargetElementId = form.getAttribute('data-target-id');
     response.text().then(partial => {
         if (TargetElementId) {
-            console.log(document.getElementById(TargetElementId));
+            //console.log(document.getElementById(TargetElementId));
             //console.log(partial);
 
-
-            document.getElementById(TargetElementId).insertAdjacentHTML('afterend', partial);
+            const deleteElement = document.getElementById(TargetElementId);
+            deleteElement.insertAdjacentHTML('afterend', partial);
+            deleteElement.remove();
             //document.getElementById(TargetElementId).insertAdjacentElement('beforeend', document.createElement('h6'));
 
 
-            console.log(document.getElementById(TargetElementId));
+            //console.log(document.getElementById(TargetElementId));
 
             //var template = document.createElement('div');
             //template.append(partial);

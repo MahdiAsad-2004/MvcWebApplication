@@ -15,7 +15,7 @@
         <ul class="cart-list">
             @foreach (var item in Model)
             {
-                <li>
+                <li id="cart-summary-productItem-@item.Id">
                     <div class="drop-cart">
                         <a href="/product/@item.Barcode" class="drop-image">
                             <img src="~/media/images/product/@item.MainImageName"
@@ -27,7 +27,7 @@
                                 <h5>@item.Title</h5>
                             </a>
                             <h6><span>@item.Count x</span>@(item.DiscountedPrice == null ? item.Price.ToToman() : item.DiscountedPrice.Value.ToToman())</h6>
-                            <button class="close-button">
+                            <button class="close-button" onclick="RemoveCartSummaryProductItem('@item.Id' , 'cart-summary-productItem-@item.Id')">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
@@ -51,3 +51,7 @@
         </div>
     </div>
 </li>
+
+<form hidden id="cart-summary-remove-productitem-form" method="post" action="/CartSummary/RemoveProductItem" data-target-id="cart-summary-dropdown">
+    <input id="cart-summary-remove-productitem-input-id" name="productItemId" value="0" type="number" />
+</form>

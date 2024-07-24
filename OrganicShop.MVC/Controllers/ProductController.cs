@@ -117,26 +117,32 @@ namespace OrganicShop.Mvc.Controllers
             {
                 #region add product to view history
 
-                List<long>? productViewHistoryIdsList = null;
-                var productViewHistoryIds = AppCookies.ProductViewHistory.GetModel(AesOperation.Decrypt(HttpContext.Request.Cookies[AppCookies.ProductViewHistory.Key], _AesKeys.Cookie));
-                if (productViewHistoryIds != null)
+                var productViewHistoryDtoList = AppCookies.ProductViewHistory.GetModel(AesOperation.Decrypt(HttpContext.Request.Cookies[AppCookies.ProductViewHistory.Key], _AesKeys.Cookie));
+                if (productViewHistoryDtoList != null)
                 {
-                    productViewHistoryIdsList = productViewHistoryIds.ToList();
-                    productViewHistoryIdsList.Add(response.Data.Id);
+                    if (productViewHistoryDtoList.Any(a => a.ProductId == response.Data.Id))
+                    {
+                        productViewHistoryDtoList.First(a => a.ProductId == response.Data.Id).ViewDate = DateTime.UtcNow;
+                    }
+                    else
+                    {
+                        productViewHistoryDtoList.Add(new ProductHistoryViewDto { ProductId = response.Data.Id, ViewDate = DateTime.UtcNow });
+                    }
                 }
                 else
                 {
-                    productViewHistoryIdsList = new List<long> { response.Data.Id };
+                    productViewHistoryDtoList = new List<ProductHistoryViewDto> { new ProductHistoryViewDto { ProductId = response.Data.Id, ViewDate = DateTime.UtcNow } };
                 }
                 HttpContext.Response.Cookies.Append(
                     AppCookies.ProductViewHistory.Key,
-                    AesOperation.Encrypt(AppCookies.ProductViewHistory.GenerateJsonValue(productViewHistoryIdsList.ToArray()), _AesKeys.Cookie),
+                    AesOperation.Encrypt(AppCookies.ProductViewHistory.GenerateJsonValue(productViewHistoryDtoList), _AesKeys.Cookie),
                     AppCookies.ProductViewHistory.Options);
 
                 #endregion
 
-                ViewData["SimilarProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { CategoryId = response.Data.CategoryId })).Data!.List;
-                ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
+                ViewData["SimilarProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { CategoryId = response.Data.CategoryId })).Data!.List ?? new List<ProductSummaryDto>(); ;
+                //ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
+                ViewData["UserWishProductIds"] = new long[11] { 1, 3, 6, 9, 12, 15, 18, 21, 24, 28, 30 };
                 return View("Product", response.Data);
             }
 
@@ -167,7 +173,7 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
-        [HttpGet("products/search/{searchText}")]
+        [HttpGet("/products/search/{searchText}")]
         public async Task<IActionResult> Search(string searchText)
         {
             if (string.IsNullOrWhiteSpace(searchText))
@@ -185,18 +191,10 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
-        [HttpPost("products/search/{searchText}")]
+        [HttpPost("/products/search/{searchText}")]
         public async Task<IActionResult> Search_Post(string searchText)
         {
-            if (string.IsNullOrWhiteSpace(searchText))
-                return _ClientHandleResult.Redirect(HttpContext, "404", "Error", false);
-
-            var model = (await _ProductService.GetAllSummary
-                (new FilterProductDto { Title = searchText }, new PagingDto { PageItemsCount = 20 })).Data?.List ?? new List<ProductSummaryDto>();
-
-            ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
-
-            return _ClientHandleResult.Partial(HttpContext, PartialView("_Search", model));
+            return _ClientHandleResult.Redirect(HttpContext, $"search/{searchText}", "products", true);
         }
 
 

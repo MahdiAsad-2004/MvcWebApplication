@@ -17,8 +17,8 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
         public string MainImageName { get; set; }
         public string[] ImageNames { get; set; }
         public string Barcode { get; set; }
-        public string CategoryTitle { get; set; }
         public bool IsActive { get; set; }
+        public Category[] Categories { get; set; }
         public PropertyListDto[] Properties { get; set; }
         public ProductVarient[] Varients { get; set; }
 

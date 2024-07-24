@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
+using OrganicShop.Domain.Dtos.ProductDtos;
 using OrganicShop.Domain.Entities.Base;
 using OrganicShop.Domain.Entities.Relations;
 
@@ -14,13 +11,62 @@ namespace OrganicShop.Domain.Entities
     {
         public int Price { get; set; }
         public string Title { get; set; }
-        public int Stock { get; set; }
+        //public int Stock { get; set; }
         public int SoldCount { get; set; }
         public string ShortDescription { get; set; }
         public string Description { get; set; }
-        public int? DiscountedPrice { get; set; }
+
+
+
+        //public int? DiscountedPrice { get; set; }
+
+
+        public int? DiscountedPrice
+        {
+            get
+            {
+                if (DiscountProducts != null)
+                {
+                    return this.GetDiscountedPrice1();
+                }
+                return null;
+            }
+            set { }
+        }
+
+
+
+        private int _Stock;
+        public int Stock
+        {
+            get
+            {
+                if (ProductVarients != null)
+                {
+                    if (ProductVarients.Any())
+                    {
+                        return ProductVarients.Sum(a => a.Stock);
+                    }
+                }
+                return _Stock;
+            }
+            set 
+            {
+                _Stock = value; 
+            }
+        }
+
+
         public string Barcode { get; set; }
         public int? SellerId { get; set; }
+
+
+
+
+
+
+
+
 
 
         public ICollection<Picture> Pictures { get; set; }

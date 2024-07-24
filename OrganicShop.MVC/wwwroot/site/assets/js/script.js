@@ -313,17 +313,17 @@ $(".notifi-wishlist").on("click", function () {
 /*=====================
    14. Loader Js
    ==========================*/
-const loaderEl = document.getElementsByClassName("fullpage-loader")[0];
-document.addEventListener("readystatechange", (event) => {
-    const readyState = "complete";
-    if (document.readyState == readyState) {
-        loaderEl.classList.add("fullpage-loader--invisible");
+//const loaderEl = document.getElementsByClassName("fullpage-loader")[0];
+//document.addEventListener("readystatechange", (event) => {
+//    const readyState = "complete";
+//    if (document.readyState == readyState) {
+//        loaderEl.classList.add("fullpage-loader--invisible");
 
-        setTimeout(() => {
-            loaderEl.parentNode.removeChild(loaderEl);
-        }, 100);
-    }
-});
+//        setTimeout(() => {
+//            loaderEl.parentNode.removeChild(loaderEl);
+//        }, 100);
+//    }
+//});
 
 /*=====================
     15. header Dropdown Js
@@ -490,7 +490,7 @@ Number.prototype.formatMoney = function (s, type) {
 
 let AddToCartForm = document.getElementById('add-to-cart-form');
 var count = 0;
-async function AddProductToCart(productId, productVarientId, timeOut,inputId) {
+async function AddProductToCart(productId, productVarientId, timeOut, inputId) {
     var result = false;
     count = +document.getElementById(inputId).value;
     if (Boolean(productVarientId) == false || productVarientId < 1) {
@@ -591,7 +591,10 @@ async function PreviewProductModalRequest(id) {
 // add product to wihslist
 
 const EditProductWishListForm = document.getElementById('edit-product-wishlist-form');
-const EditProductWishListProductIdInput = EditProductWishListForm.querySelector("input[name = 'productId']");
+let EditProductWishListProductIdInput;
+if (EditProductWishListForm) {
+    EditProductWishListProductIdInput = EditProductWishListForm.querySelector("input[name = 'productId']");
+}
 const EmptyHeartIconElemnt = `<i class="fa-regular fa-heart" style="color: #7c7e7e;"></i>`;
 const FullHeartIconElemnt = `<i class="fa-solid fa-heart" style="color: #e14141;"></i>`;
 
@@ -642,10 +645,18 @@ SearchHeaderFormButton.onclick = () => {
     SearchHeaderForm.action = `/products/search/${SearchHeaderFormInput.value}`;
     SearchHeaderForm.submit();
 }
+SearchHeaderForm.onsubmit = (e) => {
+    e.preventDefault();
+    SearchHeaderForm.action = `/products/search/${SearchHeaderFormInput.value}`;
+    SearchHeaderForm.submit();
+}
 
 
 
-// load product summary (dropdown icon in topmenu)
+
+
+
+// load cart summary (dropdown icon in topmenu)
 async function LoadCartSummary() {
     var container = document.getElementById('cart-summary-dropdown');
     var response = await fetch('/CartSummary', {
@@ -658,3 +669,22 @@ async function LoadCartSummary() {
         })
 }
 LoadCartSummary();
+
+
+
+
+
+// remove cart summary item 
+
+const CartSummaryRemoveProductitemForm = document.getElementById('cart-summary-remove-productitem-form');
+const CartSummaryRemoveProductitemInputId = document.getElementById('cart-summary-remove-productitem-input-id');
+async function RemoveCartSummaryProductItem(productItemId, elementId) {
+    if (+productItemId > 0) {
+        CartSummaryRemoveProductitemInputId.value = productItemId;
+        if (await FetchRequestForm(CartSummaryRemoveProductitemForm))
+        {
+            document.getElementById(elementId).remove();
+        }
+    }
+}
+

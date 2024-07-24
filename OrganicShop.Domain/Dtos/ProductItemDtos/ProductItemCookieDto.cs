@@ -4,7 +4,7 @@ using OrganicShop.Domain.Enums;
 
 namespace OrganicShop.Domain.Dtos.ProductItemDtos
 {
-    public class ProductItemCookieDto : BaseListDto<long>
+    public class ProductItemCookieDto : BaseDto
     {
         public long ProductId { get; set; }
         public long? ProductVarientId { get; set; }

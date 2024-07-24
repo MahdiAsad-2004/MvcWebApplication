@@ -86,8 +86,7 @@ namespace OrganicShop.Mvc.Controllers
         public async Task<IActionResult> Index()
         {
             List<ProductItemListDto> model = await GetProductItemListDtos();
-
-            return View("Index", model);
+            return View("Cart", model);
         }
 
 
@@ -108,7 +107,7 @@ namespace OrganicShop.Mvc.Controllers
             if (createProductItem.ProductVarientId < 1)
                 createProductItem.ProductVarientId = null;
 
-            var successToast = new Toast(ToastType.Success, "محصول با موفقیت به سبد خربد افزوده شد",3000);
+            var successToast = new Toast(ToastType.Success, "محصول با موفقیت به سبد خربد افزوده شد", 3000);
             if (User.Identity.IsAuthenticated)
             {
                 var response = await _ProductItemService.Create(createProductItem);
@@ -148,7 +147,14 @@ namespace OrganicShop.Mvc.Controllers
                 var response = await _ProductItemService.UpdateForCookie(productItemId, count, GetCookieProductItems());
                 if (response.Result == ResponseResult.Success)
                 {
-                    var model = await GetProductItemListDtos();
+                    var newProductItemCookieDtos = response.Data;
+                    Response.Cookies.Append(
+                            AppCookies.UnknownUserCartItems.Key,
+                            AesOperation.Encrypt(AppCookies.UnknownUserCartItems.GenerateJsonValue(newProductItemCookieDtos), _AesKeys.Cookie),
+                            AppCookies.UnknownUserCartItems.Options);
+
+                    var model = (await _ProductItemService.GetAll(newProductItemCookieDtos))?.Data ?? new List<ProductItemListDto>();
+                    
                     return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart", model));
                 }
                 return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
@@ -158,22 +164,73 @@ namespace OrganicShop.Mvc.Controllers
 
         public async Task<IActionResult> RemoveProductItem(long productItemId)
         {
-            var response = await _ProductItemService.Delete(productItemId);
-            if (response.Result == ResponseResult.Success)
+            if (User.Identity.IsAuthenticated)
             {
-                var model = await GetProductItemListDtos();
-                return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart", model));
+                var response = await _ProductItemService.Delete(productItemId);
+                if (response.Result == ResponseResult.Success)
+                {
+                    var model = await GetProductItemListDtos();
+                    return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart", model));
+                }
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
             }
-            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
-
+            else
+            {
+                var productItemCookieDtos = GetCookieProductItems();
+                var removeItem = productItemCookieDtos.FirstOrDefault(a => a.ProductId == productItemId);
+                if(removeItem != null)
+                {
+                    if(productItemCookieDtos.Remove(removeItem))
+                    {
+                        Response.Cookies.Append(
+                            AppCookies.UnknownUserCartItems.Key,
+                            AesOperation.Encrypt(AppCookies.UnknownUserCartItems.GenerateJsonValue(productItemCookieDtos), _AesKeys.Cookie),
+                            AppCookies.UnknownUserCartItems.Options);
+                        var model = (await _ProductItemService.GetAll(productItemCookieDtos))?.Data ?? new List<ProductItemListDto>();
+                        return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart", model));
+                    }
+                }
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "محصول در سبد خرید وجود نداشت !"),responseResult:false);
+            }
         }
 
 
 
-       
+        [HttpPost("/CartSummary/RemoveProductItem")]
+        public async Task<IActionResult> RemoveProductItem_1(long productItemId)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var response = await _ProductItemService.Delete(productItemId);
+                if (response.Result == ResponseResult.Success)
+                {
+                    var model = await GetProductItemListDtos();
+                    return _ClientHandleResult.Partial(HttpContext, PartialView("_CartSummary", model));
+                }
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
+            }
+            else
+            {
+                var productItemCookieDtos = GetCookieProductItems();
+                var removeItem = productItemCookieDtos.FirstOrDefault(a => a.ProductId == productItemId);
+                if(removeItem != null)
+                {
+                    if(productItemCookieDtos.Remove(removeItem))
+                    {
+                        Response.Cookies.Append(
+                            AppCookies.UnknownUserCartItems.Key,
+                            AesOperation.Encrypt(AppCookies.UnknownUserCartItems.GenerateJsonValue(productItemCookieDtos), _AesKeys.Cookie),
+                            AppCookies.UnknownUserCartItems.Options);
+                        var model = (await _ProductItemService.GetAll(productItemCookieDtos))?.Data ?? new List<ProductItemListDto>();
+                        return _ClientHandleResult.Partial(HttpContext, PartialView("_CartSummary", model));
+                    }
+                }
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "محصول در سبد خرید وجود نداشت !"),responseResult:false);
+            }
+        }
 
 
-       
+
 
 
 

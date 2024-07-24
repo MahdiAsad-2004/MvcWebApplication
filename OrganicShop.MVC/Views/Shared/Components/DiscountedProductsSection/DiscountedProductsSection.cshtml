@@ -15,9 +15,9 @@
                     {
                         <div>
                             <div class="deal-box wow fadeInUp">
-                                <a href="shop-left-sidebar.html" class="category-image order-sm-2">
+                                <a href="/Product/@item.Barcode" class="category-image order-sm-2">
                                     <img src="~/media/images/product/@item.MainImageName" class="img-fluid blur-up lazyload"
-                                         alt="">
+                                         alt="@item.Title">
                                 </a>
 
                                 <div class="deal-detail order-sm-1">
@@ -80,7 +80,7 @@
                                             <i data-feather="star"></i>
                                         </li> *@
                                     </ul>
-                                    <a href="shop-left-sidebar.html" class="text-title">
+                                    <a href="/Product/@item.Barcode" class="text-title">
                                         <h5>@item.Title</h5>
                                     </a>
                                     <h5 class="price"> @item.Price.ToMoney() تومان  <span>@item.DiscountedPrice.Value.ToMoney() </span></h5>

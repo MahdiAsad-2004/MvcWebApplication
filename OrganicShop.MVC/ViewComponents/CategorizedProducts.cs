@@ -35,14 +35,23 @@ namespace OrganicShop.Mvc.ViewComponents
                 categoryIds = ViewComponentContext.Arguments.First().Value as int[];
             string? productsHistoryCryptedStr = Request.Cookies[AppCookies.ProductViewHistory.Key];
             List<ProductSummaryDto>? productsHistory = new();
-            long[] productsHistoryIds;
+            List<ProductSummaryDto>? productSummaryDtos = new();
+            //(long ProductId, DateTime ViewDate)[]? productsHistoryItems = new (long ProductId, DateTime ViewDate)[0];
+            List<ProductHistoryViewDto>? productHistoryViewDtos = new();
             List<ProductSummaryDto> categoryproducts = new();
             if (productsHistoryCryptedStr != null)
             {
-                productsHistoryIds = AppCookies.ProductViewHistory.GetModel(AesOperation.Decrypt(productsHistoryCryptedStr, _AesKeys.Cookie)) ?? new long[0];
-                productsHistory = (await _ProductService.GetAllSummary(new FilterProductDto { Ids = productsHistoryIds }, new PagingDto { PageItemsCount = -1 })).Data?.List;
+                //productsHistoryItems = AppCookies.ProductViewHistory.GetModel(AesOperation.Decrypt(productsHistoryCryptedStr, _AesKeys.Cookie)) ?? new (long ProductId , DateTime ViewDate)[0];
+                productHistoryViewDtos = AppCookies.ProductViewHistory.GetModel(AesOperation.Decrypt(productsHistoryCryptedStr, _AesKeys.Cookie)) ?? new ();
+                productsHistory = (await _ProductService.GetAllSummary(new FilterProductDto { Ids = productHistoryViewDtos.Select(a => a.ProductId).ToArray() }, new PagingDto { PageItemsCount = -1 })).Data?.List;
             }
-            ViewData["ProductsHistory"] = productsHistory;
+            //var x = productHistoryViewDtos.OrderByDescending(a  => a.ViewDate);
+            foreach (var item in productHistoryViewDtos.OrderByDescending(a => a.ViewDate))
+            {
+                productSummaryDtos.Add(productsHistory.First(a => a.Id == item.ProductId));
+            }
+            ViewData["ProductsHistory"] = productSummaryDtos;
+            ViewData["CategoryIds"] = categoryIds;
             var products = new List<ProductSummaryDto>();
             if (categoryIds != null)
             {

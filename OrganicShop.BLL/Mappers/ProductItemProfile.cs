@@ -13,16 +13,18 @@ namespace OrganicShop.BLL.Mappers
         {
 
             CreateMap<ProductItem, ProductItemListDto>()
+                .ForMember(m => m.Id, a => a.MapFrom(b => b.Id))
                 .ForMember(m => m.Title, a => a.MapFrom(b => b.Product.Title))
                 .ForMember(m => m.Price, a => a.MapFrom(b => b.Product.Price))
-                .ForMember(m => m.Barcode, a => a.MapFrom(b => b.Product.Title))
                 .ForMember(m => m.Stock, a => a.MapFrom(b => b.Product.Stock))
                 .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
-                .ForMember(m => m.VarientValue, a => a.MapFrom(b => 
+                .ForMember(m => m.VarientValue, a => a.MapFrom(b =>
                     b.ProductVarientId > 0 ? b.Product.ProductVarients.First(p => p.Id == b.ProductVarientId).Value : null))
-                .ForMember(m => m.VarientType, a => a.MapFrom(b => 
+                .ForMember(m => m.VarientType, a => a.MapFrom(b =>
                     b.ProductVarientId > 0 ? b.Product.ProductVarients.First(p => p.Id == b.ProductVarientId).Type.ToStringValue() : null))
-                .ForMember(m => m.DiscountedPrice , a => a.MapFrom(b => b.Product.ToModel().DiscountedPrice));
+                //.ForMember(m => m.DiscountedPrice , a => a.MapFrom(b => b.Product.ToModel().DiscountedPrice))
+                .ForMember(m => m.DiscountedPrice , a => a.MapFrom(b => b.Product.DiscountedPrice))
+                .ForMember(m => m.Barcode, a => a.MapFrom(b => b.Product.Barcode));
 
 
             CreateMap<CreateProductItemDto, ProductItem>();
@@ -32,8 +34,7 @@ namespace OrganicShop.BLL.Mappers
 
 
 
-            CreateMap<CreateProductItemDto, ProductItemCookieDto>()
-                .ForMember(m => m.Id , a => a.MapFrom(b => b.ProductId * (long)2));
+            CreateMap<CreateProductItemDto, ProductItemCookieDto>();
 
         }
 

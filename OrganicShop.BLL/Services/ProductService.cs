@@ -64,7 +64,8 @@ namespace OrganicShop.BLL.Services
                 query = query.Where(a => filter.Ids.Contains(a.Id));
 
             if (filter.Title != null)
-                query = query.Where(q => EF.Functions.Like(q.Title, $"%{filter.Title}%"));
+                query = query.Where(q => EF.Functions.Like(q.Title , $"%{filter.Title}%"));
+                //query = query.Where(q => q.Title.Contains(filter.Title , StringComparison.OrdinalIgnoreCase));
 
             if (filter.MaxPrice != null)
                 query = query.Where(q => q.Price <= filter.MaxPrice);
@@ -87,8 +88,8 @@ namespace OrganicShop.BLL.Services
             if (filter.Rate != null)
             {
                 query = query.Where(q =>
-                ((float)q.Comments.Sum(b => b.Rate) / q.Comments.Count == 0 ? int.MaxValue : q.Comments.Count) >= filter.Rate &&
-                   ((float)q.Comments.Sum(b => b.Rate) / q.Comments.Count == 0 ? int.MaxValue : q.Comments.Count) < filter.Rate + 1);
+                ((float)q.Comments.Sum(b => b.Rate) / (q.Comments.Count == 0 ? int.MaxValue : q.Comments.Count)) >= filter.Rate &&
+                   ((float)q.Comments.Sum(b => b.Rate) / (q.Comments.Count == 0 ? int.MaxValue : q.Comments.Count)) < filter.Rate + 1);
             }
 
             //query = query.Where(q => q)
@@ -135,7 +136,7 @@ namespace OrganicShop.BLL.Services
 
             #region includes
 
-            var x = query
+            query = query
                 .Include(a => a.Pictures)
                 .Include(a => a.Categories)
                 .Include(a => a.DiscountProducts)
@@ -144,11 +145,11 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.Properties)
                  .ThenInclude(a => a.PropertyType)
                 .Include(a => a.ProductVarients)
-                .Select(a => a.ToModel())
-                .AsParallel();
-
-            query = x
+                //.AsParallel();
                 .AsQueryable();
+
+            //query = x
+              //.AsQueryable();
 
             #endregion
 
@@ -233,7 +234,7 @@ namespace OrganicShop.BLL.Services
             if (product == null)
                 return new ServiceResponse<ProductDetailDto>(ResponseResult.NotFound, null);
 
-            return new ServiceResponse<ProductDetailDto>(ResponseResult.Success, _Mapper.Map<ProductDetailDto>(product.ToModel()));
+            return new ServiceResponse<ProductDetailDto>(ResponseResult.Success, _Mapper.Map<ProductDetailDto>(product));
         }
 
 

@@ -173,6 +173,7 @@ async function FetchRequestForm(form) {
     form.onsubmit = () => false;
     form.requestSubmit();
     //console.log(form);
+    //console.log(new FormData(form));
     CkEditorElement = form.querySelector('#ckeditor');
     console.log(`Is Form Valid: ${$(form).valid()}`)
     if ($(form).valid()) {

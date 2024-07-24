@@ -23,13 +23,14 @@ namespace OrganicShop.BLL.Mappers
 
             CreateMap<Product, ProductSummaryDto>()
                .ForMember(m => m.DiscountedPrice, a => a.MapFrom(b => b.DiscountedPrice))
-               .ForMember(m => m.CategoryTitle, a => a.MapFrom(b => b.Categories.Last().Title))
+               .ForMember(m => m.Categories, a => a.MapFrom(b => b.Categories.OrderBy(a => a.Id).ToArray()))
                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
                .ForMember(m => m.ImageNames, a => a.MapFrom(b => b.Pictures.Select(p => p.Name).ToArray()))
-               .ForMember(m => m.CommentsRate, a => a.MapFrom(b => 
-                    b.Comments.Where(c => c.Status == CommentStatus.Accepted).Any() ?   
-                    ((float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Sum(c => c.Rate) / 
-                    (float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()) : 0))
+               //.ForMember(m => m.CommentsRate, a => a.MapFrom(b => 
+               //     b.Comments.Where(c => c.Status == CommentStatus.Accepted).Any() ?   
+               //     ((float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Sum(c => c.Rate) / 
+               //     (float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()) : 0))
+               .ForMember(m => m.CommentsRate, a => a.MapFrom(b => 0))
                .ForMember(m => m.CommentsCount, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()))
                .ForMember(m => m.Properties, a => a.MapFrom(b => b.Properties.Select(p => p.ToListDto()).OrderBy(o => o.Priority).ToArray()))
                .ForMember(m => m.IsActive, a => a.MapFrom(b => b.BaseEntity.IsActive))
@@ -42,7 +43,7 @@ namespace OrganicShop.BLL.Mappers
                .ForMember(m => m.ImageNames, a => a.MapFrom(b => b.Pictures.Select(p => p.Name).ToArray()))
                .ForMember(m => m.Properties, a => a.MapFrom(b => b.Properties.Select(p => p.ToListDto()).OrderBy(o => o.Priority).ToArray()))
                .ForMember(m => m.Comments, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Select(c => c.ToListDto()).ToList()))
-               .ForMember(m => m.Discount, a => a.MapFrom(b => b.GetDiscountedPrice()))
+               .ForMember(m => m.Discount, a => a.MapFrom(b => b.GetDiscount()))
                .ForMember(m => m.CategoryId, a => a.MapFrom(b => b.Categories.First().Id))
                .ForMember(m => m.SellerInfo, a => a.MapFrom(b => b.Seller == null ? default(object) : 
                     ValueTuple.Create(
@@ -89,36 +90,37 @@ namespace OrganicShop.BLL.Mappers
 
     public static class ProductMappers
     {
-        public static Product ToModel(this Product product)
-        {
-            return new Product
-            {
-                BaseEntity = product.BaseEntity,
-                Categories = product.Categories != null ? product.Categories!.OrderByDescending(a => a.Id).ToList() : product.Categories,
-                Comments = product.Comments/*.Where(a => a.Status == CommentStatus.Accepted).ToList()*/,
-                Description = product.Description,
-                DiscountProducts = product.DiscountProducts,
-                Id = product.Id,
-                Pictures = product.Pictures,
-                Price = product.Price,
-                ProductItems = product.ProductItems,
-                Properties = product.Properties,
-                ShortDescription = product.ShortDescription,
-                SoldCount = product.SoldCount,
-                Stock = product.ProductVarients.Any() ? product.ProductVarients.Sum(b => b.Stock) : product.Stock,
-                TagProducts = product.TagProducts,
-                Title = product.Title,
-                //DiscountedPrice = product.GetDefaultDiscountedPrice(),
-                DiscountedPrice = product.GetDiscountedPrice(),
-                Barcode = product.Barcode,
-                CouponProducts = product.CouponProducts,
-                ProductVarients = product.ProductVarients,
-                Seller = product.Seller,
-                SellerId = product.SellerId,
-                WishItems = product.WishItems,
+        //public static Product ToModel(this Product product)
+        //{
+        //    return new Product
+        //    {
+        //        BaseEntity = product.BaseEntity,
+        //        Categories = product.Categories != null ? product.Categories!.OrderByDescending(a => a.Id).ToList() : product.Categories,
+        //        Comments = product.Comments/*.Where(a => a.Status == CommentStatus.Accepted).ToList()*/,
+        //        Description = product.Description,
+        //        DiscountProducts = product.DiscountProducts,
+        //        Id = product.Id,
+        //        Pictures = product.Pictures,
+        //        Price = product.Price,
+        //        ProductItems = product.ProductItems,
+        //        Properties = product.Properties,
+        //        ShortDescription = product.ShortDescription,
+        //        SoldCount = product.SoldCount,
+        //        Stock = product.ProductVarients.Any() ? product.ProductVarients.Sum(b => b.Stock) : product.Stock,
+        //        TagProducts = product.TagProducts,
+        //        Title = product.Title,
+        //        //DiscountedPrice = product.GetDefaultDiscountedPrice(),
+        //        //DiscountedPrice = product.GetDiscountedPrice(),
+        //        DiscountedPrice = product.DiscountedPrice,
+        //        Barcode = product.Barcode,
+        //        CouponProducts = product.CouponProducts,
+        //        ProductVarients = product.ProductVarients,
+        //        Seller = product.Seller,
+        //        SellerId = product.SellerId,
+        //        WishItems = product.WishItems,
 
-            };
-        }
+        //    };
+        //}
 
     }
 }
