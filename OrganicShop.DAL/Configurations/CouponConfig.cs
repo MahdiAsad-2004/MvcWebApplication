@@ -10,7 +10,6 @@ namespace OrganicShop.DAL.Configurations
         public void Configure(EntityTypeBuilder<Coupon> builder)
         {
 
-            builder.HasMany(a => a.CouponProducts).WithOne(a => a.Coupon).HasForeignKey(a => a.CouponId).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(a => a.CouponCategories).WithOne(a => a.Coupon).HasForeignKey(a => a.CouponId).OnDelete(DeleteBehavior.Cascade);
 
 

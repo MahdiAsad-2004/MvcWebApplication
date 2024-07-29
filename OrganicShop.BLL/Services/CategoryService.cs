@@ -48,7 +48,6 @@ namespace OrganicShop.BLL.Services
                 .AsQueryable();
 
             if (filter == null) filter = new FilterCategoryDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 
@@ -96,8 +95,7 @@ namespace OrganicShop.BLL.Services
                 .AsQueryable();
 
             if (filter == null) filter = new FilterCategoryDto();
-            if (paging == null) paging = new PagingDto();
-
+           
             #region filter
 
             query = filter.ApplyBaseFilters(query);

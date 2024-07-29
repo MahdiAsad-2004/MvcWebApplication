@@ -75,10 +75,18 @@ var deadline = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
 
 
 function InitializeClocks(querySelector) {
+
+    //console.log(document.querySelectorAll(querySelector));
+
     document.querySelectorAll(querySelector).forEach(a => {
         deadline = new Date(a.getAttribute('data-endDate'));
-        initializeClock(a.id, deadline);
+        if (a.id) {
+            //console.log(`initializeClock(${a.id} , ${deadline});`);
+            initializeClock(a.id, deadline);
+        }
+
     })
 }
+
 
 InitializeClocks('.clockdiv');

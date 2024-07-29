@@ -19,7 +19,6 @@ namespace OrganicShop.DAL.Context
         public DbSet<ContactUs> ContactUs { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<CouponCategories> CouponCategories { get; set; }
-        public DbSet<CouponProducts> CouponProducts { get; set; }
         public DbSet<ProductItem> ProductItems { get; set; }
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<DiscountProducts> DiscountProducts { get; set; }

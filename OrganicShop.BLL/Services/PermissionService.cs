@@ -46,7 +46,6 @@ namespace OrganicShop.BLL.Services
             var query = _PermissionRepository.GetQueryable();
 
             if (filter == null) filter = new FilterPermissionDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 

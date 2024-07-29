@@ -50,7 +50,6 @@ namespace OrganicShop.BLL.Services
                 .AsQueryable();
 
             if (filter == null) filter = new FilterDiscountDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 

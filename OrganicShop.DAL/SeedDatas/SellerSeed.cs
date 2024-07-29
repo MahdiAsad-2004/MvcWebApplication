@@ -1,4 +1,5 @@
 ﻿
+using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Entities.Base;
 using OrganicShop.Domain.Entities.Relations;
@@ -13,6 +14,8 @@ namespace OrganicShop.DAL.SeedDatas
             return $"09{Random.Shared.Next(10, 40)}{Random.Shared.Next(100, 999)}{Random.Shared.Next(Random.Shared.Next(1000, 9999))}";
         }
 
+
+        private static DateTime UserCreateDate = DateTime.Now;
 
         private static readonly List<string> Name_LastNames = new List<string>
         {
@@ -53,36 +56,33 @@ namespace OrganicShop.DAL.SeedDatas
             "سیتی مارکت" ," کندو کده" ,"لوتوس" ," مارکت آنلاین" ," ستاره شهر" ,"آمیتیس" ,"نچرال فود" ,"آفتاب" ,"چهار فصل" ,"آپادانا" ,"سبلان" ,"مدرن استور" ,"" ,"" ,"" ,"" ,"" ,"" ,
         };
 
+
         private static User GetRandomUserForSeller()
         {
-            List<User> users = new List<User>();
             User? user = null;
-            string userFirstName = string.Empty;
-            string userLastName = string.Empty;
             bool isMan = Random.Shared.Next(1, 6) > 2;
-            string userPassword = string.Empty;
-            for (int i = 1; i <= 10; i++)
+            string userFirstName = isMan ?
+                Name_FirstNames_Man[Random.Shared.Next(0, Name_FirstNames_Man.Count)] :
+                Name_FirstNames_Woman[Random.Shared.Next(0, Name_FirstNames_Woman.Count)];
+            string userLastName = Name_LastNames[Random.Shared.Next(0, Name_LastNames.Count)];
+            string userPassword = $"user{Random.Shared.Next(1000, 10_000)}";
+            DateTime userCreateDate = UserSeed.GetRandomPastDate();
+            UserCreateDate = userCreateDate;
+            user = new User()
             {
-                userFirstName = isMan ?
-                    Name_FirstNames_Man[Random.Shared.Next(0, Name_FirstNames_Man.Count)] :
-                    Name_FirstNames_Woman[Random.Shared.Next(0, Name_FirstNames_Woman.Count)];
-                userLastName = Name_LastNames[Random.Shared.Next(0, Name_LastNames.Count)];
-                userPassword = $"user{Random.Shared.Next(1000, 10_000)}";
-                user = new User()
-                {
-                    Name = $"{userFirstName} {userLastName}",
-                    Password = userPassword,
-                    Email = $"{userPassword}@organicshop-seller.ir",
-                    IsEmailVerified = false,
-                    PhoneNumber = GeneratePhoneNumber(),
-                    Role = Role.Seller,
-                    BaseEntity = new BaseEntity(true),
-                    Addresses = new List<Address>
+                Name = $"{userFirstName} {userLastName}",
+                Password = userPassword,
+                Email = $"{userPassword}@organicshop-seller.ir",
+                IsEmailVerified = false,
+                PhoneNumber = GeneratePhoneNumber(),
+                Role = Role.Seller,
+                BaseEntity = new BaseEntity(userCreateDate),
+                Addresses = new List<Address>
                     {
                         new Address
                         {
                             Title = $"{userLastName} {userFirstName} آدرس",
-                            BaseEntity = new BaseEntity(true),
+                            BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(userCreateDate)),
                             PhoneNumber = GeneratePhoneNumber(),
                             PostCode = Random.Shared.NextInt64(1_000_000_000, 9_999_999_999).ToString(),
                             Province = (Province)Random.Shared.Next(1, 31 + 1),
@@ -90,34 +90,31 @@ namespace OrganicShop.DAL.SeedDatas
                             Text = new string(LoremIpsum.Take(20).ToArray()),
                         }
                     },
-                    BankCards = new List<BankCard>
+                BankCards = new List<BankCard>
                     {
                         new BankCard
                         {
                             OwnerName = $"{userFirstName} {userLastName}",
-                            BaseEntity = new BaseEntity(true),
+                            BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(userCreateDate)),
                             Cvv2 = Random.Shared.Next(100, 10_000).ToString(),
                             ExpireDate = DateTime.Now.AddMonths(Random.Shared.Next(1, 30)),
                             Number = $"{Random.Shared.Next(5000, 7000)}-{Random.Shared.Next(1000, 10_000)}-{Random.Shared.Next(1000, 10_000)}-{Random.Shared.Next(1000, 10_000)}",
                         }
                     },
-                    Picture = new Picture
-                    {
-                        BaseEntity = new BaseEntity(true),
-                        IsMain = true,
-                        Name = isMan ? $"man-{Random.Shared.Next(1, 60 + 1)}.jpg" : $"woman-{Random.Shared.Next(1, 50 + 1)}",
-                        SizeMB = 0.5f,
-                        Type = PictureType.User,
-                    },
+                Picture = new Picture
+                {
+                    BaseEntity = new BaseEntity(userCreateDate),
+                    IsMain = true,
+                    Name = isMan ? $"man-{Random.Shared.Next(1, 60 + 1)}.jpg" : $"woman-{Random.Shared.Next(1, 50 + 1)}",
+                    SizeMB = 0.5f,
+                    Type = PictureType.User,
+                },
 
-                };
+            };
 
-                //users.Add(user);
 
-            }
             return user;
         }
-
 
 
 
@@ -132,11 +129,11 @@ namespace OrganicShop.DAL.SeedDatas
             BaseEntity = new BaseEntity(true),
             Picture = new Picture
             {
-                BaseEntity = new BaseEntity(true),
                 Name = "city-market.jpg",
                 SizeMB = 0.5f,
                 Type = PictureType.Seller,
                 IsMain = true,
+                BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(UserCreateDate)),
             },
             Address = new Address
             {
@@ -158,11 +155,11 @@ namespace OrganicShop.DAL.SeedDatas
             BaseEntity = new BaseEntity(true),
             Picture = new Picture
             {
-                BaseEntity = new BaseEntity(true),
                 Name = "kandoo-kadeh.png",
                 SizeMB = 0.5f,
                 Type = PictureType.Seller,
                 IsMain = true,
+                BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(UserCreateDate)),
             },
             Address = new Address
             {
@@ -184,11 +181,11 @@ namespace OrganicShop.DAL.SeedDatas
             BaseEntity = new BaseEntity(true),
             Picture = new Picture
             {
-                BaseEntity = new BaseEntity(true),
                 Name = "market-online.jpg",
                 SizeMB = 0.5f,
                 Type = PictureType.Seller,
                 IsMain = true,
+                BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(UserCreateDate)),
             },
             Address = new Address
             {
@@ -210,11 +207,11 @@ namespace OrganicShop.DAL.SeedDatas
             BaseEntity = new BaseEntity(true),
             Picture = new Picture
             {
-                BaseEntity = new BaseEntity(true),
                 Name = "lotus.jpg",
                 SizeMB = 0.5f,
                 Type = PictureType.Seller,
                 IsMain = true,
+                BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(UserCreateDate)),
             },
             Address = new Address
             {
@@ -236,11 +233,11 @@ namespace OrganicShop.DAL.SeedDatas
             BaseEntity = new BaseEntity(true),
             Picture = new Picture
             {
-                BaseEntity = new BaseEntity(true),
                 Name = "setare-shahr.png",
                 SizeMB = 0.5f,
                 Type = PictureType.Seller,
                 IsMain = true,
+                BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(UserCreateDate)),
             },
             Address = new Address
             {
@@ -262,11 +259,11 @@ namespace OrganicShop.DAL.SeedDatas
             BaseEntity = new BaseEntity(true),
             Picture = new Picture
             {
-                BaseEntity = new BaseEntity(true),
                 Name = "apadana.jpg",
                 SizeMB = 0.5f,
                 Type = PictureType.Seller,
                 IsMain = true,
+                BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(UserCreateDate)),
             },
             Address = new Address
             {
@@ -288,11 +285,11 @@ namespace OrganicShop.DAL.SeedDatas
             BaseEntity = new BaseEntity(true),
             Picture = new Picture
             {
-                BaseEntity = new BaseEntity(true),
                 Name = "aftab.jpg",
                 SizeMB = 0.5f,
                 Type = PictureType.Seller,
                 IsMain = true,
+                BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(UserCreateDate)),
             },
             Address = new Address
             {
@@ -314,11 +311,11 @@ namespace OrganicShop.DAL.SeedDatas
             BaseEntity = new BaseEntity(true),
             Picture = new Picture
             {
-                BaseEntity = new BaseEntity(true),
                 Name = "amitis.png",
                 SizeMB = 0.5f,
                 Type = PictureType.Seller,
                 IsMain = true,
+                BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(UserCreateDate)),
             },
             Address = new Address
             {
@@ -340,11 +337,11 @@ namespace OrganicShop.DAL.SeedDatas
             BaseEntity = new BaseEntity(true),
             Picture = new Picture
             {
-                BaseEntity = new BaseEntity(true),
                 Name = "modern-store.jpg",
                 SizeMB = 0.5f,
                 Type = PictureType.Seller,
                 IsMain = true,
+                BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(UserCreateDate)),
             },
             Address = new Address
             {
@@ -366,11 +363,11 @@ namespace OrganicShop.DAL.SeedDatas
             BaseEntity = new BaseEntity(true),
             Picture = new Picture
             {
-                BaseEntity = new BaseEntity(true),
                 Name = "sabalan.jpg",
                 SizeMB = 0.5f,
                 Type = PictureType.Seller,
                 IsMain = true,
+                BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(UserCreateDate)),
             },
             Address = new Address
             {

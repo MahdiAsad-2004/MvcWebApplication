@@ -13,7 +13,7 @@ using OrganicShop.Mvc.Models.Toast;
 
 namespace OrganicShop.Mvc.Controllers
 {
-    public class ArticleController : BaseController<ProductController>
+    public class BlogController : BaseController<ProductController>
     {
         #region ctor
 
@@ -21,7 +21,7 @@ namespace OrganicShop.Mvc.Controllers
         private readonly ICategoryService _CategoryService;
         private readonly ITagService _TagService;
         private readonly IProductService _ProductService;
-        public ArticleController(IArticleService ArticleService, ICategoryService categoryService, ITagService tagService, IProductService productService)
+        public BlogController(IArticleService ArticleService, ICategoryService categoryService, ITagService tagService, IProductService productService)
         {
             _ArticleService = ArticleService;
             _CategoryService = categoryService;
@@ -43,7 +43,7 @@ namespace OrganicShop.Mvc.Controllers
             ViewData["FilterArticleDto"] = filter;
 
             var response = await _ArticleService.GetAll(filter);
-            return View("Index" , response.Data);
+            return View("blogs" , response.Data);
         }
 
 
@@ -68,7 +68,7 @@ namespace OrganicShop.Mvc.Controllers
             filter.CategoryId = categoryId;
 
             var response = await _ArticleService.GetAll(filter);
-            return View("Index", response.Data);
+            return View("blogs", response.Data);
         }
 
 
@@ -87,6 +87,15 @@ namespace OrganicShop.Mvc.Controllers
                 return View("blog", response.Data);
             }
             return Redirect("/Error/404");
+        }
+
+
+
+
+        [HttpGet("/Blog1")]
+        public async Task<IActionResult> Blog()
+        {
+            return View("blog1");
         }
 
 

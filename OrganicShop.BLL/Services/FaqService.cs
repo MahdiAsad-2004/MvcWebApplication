@@ -40,7 +40,6 @@ namespace OrganicShop.BLL.Services
             var query = _FaqRepository.GetQueryable();
 
             if (filter == null) filter = new FilterFaqDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 

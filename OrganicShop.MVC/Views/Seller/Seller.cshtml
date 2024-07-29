@@ -4,7 +4,7 @@
 @model SellerDetailDto
 @{
     float commentsRatingAverage = Model.Comments.Any() ? (float)Model.Comments.Sum(a => a.Rate) / (float)Model.Comments.Count() : 0;
-    int commentsCount = Model.Comments.Count();
+    float commentsCount = Model.Comments.Count();
 }
 
 
@@ -39,7 +39,10 @@
             <div class="col-xxl-12 col-xl-12 col-lg-12 wow fadeInUp">
                 <div class="row g-4">
                     <div class="col-xl-4 wow fadeInUp">
-                        <div class="product-left-box">
+                       
+                        <img src="~/media//images//seller/@Model.MainImageName" class="img-fluid"/>
+                        
+                        @*  <div class="product-left-box">
                             <div class="row g-sm-4 g-2">
                                 <div class="col-12">
                                     <div class="product-main no-arrow">
@@ -51,7 +54,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> *@
                     </div>
 
                     <div class="col-xl-8 wow fadeInUp">
@@ -92,12 +95,12 @@
                             
 
                             <div class="dynamic-checkout">
-                                <button class="bg-theme btn btn-md">
+                                <button class="border-theme-color btn btn-md" onclick="location.assign('/products/seller/@TextExtensions.EncodePersianString(Model.Title)')">
+                                    محصولات
+                                </button>
+                                <button class="bg-theme btn btn-md disabled">
                                     <div>@Model.ProductsCount محصول</div>
                                 </button>
-                                <a class="border-theme-color btn btn-md scroll-button" href="/products/seller/@TextExtensions.EncodePersianString(Model.Title)">
-                                    محصولات
-                                </a>
                             </div>
 
                         </div>
@@ -111,7 +114,7 @@
     <div class="container-fluid-lg">
         <div class="row">
             <div class="col-12">
-                <div class="product-section-box m-0">
+                <div class="product-section-box m-0 mb-5">
                     <ul class="nav nav-tabs custom-nav" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
@@ -168,7 +171,7 @@
                                                             <div class="rating-product">
                                                                 <h5>5<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount5 / commentsCount * 100} %" : "0 %");">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount5 / commentsCount * 100}%" : "0%");">
                                                                     </div>
                                                                 </div>
                                                                 <h5 class="total">@RateCount5</h5>
@@ -178,7 +181,7 @@
                                                             <div class="rating-product">
                                                                 <h5>4<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount4 / commentsCount * 100} %" : "0 %");">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount4 / commentsCount * 100}%" : "0%");">
                                                                     </div>
                                                                 </div>
                                                                 <h5 class="total">@RateCount4</h5>
@@ -188,7 +191,7 @@
                                                             <div class="rating-product">
                                                                 <h5>3<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount3 / commentsCount * 100} %" : "0 %");">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount3 / commentsCount * 100}%" : "0%");">
                                                                     </div>
                                                                 </div>
                                                                 <h5 class="total">@RateCount3</h5>
@@ -198,7 +201,7 @@
                                                             <div class="rating-product">
                                                                 <h5>2<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount2 / commentsCount * 100} %" : "0 %");">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount2 / commentsCount * 100}%" : "0%");">
                                                                     </div>
                                                                 </div>
                                                                 <h5 class="total">@RateCount2</h5>
@@ -208,7 +211,7 @@
                                                             <div class="rating-product">
                                                                 <h5>1<i data-feather="star"></i></h5>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount1 / commentsCount * 100} %" : "0 %");">
+                                                                    <div class="progress-bar" style="width: @(commentsCount > 0 ? $"{RateCount1 / commentsCount * 100}%" : "0%");">
                                                                     </div>
                                                                 </div>
                                                                 <h5 class="total">@RateCount1</h5>
@@ -238,7 +241,7 @@
                                         <div class="review-people">
                                             <ul class="review-list">
 
-                                                @foreach (var comment in Model.Comments)
+                                                @foreach (var comment in Model.Comments.OrderByDescending(a => a.Date))
                                                 {
                                                     <li>
                                                         <div class="people-box">
@@ -255,7 +258,7 @@
                                                                             @comment.Date.ToShortDateTimeString()
                                                                         </h6>
                                                                         <div class="product-rating">
-                                                                            @await Html.PartialAsync("_RatingPartial", comment.Rate)
+                                                                            @await Html.PartialAsync("_RatingPartial", (float)comment.Rate)
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -282,7 +285,7 @@
 </section>
 @section Modals{
 
-    <partial name="_AddCommetnModal" model="new CreateCommentUserDto(){SellerId = Model.Id}"
+    <partial name="_AddCommentModal" model="new CreateCommentUserDto(){SellerId = Model.Id}" view-data="ViewData"
              view-data-SellerImageName="Model.MainImageName" view-data-SellerTitle="Model.Title" />
 
 }

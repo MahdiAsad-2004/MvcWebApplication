@@ -28,7 +28,7 @@ namespace OrganicShop.Mvc.Controllers
         public async Task<IActionResult> Index(PagingDto paging)
         {
             var model = (await _SellerService.GetAllSummary(new FilterSellerDto { SortBy = BaseSortType.Newest }, paging)).Data;
-            return View("Index" , model);
+            return View("Sellers" , model);
         }
 
 

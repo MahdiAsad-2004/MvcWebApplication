@@ -43,7 +43,6 @@ namespace OrganicShop.BLL.Services
             var query = _CartRepository.GetQueryable();
 
             if (filter == null) filter = new FilterCartDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 

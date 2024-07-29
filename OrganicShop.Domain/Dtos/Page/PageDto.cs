@@ -9,26 +9,28 @@ using System.Threading.Tasks;
 
 namespace OrganicShop.Domain.Dtos.Page
 {
-    public class PageDto<Entity , ListDto , key> where Entity : class,IAggregateRoot where ListDto : BaseListDto<key> where key : struct  
+    public class PageDto<Entity, ListDto, key> where Entity : class, IAggregateRoot where ListDto : BaseListDto<key> where key : struct
     {
         public List<ListDto> List { get; set; } = new List<ListDto>();
         public Pager Pager { get; set; }
 
 
-       
 
-        public IQueryable<Entity> SetPaging(IQueryable<Entity> query , PagingDto pagingDto)
+
+        public IQueryable<Entity> SetPaging(IQueryable<Entity> query, PagingDto pagingDto)
         {
+            if (pagingDto == null)
+                return query;
             //Pager = new Pager<Entity>(pagingDto.PageNumber, pagingDto.PageItemsCount, query);
             if (pagingDto.PageItemsCount < 0)
                 return query;
             return query.Skip((pagingDto.PageNumber - 1) * pagingDto.PageItemsCount).Take(pagingDto.PageItemsCount);
         }
 
-        public Pager SetPager(IQueryable<Entity> query, PagingDto pagingDto)
+        public Pager SetPager(IQueryable<Entity> query, PagingDto? pagingDto)
         {
             var pager = new Pager();
-            pager.SetPager(pagingDto.PageNumber, pagingDto.PageItemsCount, query);
+            pager.SetPager(pagingDto, query);
             return pager;
         }
 

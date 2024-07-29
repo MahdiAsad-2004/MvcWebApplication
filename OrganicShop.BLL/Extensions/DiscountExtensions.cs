@@ -74,6 +74,19 @@ namespace OrganicShop.BLL.Extensions
             return null;
         }
 
+        public static bool HasDiscount(this Product product)
+        {
+            Discount? discount;
+            return product.DiscountProducts
+                .Select(a => a.Discount)
+                .Where(a => a.IsValid())
+                .OrderBy(a => a.Priority)
+                .Any();
+        }
+
+
+
+
 
         //public static string? GetDiscountValue(this Product product)
         //{

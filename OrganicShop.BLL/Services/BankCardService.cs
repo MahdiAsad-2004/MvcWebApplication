@@ -43,7 +43,6 @@ namespace OrganicShop.BLL.Services
             var query = _BankCardRepository.GetQueryable();
 
             if (filter == null) filter = new FilterBankCardDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 

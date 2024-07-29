@@ -48,7 +48,6 @@ namespace OrganicShop.BLL.Services
             var query = _TrackingStatusRepository.GetQueryable();
 
             if (filter == null) filter = new FilterTrackingStatusDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 

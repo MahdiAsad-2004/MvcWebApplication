@@ -44,7 +44,6 @@ namespace OrganicShop.BLL.Services
             var query = _SellerRepository.GetQueryable();
 
             if (filter == null) filter = new FilterSellerDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 
@@ -84,13 +83,12 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.Address)
                 .Include(a => a.Products)
                 .Include(a => a.Comments)
-                .AsQueryable()
-                .Select(a => a.ToModel());
+                .AsQueryable();
+                //.Select(a => a.ToModel());
 
             #endregion
 
             if (filter == null) filter = new FilterSellerDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 
@@ -136,6 +134,7 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.Products)
                 .Include(a => a.Comments)
                     .ThenInclude(a => a.User)
+                        .ThenInclude(a => a.Picture)
                 .AsQueryable();
 
             #endregion

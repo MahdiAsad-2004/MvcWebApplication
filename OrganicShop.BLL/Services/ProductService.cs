@@ -48,10 +48,9 @@ namespace OrganicShop.BLL.Services
 
         #endregion
 
-        private IQueryable<Product> FilterAndSort(IQueryable<Product> query, FilterProductDto? filter = null, PagingDto? paging = null)
+        private IQueryable<Product> FilterAndSort(IQueryable<Product> query, FilterProductDto? filter = null)
         {
             if (filter == null) filter = new FilterProductDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 
@@ -88,8 +87,8 @@ namespace OrganicShop.BLL.Services
             if (filter.Rate != null)
             {
                 query = query.Where(q =>
-                ((float)q.Comments.Sum(b => b.Rate) / (q.Comments.Count == 0 ? int.MaxValue : q.Comments.Count)) >= filter.Rate &&
-                   ((float)q.Comments.Sum(b => b.Rate) / (q.Comments.Count == 0 ? int.MaxValue : q.Comments.Count)) < filter.Rate + 1);
+                ((float)q.Comments.Where(a => a.Status == CommentStatus.Accepted).Sum(b => b.Rate) / (q.Comments.Count(a => a.Status == CommentStatus.Accepted) == 0 ? int.MaxValue : q.Comments.Count(a => a.Status == CommentStatus.Accepted))) >= filter.Rate &&
+                ((float)q.Comments.Where(a => a.Status == CommentStatus.Accepted).Sum(b => b.Rate) / (q.Comments.Count(a => a.Status == CommentStatus.Accepted) == 0 ? int.MaxValue : q.Comments.Count(a => a.Status == CommentStatus.Accepted))) < filter.Rate + 1);
             }
 
             //query = query.Where(q => q)
@@ -117,9 +116,8 @@ namespace OrganicShop.BLL.Services
                 .AsQueryable();
 
             if (filter == null) filter = new FilterProductDto();
-            if (paging == null) paging = new PagingDto();
 
-            query = FilterAndSort(query, filter, paging);
+            query = FilterAndSort(query, filter);
 
             PageDto<Product, ProductListDto, long> pageDto = new();
             pageDto.List = pageDto.SetPaging(query, paging).Select(a => _Mapper.Map<ProductListDto>(a)).ToList();
@@ -154,9 +152,8 @@ namespace OrganicShop.BLL.Services
             #endregion
 
             if (filter == null) filter = new FilterProductDto();
-            if (paging == null) paging = new PagingDto();
 
-            query = FilterAndSort(query, filter, paging);
+            query = FilterAndSort(query, filter);
 
             PageDto<Product, ProductSummaryDto, long> pageDto = new();
             pageDto.List = pageDto.SetPaging(query, paging).Select(a => _Mapper.Map<ProductSummaryDto>(a)).ToList();
@@ -570,21 +567,44 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<List<ProductSummaryDto>>> HotDiscountProducts()
         {
-            var discounts = _DiscountRepository.GetQueryable()
-                .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Pictures)
-                .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Categories)
-                .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Comments)
-                .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Properties)
-                .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.TagProducts)
-                .Where(a => a.Count! < 0);
+            //var discounts = _DiscountRepository.GetQueryable()
+            //    .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Pictures)
+            //    .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Categories)
+            //    .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Comments)
+            //    .Include(a => a.DiscountProducts).ThenInclude(a => a.Product).ThenInclude(a => a.Properties)
+            //    .Include(a => a.DiscountProducts).ThenInclude(a => a.Product)
+            //    .Where(a => a.Count > 0);
 
-            var products1 = discounts.AsEnumerable().Where(a => a.IsDiscountValid()).SelectMany(a => a.DiscountProducts).Select(a => a.Product).ToArray();
 
-            if (products1 == null)
-            {
-                return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products1.ToList()));
-            }
-            return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products1.ToList()));
+            var  productsQuery = _ProductRepository.GetQueryable()
+                .Include(a => a.Pictures)
+                    .Include(a => a.Categories)
+                    .Include(a => a.DiscountProducts)
+                        .ThenInclude(a => a.Discount)
+                    .Include(a => a.Comments)
+                    .Include(a => a.Properties)
+                     .ThenInclude(a => a.PropertyType)
+                    .Include(a => a.ProductVarients)
+                    .Where(a => a.DiscountedPrice != null)
+                    .AsQueryable();
+
+            var productSummaryDtos = await productsQuery.Select(a => _Mapper.Map<ProductSummaryDto>(a)).ToListAsync();
+
+            productSummaryDtos = productSummaryDtos
+                .Where(a => a.Discount.IsValid() && a.Discount.Count > 0 && a.Discount.EndDate > DateTime.Now)
+                .ToList();
+
+            return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success , productSummaryDtos);
+
+
+
+            //var products1 = discounts.AsEnumerable().Where(a => a.IsDiscountValid()).SelectMany(a => a.DiscountProducts).Select(a => a.Product).ToArray();
+
+            //if (products1 == null)
+            //{
+            //    return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products1.ToList()));
+            //}
+            //return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success, _Mapper.Map<List<ProductSummaryDto>>(products1.ToList()));
 
             //return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success,  new List<ProductSummaryDto>());
             //var products = products1.Union(products2);

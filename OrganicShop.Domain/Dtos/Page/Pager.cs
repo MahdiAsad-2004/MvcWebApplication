@@ -35,15 +35,41 @@ namespace OrganicShop.Domain.Dtos.Page
         //    LastPageNumber = AllItemsCount % PageItemCount == 0 ? (AllItemsCount / PageItemCount) : (AllItemsCount / PageItemCount) + 1;
         //}
 
-        public void SetPager<Entity>(int PageNumber, int PageItemCount, IQueryable<Entity> query) where Entity : IAggregateRoot
+        public void SetPager<Entity>(PagingDto? paging, IQueryable<Entity> query) where Entity : IAggregateRoot
         {
-            CurrentPage = PageNumber;
-            this.PageItemCount = PageItemCount;
-            AllItemsCount = query.Count();
-            PageItemNumberEnd = AllItemsCount > PageItemCount ? (PageItemCount * PageNumber) : AllItemsCount;
-            PageItemNumberStart = ((PageNumber - 1) * PageItemCount) + 1;
-            LastPageNumber = AllItemsCount % PageItemCount == 0 ? (AllItemsCount / PageItemCount) : (AllItemsCount / PageItemCount) + 1;
+            if (paging == null)
+            {
+                CurrentPage = 1;
+                this.PageItemCount = query.Count();
+                AllItemsCount = this.PageItemCount;
+                PageItemNumberEnd = 1;
+                PageItemNumberStart = this.PageItemCount;
+                LastPageNumber = 1;
+            }
+            else
+            {
+                CurrentPage = paging.PageNumber;
+                this.PageItemCount = paging.PageItemsCount;
+                AllItemsCount = query.Count();
+                PageItemNumberEnd = AllItemsCount > paging.PageItemsCount ? (paging.PageItemsCount * paging.PageNumber) : AllItemsCount;
+                PageItemNumberStart = ((paging.PageNumber - 1) * paging.PageItemsCount) + 1;
+                LastPageNumber = AllItemsCount % paging.PageItemsCount == 0 ? (AllItemsCount / paging.PageItemsCount) : (AllItemsCount / paging.PageItemsCount) + 1;
+            }
         }
+
+
+
+        //public void SetPager<Entity>(IQueryable<Entity> query) where Entity : IAggregateRoot
+        //{
+        //    CurrentPage = 1;
+        //    this.PageItemCount = query.Count();
+        //    AllItemsCount = this.PageItemCount;
+        //    PageItemNumberEnd = 1;
+        //    PageItemNumberStart = this.PageItemCount;
+        //    LastPageNumber = 1;
+        //}
+
+
 
         //public Pager(int PageNumber, int PageItemCount, int AllItemsCount)
         //{

@@ -26,6 +26,15 @@ namespace OrganicShop.Domain.Entities.Base
             IsActive = true;
             IsDelete = false;
             DeleteDate = null;
+        }  
+        
+        public BaseEntity(DateTime createDate)
+        {
+            CreateDate = createDate;
+            LastModified = createDate;
+            IsActive = true;
+            IsDelete = false;
+            DeleteDate = null;
         }
 
         public BaseEntity UpdateOperation(BaseEntity baseEntity)

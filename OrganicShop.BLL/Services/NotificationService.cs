@@ -44,7 +44,6 @@ namespace OrganicShop.BLL.Services
             var query = _NotificationRepository.GetQueryable();
 
             if (filter == null) filter = new FilterNotificationDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 

@@ -66,19 +66,19 @@
                         <div class="col-12">
                             <div class="blog-box blog-list wow fadeInUp">
                                 <div class="blog-image">
-                                    <img src="~/media/images/article/@item.MainImageName" class="blur-up lazyload" alt="">
+                                    <img src="~/media/images/article/@item.MainImageName" class="blur-up lazyload img-fluid" alt="">
                                 </div>
 
                                 <div class="blog-contain blog-contain-2">
                                     <div class="blog-label">
-                                        <span class="time"><i data-feather="clock"></i> <span>@item.CreateDate.ToString("yyyy  MMMMM  dd")</span></span>
+                                        <span class="time"><i data-feather="clock"></i> <span>@item.CreateDate.ToString("dd MMMM yyyy")</span></span>
                                         <span class="super"><i data-feather="user"></i> <span>@item.AuthorName</span></span>
                                     </div>
-                                    <a href="blog-detail.html">
+                                    <a href="/blog/@TextExtensions.EncodePersianString(item.Title)">
                                         <h3>@item.Title</h3>
                                     </a>
                                     <p> @item.ShortDescription </p>
-                                    <button onclick="location.href = '/Blog/@TextExtensions.EncodePersianString(item.Title)';" class="blog-button">
+                                    <button onclick="location.href = '/blog/@TextExtensions.EncodePersianString(item.Title)';" class="blog-button">
                                         مطالعه بیشتر<i class="fa-solid fa-right-long"></i>
                                     </button>
                                 </div>

@@ -118,6 +118,7 @@ namespace OrganicShop.BLL.Extensions
         public static string EncodePersianString(string str)
         {
             return HttpUtility.UrlEncode(str.Trim().Replace(" " , "-"), Encoding.UTF8).Replace("+", "-");
+            //return HttpUtility.UrlEncode(str.Trim().Replace(" ", "-"), Encoding.UTF8);
         }
 
         public static string EncodePersian(this string str)

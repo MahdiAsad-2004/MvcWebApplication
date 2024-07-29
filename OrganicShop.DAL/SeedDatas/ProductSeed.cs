@@ -7,11 +7,24 @@ namespace OrganicShop.DAL.SeedDatas
 {
     public class ProductSeed
     {
+        public static int RoundToHundred(int price)
+        {
+            if (price < 100)
+                return price;
+            return (price / 100) * 100;
+        }
+        public static int RoundToThousand(int price)
+        {
+            if (price < 1000)
+                return price;
+            return (price / 1000) * 1000;
+        }
+
         private static List<DiscountProducts> GenerateDiscountProducts()
         {
             List<DiscountProducts> discountProducts = new List<DiscountProducts>();
             Discount? discount = null;
-            if (Random.Shared.Next(1, 6) <= 2)
+            if (Random.Shared.Next(1, 6) <= 3)
             {
                 if (Random.Shared.Next(1, 5) == 1)
                 {
@@ -19,7 +32,7 @@ namespace OrganicShop.DAL.SeedDatas
                     {
                         discountProducts.Add(new DiscountProducts
                         {
-                            BaseEntity = new BaseEntity(true),
+                            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                             Discount = GenerateRndomDiscount(),
                         });
                     }
@@ -28,7 +41,7 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     discountProducts.Add(new DiscountProducts
                     {
-                        BaseEntity = new BaseEntity(true),
+                        BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                         Discount = GenerateRndomDiscount(),
                     });
                 }
@@ -40,16 +53,18 @@ namespace OrganicShop.DAL.SeedDatas
         private static Discount GenerateRndomDiscount()
         {
             bool isPercent = Random.Shared.Next(1, 4) <= 2;
-            bool hasCount = Random.Shared.Next(1, 6) >= 3;
-            bool hasStartDate = Random.Shared.Next(1, 6) >= 4;
-            bool hasEndDate = Random.Shared.Next(1, 6) >= 4;
+            bool hasCount = Random.Shared.Next(1, 6) >= 2;
+            bool hasStartDate = Random.Shared.Next(1, 6) >= 3;
+            bool hasEndDate = Random.Shared.Next(1, 6) >= 3;
 
             Discount discount = new Discount()
             {
-                BaseEntity = new BaseEntity(true),
+                BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 Priority = Random.Shared.Next(1, 5),
             };
             discount.Title = $"Discount-";
+
+            #region discount title
 
             if (isPercent)
             {
@@ -58,7 +73,7 @@ namespace OrganicShop.DAL.SeedDatas
             }
             else
             {
-                discount.Price = Random.Shared.Next(1_000, 10_000);
+                discount.Price = RoundToHundred(Random.Shared.Next(1_000, 10_000));
                 discount.Title = discount.Title + $"Price:{discount.Price}-";
             }
 
@@ -66,16 +81,18 @@ namespace OrganicShop.DAL.SeedDatas
             if (hasCount)
             {
                 discount.Count = Random.Shared.Next(0, 11);
+                discount.UsedCount = Random.Shared.Next(0, discount.Count.Value);
                 discount.Title = discount.Title + $"Count:{discount.Count}-";
             }
             else
             {
+                discount.UsedCount = Random.Shared.Next(0, 11);
                 discount.Title = discount.Title + $"NoCount-";
             }
 
             if (hasStartDate)
             {
-                discount.StartDate = DateTime.Now.AddHours(Random.Shared.Next(1, 24 * 7));
+                discount.StartDate = DateTime.Now.AddHours(Random.Shared.Next(-20, 20));
                 discount.Title = discount.Title + $"StartDate::{discount.StartDate}-";
             }
             else
@@ -87,11 +104,11 @@ namespace OrganicShop.DAL.SeedDatas
             {
                 if (discount.StartDate != null)
                 {
-                    discount.EndDate = discount.StartDate.Value.AddHours(Random.Shared.Next(1, 24 * 7));
+                    discount.EndDate = discount.StartDate.Value.AddHours(Random.Shared.Next(1, 20));
                 }
                 else
                 {
-                    discount.EndDate = DateTime.Now.AddHours(Random.Shared.Next(1, 24 * 7));
+                    discount.EndDate = DateTime.Now.AddHours(Random.Shared.Next(-20, 20));
                 }
                 discount.Title = discount.Title + $"EndDate::{discount.EndDate}-";
             }
@@ -100,8 +117,17 @@ namespace OrganicShop.DAL.SeedDatas
                 discount.Title = discount.Title + $"NoEndDate-";
             }
 
+            #endregion
+
             return discount;
         }
+
+
+
+
+
+
+
 
 
 
@@ -120,7 +146,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -128,7 +154,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -138,41 +164,44 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "",
                     PropertyType = PropertyTypeSeed.Ingredient,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
         };
+
+
+
 
 
 
         public static readonly Product Bread = new Product
         {
             Title = "نان پیتا سه نان مقدار 370 گرم",
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             //Categories = new List<Category> { CategorySeed.BasicGoods, CategorySeed.BasicGoods_Bread },
             ShortDescription = "نان پیتا محصولی از برند «سه نان» 300 گرم وزن دارد و محفظه‌ی نگهدارنده‌ی آن شفاف و پلاستیکی است. ارزش غذایی هر سهم نان پیتا سه نان برابر با 175 کیلوکالری انرژی، 4.25 گرم قند، 0.17 گرم نمک، 0.45 گرم چربی و 0.02 گرم اسیدهای چرب ترنس است. نان تست طلایی از ترکیب آرد گندم سبوس دار، آب، نمک، خمیرمایه و کره‌ی گیاهی تهیه شده است.",
@@ -185,7 +214,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "bread-1-1.png",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -193,7 +222,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "bread-1-2.png",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -203,25 +232,25 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "370 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "25 × 30 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "14654/125",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "گندم",
                     PropertyType = PropertyTypeSeed.Ingredient,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
             DiscountProducts = GenerateDiscountProducts(),
@@ -242,7 +271,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "sugar-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -250,7 +279,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "sugar-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -258,7 +287,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "sugar-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -268,24 +297,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "0.3 کیلوگرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "12×2×18 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "65465/1235",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -305,7 +334,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "beans-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -313,7 +342,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "beans-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 }
                 ,new Picture
@@ -321,7 +350,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "beans-1-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -331,24 +360,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "0.9 کیلوگرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "5 × 15 × 24 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "12545/15",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -368,7 +397,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "macaroni-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -376,7 +405,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "macaroni-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -386,24 +415,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "500 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "20x12x5 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1654/123",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -423,7 +452,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "oil-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -431,7 +460,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "oil-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                  new Picture
@@ -439,7 +468,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "oil-1-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -449,30 +478,30 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "2.7 کیلوگرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "3 لیتر",
                     PropertyType = PropertyTypeSeed.Volume,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "15564/134",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "بطری",
                     PropertyType = PropertyTypeSeed.PackageType,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 50),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -492,7 +521,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "rice-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -500,7 +529,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "rice-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -510,30 +539,30 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "10 کیلوگرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "سفید",
                     PropertyType = PropertyTypeSeed.RiceColor,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1658/448",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "دانه کامل",
                     PropertyType = PropertyTypeSeed.GrainSize,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -553,7 +582,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "nabaat-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -563,24 +592,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "0.256 کیلوگرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "2x18x20 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "5415/863",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -602,7 +631,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "cheese-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -610,7 +639,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "cheese-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 }
                 ,new Picture
@@ -618,7 +647,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "cheese-1-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 }
             },
@@ -628,36 +657,36 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "400 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "14×7×10 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1816/864",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "یخچال",
                     PropertyType = PropertyTypeSeed.MaintenanceMethod,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "ظرف پلاستیکی ",
                     PropertyType = PropertyTypeSeed.PackageType,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -677,7 +706,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "cream-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -685,7 +714,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "cream-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -693,7 +722,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "cream-1-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -703,30 +732,30 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "210 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "12 × 3 × 4 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "5641/621",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "",
                     PropertyType = PropertyTypeSeed.Ingredient,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -746,7 +775,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "dough-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -754,7 +783,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "dough-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -762,7 +791,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "dough-1-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -772,30 +801,30 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "2200 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "31 × 10 × 10 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1645/931",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "بطری",
                     PropertyType = PropertyTypeSeed.PackageType,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -815,7 +844,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "milk-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -823,7 +852,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "milk-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -833,25 +862,25 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "0.964 لیتر",
                     PropertyType = PropertyTypeSeed.Volume,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
 
                 new Property
                 {
                     Value = "1349/451",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "بطری",
                     PropertyType = PropertyTypeSeed.PackageType,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -871,7 +900,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "butter-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -881,24 +910,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "50 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "7 × 5 × 2 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "6542/983",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -918,7 +947,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "yogurt-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -926,7 +955,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "yogurt-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -934,7 +963,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "yogurt-1-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -944,30 +973,30 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "1.8 کیلوگرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "18x9x9 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1349/453",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "سطل",
                     PropertyType = PropertyTypeSeed.Ingredient,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -987,7 +1016,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "jam-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -995,7 +1024,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "jam-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1003,7 +1032,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "jam-1-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1013,24 +1042,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "820 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "16 × 5 × 5 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "4658/318",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1050,7 +1079,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "honey-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1058,7 +1087,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "honey-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1066,7 +1095,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "honey-1-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1076,24 +1105,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "1000 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "39x28x۱14 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1564/643",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1113,7 +1142,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "breakfast-chocolate-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1121,7 +1150,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "breakfast-chocolate-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1129,7 +1158,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "breakfast-chocolate-1-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1139,24 +1168,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "200 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "7 × 8 × 6 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1568/430",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1178,7 +1207,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "beef-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1188,30 +1217,30 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "1 کیلوگرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "40۵×15×20 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1564/643",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "ران گوساله ",
                     PropertyType = PropertyTypeSeed.Ingredient,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1231,7 +1260,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "checken-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1239,7 +1268,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "checken-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1249,36 +1278,36 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "1.840 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "28 × 18 × 6 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "4648/688",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "سینه",
                     PropertyType = PropertyTypeSeed.Ingredient,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "ساده",
                     PropertyType = PropertyTypeSeed.Taste,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1298,7 +1327,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "fish-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1306,7 +1335,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "fish-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1316,30 +1345,30 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "1000 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = " 5×15×25 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "6591/321",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "ماهی کامل (با سر و دم) ",
                     PropertyType = PropertyTypeSeed.Ingredient,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1359,7 +1388,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "sausage-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1367,7 +1396,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "sausage-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1377,36 +1406,36 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "250 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = " 2×15×۱19 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1658/463",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "گوشت قرمز ",
                     PropertyType = PropertyTypeSeed.Ingredient,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "ساده",
                     PropertyType = PropertyTypeSeed.Taste,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1426,7 +1455,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "meat-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1434,7 +1463,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "meat-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1444,30 +1473,30 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "1 کیلوگرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "5 × 18 × 26 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "4651/984",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "گردن گوسفند چربیگیری شده ",
                     PropertyType = PropertyTypeSeed.Ingredient,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1487,7 +1516,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "caviar-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1497,24 +1526,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "30 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "6x6x2 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1684/941",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1534,7 +1563,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "egg-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1542,7 +1571,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "egg-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1550,7 +1579,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "egg-1-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1561,24 +1590,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "600 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "30x30x5 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1024/941",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1598,7 +1627,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "shrimp-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1608,24 +1637,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "800 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "30 × 5 × 21 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1648914",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1647,7 +1676,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "energy-drink-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1657,36 +1686,36 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "600 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "8×5×4 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "6513/981",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "جنسینگ",
                     PropertyType = PropertyTypeSeed.Taste,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "۵۰۱ میلی‌لیتر",
                     PropertyType = PropertyTypeSeed.Volume,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1706,7 +1735,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "coca-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1716,36 +1745,36 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "361 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "4×12 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1546/463",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "قوطی ",
                     PropertyType = PropertyTypeSeed.PackageType,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "330 میلی‌لیتر",
                     PropertyType = PropertyTypeSeed.Volume,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1765,7 +1794,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "delester-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1773,7 +1802,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "delester-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1783,42 +1812,42 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "358 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "6×6×12 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1336/463",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "قوطی ",
                     PropertyType = PropertyTypeSeed.PackageType,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "330 میلی‌لیتر",
                     PropertyType = PropertyTypeSeed.Volume,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "لیمو",
                     PropertyType = PropertyTypeSeed.Taste,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1838,7 +1867,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "water-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1846,7 +1875,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "water-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1854,7 +1883,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "water-1-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1864,36 +1893,36 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "9200 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "35 × 8 × ۸8 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1503/493",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "بطری خانواده  ",
                     PropertyType = PropertyTypeSeed.PackageType,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1500 میلی‌لیتر",
                     PropertyType = PropertyTypeSeed.Volume,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1913,7 +1942,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "golaab-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1921,7 +1950,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "golaab-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1931,30 +1960,30 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "1050 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "26 × 8 × 8 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "4001/564",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "درجای خشک و خنک نگه‌داری ",
                     PropertyType = PropertyTypeSeed.MaintenanceMethod,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -1974,7 +2003,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "juice-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -1982,7 +2011,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "juice-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -1992,36 +2021,36 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "2200 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "24 × 12 × 8 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "6013/893",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "خانواده ",
                     PropertyType = PropertyTypeSeed.PackageType,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "2000 میلی‌لیتر",
                     PropertyType = PropertyTypeSeed.Volume,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -2043,7 +2072,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "soup-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -2051,7 +2080,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "soup-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -2059,7 +2088,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "soup-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -2069,24 +2098,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "61 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "13 × 16 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "6543/999",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -2106,7 +2135,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "tunna-fish-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -2114,7 +2143,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "tunna-fish-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -2122,7 +2151,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "tunna-fish-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -2132,24 +2161,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "170 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "3 × 5 × 5 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1321/118",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -2169,7 +2198,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "compote-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -2177,7 +2206,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "compote-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -2185,7 +2214,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "compote-3.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -2195,30 +2224,30 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "565 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "12 × 8 × 8 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "3655/168",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "آناناس",
                     PropertyType = PropertyTypeSeed.Taste,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -2238,7 +2267,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "stew-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -2248,30 +2277,30 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "285 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "11x4x16 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "1230/445",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "اول: ظرف درب بسته را ده دقیقه در اب بجوشانید. دوم: درب ظرف را باز کرده در ماکروویو گرم کنید. نوش جان ",
                     PropertyType = PropertyTypeSeed.Ingredient,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -2291,7 +2320,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "canned-bean-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -2301,24 +2330,24 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "370 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "10X7X7 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "6884/901",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],
@@ -2340,7 +2369,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = true,
                     Name = "dessert-1-1.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
                 new Picture
@@ -2348,7 +2377,7 @@ namespace OrganicShop.DAL.SeedDatas
                     IsMain = false,
                     Name = "dessert-1-2.jpg",
                     SizeMB = (float)0.550,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                     Type = PictureType.Product,
                 },
             },
@@ -2358,30 +2387,30 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Value = "100 گرم",
                     PropertyType = PropertyTypeSeed.Weight,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "6 × 5 × 4 سانتی‌متر",
                     PropertyType = PropertyTypeSeed.PackagingDimensions,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "4524/894",
                     PropertyType = PropertyTypeSeed.HealthLicenseNumber,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
                 new Property
                 {
                     Value = "کاکائو",
                     PropertyType = PropertyTypeSeed.Taste,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
                 },
             },
-            SoldCount = Random.Shared.Next(0 , 30),
+            SoldCount = Random.Shared.Next(0, 30),
             Stock = Random.Shared.Next(0, 10),
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Barcode = Guid.NewGuid().ToString().Substring(0, 13),
             DiscountProducts = GenerateDiscountProducts(),
             Seller = SellerSeed.Sellers[Random.Shared.Next(0, SellerSeed.Sellers.Count)],

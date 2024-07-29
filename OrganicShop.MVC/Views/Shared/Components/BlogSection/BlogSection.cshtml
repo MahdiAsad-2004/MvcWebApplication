@@ -1,4 +1,5 @@
-﻿@using OrganicShop.Domain.Dtos.ArticleDtos
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.ArticleDtos
 @model List<ArticleListDto>
 
 <!-- Blog Section Start -->
@@ -15,15 +16,15 @@
                 <div>
                     <div class="blog-box ratio_50">
                         <div class="blog-box-image">
-                            <a href="blog-detail.html">
+                            <a href="/blog/@TextExtensions.EncodePersianString(item.Title)">
                                 <img src="~/media/images/article/@item.MainImageName" class="img-fluid bg-img" alt="">
                             </a>
                         </div>
 
                         <div class="blog-detail">
                             <label>@item.CategoryTitle</label>
-                            <a href="blog-detail.html">
-                                <h2>@item.CategoryTitle</h2>
+                            <a href="/blog/@TextExtensions.EncodePersianString(item.Title)">
+                                <h2>@item.Title</h2>
                             </a>
                             <div class="blog-list">
                                 <span>@item.CreateDate.ToString("yyyy MMMM dd")</span>

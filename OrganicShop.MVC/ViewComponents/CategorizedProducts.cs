@@ -43,7 +43,7 @@ namespace OrganicShop.Mvc.ViewComponents
             {
                 //productsHistoryItems = AppCookies.ProductViewHistory.GetModel(AesOperation.Decrypt(productsHistoryCryptedStr, _AesKeys.Cookie)) ?? new (long ProductId , DateTime ViewDate)[0];
                 productHistoryViewDtos = AppCookies.ProductViewHistory.GetModel(AesOperation.Decrypt(productsHistoryCryptedStr, _AesKeys.Cookie)) ?? new ();
-                productsHistory = (await _ProductService.GetAllSummary(new FilterProductDto { Ids = productHistoryViewDtos.Select(a => a.ProductId).ToArray() }, new PagingDto { PageItemsCount = -1 })).Data?.List;
+                productsHistory = (await _ProductService.GetAllSummary(new FilterProductDto { Ids = productHistoryViewDtos.Select(a => a.ProductId).ToArray() })).Data?.List;
             }
             //var x = productHistoryViewDtos.OrderByDescending(a  => a.ViewDate);
             foreach (var item in productHistoryViewDtos.OrderByDescending(a => a.ViewDate))

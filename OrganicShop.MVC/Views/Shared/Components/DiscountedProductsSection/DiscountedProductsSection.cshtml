@@ -83,41 +83,43 @@
                                     <a href="/Product/@item.Barcode" class="text-title">
                                         <h5>@item.Title</h5>
                                     </a>
-                                    <h5 class="price"> @item.Price.ToMoney() تومان  <span>@item.DiscountedPrice.Value.ToMoney() </span></h5>
+                                    <h5 class="price"> @item.DiscountedPrice.Value.ToMoney() تومان  <span> @item.Price.ToMoney() </span></h5>
                                     <div class="progress custom-progressbar">
-                                        <div class="progress-bar" style="width: 50%" role="progressbar"
-                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar" 
+                                            style="width: @(((float)(item.Discount.Count.Value - item.Discount.UsedCount)) / (float)item.Discount.Count.Value * 100f)%" 
+                                            role="progressbar"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
-                                    <h4 class="item">باقی مانده : <span>@item.Stock</span></h4>
+                                    <h4 class="item">باقی مانده : <span>@item.Discount.Count.Value</span></h4>
                                     <h4 class="offer">عجله کنید !!</h4>
                                     <div class="timer clockdiv" id="@($"clock-{item.Id}")" data-hours="1" data-minutes="2" data-seconds="3" 
-                                    data-endDate="@item.DiscountEndDate">
+                                    data-endDate="@item.Discount.EndDate.Value">
                                         <ul>
                                             <li>
                                                 <div class="counter">
                                                     <div class="seconds">
-                                                        <h6>@(item.DiscountEndDate.Subtract(DateTime.Now).Seconds)</h6>
+                                                        <h6>@(item.Discount.EndDate.Value.Subtract(DateTime.Now).Seconds)</h6>
                                                     </div>
                                                 </div>
                                             </li>
                                             <li>
                                                 <div class="counter">
                                                     <div class="minutes">
-                                                        <h6>@(item.DiscountEndDate.Subtract(DateTime.Now).Minutes)</h6>
+                                                        <h6>@(item.Discount.EndDate.Value.Subtract(DateTime.Now).Minutes)</h6>
                                                     </div>
                                                 </div>
                                             </li>
                                             <li>
                                                 <div class="counter">
                                                     <div class="hours">
-                                                        <h6>@(item.DiscountEndDate.Subtract(DateTime.Now).Hours)</h6>
+                                                        <h6>@(item.Discount.EndDate.Value.Subtract(DateTime.Now).Hours)</h6>
                                                     </div>
                                                 </div>
                                             </li>
                                             <li>
                                                 <div class="counter">
                                                     <div class="days">
-                                                        <h6>@(item.DiscountEndDate.Subtract(DateTime.Now).Days)</h6>
+                                                        <h6>@(item.Discount.EndDate.Value.Subtract(DateTime.Now).Days)</h6>
                                                     </div>
                                                 </div>
                                             </li>

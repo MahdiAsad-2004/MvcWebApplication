@@ -1,6 +1,7 @@
 ﻿using OrganicShop.Domain.Dtos.Base;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Entities.Base;
+using OrganicShop.Domain.Enums;
 using OrganicShop.Domain.Enums.SortTypes;
 
 namespace OrganicShop.Domain.Dtos.ProductDtos
@@ -46,6 +47,14 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
                 case ProductSortType.PriceDesc:
                     query = query.OrderByDescending(a => a.Price);
                     break;
+                
+                case ProductSortType.Title:
+                    query = query.OrderBy(a => a.Title);
+                    break;
+
+                case ProductSortType.TitleDesc:
+                    query = query.OrderByDescending(a => a.Title);
+                    break;
 
                 case ProductSortType.Stock:
                     query = query.OrderBy(a => a.Stock);
@@ -64,20 +73,31 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
                     break;
 
                 case ProductSortType.Discount:
-                    query = query.OrderByDescending(a => a.Price - a.DiscountedPrice);
-                    break;
-
-                case ProductSortType.DiscountDesc:
                     query = query.OrderBy(a => a.Price - a.DiscountedPrice);
                     break;
 
+                case ProductSortType.DiscountDesc:
+                    query = query.OrderByDescending(a => a.Price - a.DiscountedPrice);
+                    break;
+
                 case ProductSortType.Rate:
-                    query = query.OrderBy(a => (float)a.Comments.Sum(b => b.Rate) / (a.Comments.Count == 0 ? int.MaxValue : a.Comments.Count));
+                    query = query.OrderBy(a => (float)a.Comments.Where(b =>
+                        b.Status == CommentStatus.Accepted).Sum(b => b.Rate) /
+                        (a.Comments.Count(b => b.Status == CommentStatus.Accepted) == 0 ? float.MaxValue : (float)a.Comments.Count(b => b.Status == CommentStatus.Accepted))
+                    );
                     break;
 
                 case ProductSortType.RateDesc:
-                    query = query.OrderByDescending(a => (float)a.Comments.Sum(b => b.Rate) / (a.Comments.Count == 0 ? int.MaxValue : a.Comments.Count));
+                    query = query.OrderByDescending(a => (float)a.Comments.Where(b =>
+                      b.Status == CommentStatus.Accepted).Sum(b => b.Rate) /
+                      (a.Comments.Count(b => b.Status == CommentStatus.Accepted) == 0 ? float.MaxValue : (float)a.Comments.Count(b => b.Status == CommentStatus.Accepted))
+                    );
+
+                    //query = query.OrderByDescending(a => (float)a.Comments.Sum(b => b.Rate) / (a.Comments.Count == 0 ? int.MaxValue : a.Comments.Count));
                     break;
+
+                default:
+                    throw new Exception();
             }
 
             return query;
@@ -87,5 +107,5 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
 
     }
 
-    
+
 }

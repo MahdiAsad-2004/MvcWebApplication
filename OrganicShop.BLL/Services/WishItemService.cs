@@ -39,7 +39,6 @@ namespace OrganicShop.BLL.Services
             var query = _WishItemRepository.GetQueryable();
 
             if (filter == null) filter = new FilterWishItemDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 

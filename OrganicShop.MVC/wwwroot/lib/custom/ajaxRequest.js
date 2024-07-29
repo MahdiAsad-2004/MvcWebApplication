@@ -205,6 +205,16 @@ async function FetchRequestForm(form) {
 
 
 
+async function FetchRequestFormWithId(formId) {
+    var form = document.getElementById(formId);
+    if (form) {
+        await FetchRequestForm(form);
+    }
+    else {
+        console.log('FetchRequestFormWithId => form not found');
+    }
+}
+
 
 let containerId = null;
 let containerElement = document.createElement('div');

@@ -44,7 +44,6 @@ namespace OrganicShop.BLL.Services
                 .AsQueryable();
 
             if (filter == null) filter = new FilterUserMessageDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 

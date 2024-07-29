@@ -39,7 +39,6 @@ namespace OrganicShop.BLL.Services
             var query = _PropertyRepository.GetQueryable();
 
             if (filter == null) filter = new FilterPropertyDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 

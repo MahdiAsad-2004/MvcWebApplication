@@ -37,7 +37,7 @@
                                     </a>
                                 </li>
                                 <li class="breadcrumb-item active">
-                                        @Model.Title
+                                    @Model.Title
                                 </li>
                             </ol>
                         </nav>
@@ -142,7 +142,7 @@
                                                 <li>
                                                     <a onclick="ChangeTagIds('@tagCombo.Value')">@tagCombo.Text</a>
                                                 </li>
-                                                <input name="filter.TagIds" value="@tagCombo.Value" id="tagId-@(tagCombo.Value)-input" disabled hidden/>
+                                                <input name="filter.TagIds" value="@tagCombo.Value" id="tagId-@(tagCombo.Value)-input" disabled hidden />
                                             }
 
                                         </ul>
@@ -195,10 +195,7 @@
                     <img src="~/media/images/article/@Model.MainImageName" class="bg-img blur-up lazyload" alt="">
                     <div class="blog-image-contain">
                         <ul class="contain-list">
-                            @foreach (var tagCombo in tagCombos.IntersectBy(Model.TagIds,a => int.Parse(a.Value)))
-                            {
-                                <li>@tagCombo.Value</li>
-                            }
+                            <li>@Model.CategoryTitle</li>
                         </ul>
                         <h2>@Model.Title</h2>
                         <ul class="contain-comment-list">
@@ -212,7 +209,7 @@
                             <li>
                                 <div class="user-list">
                                     <i data-feather="calendar"></i>
-                                    <span>@Model.CreateDate.ToString("yyyy  MMMMM  dd")</span>
+                                    <span>@Model.CreateDate.ToString("dd - MMMM - yyyy")</span>
                                 </div>
                             </li>
 
@@ -230,13 +227,25 @@
                     @Html.Raw(Model.Content)
                 </div>
 
-               
+                <div class="product-tags-box">
+                    <h3 class="mt-5 mb-1">برچسب ها</h3>
+                    <ul style="padding:8px">
+                        @foreach (var tagCombo in tagCombos.IntersectBy(Model.TagIds, a => int.Parse(a.Value)))
+                        {
+                            <li style="cursor:pointer; padding:5px 12px; margin:5px; color:var(--theme-color); border-radius:3px; overflow:hidden; background-color:rgba(var(--theme-color-rgb), 0.1);">
+                                <a class="fw-bold" style="font-size:13px;" href="/tag/@TextExtensions.EncodePersian(tagCombo.Text)">@tagCombo.Text</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
                 @if (User.Identity.IsAuthenticated)
                 {
                     await Html.PartialAsync("_SendCommentUserSection", new CreateCommentUserDto { ArticleId = Model.Id });
                 }
-                else{
-                    await Component.InvokeAsync("_SendCommentSection",new {ProductId = default(int?) , Article = Model.Id});
+                else
+                {
+                    await Component.InvokeAsync("SendCommentSection", new { ProductId = default(int?), ArticleId = Model.Id });
                 }
 
 
@@ -248,7 +257,7 @@
                     <div class="user-comment-box">
                         <ul>
 
-                            @foreach (var comment in Model.Comments)
+                            @foreach (var comment in Model.Comments.OrderByDescending(a => a.Date))
                             {
                                 <li>
                                     <div class="user-box border-color">
@@ -260,7 +269,7 @@
                                             <img src="~/media//images/user/@comment.AuthorImageName"
                                                  class="img-fluid blur-up lazyload" alt="">
                                             <div class="user-name">
-                                                <h6>@comment.Date.ToString("yyyy  MMMMM  dd")</h6>
+                                                <h6>@comment.Date.ToString("dd  MMMM  yyyy - HH:mm")</h6>
                                                 <h5 class="text-content">@comment.AuthorName</h5>
                                             </div>
                                         </div>
@@ -276,16 +285,14 @@
                     </div>
                 </div>
 
-               
+
             </div>
 
         </div>
     </div>
 </section>
 <!-- Blog Details Section End -->
-
-
-@section Scripts{
+@section Scripts {
 
     <script src="~/site/views/blog/blog.js"></script>
 

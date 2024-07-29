@@ -52,7 +52,6 @@ namespace OrganicShop.BLL.Services
                 .AsQueryable();
 
             if (filter == null) filter = new FilterArticleDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 
@@ -133,6 +132,7 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.Category)
                 .Include(a => a.Comments)
                     .ThenInclude(a => a.User)
+                        .ThenInclude(a => a.Picture)
                 .Include(a => a.TagArticles)
                 .AsQueryable();
 

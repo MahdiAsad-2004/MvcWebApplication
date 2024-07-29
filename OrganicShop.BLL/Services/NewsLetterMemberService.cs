@@ -44,7 +44,6 @@ namespace OrganicShop.BLL.Services
             var query = _NewsLetterMemberRepository.GetQueryable();
 
             if (filter == null) filter = new FilterNewsLetterMemberDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 

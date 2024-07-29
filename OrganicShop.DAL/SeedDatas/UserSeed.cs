@@ -13,6 +13,24 @@ namespace OrganicShop.DAL.SeedDatas
             return $"09{Random.Shared.Next(10, 40)}{Random.Shared.Next(100, 999)}{Random.Shared.Next(Random.Shared.Next(1000, 9999))}";
         }
 
+
+        public static DateTime GetRandomPastDate()
+        {
+            return DateTime.Now.
+                AddMonths(Random.Shared.Next(-36, 0)).AddDays(Random.Shared.Next(-30, 0)).AddHours(Random.Shared.Next(-72, 0)).AddMinutes(Random.Shared.Next(-60 , 0));
+        }
+        public static DateTime GetRandomDateAfter(DateTime dateTime)
+        {
+            var date = DateTime.Now;
+            do
+            {
+                date = dateTime.AddMonths(Random.Shared.Next(0, 13)).AddDays(Random.Shared.Next(0, 30)).AddHours(Random.Shared.Next(0, 72)).AddMinutes(Random.Shared.Next(-60, 0));
+            }
+            while (date > DateTime.Now);
+
+            return date;
+        }
+
         private static List<WishItem> GenerateWishItems()
         {
             List<WishItem> wishItems = new();
@@ -32,36 +50,54 @@ namespace OrganicShop.DAL.SeedDatas
             return wishItems;
         }
 
-        private static List<Comment> GenerateComments()
+        private static List<Comment> GenerateComments(DateTime userCreateDate)
         {
             List<Comment> comments = new();
             HashSet<int> productIds = new HashSet<int>();
+            HashSet<int> articleIds = new HashSet<int>();
+            HashSet<int> sellerIds = new HashSet<int>();
             Comment? comment = null;
-            for (int i = 1; i <= 5; i++)
+            int commentSubjectPossibility = 0;
+            for (int i = 1; i <= 10; i++)
             {
-                productIds.Add(Random.Shared.Next(1, ProductSeed.Products.Count));
+                commentSubjectPossibility = Random.Shared.Next(1, 7);
+                if (commentSubjectPossibility >= 4) // 4 , 5 , 6
+                {
+                    productIds.Add(Random.Shared.Next(1, ProductSeed.Products.Count + 1));
+                }
+                else if (commentSubjectPossibility >= 2) // 2 , 3
+                {
+                    articleIds.Add(Random.Shared.Next(1, ArticleSeed.Articles.Count + 1));
+                }
+                else // 1
+                {
+                    sellerIds.Add(Random.Shared.Next(1, SellerSeed.Sellers.Count + 1));
+                }
             }
+
+
             foreach (var productId in productIds)
             {
                 comment = new Comment
                 {
-                    BaseEntity = new BaseEntity(true),
-                    Rate = Random.Shared.Next(1, 6),
-                    Text = new string(LoremIpsum.Take(Random.Shared.Next(50, 300)).ToArray()),
+                    IsFeedback = true,
                     ProductId = productId,
+                    Rate = Random.Shared.Next(1, 6),
+                    BaseEntity = new BaseEntity(GetRandomDateAfter(userCreateDate)),
+                    Text = new string(LoremIpsum.Take(Random.Shared.Next(50, 300)).ToArray()),
                 };
-                switch (Random.Shared.Next(1, 4))
+                switch (Random.Shared.Next(1, 6 + 1))
                 {
-                    case 1:
+                    case <= 4:
                         comment.Status = CommentStatus.Accepted;
                         break;
 
-                    case 2:
-                        comment.Status = CommentStatus.Accepted;
+                    case 5:
+                        comment.Status = CommentStatus.Unread;
                         break;
 
-                    case 3:
-                        comment.Status = CommentStatus.Accepted;
+                    case 6:
+                        comment.Status = CommentStatus.NotAccepted;
                         break;
 
                     default:
@@ -69,6 +105,68 @@ namespace OrganicShop.DAL.SeedDatas
                 }
                 comments.Add(comment);
             }
+
+            foreach (var articleId in articleIds)
+            {
+                comment = new Comment
+                {
+                    Rate = 0,
+                    IsFeedback = false,
+                    ArticleId = articleId,
+                    BaseEntity = new BaseEntity(GetRandomDateAfter(userCreateDate)),
+                    Text = new string(LoremIpsum.Take(Random.Shared.Next(50, 300)).ToArray()),
+                };
+                switch (Random.Shared.Next(1, 6 + 1))
+                {
+                    case <= 4:
+                        comment.Status = CommentStatus.Accepted;
+                        break;
+
+                    case 5:
+                        comment.Status = CommentStatus.Unread;
+                        break;
+
+                    case 6:
+                        comment.Status = CommentStatus.NotAccepted;
+                        break;
+
+                    default:
+                        throw new Exception();
+                }
+                comments.Add(comment);
+            }
+
+            foreach (var sellerId in sellerIds)
+            {
+                comment = new Comment
+                {
+                    IsFeedback = true,
+                    SellerId = sellerId,
+                    Rate = Random.Shared.Next(1, 6),
+                    BaseEntity = new BaseEntity(GetRandomDateAfter(userCreateDate)),
+                    Text = new string(LoremIpsum.Take(Random.Shared.Next(50, 300)).ToArray()),
+                };
+                switch (Random.Shared.Next(1, 6 + 1))
+                {
+                    case <= 4:
+                        comment.Status = CommentStatus.Accepted;
+                        break;
+
+                    case 5:
+                        comment.Status = CommentStatus.Unread;
+                        break;
+
+                    case 6:
+                        comment.Status = CommentStatus.NotAccepted;
+                        break;
+
+                    default:
+                        throw new Exception();
+                }
+                comments.Add(comment);
+            }
+
+
             return comments;
         }
 
@@ -117,7 +215,7 @@ namespace OrganicShop.DAL.SeedDatas
             PhoneNumber = GeneratePhoneNumber(),
             Password = "",
             Role = Domain.Enums.Role.Customer,
-            BaseEntity = new BaseEntity(true),
+            BaseEntity = new BaseEntity(UserSeed.GetRandomPastDate()),
             Addresses = new List<Address>
             {
                 new Address
@@ -169,6 +267,7 @@ namespace OrganicShop.DAL.SeedDatas
             string userLastName = string.Empty;
             string userPassword = string.Empty;
             bool isMan = true;
+            DateTime userCreateDate = DateTime.Now;
             for (int i = 1; i <= 20; i++)
             {
                 isMan = Random.Shared.Next(1, 6) > 2;
@@ -177,6 +276,7 @@ namespace OrganicShop.DAL.SeedDatas
                     Name_FirstNames_Woman[Random.Shared.Next(0, Name_FirstNames_Woman.Count)];
                 userLastName = Name_LastNames[Random.Shared.Next(0, Name_LastNames.Count)];
                 userPassword = $"user{Random.Shared.Next(1000, 10_000)}";
+                userCreateDate = UserSeed.GetRandomPastDate();
                 user = new User()
                 {
                     Name = $"{userFirstName} {userLastName}",
@@ -185,13 +285,13 @@ namespace OrganicShop.DAL.SeedDatas
                     IsEmailVerified = false,
                     PhoneNumber = GeneratePhoneNumber(),
                     Role = Role.Customer,
-                    BaseEntity = new BaseEntity(true),
+                    BaseEntity = new BaseEntity(userCreateDate),
                     Addresses = new List<Address>
                     {
                         new Address
                         {
                             Title = $"{userLastName} {userFirstName} آدرس",
-                            BaseEntity = new BaseEntity(true),
+                            BaseEntity = new BaseEntity(GetRandomDateAfter(userCreateDate)),
                             PhoneNumber = GeneratePhoneNumber(),
                             PostCode = Random.Shared.NextInt64(1_000_000_000, 9_999_999_999).ToString(),
                             Province = (Province)Random.Shared.Next(1, 31 + 1),
@@ -204,7 +304,7 @@ namespace OrganicShop.DAL.SeedDatas
                         new BankCard
                         {
                             OwnerName = $"{userFirstName} {userLastName}",
-                            BaseEntity = new BaseEntity(true),
+                            BaseEntity = new BaseEntity(GetRandomDateAfter(userCreateDate)),
                             Cvv2 = Random.Shared.Next(100, 10_000).ToString(),
                             ExpireDate = DateTime.Now.AddMonths(Random.Shared.Next(1, 30)),
                             Number = $"{Random.Shared.Next(5000, 7000)}-{Random.Shared.Next(1000, 10_000)}-{Random.Shared.Next(1000, 10_000)}-{Random.Shared.Next(1000, 10_000)}",
@@ -212,13 +312,14 @@ namespace OrganicShop.DAL.SeedDatas
                     },
                     Picture = new Picture
                     {
-                        BaseEntity = new BaseEntity(true),
+                        BaseEntity = new BaseEntity(userCreateDate),
                         IsMain = true,
                         Name = isMan ? $"man-{Random.Shared.Next(1, 60 + 1)}.jpg" : $"woman-{Random.Shared.Next(1, 50 + 1)}.jpg",
                         SizeMB = 0.5f,
+                        Type = PictureType.User,
                     },
                     WishItems = GenerateWishItems(),
-                    Comments = GenerateComments(),
+                    Comments = GenerateComments(userCreateDate),
                 };
 
                 users.Add(user);

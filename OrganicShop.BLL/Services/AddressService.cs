@@ -45,7 +45,6 @@ namespace OrganicShop.BLL.Services
             var query = _AddressRepository.GetQueryable();
             
             if (filter == null) filter = new FilterAddressDto();
-            if(paging == null) paging = new PagingDto();
 
             #region filter
 

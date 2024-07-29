@@ -180,7 +180,7 @@
                                             }
                                         }
                                     </ul>
-                                    <span>بازخورد (@(commentsCount))</span>
+                                    <span> @commentsCount بازخورد</span>
                                 </div>
                             </div>
 
@@ -601,7 +601,7 @@
                                         <div class="review-people">
                                             <ul class="review-list">
 
-                                                @foreach (var comment in Model.Comments)
+                                                @foreach (var comment in Model.Comments.OrderByDescending(a => a.Date))
                                                 {
                                                     <li>
                                                         <div class="people-box">

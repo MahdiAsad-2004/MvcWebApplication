@@ -90,20 +90,28 @@ if (dbContext.Database.CanConnect() == false)
 }
 var productTableRowCount = await dbContext.Products.LongCountAsync();
 var categoryTableRowCount = await dbContext.Categories.CountAsync();
+var couponTableRowCount = await dbContext.Coupons.CountAsync();
 var UserTableCustomerRowCount = await dbContext.Users.CountAsync(a => (int)a.Role == (int)Role.Customer);
 Console.WriteLine($"Category Table Row Count: {categoryTableRowCount}");
 Console.WriteLine($"Product Table Row Count: {productTableRowCount}");
 Console.WriteLine($"User(Customer) Table Row Count: {UserTableCustomerRowCount}");
 if (categoryTableRowCount < 1)
 {
-    Console.WriteLine("seedign categories with products");
-    await dbContext.Categories.AddRangeAsync(CategorySeed.Categories);
+    Console.WriteLine("seedign categories with products with articles");
+    await dbContext.Categories.AddRangeAsync(CategorySeed.Categories_Product);
+    await dbContext.Categories.AddRangeAsync(CategorySeed.Categories_Article);
     await dbContext.SaveChangesAsync();
 }
 if(UserTableCustomerRowCount < 1)
 {
     Console.WriteLine("seedign users(customers)");
     await dbContext.Users.AddRangeAsync(UserSeed.RandomUsers());
+    await dbContext.SaveChangesAsync();
+}
+if (couponTableRowCount < 1)
+{
+    Console.WriteLine("seedign coupons");
+    await dbContext.Coupons.AddRangeAsync(CouponSeed.GenerateCoupons(20));
     await dbContext.SaveChangesAsync();
 }
 

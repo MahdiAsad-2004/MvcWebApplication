@@ -1719,7 +1719,7 @@ namespace OrganicShop.DAL.SeedDatas
 
 
 
-        public static readonly List<Category> Categories = new List<Category>
+        public static readonly List<Category> Categories_Product = new List<Category>
         {
             BasicGoods,BasicGoods_Bread,BasicGoods_Candy,BasicGoods_Cereals,BasicGoods_Oil,BasicGoods_PastaAndNoodles,BasicGoods_Rice,BasicGoods_Sugar,
             Dairy, Dairy_BreakfastChocolate ,Dairy_Butter ,Dairy_Cheese ,Dairy_Cream ,Dairy_Dough ,Dairy_Honey ,Dairy_Jam ,Dairy_Milk ,Dairy_Yogurt,
@@ -1734,6 +1734,149 @@ namespace OrganicShop.DAL.SeedDatas
             Pickles ,Pickles_Olive ,Pickles_Pickle ,Pickles_PickledCucumber ,Pickles_Salty,
             Additives ,Additives_DriedVegetablesAndSproutPowder ,Additives_FoodDesign ,Additives_LiquidCondiments ,Additives_Sauce ,Additives_SpicesAndSeasonings,
         };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public static readonly Category LearnCooking = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "آموزش آشپزی",
+            Type = CategoryType.Article,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "learn-cooking.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Articles = new List<Article>
+            {
+                ArticleSeed.HowToPrePareBeanPilaf, ArticleSeed.HowToPreparePastaWithChicken,
+            },
+        };
+
+
+        public static readonly Category Health = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "سلامت",
+            Type = CategoryType.Article,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "health.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Articles = new List<Article>
+            {
+                ArticleSeed.IsotonicDrinks , ArticleSeed.ChildrenSleep ,ArticleSeed.YellowNailSyndrome ,
+            },
+        };
+
+
+        public static readonly Category Diet = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "رژیم",
+            Type = CategoryType.Article,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "diet.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Articles = new List<Article>
+            {
+                ArticleSeed.FreeDiet ,ArticleSeed.ZonSlimmingDiet ,
+            },
+        };
+
+
+        public static readonly Category Nutrition = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "تغذیه",
+            Type = CategoryType.Article,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "nutrition.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Articles = new List<Article>
+            {
+                ArticleSeed.GettingToKnowThePropertiesOfMelon ,ArticleSeed.ThePropertiesOfLemonJuice ,
+            },
+        };
+
+
+         public static readonly Category Meals = new Category
+        {
+            BaseEntity = new BaseEntity(true),
+            Title = "معرفی غذاها",
+            Type = CategoryType.Article,
+            Picture = new Picture
+            {
+                IsMain = true,
+                Name = "meals.jpg",
+                SizeMB = (float)0.645,
+                BaseEntity = new BaseEntity(true),
+                Type = PictureType.Category,
+            },
+            Articles = new List<Article>
+            {
+                ArticleSeed.PopularStreetFoods ,ArticleSeed.ArabicFoods ,ArticleSeed.MostDisgustingFoods
+            },
+        };
+
+
+
+
+
+
+
+        public static readonly List<Category> Categories_Article = new List<Category>
+        {
+            LearnCooking ,Health ,Nutrition ,Diet ,Meals,
+        };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 }

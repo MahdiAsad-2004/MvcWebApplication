@@ -43,7 +43,6 @@ namespace OrganicShop.BLL.Services
             var query = _NewsLetterRepository.GetQueryable();
 
             if (filter == null) filter = new FilterNewsLetterDto();
-            if (paging == null) paging = new PagingDto();
 
             #region filter
 
