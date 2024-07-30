@@ -162,7 +162,7 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
             httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             Redirect redirect = new Redirect()
             {
-                Url = GetUrl(url),
+                Url = url,
                 IsReplace = replace,
                 TimeOut = 0,
             };
@@ -205,14 +205,14 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
         #region redirect => toast
 
-        public IActionResult RedirectThenToast(HttpContext httpContext,ITempDataDictionary tempdata ,string action, Toast message, bool replace, bool responseResult = true)
+        public IActionResult RedirectThenToast(HttpContext httpContext,ITempDataDictionary tempdata ,string url, Toast message, bool replace, bool responseResult = true)
         {
             tempdata["Toast"] = message.Serialize();
             httpContext.Response.Headers.Add("ResponseDataType", "redirect-toast");
             httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             Redirect redirect = new Redirect()
             {
-                Url = GetUrl(action),
+                Url = url,
                 IsReplace = replace,
                 TimeOut = 0,
             };
@@ -283,13 +283,13 @@ namespace OrganicShop.Mvc.Controllers.Base.Result
 
         #region redirect
 
-        public IActionResult Redirect(HttpContext httpContext, string action, bool replace,bool responseResult = true)
+        public IActionResult Redirect(HttpContext httpContext, string url, bool replace,bool responseResult = true)
         {
             httpContext.Response.Headers.Add("ResponseDataType", "redirect");
             httpContext.Response.Headers.Add("ResponseResult", $"{responseResult}");
             Redirect redirect = new Redirect()
             {
-                Url = GetUrl(action),
+                Url = url,
                 IsReplace = replace,
                 TimeOut = 0,
             };

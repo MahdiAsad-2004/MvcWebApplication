@@ -26,6 +26,7 @@ using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Enums;
 using System.Diagnostics;
 using OrganicShop.BLL.Extensions;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,28 @@ builder.Services.AddSingleton<IApplicationUserProvider, ApplicationUserProvider>
 builder.Services.Configure<AesKeys>(builder.Configuration.GetSection("AesKeys"));
 builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSetting"));
 
+
+#region Authentication
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+}).AddCookie(options =>
+{
+    options.LoginPath = "/account/sign-in";
+    options.LogoutPath = "/account/log-out";
+    options.AccessDeniedPath = "/error/401";
+    options.ExpireTimeSpan = TimeSpan.FromDays(180);
+    options.SlidingExpiration = false;
+});
+
+#endregion
+
+
+#region hangfire
+
 //builder.Services.AddHangfire(c => c.UseMemoryStorage(new MemoryStorageOptions { }));
 builder.Services.AddHangfire(configuration => configuration
     .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
@@ -47,7 +70,12 @@ builder.Services.AddHangfire(configuration => configuration
     .UseSqlServerStorage(builder.Configuration.GetConnectionString("OrganicShopConnectionString")));
 builder.Services.AddHangfireServer();
 
-builder.Services.AddHostedService<NewsLetterSenderServiceBackground>();
+
+#endregion
+
+
+//builder.Services.AddHostedService<NewsLetterSenderServiceBackground>();
+
 
 RegisterServices(builder.Services);
 
@@ -81,6 +109,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 
+
+#region seedign data
+
 var dbContext = app.Services.GetRequiredService<OrganicShopDbContext>();
 Console.WriteLine($"Database Can Connect: {dbContext.Database.CanConnect()}");
 if (dbContext.Database.CanConnect() == false)
@@ -102,7 +133,7 @@ if (categoryTableRowCount < 1)
     await dbContext.Categories.AddRangeAsync(CategorySeed.Categories_Article);
     await dbContext.SaveChangesAsync();
 }
-if(UserTableCustomerRowCount < 1)
+if (UserTableCustomerRowCount < 1)
 {
     Console.WriteLine("seedign users(customers)");
     await dbContext.Users.AddRangeAsync(UserSeed.RandomUsers());
@@ -115,12 +146,17 @@ if (couponTableRowCount < 1)
     await dbContext.SaveChangesAsync();
 }
 
+#endregion
+
+
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ApplicationUserProviderMiddleware>(app);

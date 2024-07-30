@@ -47,38 +47,38 @@
 
                     <div class="input-box">
                         <form class="row g-4" id="sign-up-form" action="/account/sign-up" method="post" data-container-id="view-container">
-                            <div class="col-12 mb-4">
+                            <div class="col-12 mb-3">
                                 <div class="form-floating theme-form-floating">
-                                    <input asp-for="Name" type="text" class="form-control" id="fullname" placeholder="نام و نام خانوادگی">
+                                    <input asp-for="Name" type="text" class="form-control" id="fullname" placeholder="نام و نام خانوادگی" autocomplete="on">
                                     <label for="fullname">نام و نام خانوادگی</label>
                                 </div>
                                 <span asp-validation-for="Name" class="mt-2 text-danger"></span>
                             </div>
-                            <div class="col-12 mb-4">
+                            <div class="col-12 mb-3">
                                 <div class="form-floating theme-form-floating">
-                                    <input asp-for="PhoneNumber" type="text" class="form-control" id="phoneNumber" placeholder="آدرس شماره همراه خود را وارد کنید">
+                                    <input asp-for="PhoneNumber" type="text" class="form-control" id="phoneNumber" placeholder="آدرس شماره همراه خود را وارد کنید" autocomplete="on">
                                     <label for="phoneNumber">شماره همراه</label>
                                 </div>
                                 <span asp-validation-for="PhoneNumber" class="mt-2 text-danger"></span>
                             </div>
-                            <div class="col-12 mb-4">
+                            <div class="col-12 mb-3">
                                 <div class="form-floating theme-form-floating">
-                                    <input asp-for="Email" type="email" class="form-control" id="email" placeholder="آدرس ایمیل خود را وارد کنید">
+                                    <input asp-for="Email" type="email" class="form-control" id="email" placeholder="آدرس ایمیل خود را وارد کنید" autocomplete="on">
                                     <label for="email">ایمیل</label>
                                 </div>
                                 <span asp-validation-for="Email" class="mt-2 text-danger"></span>
                             </div>
 
-                            <div class="col-12 mb-4">
+                            <div class="col-12 mb-3">
                                 <div class="form-floating theme-form-floating">
                                     <input asp-for="Password" type="password" class="form-control" id="password" placeholder="رمز عبور خود را وارد کنید">
                                     <label for="password">رمز عبور</label>
                                 </div>
                                 <span asp-validation-for="Password" class="mt-2 text-danger"></span>
                             </div>
-                            <div class="col-12 mb-4">
+                            <div class="col-12 mb-3">
                                 <div class="form-floating theme-form-floating">
-                                    <input asp-for="PasswordRepeat" type="password" class="form-control" id="password-repeat" placeholder="رمز عبور خود را وارد کنید">
+                                    <input asp-for="PasswordRepeat" type="password" class="form-control" id="password-repeat" placeholder="تکرار رمز عبور خود را وارد کنید">
                                     <label for="password-repeat">تکرار رمز عبور</label>
                                 </div>
                                 <span asp-validation-for="PasswordRepeat" class="mt-2 text-danger"></span>
@@ -87,7 +87,7 @@
                             <div class="col-12">
                                 <div class="forgot-box">
                                     <div class="form-check ps-0 m-0 remember-box">
-                                        <input class="checkbox_animated check-box" type="checkbox" id="accept-terms-check">
+                                        <input class="checkbox_animated check-box" type="checkbox" id="accept-terms-check" onchange="AcceptTermsCheckChanged(event)">
                                         <label class="form-check-label" for="accept-terms-check">
                                             <span>شرایط</span> و <span>قوانین</span> را میپذیرم.
                                         </label>

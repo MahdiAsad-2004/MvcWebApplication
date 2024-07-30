@@ -160,6 +160,7 @@ async function Partial(response, form) {
         else {
             ViewContainer.innerHTML = partial;
         }
+        
     });
 
 }

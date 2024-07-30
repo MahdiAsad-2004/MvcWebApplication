@@ -20,6 +20,18 @@ namespace OrganicShop.Mvc.Controllers
         public async Task<IActionResult> NotFound()
         {
             return View();
+        } 
+        
+        [HttpGet("/Error/403")]
+        public async Task<IActionResult> Forbidden()
+        {
+            return View();
+        }
+
+        [HttpGet("/Error/401")]
+        public async Task<IActionResult> Unauthorized()
+        {
+            return View();
         }
 
 

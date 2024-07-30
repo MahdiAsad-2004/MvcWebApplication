@@ -30,7 +30,7 @@ namespace OrganicShop.BLL.Services
         private readonly IValidator<UpdateUserDto> _ValidatorUpdateUser;
         private readonly IValidator<ChangePasswordDto> _ValidatorChangePassword;
         public UserService(IApplicationUserProvider provider, IMapper mapper, IUserRepository userRepository,
-            IValidator<CreateUserDto> validator1CreateUser, IValidator<UpdateUserDto> validator1UpdateUser, 
+            IValidator<CreateUserDto> validator1CreateUser, IValidator<UpdateUserDto> validator1UpdateUser,
             IValidator<ChangePasswordDto> validatorChangePassword) : base(provider)
         {
             _Mapper = mapper;
@@ -44,7 +44,7 @@ namespace OrganicShop.BLL.Services
 
 
 
-        public async Task<ServiceResponse<PageDto<User, UserListDto, long>>> GetAll(FilterUserDto? filter = null,PagingDto? paging = null)
+        public async Task<ServiceResponse<PageDto<User, UserListDto, long>>> GetAll(FilterUserDto? filter = null, PagingDto? paging = null)
         {
             var query = _userRepository.GetQueryable()
                 .Include(a => a.Picture)
@@ -65,7 +65,7 @@ namespace OrganicShop.BLL.Services
             if (filter.Email != null)
                 query = query.Where(a => EF.Functions.Like(a.Email, $"%{filter.Email}%"));
 
-            if(filter.Role != null)
+            if (filter.Role != null)
                 query = query.Where(a => a.Role == filter.Role);
 
             #endregion
@@ -82,7 +82,7 @@ namespace OrganicShop.BLL.Services
 
             await Console.Out.WriteLineAsync($"************** {_AppUserProvider.User.Id}  {_AppUserProvider.User.UserName} ***************");
 
-            return new ServiceResponse<PageDto<User, UserListDto, long>>(ResponseResult.Success,pageDto);
+            return new ServiceResponse<PageDto<User, UserListDto, long>>(ResponseResult.Success, pageDto);
         }
 
 
@@ -90,7 +90,7 @@ namespace OrganicShop.BLL.Services
         {
             var user = await _userRepository.GetAsNoTracking(id);
             UserListDto? userListDto = null;
-            if(user != null)
+            if (user != null)
             {
                 userListDto = _Mapper.Map<UserListDto>(user);
             }
@@ -103,27 +103,27 @@ namespace OrganicShop.BLL.Services
         {
             var validationResult = await _ValidatorCreateUser.ValidateAsync(create);
             if (!validationResult.IsValid)
-                return new ServiceResponse<Empty>(create,validationResult);
+                return new ServiceResponse<Empty>(create, validationResult);
 
             if (await _userRepository.GetQueryable().AnyAsync(a => a.PhoneNumber == create.PhoneNumber))
-                return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(create,a => nameof(a.PhoneNumber)));
+                return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(create, a => nameof(a.PhoneNumber)));
 
             if (await _userRepository.GetQueryable().AnyAsync(a => a.Email == create.Email))
                 return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(create, a => nameof(a.Email)));
 
             User user = _Mapper.Map<User>(create);
-            
-            if(HasPermission(a => a.Giving_Permission))
+
+            if (HasPermission(a => a.Giving_Permission))
             {
                 foreach (var permissionId in create.Permissions)
                 {
-                    user.PermissionUsers.Add(new PermissionUsers() { PermissionId = (byte)permissionId , BaseEntity = new BaseEntity(true) });
+                    user.PermissionUsers.Add(new PermissionUsers() { PermissionId = (byte)permissionId, BaseEntity = new BaseEntity(true) });
                 }
             }
 
-            user.Picture = create.ProfileImage != null ? await create.ProfileImage.SavePictureAsync(PathKey.UserImages , PictureType.User) : null;
+            user.Picture = create.ProfileImage != null ? await create.ProfileImage.SavePictureAsync(PathKey.UserImages, PictureType.User) : null;
 
-            await _userRepository.Add(user,_AppUserProvider.User.Id);
+            await _userRepository.Add(user, _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());
         }
 
@@ -139,16 +139,16 @@ namespace OrganicShop.BLL.Services
             //    return new ServiceResponse<Empty>(ResponseResult.EntityExist, _Message.EntityExist(update, a => nameof(a.Email)));
 
             User? user = await _userRepository.GetAsTracking(update.Id);
-            
+
             if (user == null)
                 return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
 
-            if(update.ProfileImage != null) 
+            if (update.ProfileImage != null)
             {
-                if(user.Picture != null)
-                    user.Picture =  await update.ProfileImage.SavePictureAsync(user.Picture,PathKey.UserImages );
-                else 
-                    user.Picture =  await update.ProfileImage.SavePictureAsync(PathKey.UserImages ,PictureType.User);
+                if (user.Picture != null)
+                    user.Picture = await update.ProfileImage.SavePictureAsync(user.Picture, PathKey.UserImages);
+                else
+                    user.Picture = await update.ProfileImage.SavePictureAsync(PathKey.UserImages, PictureType.User);
             }
             await _userRepository.Update(_Mapper.Map<User>(update), _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
@@ -158,7 +158,7 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Delete(long delete)
         {
-            if(delete < 1)
+            if (delete < 1)
                 return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
 
             User? user = await _userRepository.GetAsTracking(delete);
@@ -210,10 +210,29 @@ namespace OrganicShop.BLL.Services
 
 
 
-        
 
 
-      
+        public async Task<ServiceResponse<UserSignInDto>> SignIn(SignInUserDto signInUser)
+        {
+            var user = await _userRepository.GetQueryable()
+                .FirstOrDefaultAsync(a => a.PhoneNumber == signInUser.PhoneNumber && a.Password == signInUser.Password);
+
+            if (user == null)
+                return new ServiceResponse<UserSignInDto>(ResponseResult.Failed, "شماره همراه یا رمز عبور نادرست است");
+
+            return new ServiceResponse<UserSignInDto>(ResponseResult.Success, "شما با موفقیت وارد شدید", 
+                new UserSignInDto 
+                {
+                    Email = user.Email,
+                    Id = user.Id,
+                    Role = user.Role,
+                    Name = user.Name
+                });
+
+        }
+
+
+
 
     }
 

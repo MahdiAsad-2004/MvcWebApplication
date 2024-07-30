@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using OrganicShop.Domain.Validation.Validators;
 using OrganicShop.Domain.Validation.UserValidators;
+using OrganicShop.BLL.Services.BackgroundServices;
 
 
 namespace OrganicShop.Ioc
@@ -25,7 +26,7 @@ namespace OrganicShop.Ioc
         public static DryIoc.Container GetContainer()
         {
             var container = new DryIoc.Container();
-            var serviceCollecton = new ServiceCollection();
+            var serviceCollection = new ServiceCollection();
 
             IRepository repository;
             UserRepository userRepository;
@@ -61,7 +62,11 @@ namespace OrganicShop.Ioc
 
             container.RegisterInstance<IMapper>(new Mapper(MappingConfiguration.GetConfiguration()));
 
-            serviceCollecton.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+            serviceCollection.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+
+            serviceCollection.AddHostedService<NewsLetterSenderServiceBackground>();
+
+
 
             //serviceCollecton.AddFluentValidation(fv =>
             //{
@@ -98,8 +103,8 @@ namespace OrganicShop.Ioc
             //    Console.WriteLine(item.ImplementationType.Name + "  ____  " + item.ServiceType.Name);
             //}
 
-           
-            container.Populate(serviceCollecton);
+
+            container.Populate(serviceCollection);
 
             return container;
         }

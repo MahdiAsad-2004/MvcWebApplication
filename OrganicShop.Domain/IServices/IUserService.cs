@@ -25,6 +25,7 @@ namespace OrganicShop.Domain.IServices
 
         Task<bool> IsPhoneNumberExist(string email);
 
+        Task<ServiceResponse<UserSignInDto>> SignIn(SignInUserDto signInUser);
 
 
 

@@ -1,8 +1,11 @@
-let AcceptTermsCheck = document.getElementById('accept-terms-check');
 
+let AcceptTermsCheck = document.getElementById('accept-terms-check');
 let SubmitSignUpButton = document.getElementById('submit-sign-up-button');
 
-AcceptTermsCheck.oninput = (e) => {
+
+
+function AcceptTermsCheckChanged(e) {
+    SubmitSignUpButton = document.getElementById('submit-sign-up-button');
     if (e.target.checked) {
         SubmitSignUpButton.disabled = false;
     }
@@ -10,3 +13,5 @@ AcceptTermsCheck.oninput = (e) => {
         SubmitSignUpButton.disabled = true;
     }
 }
+
+

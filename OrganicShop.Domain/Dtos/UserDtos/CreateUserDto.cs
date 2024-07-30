@@ -17,7 +17,7 @@ namespace OrganicShop.Domain.Dtos.UserDtos
 
         [DisplayName("رمز عبور")]
         [Required(ErrorMessage = "{0} ضروری است")]
-        [MinLength(8, ErrorMessage = "{0} باید حداقل {1} حرف باشد")]
+        [MinLength(6, ErrorMessage = "{0} باید حداقل {1} حرف باشد")]
         public string Password { get; set; }
 
 

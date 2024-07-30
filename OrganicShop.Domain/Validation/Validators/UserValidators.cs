@@ -21,7 +21,7 @@ namespace OrganicShop.Domain.Validation.UserValidators
             RuleFor(a => a.Password)
                .NotNull()
                .NotEmpty()
-               .MinimumLength(8);
+               .MinimumLength(6);
 
             RuleFor(a => new { a.Password, a.PasswordRepeat })
                .NotNull()
@@ -31,7 +31,8 @@ namespace OrganicShop.Domain.Validation.UserValidators
             RuleFor(a => a.PhoneNumber)
                .NotNull()
                .NotEmpty()
-               .Length(11, 11).WithMessage("#PropertyName معتبر نیست");
+               .Length(11, 11)
+               .WithMessage("#PropertyName معتبر نیست");
 
 
             RuleFor(a => a.Email)

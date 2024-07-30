@@ -19,9 +19,9 @@ namespace OrganicShop.Domain.Validation.Validators.Base
 
             AddTranslation("fa", "LengthValidator", "#PropertyName باید حداقل {MinLength} و حداکثر {MaxLength} حرف داشته باشد");
             
-            AddTranslation("fa", "MinLengthValidator", "#PropertyName باید حداقل {MinLength} حرف داشته باشد");
+            AddTranslation("fa", "MinimumLengthValidator", "#PropertyName باید حداقل {MinLength} حرف داشته باشد");
 
-            AddTranslation("fa", "MaxLengthValidator", "#PropertyName باید حداکثر {MaxLength} حرف داشته باشد");
+            AddTranslation("fa", "MaximumLengthValidator", "#PropertyName باید حداکثر {MaxLength} حرف داشته باشد");
 
             AddTranslation("fa", "LessThanValidator", "#PropertyName باید کوچک تر از {ComparisonValue} باشد");
 

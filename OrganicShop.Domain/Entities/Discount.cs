@@ -8,7 +8,7 @@ namespace OrganicShop.Domain.Entities
     public class Discount : EntityId<int>
     {
         public string Title { get; set; }
-        public int? Price { get; set; } 
+        public int? Price { get; set; }
         public int? Percent { get; set; }
         public int? Count { get; set; }
         public int UsedCount { get; set; }
@@ -46,7 +46,7 @@ namespace OrganicShop.Domain.Entities
                 return false;
 
             if (Count != null)
-                if (Count < 1)
+                if (Count < 1 || UsedCount >= Count)
                     return false;
 
             if (StartDate != null)

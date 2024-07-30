@@ -9,12 +9,14 @@ using OrganicShop.Domain.Response.Messages;
 
 namespace OrganicShop.Domain.Response
 {
-    public class ServiceResponse<TData> where TData : class
+    public class ServiceResponse<TData>
     {
         public ResponseResult Result { get; set; }
         public string Message { get; set; } = string.Empty;
 
         public Dictionary<string,string> ValidationErrors = new Dictionary<string,string>();
+
+        public List<ValidationFailure> ValidationFailures = new();
         public TData? Data { get; set; } 
        
 
@@ -42,10 +44,26 @@ namespace OrganicShop.Domain.Response
         {
             Result = ResponseResult.ValidationError;
             Message = message ?? "داده های ارسال شده معتبر نیستند";
-            ValidationErrors = validationResult.Errors
-                .ToDictionary(
-                    a => a.PropertyName, 
-                    a => a.ErrorMessage.Replace("#PropertyName" , DisplayNameExtension.GetPropName(dto , a.PropertyName)));
+
+            //ValidationErrors = validationResult.Errors
+            //    .ToDictionary(
+            //        a => a.PropertyName, 
+            //        a => a.ErrorMessage.Replace("#PropertyName" , DisplayNameExtension.GetPropName(dto , a.PropertyName)));
+
+            ValidationFailures = validationResult.Errors
+                .Select(a => new ValidationFailure()
+                {
+                    AttemptedValue = a.AttemptedValue,
+                    CustomState = a.CustomState,
+                    ErrorCode = a.ErrorCode,
+                    ErrorMessage = a.ErrorMessage.Replace("#PropertyName", DisplayNameExtension.GetPropName(dto, a.PropertyName)),
+                    FormattedMessagePlaceholderValues = a.FormattedMessagePlaceholderValues,
+                    PropertyName = a.PropertyName,
+                    Severity = a.Severity
+                })
+                .ToList();
+
+            
         }
 
     }

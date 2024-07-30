@@ -585,13 +585,14 @@ namespace OrganicShop.BLL.Services
                     .Include(a => a.Properties)
                      .ThenInclude(a => a.PropertyType)
                     .Include(a => a.ProductVarients)
-                    .Where(a => a.DiscountedPrice != null)
-                    .AsQueryable();
+                    .Where(a => a.DiscountedPrice != null);
 
-            var productSummaryDtos = await productsQuery.Select(a => _Mapper.Map<ProductSummaryDto>(a)).ToListAsync();
+            var productSummaryDtos = await productsQuery
+                .Select(a => _Mapper.Map<ProductSummaryDto>(a))
+                .ToListAsync();
 
             productSummaryDtos = productSummaryDtos
-                .Where(a => a.Discount.IsValid() && a.Discount.Count > 0 && a.Discount.EndDate > DateTime.Now)
+                .Where(a => a.DiscountedPrice != null && a.Discount.Count > 0 && a.Discount.EndDate > DateTime.Now)
                 .ToList();
 
             return new ServiceResponse<List<ProductSummaryDto>>(ResponseResult.Success , productSummaryDtos);
