@@ -1,0 +1,86 @@
+﻿@using OrganicShop.Domain.Dtos.AddressDtos
+@using OrganicShop.Domain.Enums.EnumValues
+
+@model List<AddressListDto>
+
+<div class="dashboard-address">
+    <div class="title title-flex">
+        <div>
+            <h2>آدرس های شما</h2>
+            <span class="title-leaf">
+                <svg class="icon-width bg-gray">
+                    <use xlink:href="~/site/assets/svg/leaf.svg#leaf"></use>
+                </svg>
+            </span>
+        </div>
+
+        <button class="btn theme-bg-color text-white btn-sm fw-bold mt-lg-0 mt-3" data-bs-toggle="modal" data-bs-target="#add-address-modal">
+            <i data-feather="plus"
+               class="me-2"></i> افزودن آدرس جدید
+        </button>
+    </div>
+
+    <div class="row g-sm-4 g-3">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-xxl-4 col-xl-6 col-lg-12 col-md-6">
+                <div class="address-box">
+                    <div>
+                        @* <div class="form-check">
+                            <input class="form-check-input" type="radio" name="jack" id="flexRadioDefault2">
+                        </div> *@
+
+                        <div class="label">
+                            <label>@item.Title</label>
+                        </div>
+
+                        <div class="table-responsive address-table">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2">@item.ReceiverName</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>آدرس :</td>
+                                        <td>
+                                            <p>
+                                                @item.Text -  @item.Province.ToStringValue()
+                                            </p>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>کد پستی :</td>
+                                        <td>@item.PostCode</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>تلفن :</td>
+                                        <td>@item.PhoneNumber</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-sm add-button w-100" 
+                            onclick="OpenEditAddressModal('@item.Id' , '@item.Title' ,'@item.ReceiverName' , '@item.PhoneNumber' , '@item.PostCode' , '@((int)item.Province)' , '@item.Text')">
+                            <i data-feather="edit"></i>
+                            ویرایش
+                        </button>
+                        <button class="btn btn-sm add-button w-100" onclick="OpenRemoveAddressModal('@item.Id' , '@item.Title')">
+                            <i data-feather="trash-2"></i>
+                            حذف
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        
+
+    </div>
+</div>

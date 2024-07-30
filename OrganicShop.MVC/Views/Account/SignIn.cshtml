@@ -47,7 +47,7 @@
 
                     <div class="input-box">
                         <form class="row g-4" id="sign-in-form" action="/account/sign-in" method="post">
-                            <div class="col-12 mb-3">
+                            <div class="col-12 mb-2">
                                 <div class="form-floating theme-form-floating log-in-form">
                                     <input asp-for="PhoneNumber" type="text" class="form-control" id="phoneNumber" placeholder="آدرس ایمیل خود را وارد کنید">
                                     <label for="phoneNumber">شماره همراه</label>
@@ -55,7 +55,7 @@
                                 <span asp-validation-for="PhoneNumber" class="mt-2 text-danger"></span>
                             </div>
 
-                            <div class="col-12 mb-3">
+                            <div class="col-12 mb-2">
                                 <div class="form-floating theme-form-floating log-in-form">
                                     <input asp-for="Password" type="password" class="form-control" id="password" placeholder="رمز عبور خود را وارد کنید">
                                     <label for="password">رمز عبور</label>
@@ -63,8 +63,8 @@
                                 <span asp-validation-for="Password" class="mt-2 text-danger"></span>
                             </div>
 
-                            <div class="col-12 mb-3">
-                                <div class="forgot-box">
+                            <div class="col-12">
+                                <div class="forgot-box mb-4">
                                     <div class="form-check ps-0 m-0 remember-box">
                                         <input asp-for="RememberMe" class="checkbox_animated check-box" type="checkbox" id="flexCheckDefault">
                                         <label class="form-check-label" for="flexCheckDefault">
@@ -121,3 +121,9 @@
     </div>
 </section>
 <!-- log in section end -->
+@section Scripts{
+
+    <partial name="_ValidationScriptsPartial" />
+
+
+}

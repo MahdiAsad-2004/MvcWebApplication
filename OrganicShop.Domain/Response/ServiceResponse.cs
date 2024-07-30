@@ -9,7 +9,7 @@ using OrganicShop.Domain.Response.Messages;
 
 namespace OrganicShop.Domain.Response
 {
-    public class ServiceResponse<TData>
+    public class ServiceResponse<TData> where TData : class
     {
         public ResponseResult Result { get; set; }
         public string Message { get; set; } = string.Empty;

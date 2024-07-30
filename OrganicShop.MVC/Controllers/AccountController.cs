@@ -16,6 +16,7 @@ using OrganicShop.Ioc;
 using OrganicShop.Mvc.Controllers.Base;
 using OrganicShop.Mvc.Models.Toast;
 using System.Security.Claims;
+using OrganicShop.BLL.Extensions;
 
 namespace OrganicShop.Mvc.Controllers
 {
@@ -100,7 +101,7 @@ namespace OrganicShop.Mvc.Controllers
                 return _ClientHandleResult.RedirectThenToast(HttpContext, TempData, "/home", new Toast(ToastType.Success, response.Message), true);
             }
 
-            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, response.Message), responseResult: false);
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
 
         }
 

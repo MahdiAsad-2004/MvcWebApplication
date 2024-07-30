@@ -1,4 +1,5 @@
 ﻿using OrganicShop.Domain.Dtos.Base;
+using OrganicShop.Domain.Enums;
 
 namespace OrganicShop.Domain.Dtos.AddressDtos
 {
@@ -9,10 +10,11 @@ namespace OrganicShop.Domain.Dtos.AddressDtos
         public string PostCode { get; set; }
         public string PhoneNumber { get; set; }
         public string ReceiverName { get; set; }
+        public Province Province { get; set; }
+
+
+
 
     }
-
-
-
 
 }

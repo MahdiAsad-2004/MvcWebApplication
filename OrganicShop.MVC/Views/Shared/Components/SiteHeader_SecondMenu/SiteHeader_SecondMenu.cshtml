@@ -94,7 +94,28 @@
                                     <a href="/sellers" class="nav-link dropdown-toggle ps-xl-2 ps-0">فروشندگان</a>
                                 </li>   
                                 <li class="nav-item dropdown dropdown-mega">
-                                    <a href="/profile" class="nav-link dropdown-toggle ps-xl-2 ps-0">پروفایل کاربری</a>
+                                    <a href="javascript:void(0)" class="nav-link dropdown-toggle ps-xl-2 ps-0" data-bs-toggle="dropdown">حساب کاربری</a>
+                                    <ul class="dropdown-menu">
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <li>
+                                                <a class="dropdown-item" href="/profile">پروفایل کاربری</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="/account/log-out">خروج از حساب</a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <a class="dropdown-item" href="/account/sign-up">ثبت نام</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="/account/sign-in">ورود</a>
+                                            </li>
+                                        }
+                                      
+                                    </ul>
                                 </li>
                                 <li class="nav-item dropdown dropdown-mega">
                                     <a href="/faq" class="nav-link dropdown-toggle ps-xl-2 ps-0">سوالات متداول</a>

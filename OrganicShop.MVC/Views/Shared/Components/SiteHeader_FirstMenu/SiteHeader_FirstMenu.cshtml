@@ -49,27 +49,28 @@
 
                         <div class="option-list">
                             <ul>
-                                <li>
-                                    <a href="javascript:void(0)" class="header-icon user-icon search-icon">
-                                        <i class="iconly-Profile icli"></i>
-                                    </a>
+                                @*  <li>
+                                <a href="javascript:void(0)" class="header-icon search-box search-icon">
+                                <i class="iconly-Search icli"></i>
+                                </a>
                                 </li>
 
                                 <li>
-                                    <a href="javascript:void(0)" class="header-icon search-box search-icon">
-                                        <i class="iconly-Search icli"></i>
-                                    </a>
-                                </li>
+                                <a href="javascript:void(0)" class="header-icon user-icon search-icon">
+                                <i class="iconly-Profile icli"></i>
+                                </a>
+                                </li> *@
 
                                 @*
                                 <li>
-                                    <a href="compare.html" class="header-icon">
-                                        <small class="badge-number">2</small>
-                                        <i class="iconly-Swap icli"></i>
-                                    </a>
+                                <a href="compare.html" class="header-icon">
+                                <small class="badge-number">2</small>
+                                <i class="iconly-Swap icli"></i>
+                                </a>
                                 </li>
                                 *@
-                                
+
+
                                 <li class="onhover-dropdown">
                                     <a href="javascript:void(0)" class="header-icon swap-icon">
                                         <i class="iconly-Heart icli"></i>
@@ -77,7 +78,19 @@
 
                                 </li>
 
+
                                 @await Html.PartialAsync("_CartSummary", new List<ProductItemListDto>())
+
+
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li>
+                                        <a href="/profile" class="header-icon text-dark" style="margin-right:15px;">
+                                            <i class="fa-regular fa-user"></i>
+                                        </a>
+                                    </li>
+                                }
+
 
                             </ul>
                         </div>

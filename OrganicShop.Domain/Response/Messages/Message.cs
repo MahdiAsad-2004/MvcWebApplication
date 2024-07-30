@@ -70,7 +70,7 @@ namespace OrganicShop.Domain.Response.Messages
         }
         public string NoAccess()
         {
-            return $"شما به این بخش دسترسی ندارید";
+            return $"شما به این {_EntityName} ندارید";
         }
 
         public string SuccessUpdate()

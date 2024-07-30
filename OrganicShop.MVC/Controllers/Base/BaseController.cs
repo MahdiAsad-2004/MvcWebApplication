@@ -3,6 +3,7 @@ using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Enums.Response;
 using OrganicShop.Domain.Models;
 using OrganicShop.Mvc.Controllers.Base.Result;
+using OrganicShop.Mvc.Extensions;
 using OrganicShop.Mvc.Models.Redirect;
 using OrganicShop.Mvc.Models.Toast;
 using System.Diagnostics;
@@ -24,9 +25,16 @@ namespace OrganicShop.Mvc.Controllers.Base
         {
 
         }
-        
+
 
         #endregion
+
+
+        public ApplicationUser AppUser 
+        {
+            get { return User.GetAppUser(); }
+            set { } 
+        }
 
 
         private string? GetActionAreaName()

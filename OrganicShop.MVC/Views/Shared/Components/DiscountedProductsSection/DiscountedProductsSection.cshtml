@@ -2,137 +2,142 @@
 @using OrganicShop.Domain.Dtos.ProductDtos
 @model List<ProductSummaryDto>
 
-<!-- Deal Section Start -->
-<section class="deal-section">
-    <div class="container-fluid-lg">
-        <div class="title">
-            <h2>تخفیفات داغ روزانه</h2>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="three-slider-1 arrow-slider">
-                    @foreach (var item in Model)
-                    {
-                        <div>
-                            <div class="deal-box wow fadeInUp">
-                                <a href="/Product/@item.Barcode" class="category-image order-sm-2">
-                                    <img src="~/media/images/product/@item.MainImageName" class="img-fluid blur-up lazyload"
-                                         alt="@item.Title">
-                                </a>
 
-                                <div class="deal-detail order-sm-1">
-                                    <button class="buy-box btn theme-bg-color text-white btn-cart">
-                                        <i class="iconly-Buy icli m-0"></i>
-                                    </button>
-                                    <div class="hot-deal">
-                                        <span>معاملات داغ</span>
-                                    </div>
-                                    <ul class="rating">
-                                        @{
-                                            int i = 1;
-                                            for (i = 1; i <= float.Floor(item.CommentsRate); i++)
-                                            {
-                                                <li>
-                                                    <i class="fa-solid fa-star-sharp"></i>
-                                                </li>
+@if (Model.Any())
+{
 
-                                            }
-                                            if ((item.CommentsRate * 10) % 10 >= 5)
-                                            {
-                                                <li>
-                                                    <i class="fa-solid fa-star-half-stroke"></i>
-                                                </li>
-                                                for (int j = 5; j > i + 1; j--)
-                                                {
-                                                    <li>
-                                                        <i class="fa-regular fa-star-sharp"></i>
-                                                    </li>
-                                                }
-                                            }
-                                            else
-                                            {
-                                                for (int j = 5; j > i; j--)
-                                                {
-                                                    <li>
-                                                        <i class="fa-regular fa-star-sharp"></i>
-                                                    </li>
-                                                }
-                                            }
-                                        }
-
-                                      @*   <i class="fa-solid fa-star-sharp"></i>
-                                        <i class="fa-solid fa-star-half-stroke"></i>
-                                        <i class="fa-regular fa-star-sharp"></i>
-
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li> *@
-                                    </ul>
-                                    <a href="/Product/@item.Barcode" class="text-title">
-                                        <h5>@item.Title</h5>
+    <!-- Deal Section Start -->
+    <section class="deal-section">
+        <div class="container-fluid-lg">
+            <div class="title">
+                <h2>تخفیفات داغ روزانه</h2>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="three-slider-1 arrow-slider">
+                        @foreach (var item in Model)
+                        {
+                            <div>
+                                <div class="deal-box wow fadeInUp">
+                                    <a href="/Product/@item.Barcode" class="category-image order-sm-2">
+                                        <img src="~/media/images/product/@item.MainImageName" class="img-fluid blur-up lazyload"
+                                             alt="@item.Title">
                                     </a>
-                                    <h5 class="price"> @item.DiscountedPrice.Value.ToMoney() تومان  <span> @item.Price.ToMoney() </span></h5>
-                                    <div class="progress custom-progressbar">
-                                        <div class="progress-bar" 
-                                            style="width: @(((float)(item.Discount.Count.Value - item.Discount.UsedCount)) / (float)item.Discount.Count.Value * 100f)%" 
-                                            role="progressbar"
-                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="item">باقی مانده : <span>@item.Discount.Count.Value</span></h4>
-                                    <h4 class="offer">عجله کنید !!</h4>
-                                    <div class="timer clockdiv" id="@($"clock-{item.Id}")" data-hours="1" data-minutes="2" data-seconds="3" 
-                                    data-endDate="@item.Discount.EndDate.Value">
-                                        <ul>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="seconds">
-                                                        <h6>@(item.Discount.EndDate.Value.Subtract(DateTime.Now).Seconds)</h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="minutes">
-                                                        <h6>@(item.Discount.EndDate.Value.Subtract(DateTime.Now).Minutes)</h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="hours">
-                                                        <h6>@(item.Discount.EndDate.Value.Subtract(DateTime.Now).Hours)</h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="days">
-                                                        <h6>@(item.Discount.EndDate.Value.Subtract(DateTime.Now).Days)</h6>
-                                                    </div>
-                                                </div>
-                                            </li>
+
+                                    <div class="deal-detail order-sm-1">
+                                        <button class="buy-box btn theme-bg-color text-white btn-cart">
+                                            <i class="iconly-Buy icli m-0"></i>
+                                        </button>
+                                        <div class="hot-deal">
+                                            <span>معاملات داغ</span>
+                                        </div>
+                                        <ul class="rating">
+                                            @{
+                                                int i = 1;
+                                                for (i = 1; i <= float.Floor(item.CommentsRate); i++)
+                                                {
+                                                    <li>
+                                                        <i class="fa-solid fa-star-sharp"></i>
+                                                    </li>
+
+                                                }
+                                                if ((item.CommentsRate * 10) % 10 >= 5)
+                                                {
+                                                    <li>
+                                                        <i class="fa-solid fa-star-half-stroke"></i>
+                                                    </li>
+                                                    for (int j = 5; j > i + 1; j--)
+                                                    {
+                                                        <li>
+                                                            <i class="fa-regular fa-star-sharp"></i>
+                                                        </li>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    for (int j = 5; j > i; j--)
+                                                    {
+                                                        <li>
+                                                            <i class="fa-regular fa-star-sharp"></i>
+                                                        </li>
+                                                    }
+                                                }
+                                            }
+
+                                            @*   <i class="fa-solid fa-star-sharp"></i>
+                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                    <i class="fa-regular fa-star-sharp"></i>
+
+                                    <li>
+                                    <i data-feather="star" class="fill"></i>
+                                    </li>
+                                    <li>
+                                    <i data-feather="star" class="fill"></i>
+                                    </li>
+                                    <li>
+                                    <i data-feather="star" class="fill"></i>
+                                    </li>
+                                    <li>
+                                    <i data-feather="star"></i>
+                                    </li>
+                                    <li>
+                                    <i data-feather="star"></i>
+                                    </li> *@
                                         </ul>
+                                        <a href="/Product/@item.Barcode" class="text-title">
+                                            <h5>@item.Title</h5>
+                                        </a>
+                                        <h5 class="price"> @item.DiscountedPrice.Value.ToMoney() تومان  <span> @item.Price.ToMoney() </span></h5>
+                                        <div class="progress custom-progressbar">
+                                            <div class="progress-bar"
+                                                 style="width: @(((float)(item.Discount.Count.Value - item.Discount.UsedCount)) / (float)item.Discount.Count.Value * 100f)%"
+                                                 role="progressbar"
+                                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <h4 class="item">باقی مانده : <span>@item.Discount.Count.Value</span></h4>
+                                        <h4 class="offer">عجله کنید !!</h4>
+                                        <div class="timer clockdiv" id="@($"clock-{item.Id}")" data-hours="1" data-minutes="2" data-seconds="3"
+                                             data-endDate="@item.Discount.EndDate.Value">
+                                            <ul>
+                                                <li>
+                                                    <div class="counter">
+                                                        <div class="seconds">
+                                                            <h6>@(item.Discount.EndDate.Value.Subtract(DateTime.Now).Seconds)</h6>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="counter">
+                                                        <div class="minutes">
+                                                            <h6>@(item.Discount.EndDate.Value.Subtract(DateTime.Now).Minutes)</h6>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="counter">
+                                                        <div class="hours">
+                                                            <h6>@(item.Discount.EndDate.Value.Subtract(DateTime.Now).Hours)</h6>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="counter">
+                                                        <div class="days">
+                                                            <h6>@(item.Discount.EndDate.Value.Subtract(DateTime.Now).Days)</h6>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    }
+                        }
 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-<!-- Deal Section End -->
+    </section>
+    <!-- Deal Section End -->
+}

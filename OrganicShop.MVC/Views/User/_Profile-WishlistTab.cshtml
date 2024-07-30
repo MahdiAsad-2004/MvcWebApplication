@@ -1,0 +1,70 @@
+﻿@using OrganicShop.Domain.Dtos.ProductDtos
+@using OrganicShop.BLL.Extensions
+@model List<ProductSummaryDto>
+
+<div class="dashboard-wishlist">
+    <div class="title">
+        <h2>لیست علاقه‌مندی های من</h2>
+        <span class="title-leaf title-leaf-gray">
+            <svg class="icon-width bg-gray">
+                <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
+            </svg>
+        </span>
+    </div>
+    <div class="row g-sm-4 g-3">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-xxl-3 col-lg-6 col-md-4 col-sm-6" id="product-wish-@item.Id">
+                <div class="product-box-3 theme-bg-white h-100">
+                    <div class="product-header">
+                        <div class="product-image">
+                            <a href="product-left-thumbnail.html">
+                                <img src="~/media/images/product/@item.MainImageName" class="img-fluid blur-up lazyload" alt="@item.Title">
+                            </a>
+
+                            <div class="product-header-top">
+                                <button class="btn wishlist-button close_button" onclick="RemoveProductFromWishList('@item.Id')">
+                                    <i data-feather="x"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-footer">
+                        <div class="product-detail">
+                            <span class="span-name">@item.Categories.Last().Title</span>
+                            <a href="/product/@item.Barcode">
+                                <h5 class="name">@item.Title</h5>
+                            </a>
+                            <p class="text-content mt-1 mb-2 product-content">@item.ShortDescription</p>
+                            <h5 class="price">
+                                @if (item.DiscountedPrice != null)
+                                {
+                                    <span class="theme-color">@item.DiscountedPrice.Value.ToToman()</span>
+                                    <del>@item.Price.ToMoney()</del>
+                                }
+                                else
+                                {
+                                    <span class="theme-color">@item.Price.ToToman()</span>
+                                }
+                            </h5>
+                            <div class="add-to-cart-box mt-2 bg-white">
+                                <button class="btn btn-add-cart addcart-button"
+                                        onclick="AddProductToCartWithCount('@(item.Id)' , null , 1 , 0)">
+                                    افزودن
+                                    <span class="add-icon bg-light-gray">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+
+    </div>
+</div>
