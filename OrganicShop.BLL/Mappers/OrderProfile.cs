@@ -42,6 +42,28 @@ namespace OrganicShop.BLL.Mappers
     }
 
 
+    public static class OrderMappers
+    {
+        public static OrderListDto ToListDto(this Order order)
+        {
+            return new OrderListDto
+            {
+                CreateDate = order.BaseEntity.CreateDate.ToPersianDate(),
+                DeliveryDatePredicate = order.DeliveryDateEstimated,
+                Id = order.Id,
+                OrderStatus = order.OrderStatus,
+                PaymentMethod = order.PaymentMethod,
+                ShippingMethodName = order.ShippingMethodName,
+                TotalPrice = order.TotalPrice,
+                TrackingCode = order.TrackingCode,
+                UserName = order.Receiver.Name,
+                UserPhoneNumber = order.Receiver.PhoneNumber,
+            };
+        }
+
+
+    }
+
 
 
 }

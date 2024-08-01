@@ -13,10 +13,16 @@ namespace OrganicShop.Domain.IServices
         
         Task<UserListDto> Get(long id);
 
-        Task<ServiceResponse<Empty>> Create(CreateUserDto create);
+        Task<ServiceResponse<UpdateUserDto>> GetUpdateDto(long Id);
+
+        Task<ServiceResponse<UserProfileDto>> GetProfileDto();
+
+        Task<ServiceResponse<long>> Create(CreateUserDto create);
 
         Task<ServiceResponse<Empty>> Update(UpdateUserDto update);
-        
+
+        Task<ServiceResponse<Empty>> UpdatePrivacy(UpdateUserPrivacyDto updatePrivacy);
+
         Task<ServiceResponse<Empty>> Delete(long Id);
 
         Task<ServiceResponse<Empty>> ChangePassword(ChangePasswordDto changePassword);

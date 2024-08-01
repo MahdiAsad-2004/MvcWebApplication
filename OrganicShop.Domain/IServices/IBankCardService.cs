@@ -9,6 +9,8 @@ namespace OrganicShop.Domain.IServices
     {
         Task<ServiceResponse<PageDto<BankCard, BankCardListDto, long>>> GetAll(FilterBankCardDto? filter = null, PagingDto? paging = null);
 
+        Task<ServiceResponse<UpdateBankCardDto>> Get(long Id);
+
         Task<ServiceResponse<Empty>> Create(CreateBankCardDto create);
 
         Task<ServiceResponse<Empty>> Update(UpdateBankCardDto update);

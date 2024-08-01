@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Web;
+using System.Security.Cryptography;
+
 
 
 namespace OrganicShop.BLL.Extensions
@@ -117,13 +119,13 @@ namespace OrganicShop.BLL.Extensions
 
         public static string EncodePersianString(string str)
         {
-            return HttpUtility.UrlEncode(str.Trim().Replace(" " , "-"), Encoding.UTF8).Replace("+", "-");
+            return HttpUtility.UrlEncode(str.Trim().Replace(" ", "-"), Encoding.UTF8).Replace("+", "-");
             //return HttpUtility.UrlEncode(str.Trim().Replace(" ", "-"), Encoding.UTF8);
         }
 
         public static string EncodePersian(this string str)
         {
-            return HttpUtility.UrlEncode(str.Trim().Replace(" " , "-"), Encoding.UTF8).Replace("+", "-");
+            return HttpUtility.UrlEncode(str.Trim().Replace(" ", "-"), Encoding.UTF8).Replace("+", "-");
         }
 
         public static string DecodePersianString(string codedSttring)
@@ -144,7 +146,7 @@ namespace OrganicShop.BLL.Extensions
         {
             try
             {
-                return HttpUtility.UrlDecode(codedSttring, Encoding.UTF8).Replace("+", "-").Replace("-" , " ");
+                return HttpUtility.UrlDecode(codedSttring, Encoding.UTF8).Replace("+", "-").Replace("-", " ");
 
             }
             catch (Exception ex)
@@ -161,6 +163,30 @@ namespace OrganicShop.BLL.Extensions
         {
             return Guid.NewGuid().ToString().Substring(0, 13);
         }
+
+
+
+
+
+
+        private static byte[] GetHash(this string inputString)
+        {
+            using (HashAlgorithm algorithm = SHA256.Create())
+                return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
+        }
+
+
+
+        public static string ToSha256String(this string inputString)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in GetHash(inputString))
+                sb.Append(b.ToString("X2"));
+
+            return sb.ToString();
+        }
+
+
 
     }
 }

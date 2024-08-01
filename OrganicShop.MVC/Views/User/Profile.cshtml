@@ -1,12 +1,21 @@
 ﻿@using OrganicShop.Domain.Dtos.AddressDtos
+@using OrganicShop.Domain.Dtos.BankCardDtos
+@using OrganicShop.Domain.Dtos.NewsLetterMemberDtos
 @using OrganicShop.Domain.Dtos.ProductDtos
 @using OrganicShop.Domain.Dtos.ProductItemDtos
 @using OrganicShop.Domain.Dtos.UserDtos
+@using OrganicShop.BLL.Mappers
+@using OrganicShop.Domain.Enums
 @model UserProfileDto
 
 @{
     var wishProducts = ViewData["WishProducts"] as List<ProductSummaryDto> ?? new List<ProductSummaryDto>();
 
+    var isMemberOfNewsLetter = ViewData["IsMemberOfNewsLetter"] as bool? ?? false;
+
+    int totalOrdersCount = Model.Orders.Count();
+    int totalOrdersWaitingCount = Model.Orders.Count(a => a.OrderStatus == OrderStatus.Waiting);
+    int wishProductsCount = wishProducts.Count;
 }
 
 @section Breadcrumb {
@@ -67,8 +76,8 @@
                             </div>
 
                             <div class="profile-name">
-                                <h3>@Model.Name</h3>
-                                <h6 class="text-content">@Model.Email</h6>
+                                <h3 class="profile-user-name">@Model.UpdateUser.Name</h3>
+                                <h6 class="text-content profile-user-email">@Model.UpdateUser.Email</h6>
                             </div>
                         </div>
                     </div>
@@ -108,14 +117,14 @@
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-profile" type="button" role="tab">
+                                    data-bs-target="#pills-info" type="button" role="tab">
                                 <i data-feather="user"></i>
                                 پروفایل
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-security-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-security" type="button" role="tab">
+                            <button class="nav-link" id="pills-setting-tab" data-bs-toggle="pill"
+                                    data-bs-target="#pills-privacy" type="button" role="tab">
                                 <i data-feather="shield"></i>
                                 حریم خصوصی
                             </button>
@@ -144,7 +153,7 @@
                                 </div>
 
                                 <div class="dashboard-user-name">
-                                    <h6 class="text-content">سلام, <b class="text-title">زینب احمدی</b></h6>
+                                    <h6 class="text-content">سلام, <b class="text-title profile-user-name">زینب احمدی</b></h6>
                                     <p class="text-content">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.</p>
                                 </div>
 
@@ -158,7 +167,7 @@
                                                      alt="">
                                                 <div class="totle-detail">
                                                     <h5>مجموع سفارشات</h5>
-                                                    <h3>3658</h3>
+                                                    <h3>@totalOrdersCount</h3>
                                                 </div>
                                             </div>
                                         </div>
@@ -171,7 +180,7 @@
                                                      alt="">
                                                 <div class="totle-detail">
                                                     <h5>سفارشات در انتظار</h5>
-                                                    <h3>254</h3>
+                                                    <h3>@totalOrdersWaitingCount</h3>
                                                 </div>
                                             </div>
                                         </div>
@@ -184,7 +193,7 @@
                                                      class="blur-up lazyload" alt="">
                                                 <div class="totle-detail">
                                                     <h5>مجموع علاقه‌مندی ها</h5>
-                                                    <h3>32158</h3>
+                                                    <h3>@wishProductsCount</h3>
                                                 </div>
                                             </div>
                                         </div>
@@ -204,20 +213,31 @@
                                             </h4> *@
                                         </div>
                                         <div class="dashboard-detail">
-                                            <h6 class="text-content">@Model.Name</h6>
-                                            <h6 class="text-content">@Model.PhoneNumber</h6>
-                                            <h6 class="text-content">@Model.Email</h6>
+                                            <h6 class="text-content profile-user-name">@Model.UpdateUser.Name</h6>
+                                            <h6 class="text-content">@Model.UpdateUser.PhoneNumber</h6>
+                                            <h6 class="text-content profile-user-email">@Model.UpdateUser.Email</h6>
                                         </div>
                                     </div>
 
                                     <div class="col-xxl-6">
                                         <div class="dashboard-content-title">
                                             <h4>
-                                                خبرنامه <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#editProfile">درخواست عضویت خبرنامه</a>
+                                                خبرنامه
+                                                @if (isMemberOfNewsLetter == false)
+                                                {
+                                                    <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#editProfile">درخواست عضویت خبرنامه</a>
+                                                }
                                             </h4>
                                         </div>
                                         <div class="dashboard-detail">
-                                            <h6 class="text-content">شما در حال حاضر عضو خبرنامه نیستید!</h6>
+                                            @if (isMemberOfNewsLetter)
+                                            {
+                                                <h6 class="text-content">شما در حال حاضر عضو خبرنامه هستید </h6>
+                                            }
+                                            else
+                                            {
+                                                <h6 class="text-content">شما در حال حاضر عضو خبرنامه نیستید!</h6>
+                                            }
                                         </div>
                                     </div>
 
@@ -230,248 +250,7 @@
                         </div>
 
                         <div class="tab-pane fade" id="pills-order" role="tabpanel">
-                            <div class="dashboard-order">
-                                <div class="title">
-                                    <h2>تاریخچه سفارشات من</h2>
-                                    <span class="title-leaf title-leaf-gray">
-                                        <svg class="icon-width bg-gray">
-                                            <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
-                                        </svg>
-                                    </span>
-                                </div>
-
-                                <div class="order-contain">
-                                    <div class="order-box dashboard-bg-box">
-                                        <div class="order-container">
-                                            <div class="order-icon">
-                                                <i data-feather="box"></i>
-                                            </div>
-
-                                            <div class="order-detail">
-                                                <h4>وضعیت <span>در انتظار</span></h4>
-                                                <h6 class="text-content">
-                                                    این یک نوشته آزمایشی است که به طراحان و برنامه نویسان کمک میکند تا این عزیزان با بهره گیری از این نوشته تستی و آزمایشی بتوانند. چدار دولسلات گودا. پنیر ماکارونی
-                                                    رشته های پنیر پنیر کوتج فتا هالومی پنیر جارلسبرگ
-                                                    مثلث ها می گویند پنیر.
-                                                </h6>
-                                            </div>
-                                        </div>
-
-                                        <div class="product-order-detail">
-                                            <a href="product-left-thumbnail.html" class="order-image">
-                                                <img src="../assets/images/vegetable/product/1.png"
-                                                     class="blur-up lazyload" alt="">
-                                            </a>
-
-                                            <div class="order-wrap">
-                                                <a href="product-left-thumbnail.html">
-                                                    <h3>کوکی های ترد فانتزی شکلات چیپ</h3>
-                                                </a>
-                                                <p class="text-content">
-                                                    چدار دولسلات گودا. پنیر ماکارونی
-                                                    رشته های پنیر پنیر کوتج فتا هالومی پنیر جارلسبرگ
-                                                    مثلث ها می گویند پنیر.
-                                                </p>
-                                                <ul class="product-size">
-                                                    <li>
-                                                        <div class="size-box">
-                                                            <h6 class="text-content">قیمت : </h6>
-                                                            <h5>20.680 تومان</h5>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div class="size-box">
-                                                            <h6 class="text-content">امتیاز : </h6>
-                                                            <div class="product-rating ms-2">
-                                                                <ul class="rating">
-                                                                    <li>
-                                                                        <i data-feather="star" class="fill"></i>
-                                                                    </li>
-                                                                    <li>
-                                                                        <i data-feather="star" class="fill"></i>
-                                                                    </li>
-                                                                    <li>
-                                                                        <i data-feather="star" class="fill"></i>
-                                                                    </li>
-                                                                    <li>
-                                                                        <i data-feather="star" class="fill"></i>
-                                                                    </li>
-                                                                    <li>
-                                                                        <i data-feather="star"></i>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div class="size-box">
-                                                            <h6 class="text-content">سازنده : </h6>
-                                                            <h5>اپل</h5>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div class="size-box">
-                                                            <h6 class="text-content">مقدار : </h6>
-                                                            <h5>250 گرم</h5>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="order-box dashboard-bg-box">
-                                        <div class="order-container">
-                                            <div class="order-icon">
-                                                <i data-feather="box"></i>
-                                            </div>
-
-                                            <div class="order-detail">
-                                                <h4>وضعیت <span>در انتظار</span></h4>
-                                                <h6 class="text-content">هر نفسی که فرو می‌ بریم، مرگی را که مدام به ما دست‌ اندازی می‌کند پس می‌زند... در نهایت این مرگ است که باید پیروز شود.هر نفسی که فرو می‌ بریم، مرگی را که مدام به ما دست‌ اندازی می‌کند پس می‌زند... در نهایت این مرگ است که باید پیروز شود.</h6>
-                                            </div>
-                                        </div>
-
-                                        <div class="product-order-detail">
-                                            <a href="product-left.html" class="order-image">
-                                                <img src="../assets/images/vegetable/product/3.png" alt=""
-                                                     class="blur-up lazyload">
-                                            </a>
-
-                                            <div class="order-wrap">
-                                                <a href="product-left.html">
-                                                    <h3>بیسکویت کره بادام زمینی پرمیوم کره 600 گرم</h3>
-                                                </a>
-                                                <p class="text-content">پیر مردی هر روز تو محله می دید پسر کی با کفش های پاره و پای برهنه با توپ پلاستیکی فوتبال بازی می کند.</p>
-                                                <ul class="product-size">
-                                                    <li>
-                                                        <div class="size-box">
-                                                            <h6 class="text-content">قیمت: </h6>
-                                                            <h5>2.680 تومان</h5>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div class="size-box">
-                                                            <h6 class="text-content">امتیاز : </h6>
-                                                            <div class="product-rating ms-2">
-                                                                <ul class="rating">
-                                                                    <li>
-                                                                        <i data-feather="star" class="fill"></i>
-                                                                    </li>
-                                                                    <li>
-                                                                        <i data-feather="star" class="fill"></i>
-                                                                    </li>
-                                                                    <li>
-                                                                        <i data-feather="star" class="fill"></i>
-                                                                    </li>
-                                                                    <li>
-                                                                        <i data-feather="star" class="fill"></i>
-                                                                    </li>
-                                                                    <li>
-                                                                        <i data-feather="star"></i>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div class="size-box">
-                                                            <h6 class="text-content">سازنده : </h6>
-                                                            <h5>اپل</h5>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div class="size-box">
-                                                            <h6 class="text-content">مقدار : </h6>
-                                                            <h5>250 گرم</h5>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="order-box dashboard-bg-box">
-                                        <div class="order-container">
-                                            <div class="order-icon">
-                                                <i data-feather="box"></i>
-                                            </div>
-
-                                            <div class="order-detail">
-                                                <h4>وضعیت <span class="success-bg">موفق</span></h4>
-                                                <h6 class="text-content">پیر مردی هر روز تو محله می دید پسر کی با کفش های پاره و پای برهنه با توپ پلاستیکی فوتبال بازی می کند</h6>
-                                            </div>
-                                        </div>
-
-                                        <div class="product-order-detail">
-                                            <a href="product-left.html" class="order-image">
-                                                <img src="../assets/images/vegetable/product/4.png"
-                                                     class="blur-up lazyload" alt="">
-                                            </a>
-
-                                            <div class="order-wrap">
-                                                <a href="product-left.html">
-                                                    <h3>بسته ترکیبی اسنک آرمور از جوار استیک و چیپس جوار</h3>
-                                                </a>
-                                                <p class="text-content">پسرک کفشا رو پوشید و خوشحال رو به پیر مرد کرد و گفت: شما خدایید؟! پیر مرد لبش را گزید و گفت نه! پسرک گفت پس دوست خدایی، چون من دیشب فقط به خدا گفتم كه کفش ندارم…</p>
-                                                <ul class="product-size">
-                                                    <li>
-                                                        <div class="size-box">
-                                                            <h6 class="text-content">قیمت: </h6>
-                                                            <h5>2.680 تومان</h5>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div class="size-box">
-                                                            <h6 class="text-content">امتیاز : </h6>
-                                                            <div class="product-rating ms-2">
-                                                                <ul class="rating">
-                                                                    <li>
-                                                                        <i data-feather="star" class="fill"></i>
-                                                                    </li>
-                                                                    <li>
-                                                                        <i data-feather="star" class="fill"></i>
-                                                                    </li>
-                                                                    <li>
-                                                                        <i data-feather="star" class="fill"></i>
-                                                                    </li>
-                                                                    <li>
-                                                                        <i data-feather="star" class="fill"></i>
-                                                                    </li>
-                                                                    <li>
-                                                                        <i data-feather="star"></i>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div class="size-box">
-                                                            <h6 class="text-content">سازنده : </h6>
-                                                            <h5>اپل</h5>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div class="size-box">
-                                                            <h6 class="text-content">مقدار : </h6>
-                                                            <h5>250 گرم</h5>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            @await Html.PartialAsync("_Profile-AddressTab", Model.Orders.ToList())
                         </div>
 
                         <div class="tab-pane fade" id="pills-address" role="tabpanel">
@@ -479,404 +258,16 @@
                         </div>
 
                         <div class="tab-pane fade" id="pills-card" role="tabpanel">
-                            <div class="dashboard-card">
-                                <div class="title title-flex">
-                                    <div>
-                                        <h2>اطلاعات حساب های بانکی</h2>
-                                        <span class="title-leaf">
-                                            <svg class="icon-width bg-gray">
-                                                <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
-                                            </svg>
-                                        </span>
-                                    </div>
-
-                                    <button class="btn theme-bg-color text-white btn-sm fw-bold mt-lg-0 mt-3"
-                                            data-bs-toggle="modal" data-bs-target="#editCard">
-                                        <i data-feather="plus"
-                                           class="me-2"></i> افزودن حساب جدید
-                                    </button>
-                                </div>
-
-                                <div class="row g-4">
-                                    <div class="col-xxl-4 col-xl-6 col-lg-12 col-sm-6">
-                                        <div class="payment-card-detail">
-                                            <div class="card-details">
-                                                <div class="card-number">
-                                                    <h4>XXXX - XXXX - XXXX - 2548</h4>
-                                                </div>
-
-                                                <div class="valid-detail">
-                                                    <div class="title">
-                                                        <span>فعال</span>
-                                                        <span>1400/10/1</span>
-                                                    </div>
-                                                    <div class="date">
-                                                        <h3>08/05</h3>
-                                                    </div>
-                                                    <div class="primary">
-                                                        <span class="badge bg-pill badge-light">CVV2 : 1454</span>
-                                                    </div>
-                                                </div>
-
-                                                <div class="name-detail">
-                                                    <div class="name">
-                                                        <h5>زینب احمدی</h5>
-                                                    </div>
-                                                    <div class="card-img">
-                                                        <img src="../assets/images/payment-icon/1.jpg"
-                                                             class="img-fluid blur-up lazyloaded" alt="">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="edit-card">
-                                                <a data-bs-toggle="modal" data-bs-target="#editCard"
-                                                   href="javascript:void(0)"><i class="far fa-edit"></i> ویرایش</a>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                   data-bs-target="#removeProfile">
-                                                    <i class="far fa-minus-square"></i> حذف
-                                                </a>
-                                            </div>
-                                        </div>
-
-                                        <div class="edit-card-mobile">
-                                            <a data-bs-toggle="modal" data-bs-target="#editCard"
-                                               href="javascript:void(0)"><i class="far fa-edit"></i> ویرایش</a>
-                                            <a href="javascript:void(0)">
-                                                <i class="far fa-minus-square"></i>
-                                                حذف
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xxl-4 col-xl-6 col-lg-12 col-sm-6">
-                                        <div class="payment-card-detail">
-                                            <div class="card-details card-visa">
-                                                <div class="card-number">
-                                                    <h4>XXXX - XXXX - XXXX - 1536</h4>
-                                                </div>
-
-                                                <div class="valid-detail">
-                                                    <div class="title">
-                                                        <span>فعال</span>
-                                                        <span>1400/10/1</span>
-                                                    </div>
-                                                    <div class="date">
-                                                        <h3>08/05</h3>
-                                                    </div>
-                                                    <div class="primary">
-                                                        <span class="badge bg-pill badge-light">CVV2 : 1554</span>
-                                                    </div>
-                                                </div>
-
-                                                <div class="name-detail">
-                                                    <div class="name">
-                                                        <h5>زینب احمدی</h5>
-                                                    </div>
-                                                    <div class="card-img">
-                                                        <img src="../assets/images/payment-icon/1.jpg"
-                                                             class="img-fluid blur-up lazyloaded" alt="">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="edit-card">
-                                                <a data-bs-toggle="modal" data-bs-target="#editCard"
-                                                   href="javascript:void(0)"><i class="far fa-edit"></i> ویرایش</a>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                   data-bs-target="#removeProfile">
-                                                    <i class="far fa-minus-square"></i> حذف
-                                                </a>
-                                            </div>
-                                        </div>
-
-                                        <div class="edit-card-mobile">
-                                            <a data-bs-toggle="modal" data-bs-target="#editCard"
-                                               href="javascript:void(0)"><i class="far fa-edit"></i> ویرایش</a>
-                                            <a href="javascript:void(0)">
-                                                <i class="far fa-minus-square"></i>
-                                                حذف
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xxl-4 col-xl-6 col-lg-12 col-sm-6">
-                                        <div class="payment-card-detail">
-                                            <div class="card-details dabit-card">
-                                                <div class="card-number">
-                                                    <h4>XXXX - XXXX - XXXX - 1366</h4>
-                                                </div>
-
-                                                <div class="valid-detail">
-                                                    <div class="title">
-                                                        <span>فعال</span>
-                                                        <span>1400/10/1</span>
-                                                    </div>
-                                                    <div class="date">
-                                                        <h3>08/05</h3>
-                                                    </div>
-                                                    <div class="primary">
-                                                        <span class="badge bg-pill badge-light">CVV2 : 1654</span>
-                                                    </div>
-                                                </div>
-
-                                                <div class="name-detail">
-                                                    <div class="name">
-                                                        <h5>زینب احمدی</h5>
-                                                    </div>
-                                                    <div class="card-img">
-                                                        <img src="../assets/images/payment-icon/1.jpg"
-                                                             class="img-fluid blur-up lazyloaded" alt="">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="edit-card">
-                                                <a data-bs-toggle="modal" data-bs-target="#editCard"
-                                                   href="javascript:void(0)"><i class="far fa-edit"></i> ویرایش</a>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                   data-bs-target="#removeProfile">
-                                                    <i class="far fa-minus-square"></i> حذف
-                                                </a>
-                                            </div>
-                                        </div>
-
-                                        <div class="edit-card-mobile">
-                                            <a data-bs-toggle="modal" data-bs-target="#editCard"
-                                               href="javascript:void(0)"><i class="far fa-edit"></i> ویرایش</a>
-                                            <a href="javascript:void(0)">
-                                                <i class="far fa-minus-square"></i>
-                                                حذف
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            @await Html.PartialAsync("_Profile-BankCardTab", Model.BankCards.ToList())
                         </div>
 
-                        <div class="tab-pane fade" id="pills-profile" role="tabpanel">
-                            <div class="dashboard-profile">
-                                <div class="title">
-                                    <h2>پروفایل من</h2>
-                                    <span class="title-leaf">
-                                        <svg class="icon-width bg-gray">
-                                            <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
-                                        </svg>
-                                    </span>
-                                </div>
-
-                                <div class="profile-detail dashboard-bg-box">
-                                    <div class="dashboard-title">
-                                        <h3>اطلاعات کلی</h3>
-                                    </div>
-                                    <div class="profile-name-detail">
-                                        <div class="d-sm-flex align-items-center d-block">
-                                            <h3>زینب احمدی</h3>
-                                            <div class="product-rating profile-rating">
-                                                <ul class="rating">
-                                                    <li>
-                                                        <i data-feather="star" class="fill"></i>
-                                                    </li>
-                                                    <li>
-                                                        <i data-feather="star" class="fill"></i>
-                                                    </li>
-                                                    <li>
-                                                        <i data-feather="star" class="fill"></i>
-                                                    </li>
-                                                    <li>
-                                                        <i data-feather="star"></i>
-                                                    </li>
-                                                    <li>
-                                                        <i data-feather="star"></i>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-
-                                        <a href="javascript:void(0)" data-bs-toggle="modal"
-                                           data-bs-target="#editProfile">ویرایش</a>
-                                    </div>
-
-                                    <div class="location-profile">
-                                        <ul>
-                                            <li>
-                                                <div class="location-box">
-                                                    <i data-feather="map-pin"></i>
-                                                    <h6>تهران، برج میلاد</h6>
-                                                </div>
-                                            </li>
-
-                                            <li>
-                                                <div class="location-box">
-                                                    <i data-feather="mail"></i>
-                                                    <h6>email@domain.com</h6>
-                                                </div>
-                                            </li>
-
-                                            <li>
-                                                <div class="location-box">
-                                                    <i data-feather="check-square"></i>
-                                                    <h6>میزان فعالیت : 2 سال</h6>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <div class="profile-description">
-                                        <p>
-                                            اقامتگاه ها را می توان بر اساس و نحوه اتصال آنها طبقه بندی کرد
-                                            خانه ها و زمین های همسایه انواع مختلف تصدی مسکن می تواند
-                                            برای همان نوع فیزیکی استفاده شود.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="profile-about dashboard-bg-box">
-                                    <div class="row">
-                                        <div class="col-xxl-7">
-                                            <div class="dashboard-title mb-3">
-                                                <h3>اطلاعات کامل</h3>
-                                            </div>
-
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>جنسیت :</td>
-                                                            <td>زن</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>تاریخ تولد :</td>
-                                                            <td>1400/12/12</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>شماره تماس :</td>
-                                                            <td>
-                                                                <a href="javascript:void(0)"> 123-456-789</a>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>آدرس :</td>
-                                                            <td>تهران برج میلاد</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-
-                                            <div class="dashboard-title mb-3">
-                                                <h3>اطلاعات ورود</h3>
-                                            </div>
-
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>ایمیل :</td>
-                                                            <td>
-                                                                <a href="javascript:void(0)">
-                                                                    email@domain.com
-                                                                    <span data-bs-toggle="modal"
-                                                                          data-bs-target="#editProfile">ویرایش</span>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>رمز ورود :</td>
-                                                            <td>
-                                                                <a href="javascript:void(0)">
-                                                                    ●●●●●●
-                                                                    <span data-bs-toggle="modal"
-                                                                          data-bs-target="#editProfile">ویرایش</span>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xxl-5">
-                                            <div class="profile-image">
-                                                <img src="../assets/images/inner-page/dashboard-profile.png"
-                                                     class="img-fluid blur-up lazyload" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
+                        <div class="tab-pane fade" id="pills-info" role="tabpanel">
+                            @await Html.PartialAsync("_Profile-InfoTab", Model.UpdateUser)
                         </div>
 
 
-                        <div class="tab-pane fade" id="pills-security" role="tabpanel">
-                            <div class="dashboard-privacy">
-                                <div class="dashboard-bg-box">
-                                    <div class="dashboard-title mb-4">
-                                        <h3>حریم خصوصی</h3>
-                                    </div>
-
-                                    <div class="privacy-box">
-                                        <div class="d-flex align-items-start">
-                                            <h6>به دیگران اجازه میدهم حساب من را مشاهده کنند.</h6>
-                                            <div class="form-check form-switch switch-radio ms-auto">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                       id="redio">
-                                                <label class="form-check-label" for="redio"></label>
-                                            </div>
-                                        </div>
-
-                                        <p class="text-content">همه مردم می توانند پروفایل من را ببینند</p>
-                                    </div>
-
-                                    <div class="privacy-box">
-                                        <div class="d-flex align-items-start">
-                                            <h6>ایمیل من در دیدگاه قابل مشاهده باشد</h6>
-                                            <div class="form-check form-switch switch-radio ms-auto">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                       id="redio2">
-                                                <label class="form-check-label" for="redio2"></label>
-                                            </div>
-                                        </div>
-
-                                        <p class="text-content">با فعال سازی این گزینه به دیگران اجازه میدهید ایمیل شما را مشاهده کنند.</p>
-                                    </div>
-
-                                    <button class="btn theme-bg-color btn-md fw-bold mt-4 text-white">ذخیره تغییرات</button>
-                                </div>
-
-                                <div class="dashboard-bg-box mt-4">
-                                    <div class="dashboard-title mb-4">
-                                        <h3>تنظیمات حساب</h3>
-                                    </div>
-
-                                    <div class="privacy-box">
-                                        <div class="d-flex align-items-start">
-                                            <h6>حساب کاربریم را پس از خارج شدن من حذف کن!!</h6>
-                                            <div class="form-check form-switch switch-radio ms-auto">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                       id="redio3">
-                                                <label class="form-check-label" for="redio3"></label>
-                                            </div>
-                                        </div>
-                                        <p class="text-content">حساب کاربری شما پس از خروج شما حذف خواهد (این فرآیند قابل بازیابی نیست!)</p>
-                                    </div>
-
-                                    <div class="privacy-box">
-                                        <div class="d-flex align-items-start">
-                                            <h6>تصویر پروفایل من را نمایش دهید</h6>
-                                            <div class="form-check form-switch switch-radio ms-auto">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                       id="redio4">
-                                                <label class="form-check-label" for="redio4"></label>
-                                            </div>
-                                        </div>
-
-                                        <p class="text-content">با فعال سازی این گزینه امکان دنلود تصویر پروفایل شما توسط دیگران وجود دارد. لطفا پ از فعال سازی این گرینه از تصویر خود برا پروفایل استفاده نفرمایید.</p>
-                                    </div>
-
-                                    <button class="btn theme-bg-color btn-md fw-bold mt-4 text-white">حذف حساب کاربری</button>
-                                </div>
-                            </div>
+                        <div class="tab-pane fade" id="pills-setting" role="tabpanel">
+                            @await Html.PartialAsync("_Profile-SettingTab", Model.UpdatePrivacy)
                         </div>
 
                     </div>
@@ -898,17 +289,29 @@
 <form hidden id="load-address-tab-form" action="/profile/address" method="get" data-container-id="pills-address">
 </form>
 
+<form hidden id="load-address-edit-modal-form" action="/profile/address/0" method="get" data-container-id="edit-address-modal">
+</form>
+
+<form hidden id="load-bankCard-tab-form" action="/profile/bankCard" method="get" data-container-id="pills-card">
+</form>
+
+<form hidden id="load-bankCard-edit-modal-form" action="/profile/bankCard/0" method="get" data-container-id="edit-bankCard-modal">
+</form>
+
+<form hidden id="load-user-info-tab-form" action="/profile/info" method="get" data-container-id="pills-card">
+</form>
+
 @section Modals {
 
     <div class="modal fade theme-modal show" id="add-address-modal" tabindex="-1" style="display: block; padding-right: 0px;" aria-modal="true" role="dialog">
-        @await Html.PartialAsync("_AddAddressModal", new CreateAddressDto() { UserId = User.GetAppUser().Id })
+        @await Html.PartialAsync("_AddAddressModal", new CreateAddressDto())
     </div>
 
     <div class="modal fade theme-modal show" id="edit-address-modal" tabindex="-1" style="display: block; padding-right: 0px;" aria-modal="true" role="dialog">
-        @await Html.PartialAsync("EditAddressModal", new UpdateAddressDto())
+        @await Html.PartialAsync("_EditAddressModal", new UpdateAddressDto())
     </div>
 
-    <div class="modal fade theme-modal remove-profile show" id="remove-address-modal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+    <div class="modal fade theme-modal remove-profile show" id="delete-address-modal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header d-block text-center">
@@ -918,21 +321,95 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form hidden id="remove-address-form" action="/profile/address/delete" method="post">
-                        <input hidden readonly id="delete-address-id-input" name="Id" value="0"/>
+                    <form hidden id="delete-address-form" action="/profile/address/delete" method="post">
+                        <input hidden readonly id="delete-address-id-input" name="Id" value="0" />
                     </form>
                     <div class="remove-box">
-                        <p>آیا از حذف کردن آدرس با عنوان <span id="remove-address-modal-addressTitle"></span> اطمینان دارید ؟</p>
+                        <p>آیا از حذف کردن آدرس با عنوان <span id="delete-address-modal-addressTitle"></span> اطمینان دارید ؟</p>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">خیر</button>
-                    <button type="button" class="btn theme-bg-color btn-md fw-bold text-light" onclick="DeleteAddressSbmit('remove-address-form')" >بله</button>
+                    <button type="button" class="btn theme-bg-color btn-md fw-bold text-light" onclick="DeleteAddressSubmit('delete-address-form')">بله</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="modal fade theme-modal show" id="add-bankCard-modal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+        @await Html.PartialAsync("_AddBankCardModal", new CreateBankCardDto())
+    </div>
+
+    <div class="modal fade theme-modal show" id="edit-bankCard-modal" tabindex="-1" style="display: block; padding-right: 0px;" aria-modal="true" role="dialog">
+        @await Html.PartialAsync("_EditBankCardModal", new UpdateBankCardDto())
+    </div>
+
+    <div class="modal fade theme-modal remove-profile show" id="delete-bankCard-modal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header d-block text-center">
+                    <h5 class="modal-title w-100" id="exampleModalLabel22">خذف کارت بانکی</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form hidden id="delete-bankCard-form" action="/profile/bankCard/delete" method="post">
+                        <input hidden readonly id="delete-bankCard-id-input" name="Id" value="0" />
+                    </form>
+                    <div class="remove-box">
+                        <p>آیا از حذف کردن کارت بانکی اطمینان دارید ؟</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">خیر</button>
+                    <button type="button" class="btn theme-bg-color btn-md fw-bold text-light" onclick="DeleteBankCardSubmit('delete-address-form')">بله</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade theme-modal show" id="edit-user-info-modal" tabindex="-1" style="display: block; padding-right: 0px;" aria-modal="true" role="dialog">
+        @await Html.PartialAsync("_EditUserInfoModal", Model.UpdateUser)
+    </div>
+
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-fullscreen-sm-down" id="change-user-password-modal">
+        @await Html.PartialAsync("_ChangePasswordModal", new ChangePasswordDto())
+    </div>
+
+    <div class="modal fade theme-modal remove-profile show" id="delete-account-modal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header d-block text-center">
+                    <h5 class="modal-title w-100" id="exampleModalLabel22">حذف حساب کاربری</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form hidden id="delete-account-form" action="/profile/delete" method="post">
+                    </form>
+                    <div class="remove-box">
+                        <p>پس از حذف حساب امکان بازگردانی حساب وجود ندارد. آیا ادامه میدهید ؟</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">خیر</button>
+                    <button type="button" class="btn theme-bg-color btn-md fw-bold text-light" onclick="DeleteAccountSubmit('delete-account-form')">بله</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade theme-modal show" id="subscribe-user-newsLetter-modal" tabindex="-1" style="display: block; padding-right: 0px;" aria-modal="true" role="dialog">
+        @* 
+        @await Html.PartialAsync("_SubscribeUserToNewsLetter", new CreateNewsLetterMemberDto())
+        *@
+
+        <partial name="_SubscribeUserToNewsLetter" model="new CreateNewsLetterMemberDto(){Email = Model.UpdateUser.Email}"
+            view-data="ViewData" view-data-IsEmailVerified="Model.UpdateUser.IsEmailVerified"/>
+
+    </div>
 
 }
 
@@ -940,3 +417,5 @@
 
     <script src="~/site/views/user/profile.js"></script>
 }
+
+

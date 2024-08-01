@@ -2,6 +2,7 @@
 using OrganicShop.Domain.Entities.Base;
 using OrganicShop.Domain.Entities.Relations;
 using System.ComponentModel;
+using OrganicShop.Domain.Entities.ComplexTypes;
 
 namespace OrganicShop.Domain.Entities
 {
@@ -14,6 +15,10 @@ namespace OrganicShop.Domain.Entities
         public string Email { get; set; }
         public bool IsEmailVerified { get; set; }
         public Role Role { get; set; }
+        public Gender? Gender { get; set; }
+        public DateTime? BirthDate { get; set; }
+        public UserPrivacy Privacy { get; set; }
+
 
 
 

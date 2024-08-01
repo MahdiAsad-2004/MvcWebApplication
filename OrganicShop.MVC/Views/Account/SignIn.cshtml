@@ -49,16 +49,16 @@
                         <form class="row g-4" id="sign-in-form" action="/account/sign-in" method="post">
                             <div class="col-12 mb-2">
                                 <div class="form-floating theme-form-floating log-in-form">
-                                    <input asp-for="PhoneNumber" type="text" class="form-control" id="phoneNumber" placeholder="آدرس ایمیل خود را وارد کنید">
-                                    <label for="phoneNumber">شماره همراه</label>
+                                    <input asp-for="PhoneNumberOrEmail" type="text" class="form-control" id="phoneNumber" placeholder="آدرس ایمیل خود را وارد کنید">
+                                    <label asp-for="PhoneNumberOrEmail"></label>
                                 </div>
-                                <span asp-validation-for="PhoneNumber" class="mt-2 text-danger"></span>
+                                <span asp-validation-for="PhoneNumberOrEmail" class="mt-2 text-danger"></span>
                             </div>
 
                             <div class="col-12 mb-2">
                                 <div class="form-floating theme-form-floating log-in-form">
                                     <input asp-for="Password" type="password" class="form-control" id="password" placeholder="رمز عبور خود را وارد کنید">
-                                    <label for="password">رمز عبور</label>
+                                    <label asp-for="Password"></label>
                                 </div>
                                 <span asp-validation-for="Password" class="mt-2 text-danger"></span>
                             </div>
@@ -74,7 +74,7 @@
                                         <span asp-validation-for="RememberMe" class="mt-2 text-danger"></span>
                                     </div>
                                 </div>
-                                <a href="forgot.html" class="forgot-password">رمز عبور خود را فراموش کردم</a>
+                                <a href="/account/forgot-password" class="forgot-password">رمز عبور خود را فراموش کردم</a>
                             </div>
 
                             <div class="col-12">

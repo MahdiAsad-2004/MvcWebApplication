@@ -24,8 +24,25 @@ namespace OrganicShop.BLL.Mappers
 
 
 
+    }
+
+    public static class BankCardMappers
+    {
+        public static BankCardListDto ToListDto(this BankCard bankCard) 
+        {
+            return new BankCardListDto
+            {
+                Id = bankCard.Id,
+                Cvv2 = bankCard.Cvv2,
+                Number = bankCard.Number,
+                ExpireDate = bankCard.ExpireDate,
+                OwnerName = bankCard.OwnerName,
+            };
+        } 
 
 
 
     }
+
+
 }

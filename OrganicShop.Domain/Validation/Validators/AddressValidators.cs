@@ -81,8 +81,6 @@ namespace OrganicShop.Domain.Validation.AddressValidators
               .NotEmpty()
               .IsInEnum();
 
-            RuleFor(a => a.UserId)
-                .GreaterThanOrEqualTo(1).WithMessage("#PropertyName معتبر نیست");
 
 
 

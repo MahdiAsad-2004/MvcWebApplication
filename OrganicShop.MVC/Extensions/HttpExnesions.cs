@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Enums;
 using OrganicShop.Domain.Models;
@@ -15,24 +16,20 @@ namespace OrganicShop.Mvc.Extensions
         {
             ApplicationUser currentUser = new ApplicationUser()
             {
-                Id = 1,
+                Id = 0,
                 UserName = "NULL",
                 Email = "NULL",
+                PhoneNumber = "NULL",
                 Role = null,
             };
-            if (httpContext.User.Identity.IsAuthenticated)
+            if (httpContext.User != null)
             {
-
-                if (httpContext.User != null)
+                if (httpContext.User.Identity != null)
                 {
-                    if (httpContext.User.Identity != null)
+                    if (httpContext.User.Identity.IsAuthenticated)
                     {
-                        //currentUser.Id = long.Parse(httpContext.User.Claims.First(a => a.Type == ClaimTypes.NameIdentifier).Value);
-                        //currentUser.Username = httpContext.User.Identity.Name;
-                        //currentUser.Role = Enum.Parse<Role>(httpContext.User.Claims.First(a => a.Type == ClaimTypes.Role).Value);
-                        //Console.WriteLine($".......{currentUser.Username}...........");
+                        currentUser = httpContext.User.GetAppUser();
                     }
-
                 }
             }
             return currentUser;
@@ -53,14 +50,19 @@ namespace OrganicShop.Mvc.Extensions
             {
                 if (User.Identity != null)
                 {
-                    //currentUser.Id = long.Parse(httpContext.User.Claims.First(a => a.Type == ClaimTypes.NameIdentifier).Value);
-                    //currentUser.Username = httpContext.User.Identity.Name;
-                    //currentUser.Role = Enum.Parse<Role>(httpContext.User.Claims.First(a => a.Type == ClaimTypes.Role).Value);
-                    //Console.WriteLine($".......{currentUser.Username}...........");
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        currentUser.Id = long.Parse(User.Claims.First(a => a.Type == ClaimTypes.NameIdentifier).Value);
+                        currentUser.UserName = User.Claims.First(a => a.Type == ClaimTypes.Name).Value;
+                        currentUser.Email = User.Claims.First(a => a.Type == ClaimTypes.Email).Value;
+                        currentUser.Role = Enum.Parse<Role>(User.Claims.First(a => a.Type == ClaimTypes.Role).Value);
+                        Console.WriteLine($".......{currentUser.UserName}...........");
+                    }
                 }
-
             }
             return currentUser;
         }
+
+
     }
 }

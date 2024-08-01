@@ -13,10 +13,11 @@ using AutoMapper;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Enums.SortTypes;
 using FluentValidation;
+using OrganicShop.Domain.Enums;
 
 namespace OrganicShop.BLL.Services
 {
-    public class BankCardService : Service<BankCard> , IBankCardService
+    public class BankCardService : Service<BankCard>, IBankCardService
     {
         #region ctor
 
@@ -38,7 +39,7 @@ namespace OrganicShop.BLL.Services
 
 
 
-        public async Task<ServiceResponse<PageDto<BankCard, BankCardListDto, long>>> GetAll(FilterBankCardDto?filter = null, PagingDto? paging = null)
+        public async Task<ServiceResponse<PageDto<BankCard, BankCardListDto, long>>> GetAll(FilterBankCardDto? filter = null, PagingDto? paging = null)
         {
             var query = _BankCardRepository.GetQueryable();
 
@@ -64,9 +65,26 @@ namespace OrganicShop.BLL.Services
             pageDto.Pager = pageDto.SetPager(query, paging);
 
 
-            return new ServiceResponse<PageDto<BankCard, BankCardListDto, long>>(ResponseResult.Success,pageDto);
+            return new ServiceResponse<PageDto<BankCard, BankCardListDto, long>>(ResponseResult.Success, pageDto);
         }
 
+
+        public async Task<ServiceResponse<UpdateBankCardDto>> Get(long Id)
+        {
+            if (Id < 1)
+                return new ServiceResponse<UpdateBankCardDto>(ResponseResult.NotFound);
+
+            var bankCard = await _BankCardRepository.GetQueryable()
+                .FirstOrDefaultAsync(a => a.Id == Id);
+
+            if (bankCard == null)
+                return new ServiceResponse<UpdateBankCardDto>(ResponseResult.NotFound);
+
+            if (bankCard.UserId != _AppUserProvider.User.Id)
+                return new ServiceResponse<UpdateBankCardDto>(ResponseResult.NoAccess);
+            
+            return new ServiceResponse<UpdateBankCardDto>(ResponseResult.Success, _Mapper.Map<UpdateBankCardDto>(bankCard));
+        }
 
 
         public async Task<ServiceResponse<Empty>> Create(CreateBankCardDto create)
@@ -76,14 +94,14 @@ namespace OrganicShop.BLL.Services
                 return new ServiceResponse<Empty>(create, validationResult);
 
             if (await _BankCardRepository.GetQueryable().Where(a => a.UserId == create.UserId).CountAsync() > 8)
-                return new ServiceResponse<Empty>(ResponseResult.Failed , _Message.MaxCreate(8));
+                return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.MaxCreate(8));
 
             BankCard BankCard = _Mapper.Map<BankCard>(create);
             await _BankCardRepository.Add(BankCard, _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());
         }
 
-            
+
 
         public async Task<ServiceResponse<Empty>> Update(UpdateBankCardDto update)
         {
@@ -96,7 +114,7 @@ namespace OrganicShop.BLL.Services
             if (BankCard == null)
                 return new ServiceResponse<Empty>(ResponseResult.Success, _Message.NotFound());
 
-            if (BankCard.UserId != update.UserId)
+            if (BankCard.UserId != _AppUserProvider.User.Id)
                 return new ServiceResponse<Empty>(ResponseResult.Success, _Message.NoAccess());
 
             await _BankCardRepository.Update(_Mapper.Map<BankCard>(update), _AppUserProvider.User.Id);

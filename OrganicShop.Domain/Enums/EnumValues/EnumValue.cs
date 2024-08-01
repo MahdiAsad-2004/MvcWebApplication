@@ -22,6 +22,20 @@ namespace OrganicShop.Domain.Enums.EnumValues
                     throw new Exception("Enum value not found");
             }
         }
+        public static string ToStringValue(this Gender gender)
+        {
+            switch (gender)
+            {
+                case Gender.Man:
+                    return "مرد";
+
+                case Gender.Woman:
+                    return "زن";
+
+                default:
+                    throw new Exception("Enum value not found");
+            }
+        }
 
         public static string ToStringValue(this CommentStatus commentStatus)
         {

@@ -43,12 +43,6 @@ namespace OrganicShop.Mvc.Middlewares
 
             var applicationUserProvider = _application.Services.GetService<IApplicationUserProvider>();
             var applicationUser = httpContext.GetAppUser();
-            //applicationUser = new ApplicationUser()
-            //{
-            //    Id = 10,
-            //    UserName = "user nameee",
-            //    Role = Role.Admin,
-            //};
             applicationUserProvider.SetCurrentUser(applicationUser);
 
             //await Console.Out.WriteLineAsync($"///////////  {applicationUserProvider.User.Id}  /////////////");

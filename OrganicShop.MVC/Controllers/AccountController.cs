@@ -26,7 +26,7 @@ namespace OrganicShop.Mvc.Controllers
 
         private readonly IUserService _UserService;
         private readonly IWishItemService _WishItemService;
-        public AccountController(IUserService userService, IWishItemService wishItemService)
+        public AccountController(IUserService userService, IWishItemService wishItemService )
         {
             _UserService = userService;
             _WishItemService = wishItemService;
@@ -50,6 +50,27 @@ namespace OrganicShop.Mvc.Controllers
             var response = await _UserService.Create(createUser);
             if (response.Result == ResponseResult.Success)
             {
+                #region signing in user
+
+                var claims = new List<Claim>
+                {
+                    new(ClaimTypes.NameIdentifier,response.Data.ToString()),
+                    new(ClaimTypes.Name,createUser.Name),
+                    new(ClaimTypes.MobilePhone,createUser.PhoneNumber),
+                    new(ClaimTypes.Role , createUser.Role.ToString()),
+                    new(ClaimTypes.Email , createUser.Email),
+                };
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+                var properties = new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.Now.AddHours(1),
+                };
+                await HttpContext.SignInAsync(principal, properties);
+
+                #endregion
+
                 return _ClientHandleResult.RedirectThenToast(HttpContext, TempData, "/Home", new Toast(ToastType.Success, "شما با موفقیت ثبت نام شدید"), true, responseResult: true);
             }
 
@@ -85,7 +106,7 @@ namespace OrganicShop.Mvc.Controllers
                 {
                     new(ClaimTypes.NameIdentifier,response.Data.Id.ToString()),
                     new(ClaimTypes.Name,response.Data.Name),
-                    new(ClaimTypes.MobilePhone,signInUser.PhoneNumber),
+                    new(ClaimTypes.MobilePhone,response.Data.PhoneNumber),
                     new(ClaimTypes.Role , response.Data.Role.ToString()),
                     new(ClaimTypes.Email , response.Data.Email),
                 };

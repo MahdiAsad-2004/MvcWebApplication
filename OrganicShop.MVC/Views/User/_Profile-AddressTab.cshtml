@@ -67,11 +67,11 @@
 
                     <div class="button-group">
                         <button class="btn btn-sm add-button w-100" 
-                            onclick="OpenEditAddressModal('@item.Id' , '@item.Title' ,'@item.ReceiverName' , '@item.PhoneNumber' , '@item.PostCode' , '@((int)item.Province)' , '@item.Text')">
+                            onclick="OpenEditAddressModal('@item.Id')">
                             <i data-feather="edit"></i>
                             ویرایش
                         </button>
-                        <button class="btn btn-sm add-button w-100" onclick="OpenRemoveAddressModal('@item.Id' , '@item.Title')">
+                        <button class="btn btn-sm add-button w-100" onclick="OpenDeleteAddressModal('@item.Id' , '@item.Title')">
                             <i data-feather="trash-2"></i>
                             حذف
                         </button>

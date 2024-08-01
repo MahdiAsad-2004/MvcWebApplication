@@ -1,0 +1,56 @@
+﻿@using OrganicShop.Domain.Dtos.BankCardDtos
+@model UpdateBankCardDto
+
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-fullscreen-sm-down">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel8">ویرایش کارت بانک</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="row g-4" id="edit-bankCard-form" action="/profile/bankCard/edit" method="post" data-container-id="edit-bankCard-modal">
+                <input asp-for="Id" hidden readonly/>
+
+                <div class="col-xxl-6 mb-4">
+                    <div class="form-floating theme-form-floating">
+                        <input asp-for="Number" type="text" class="form-control bankCard-number-input">
+                        <label asp-for="Number"></label>
+                    </div>
+                    <span asp-validation-for="Number" class="text-danger mt-2"></span>
+                </div>
+                
+                <div class="col-xxl-6 mb-4">
+                    <div class="form-floating theme-form-floating">
+                        <input asp-for="Cvv2" type="text" class="form-control" max="4"> 
+                        <label asp-for="Cvv2"></label>
+                    </div>
+                    <span asp-validation-for="Cvv2" class="text-danger mt-2"></span>
+                </div>
+
+                <div class="col-xxl-6 mb-4">
+                    <div class="form-floating theme-form-floating">
+                        <input asp-for="OwnerName" type="text" class="form-control">
+                        <label asp-for="OwnerName"></label>
+                    </div>
+                    <span asp-validation-for="OwnerName" class="text-danger mt-2"></span>
+                </div>
+
+                <div class="col-xxl-6 mb-4">
+                    <div class="form-floating theme-form-floating">
+                        <input asp-for="ExpireDate" type="text" class="form-control" >
+                        <label asp-for="ExpireDate"></label>
+                    </div>
+                    <span asp-validation-for="ExpireDate" class="text-danger mt-2"></span>
+                </div>
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">لغو</button>
+            <button type="button" class="btn theme-bg-color btn-md fw-bold text-light" onclick="EditBankCardSubmit('edit-bankCard-form')">ویرایش کارت بانک</button>
+        </div>
+    </div>
+</div>

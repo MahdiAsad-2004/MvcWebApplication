@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using OrganicShop.BLL.Mappers;
 using OrganicShop.BLL.Providers;
+using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Dtos.AddressDtos;
+using OrganicShop.Domain.Dtos.BankCardDtos;
 using OrganicShop.Domain.Dtos.Page;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Enums.Response;
@@ -69,7 +71,24 @@ namespace OrganicShop.BLL.Services
         }
 
 
-     
+        public async Task<ServiceResponse<UpdateAddressDto>> Get(long Id)
+        {
+            if (Id < 1)
+                return new ServiceResponse<UpdateAddressDto>(ResponseResult.NotFound);
+
+            var address = await _AddressRepository.GetQueryable()
+                .FirstOrDefaultAsync(a => a.Id == Id);
+
+            if (address == null)
+                return new ServiceResponse<UpdateAddressDto>(ResponseResult.NotFound);
+
+            if (address.UserId != _AppUserProvider.User.Id)
+                return new ServiceResponse<UpdateAddressDto>(ResponseResult.NoAccess);
+
+            return new ServiceResponse<UpdateAddressDto>(ResponseResult.Success, _Mapper.Map<UpdateAddressDto>(address));
+        }
+
+
 
 
         public async Task<ServiceResponse<Empty>> Create(CreateAddressDto create)

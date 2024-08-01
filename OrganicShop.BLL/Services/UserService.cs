@@ -98,18 +98,46 @@ namespace OrganicShop.BLL.Services
         }
 
 
+        public async Task<ServiceResponse<UpdateUserDto>> GetUpdateDto(long Id)
+        {
+            var user = await _userRepository.GetQueryable()
+                .FirstOrDefaultAsync(a => a.Id == Id);
 
-        public async Task<ServiceResponse<Empty>> Create(CreateUserDto create)
+            if (user == null)
+                return new ServiceResponse<UpdateUserDto>(ResponseResult.NotFound, " کاربری مورد نظر یافت نشد");
+
+            return new ServiceResponse<UpdateUserDto>(ResponseResult.Success, _Mapper.Map<UpdateUserDto>(user));
+        }
+
+
+        public async Task<ServiceResponse<UserProfileDto>> GetProfileDto()
+        {
+            var user = await _userRepository.GetQueryable()
+                .Include(a => a.Addresses)
+                .Include(a => a.BankCards)
+                .Include(a => a.Orders)
+                .Include(a => a.Picture)
+                .FirstOrDefaultAsync(a => a.Id == _AppUserProvider.User.Id);
+
+            if (user == null)
+                return new ServiceResponse<UserProfileDto>(ResponseResult.NotFound, "پروفایل کاربری شما یافت نشد");
+
+            return new ServiceResponse<UserProfileDto>(ResponseResult.Success, _Mapper.Map<UserProfileDto>(user));
+        }
+
+
+
+        public async Task<ServiceResponse<long>> Create(CreateUserDto create)
         {
             var validationResult = await _ValidatorCreateUser.ValidateAsync(create);
             if (!validationResult.IsValid)
-                return new ServiceResponse<Empty>(create, validationResult);
+                return new ServiceResponse<long>(create, validationResult);
 
             if (await _userRepository.GetQueryable().AnyAsync(a => a.PhoneNumber == create.PhoneNumber))
-                return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(create, a => nameof(a.PhoneNumber)));
+                return new ServiceResponse<long>(ResponseResult.Failed, _Message.EntityExist(create, a => nameof(a.PhoneNumber)));
 
             if (await _userRepository.GetQueryable().AnyAsync(a => a.Email == create.Email))
-                return new ServiceResponse<Empty>(ResponseResult.Failed, _Message.EntityExist(create, a => nameof(a.Email)));
+                return new ServiceResponse<long>(ResponseResult.Failed, _Message.EntityExist(create, a => nameof(a.Email)));
 
             User user = _Mapper.Map<User>(create);
 
@@ -122,9 +150,10 @@ namespace OrganicShop.BLL.Services
             }
 
             user.Picture = create.ProfileImage != null ? await create.ProfileImage.SavePictureAsync(PathKey.UserImages, PictureType.User) : null;
+            user.Password = create.Password.ToSha256String();
 
-            await _userRepository.Add(user, _AppUserProvider.User.Id);
-            return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessCreate());
+            var userId = await _userRepository.Add(user, _AppUserProvider.User.Id);
+            return new ServiceResponse<long>(ResponseResult.Success, _Message.SuccessCreate(), data: userId);
         }
 
 
@@ -143,14 +172,29 @@ namespace OrganicShop.BLL.Services
             if (user == null)
                 return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
 
-            if (update.ProfileImage != null)
-            {
-                if (user.Picture != null)
-                    user.Picture = await update.ProfileImage.SavePictureAsync(user.Picture, PathKey.UserImages);
-                else
-                    user.Picture = await update.ProfileImage.SavePictureAsync(PathKey.UserImages, PictureType.User);
-            }
+            //if (update.ProfileImage != null)
+            //{
+            //    if (user.Picture != null)
+            //        user.Picture = await update.ProfileImage.SavePictureAsync(user.Picture, PathKey.UserImages);
+            //    else
+            //        user.Picture = await update.ProfileImage.SavePictureAsync(PathKey.UserImages, PictureType.User);
+            //}
             await _userRepository.Update(_Mapper.Map<User>(update), _AppUserProvider.User.Id);
+            return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
+        }
+
+
+        public async Task<ServiceResponse<Empty>> UpdatePrivacy(UpdateUserPrivacyDto updatePrivacy)
+        {
+            if (updatePrivacy.UserId != _AppUserProvider.User.Id)
+                return new ServiceResponse<Empty>(ResponseResult.NoAccess);
+
+            User? user = await _userRepository.GetAsTracking(updatePrivacy.UserId);
+
+            if (user == null)
+                return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
+
+            await _userRepository.Update(_Mapper.Map<User>(updatePrivacy), _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
         }
 
@@ -174,20 +218,23 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> ChangePassword(ChangePasswordDto changePassword)
         {
+            if (changePassword.UserId != _AppUserProvider.User.Id)
+                return new ServiceResponse<Empty>(ResponseResult.NoAccess);
+
             var validationResult = await _ValidatorChangePassword.ValidateAsync(changePassword);
             if (!validationResult.IsValid)
                 return new ServiceResponse<Empty>(changePassword, validationResult);
 
-            User? user = await _userRepository.GetAsNoTracking(changePassword.Id);
+            User? user = await _userRepository.GetAsNoTracking(changePassword.UserId);
 
             if (user == null)
                 return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
 
-            if (user.Password != changePassword.Password)
+            if (user.Password != changePassword.Password.ToSha256String())
                 return new ServiceResponse<Empty>(ResponseResult.Failed, "رمز عبور نادرست است");
 
-            user = await _userRepository.GetAsTracking(changePassword.Id);
-            user!.Password = changePassword.NewPassword;
+            user = await _userRepository.GetAsTracking(changePassword.UserId);
+            user!.Password = changePassword.NewPassword.ToSha256String();
             await _userRepository.Update(user, _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, "رمز عبور با موفقیت تغییر یافت");
         }
@@ -214,14 +261,32 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<UserSignInDto>> SignIn(SignInUserDto signInUser)
         {
-            var user = await _userRepository.GetQueryable()
-                .FirstOrDefaultAsync(a => a.PhoneNumber == signInUser.PhoneNumber && a.Password == signInUser.Password);
+            User? user = null;
+            bool isSignInWithEmail = false;
+
+            if (signInUser.PhoneNumberOrEmail.Contains('@') || signInUser.PhoneNumberOrEmail.Contains('.'))
+            {
+                isSignInWithEmail = true;
+                user = await _userRepository.GetQueryable()
+                    .FirstOrDefaultAsync(a => a.Email == signInUser.PhoneNumberOrEmail && a.Password == signInUser.Password);
+            }
+            else
+            {
+                user = await _userRepository.GetQueryable()
+                    .FirstOrDefaultAsync(a => a.PhoneNumber == signInUser.PhoneNumberOrEmail && a.Password == signInUser.Password);
+            }
+
 
             if (user == null)
-                return new ServiceResponse<UserSignInDto>(ResponseResult.Failed, "شماره همراه یا رمز عبور نادرست است");
+            {
+                if (isSignInWithEmail)
+                    return new ServiceResponse<UserSignInDto>(ResponseResult.Failed, "ایمیل یا رمز عبور وارد شده نادرست است");
 
-            return new ServiceResponse<UserSignInDto>(ResponseResult.Success, "شما با موفقیت وارد شدید", 
-                new UserSignInDto 
+                return new ServiceResponse<UserSignInDto>(ResponseResult.Failed, "شماره همراه یا رمز عبور وارد شده نادرست است");
+            }
+
+            return new ServiceResponse<UserSignInDto>(ResponseResult.Success, "شما با موفقیت وارد شدید",
+                new UserSignInDto
                 {
                     Email = user.Email,
                     Id = user.Id,

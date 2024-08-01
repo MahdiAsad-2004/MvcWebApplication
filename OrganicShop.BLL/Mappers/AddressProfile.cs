@@ -28,6 +28,20 @@ namespace OrganicShop.BLL.Mappers
 
     public static class AddressMappers
     {
+        public static AddressListDto ToListDto(this Address address) 
+        {
+            return new AddressListDto
+            {
+                Id = address.Id,
+                Title = address.Title,
+                Text = address.Text,
+                PostCode = address.PostCode,
+                Province = address.Province,
+                ReceiverName = address.ReceiverName,
+                PhoneNumber = address.PhoneNumber,
+            };
+        }
+
         public static OrderAddress ToOrderAddress(this Address address)
         {
             return new OrderAddress

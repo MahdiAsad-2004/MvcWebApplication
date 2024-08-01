@@ -10,6 +10,8 @@ namespace OrganicShop.Domain.IServices
     {
         Task<ServiceResponse<PageDto<Address, AddressListDto, long>>> GetAll(FilterAddressDto? filter = null ,PagingDto? paging = null);
 
+        Task<ServiceResponse<UpdateAddressDto>> Get(long Id);
+
         Task<ServiceResponse<Empty>> Create(CreateAddressDto create);
 
         Task<ServiceResponse<Empty>> Update(UpdateAddressDto update);

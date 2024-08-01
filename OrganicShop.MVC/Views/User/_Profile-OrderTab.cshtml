@@ -1,0 +1,78 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.OrderDtos
+@using OrganicShop.Domain.Enums
+@using OrganicShop.Domain.Enums.EnumValues
+
+@model List<OrderListDto>
+
+<div class="dashboard-order">
+    <div class="title">
+        <h2>تاریخچه سفارشات من</h2>
+        <span class="title-leaf title-leaf-gray">
+            <svg class="icon-width bg-gray">
+                <use xlink:href="~/site/assets/svg/leaf.svg#leaf"></use>
+            </svg>
+        </span>
+    </div>
+
+    <div class="order-contain">
+
+        <table class="table order-table table-striped">
+            <thead>
+                <tr>
+                    <th rowspan="1" colspan="1" style="width: 170px;">تاریخ</th>
+                    <th rowspan="1" colspan="1" style="width: 170px;">وضعیت سفارش</th>
+                    <th rowspan="1" colspan="1" style="width: 170px;">قیمت</th>
+                    <th rowspan="1" colspan="1" style="width: 170px;">کد رهگیری</th>
+                    <th rowspan="1" colspan="1" style="width: 170px;">نحوه پرداخت</th>
+                    <th rowspan="1" colspan="1" style="width: 170px;">عملیات</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+
+
+                @foreach (var item in Model)
+                {
+                    <tr data-bs-toggle="offcanvas" href="#order-details" class="odd">
+
+                        <td> @item.CreateDate.ToLongDateString() </td>
+
+                        <td>
+                            @if (item.OrderStatus == OrderStatus.Waiting)
+                            {
+                                <span style="background:linear-gradient(-90deg, #706bff 0%, #504bef 100%); color:white; padding:8px; border-radius:3px;">در انتظار</span>
+                            }
+                            else if (item.OrderStatus == OrderStatus.Success)
+                            {
+                                <span style="background:var(--theme-color2); color:white; padding:8px; border-radius:3px;">موفق</span>
+                            }
+                            else
+                            {
+                                <span style="background:linear-gradient(-90deg, #ff6b6b 0%, #ff4f4f 100%); color:white; padding:8px; border-radius:3px;">نا موفق</span>
+                            }
+                        </td>
+
+                        <td>@item.TotalPrice.ToToman()</td>
+
+                        <td>@item.TrackingCode</td>
+
+                        <td>@item.PaymentMethod.ToStringValue()</td>
+
+                        <td>
+                            <a href="/order" class="btn btn-sm theme-bg-color text-white">
+                                جزییات
+                            </a>
+                        </td>
+
+                    </tr>
+                }
+
+
+
+            </tbody>
+        </table>
+
+    </div>
+</div>

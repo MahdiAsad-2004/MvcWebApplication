@@ -45,6 +45,7 @@ namespace OrganicShop.Mvc.Controllers
         public async Task<IActionResult> Index()
         {
             ViewData["UserWishProductIds"] = new long[11] { 1, 3, 6, 9, 12, 15, 18, 21, 24, 28, 30 };
+            await Console.Out.WriteLineAsync($"AppUser in home => index: ${AppUser.Id} - {AppUser.UserName} - {AppUser.Email} - {AppUser.PhoneNumber}");
             return View("Index");
         }
 

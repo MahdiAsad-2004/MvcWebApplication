@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Enums.Response;
+using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Models;
 using OrganicShop.Mvc.Controllers.Base.Result;
 using OrganicShop.Mvc.Extensions;
@@ -19,21 +23,28 @@ namespace OrganicShop.Mvc.Controllers.Base
     {
         #region ctor
 
-        protected readonly ClientHandleResult<TController> _ClientHandleResult = new ClientHandleResult<TController>(); 
+        protected readonly ClientHandleResult<TController> _ClientHandleResult = new ClientHandleResult<TController>();
+
+        //private readonly IApplicationUserProvider _ApplicationUserProvider;
+
+        //public BaseController(IApplicationUserProvider applicationUserProvider)
+        //{
+        //    _ApplicationUserProvider = applicationUserProvider;
+        //}
 
         public BaseController()
         {
-
+            AppUser = User.GetAppUser();
+            Console.WriteLine($"AppUser in BaseController : ${AppUser.Id} - {AppUser.UserName} - {AppUser.Email} - {AppUser.PhoneNumber}");
         }
-
 
         #endregion
 
 
         public ApplicationUser AppUser 
         {
-            get { return User.GetAppUser(); }
-            set { } 
+            get;
+            init; 
         }
 
 
@@ -85,6 +96,16 @@ namespace OrganicShop.Mvc.Controllers.Base
                     throw new Exception("Unhandled response result");
             }
         }
+
+
+        public void AddErrorsToModelState(ModelStateDictionary modelState , List<ValidationFailure> validationFailures)
+        {
+            foreach (var item in validationFailures)
+            {
+                modelState.AddModelError(item.PropertyName, item.ErrorMessage);
+            }
+        }
+
 
     }
 

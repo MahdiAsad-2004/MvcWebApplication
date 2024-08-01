@@ -16,5 +16,8 @@ namespace OrganicShop.Domain.IServices
         
         Task<ServiceResponse<Empty>> Delete(int delete);
 
+        Task<bool> IsMemberOfNewsLetter(long UserId);
+
+
     }
 }

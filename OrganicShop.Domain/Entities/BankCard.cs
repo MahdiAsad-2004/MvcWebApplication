@@ -13,7 +13,7 @@ namespace OrganicShop.Domain.Entities
     {
         public string Cvv2 { get; set; }
         public string Number { get; set; }
-        public DateTime ExpireDate { get; set; }
+        public string ExpireDate { get; set; }
         public string OwnerName { get; set; }
         public long UserId { get; set; }
 

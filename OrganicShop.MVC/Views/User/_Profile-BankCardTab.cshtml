@@ -1,0 +1,79 @@
+﻿@using OrganicShop.Domain.Dtos.BankCardDtos
+@model List<BankCardListDto>
+
+
+<div class="dashboard-card">
+    <div class="title title-flex">
+        <div>
+            <h2>اطلاعات حساب های بانکی</h2>
+            <span class="title-leaf">
+                <svg class="icon-width bg-gray">
+                    <use xlink:href="~/site/assets/svg/leaf.svg#leaf"></use>
+                </svg>
+            </span>
+        </div>
+
+        <button class="btn theme-bg-color text-white btn-sm fw-bold mt-lg-0 mt-3" data-bs-toggle="modal" data-bs-target="#add-bankCard-modal">
+            <i data-feather="plus"
+               class="me-2"></i> افزودن حساب جدید
+        </button>
+    </div>
+
+    <div class="row g-4">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-xxl-4 col-xl-6 col-lg-12 col-sm-6">
+                <div class="payment-card-detail">
+                    <div class="card-details">
+                        <div class="card-number">
+                            <h4>@item.Number.Substring(0, 4) - @item.Number.Substring(4, 4) - @item.Number.Substring(8, 4) - @item.Number.Substring(12, 4)</h4>
+                        </div>
+
+                        <div class="valid-detail">
+                            <div class="title">
+                                <span>فعال</span>
+                                @*<span>1400/10/1</span>*@
+                            </div>
+                            <div class="date">
+                                <h3>@item.ExpireDate</h3>
+                            </div>
+                            <div class="primary">
+                                <span class="badge bg-pill badge-light">CVV2 : @item.Cvv2</span>
+                            </div>
+                        </div>
+
+                        <div class="name-detail">
+                            <div class="name">
+                                <h5>@item.OwnerName</h5>
+                            </div>
+                            <div class="card-img">
+                                <img src="~/site/assets/images/payment-icon/@(Random.Shared.Next(1 , 4)).jpg"
+                                     class="img-fluid blur-up lazyloaded" alt="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="edit-card">
+                        <a href="javascript:void(0)" onclick="OpenEditBankCardModal('@item.Id')">
+                            <i class="far fa-edit"></i> ویرایش
+                        </a>
+                        <a href="javascript:void(0)" onclick="OpenDeleteBankCardModal('@item.Id')">
+                            <i class="far fa-minus-square"></i> حذف
+                        </a>
+                    </div>
+                </div>
+
+                <div class="edit-card-mobile">
+                    <a href="javascript:void(0)" onclick="OpenEditBankCardModal('@item.Id')">
+                        <i class="far fa-edit"></i> ویرایش
+                        </a>
+                    <a href="javascript:void(0)" onclick="OpenDeleteBankCardModal('@item.Id')">
+                        <i class="far fa-minus-square"></i> حذف
+                    </a>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

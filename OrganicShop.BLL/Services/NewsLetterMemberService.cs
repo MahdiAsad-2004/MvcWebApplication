@@ -22,17 +22,20 @@ namespace OrganicShop.BLL.Services
         #region ctor
 
         private readonly IMapper _Mapper;
+        private readonly IUserRepository _UserRepository;
         private readonly INewsLetterMemberRepository _NewsLetterMemberRepository;
         private readonly IValidator<CreateNewsLetterMemberDto> _ValidatorCreateNewsLetterMember;
         private readonly IValidator<UpdateNewsLetterMemberDto> _ValidatorUpdateNewsLetterMember;
 
         public NewsLetterMemberService(IApplicationUserProvider provider, IMapper mapper, INewsLetterMemberRepository NewsLetterMemberRepository,
-            IValidator<CreateNewsLetterMemberDto> validatorCreateNewsLetterMember, IValidator<UpdateNewsLetterMemberDto> validatorUpdateNewsLetterMember) : base(provider)
+            IValidator<CreateNewsLetterMemberDto> validatorCreateNewsLetterMember, IValidator<UpdateNewsLetterMemberDto> validatorUpdateNewsLetterMember,
+            IUserRepository userRepository) : base(provider)
         {
             _Mapper = mapper;
             _NewsLetterMemberRepository = NewsLetterMemberRepository;
             _ValidatorCreateNewsLetterMember = validatorCreateNewsLetterMember;
             _ValidatorUpdateNewsLetterMember = validatorUpdateNewsLetterMember;
+            _UserRepository = userRepository;
         }
 
         #endregion
@@ -80,14 +83,17 @@ namespace OrganicShop.BLL.Services
 
             NewsLetterMember NewsLetterMember = _Mapper.Map<NewsLetterMember>(create);
 
+            if (create.UserId > 0)
+            {
+                if (await _UserRepository.GetQueryable().AnyAsync(a => a.Id == create.UserId && a.IsEmailVerified == true) == false)
+                    return new ServiceResponse<Empty>(ResponseResult.Failed, "ایمیل شما تایید نشده است !");
+            }
+
             if (await _NewsLetterMemberRepository.GetQueryable().AnyAsync(a => a.UserId != null && a.UserId == _AppUserProvider.User.Id))
                 return new ServiceResponse<Empty>(ResponseResult.Failed, "قبلا عضو شده اید !");
 
             if (await _NewsLetterMemberRepository.GetQueryable().AnyAsync(a => EF.Functions.Like(a.Email , create.Email)))
                 return new ServiceResponse<Empty>(ResponseResult.Failed, "قبلا عضو شده اید !");
-
-            if (_AppUserProvider.User.Id > 0)
-                NewsLetterMember.UserId = _AppUserProvider.User.Id;
 
             await _NewsLetterMemberRepository.Add(NewsLetterMember,_AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, "عضویت در خبرنامه با موفقیت انجام شد");
@@ -122,6 +128,19 @@ namespace OrganicShop.BLL.Services
             await _NewsLetterMemberRepository.SoftDelete(NewsLetterMember, _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessDelete());
         }
+
+
+
+        public async Task<bool> IsMemberOfNewsLetter(long UserId)
+        {
+            if(UserId < 1)
+                return false;
+
+            return await _NewsLetterMemberRepository.GetQueryable()
+                .AnyAsync(a => a.UserId == UserId);
+        }
+
+
 
 
 

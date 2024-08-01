@@ -13,6 +13,10 @@ namespace OrganicShop.Domain.Dtos.NewsLetterMemberDtos
         public string Email { get; set; }
 
 
+        [DisplayName("کاربر")]
+        [Range(1, long.MaxValue, ErrorMessage = "{0} معتبر نیست")]
+        public long? UserId { get; set; }
+
 
     }
 

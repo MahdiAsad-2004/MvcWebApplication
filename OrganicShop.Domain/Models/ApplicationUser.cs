@@ -7,9 +7,9 @@ namespace OrganicShop.Domain.Models
     public class ApplicationUser
     {
         public long Id { get; set; } = 1;
-        public long? CartId { get; set; } = null;
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
         public Role? Role { get; set; } = null;
         public IEnumerable<byte> PermissionIds { get; set; } = Enumerable.Empty<byte>();
 

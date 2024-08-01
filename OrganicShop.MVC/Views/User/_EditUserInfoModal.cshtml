@@ -1,0 +1,68 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.UserDtos
+@using OrganicShop.Domain.Enums
+@using OrganicShop.Domain.Enums.EnumValues
+@model UpdateUserDto
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-fullscreen-sm-down">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel2">ویرایش اطلاعات</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="row g-4" id="edit-user-info-form" action="/prodfile/info" method="post" data-container-id="edit-user-info-modal">
+                <input hidden readonly asp-for="Id"/>
+
+                <div class="col-xxl-12 mb-4">
+                    <div class="form-floating theme-form-floating">
+                        <input type="text" class="form-control" asp-for="Name">
+                        <label asp-for="Name"></label>
+                    </div>
+                    <span asp-validation-for="Name" class="text-dange mt-2"></span>
+                </div>
+
+                @if (Model.IsEmailVerified == false)
+                {
+                    <div class="col-xxl-12 mb-4">
+                        <div class="form-floating theme-form-floating">
+                            <input asp-for="Email" type="email" class="form-control">
+                            <label asp-for="Email"></label>
+                        </div>
+                        <span asp-validation-for="Name" class="text-dange mt-2"></span>
+                    </div>
+                }
+
+                <div class="col-xxl-6 mb-4">
+                    <div class="form-floating theme-form-floating">
+                        <select asp-for="Gender" class="form-control">
+                            <option value="">--- بدون انتخاب ---</option>
+                            @foreach (var gender in EnumExtensions.GetArray<Gender>())
+                            {
+                                <option value="@((int)gender)">@gender.ToStringValue()</option>
+                            }
+                        </select>
+                        <label asp-for="Gender"></label>
+                    </div>
+                    <span asp-validation-for="Gender" class="text-dange mt-2"></span>
+                </div>
+
+                <div class="col-xxl-6 mb-4">
+                    <div class="form-floating theme-form-floating">
+                        <input type="text" class="form-control" asp-for="BirthDate">
+                        <label asp-for="BirthDate"></label>
+                    </div>
+                    <span asp-validation-for="BirthDate" class="text-dange mt-2"></span>
+                </div>
+
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">بستن</button>
+            <button type="button" class="btn theme-bg-color btn-md fw-bold text-light" onclick="EditUserInfoSubmit('edit-user-info-form')">ذخیره تغییرات</button>
+        </div>
+    </div>
+</div>

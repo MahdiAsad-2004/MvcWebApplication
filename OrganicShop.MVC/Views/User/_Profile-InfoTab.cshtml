@@ -1,0 +1,186 @@
+﻿@using MD.PersianDateTime
+@using OrganicShop.Domain.Dtos.UserDtos
+@using OrganicShop.Domain.Enums
+@using OrganicShop.Domain.Enums.EnumValues
+@model UpdateUserDto
+
+@{
+    float registerYears = (float)((Model.RegisterDate - PersianDateTime.Now).TotalDays) / 360f;
+    float registerMonths = ((float)((Model.RegisterDate - PersianDateTime.Now).TotalDays) % 360f) / 30f;
+    float registerDays = ((float)((Model.RegisterDate - PersianDateTime.Now).TotalDays) % 30f);
+}
+
+<span hidden id="profile-user-updated-name">@Model.Name</span>
+<span hidden id="profile-user-updated-email">@Model.Email</span>
+
+<div class="dashboard-profile">
+    <div class="title">
+        <h2>پروفایل من</h2>
+        <span class="title-leaf">
+            <svg class="icon-width bg-gray">
+                <use xlink:href="~/site/assets/svg/leaf.svg#leaf"></use>
+            </svg>
+        </span>
+    </div>
+
+    <div class="profile-detail dashboard-bg-box">
+        <div class="dashboard-title">
+            <h3>اطلاعات کلی</h3>
+        </div>
+        <div class="profile-name-detail">
+            <div class="d-sm-flex align-items-center d-block">
+                <h3>@Model.Name</h3>
+            </div>
+
+            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#editProfile">اطلاعات ویرایش</a>
+        </div>
+
+        <div class="location-profile">
+            <ul>
+                <li>
+                    <div class="location-box">
+                        <i data-feather="mail"></i>
+                        <h6>@Model.Email</h6>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="location-box">
+                        <i data-feather="check-square"></i>
+                        @if (registerYears > 0 && registerMonths > 0)
+                        {
+                            <h6>میزان فعالیت : @($"{registerYears} سال و {registerMonths} ماه") </h6>
+                        }
+                        @if (registerYears < 1 && registerMonths > 0)
+                        {
+                            <h6>میزان فعالیت : @($"{registerMonths} ماه") </h6>
+                        }
+                        @if (registerYears > 0 && registerMonths < 1)
+                        {
+                            <h6>میزان فعالیت : @($"{registerYears} سال") </h6>
+                        }
+                        @if (registerYears < 1 && registerMonths < 1)
+                        {
+                            <h6>میزان فعالیت : @($"{registerDays} روز") </h6>
+                        }
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="profile-about dashboard-bg-box">
+        <div class="row">
+            <div class="col-xxl-7">
+                <div class="dashboard-title mb-3">
+                    <h3>اطلاعات کامل</h3>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>جنسیت :</td>
+                                @if (Model.Gender == null)
+                                {
+                                    <td>تعیین نشده</td>
+                                }
+                                else
+                                {
+                                    <td>@Model.Gender.Value.ToStringValue()</td>
+                                }
+                            </tr>
+                            <tr>
+                                <td>تاریخ تولد :</td>
+                                @if (Model.BirthDate != null)
+                                {
+                                    <td>@Model.BirthDate.Value.ToShortDateString()</td>
+                                }
+                                else
+                                {
+                                    <td>مشخص نشده</td>
+                                }
+                            </tr>
+                            @*  <tr>
+                            <td>ایمیل : </td>
+                            <td>
+                            @if (Model.IsEmailVerified)
+                            {
+                            <a href="javascript:void(0)" style="color:var(--theme-color);"> @Model.Email</a>
+                            }
+                            else
+                            {
+                            <a href="javascript:void(0)" style="color:#a40d0d;"> @Model.Email</a>
+                            <a role="button" href="/account/email-verification"
+                            style="padding:8px; border-radius:5px; margin-right: calc(8px + 12*(100vw - 320px)/1600); background: var(--theme-color2); color:var(--theme-color)">
+                            تایید ایمیل
+                            </a>
+                            }
+                            </td>
+                            </tr> *@
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="dashboard-title mb-3">
+                    <h3>اطلاعات ورود</h3>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>شماره همراه :</td>
+                                <td>
+                                    <a href="javascript:void(0)">
+                                        @Model.PhoneNumber
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>ایمیل :</td>
+                                @if (Model.IsEmailVerified)
+                                {
+                                    <td>
+                                        <a href="javascript:void(0)">
+                                            @Model.Email
+                                        </a>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <a href="javascript:void(0)" style="color:#a40d0d;">
+                                            @Model.Email
+                                            <span onclick="location.assign('/account/email-verification')" style="color:var(--theme-color)">تایید ایمیل</span>
+                                        </a>
+                                    </td>
+                                }
+                            </tr>
+                            <tr>
+                                <td>رمز ورود :</td>
+                                <td>
+                                    <a href="javascript:void(0)">
+
+                                        @("●".PadRight(6))
+
+                                        <span data-bs-toggle="modal" data-bs-target="#editProfile">ویرایش رمز عبور</span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-xxl-5">
+                <div class="profile-image">
+                    <img src="~/site/assets/images/inner-page/@(Model.Gender == Gender.Man ? "dashboard-man" : "dashboard-woman").png"
+                         class="img-fluid blur-up lazyload" alt="">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

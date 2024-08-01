@@ -9,7 +9,7 @@ using OrganicShop.Domain.Response.Messages;
 
 namespace OrganicShop.Domain.Response
 {
-    public class ServiceResponse<TData> where TData : class
+    public class ServiceResponse<TData> 
     {
         public ResponseResult Result { get; set; }
         public string Message { get; set; } = string.Empty;
@@ -20,17 +20,17 @@ namespace OrganicShop.Domain.Response
         public TData? Data { get; set; } 
        
 
-        public ServiceResponse(ResponseResult result,TData? data = null )
+        public ServiceResponse(ResponseResult result,TData? data = default(TData))
         {
             Result = result;
-            Data = result != ResponseResult.Success ? null : data;
+            Data = result != ResponseResult.Success ? default(TData) : data;
         }
 
-        public ServiceResponse(ResponseResult result, string message, TData? data = null)
+        public ServiceResponse(ResponseResult result, string message, TData? data = default(TData))
         {
             Result = result;
             Message = message;
-            Data = result != ResponseResult.Success ? null : data;
+            Data = result != ResponseResult.Success ? default(TData) : data;
         }
 
         public ServiceResponse(string propertyName, string errorMessage , string message)

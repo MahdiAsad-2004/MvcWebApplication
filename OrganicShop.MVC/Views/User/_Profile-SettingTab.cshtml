@@ -1,0 +1,52 @@
+﻿@using OrganicShop.Domain.Dtos.UserDtos
+@using OrganicShop.Domain.Entities.ComplexTypes
+@model UpdateUserPrivacyDto
+
+<div class="dashboard-privacy">
+    <form class="dashboard-bg-box mt-4" id="edit-user-privacy-form" action="/profile/setting" method="post" data-container-id="pills-setting">
+        <input hidden readonly asp-for="UserId"/>
+
+        <div class="dashboard-title mb-4">
+            <h3>تنظیمات حساب</h3>
+        </div>
+
+        <div class="privacy-box">
+            <div class="d-flex align-items-start">
+                <h6>ایمیل من در دیدگاه قابل مشاهده باشد</h6>
+                <div class="form-check form-switch switch-radio ms-auto">
+                    <input asp-for="IsEmailVisible" class="form-check-input" type="checkbox" role="switch" id="redio2">
+                    <label class="form-check-label" for="redio2"></label>
+                </div>
+            </div>
+
+            <p class="text-content">با فعال سازی این گزینه به دیگران اجازه میدهید ایمیل شما را مشاهده کنند.</p>
+        </div>
+
+        <div class="privacy-box">
+            <div class="d-flex align-items-start">
+                <h6>تصویر پروفایل من را نمایش دهید</h6>
+                <div class="form-check form-switch switch-radio ms-auto">
+                    <input asp-for="IsProfileImageVisible" class="form-check-input" type="checkbox" role="switch" id="redio4">
+                    <label class="form-check-label" for="redio4"></label>
+                </div>
+            </div>
+
+            <p class="text-content">با فعال سازی این گزینه امکان دنلود تصویر پروفایل شما توسط دیگران وجود دارد. لطفا پ از فعال سازی این گرینه از تصویر خود برا پروفایل استفاده نفرمایید.</p>
+        </div>
+
+        <div class="privacy-box">
+            <div class="d-flex align-items-start">
+                <h6>حساب کاربریم را پس از خارج شدن من حذف کن!!</h6>
+                <div class="form-check form-switch switch-radio ms-auto">
+                    <input asp-for="DeleteAccountAfterLogOut" class="form-check-input" type="checkbox" role="switch" id="redio3">
+                    <label class="form-check-label" for="redio3"></label>
+                </div>
+            </div>
+            <p class="text-content">حساب کاربری شما پس از خروج شما حذف خواهد (این فرآیند قابل بازیابی نیست!)</p>
+        </div>
+
+        <button class="btn theme-bg-color btn-md fw-bold mt-4 text-white" onclick="FetchRequestFormWithId('edit-user-privacy-form')">ذخیره تغییرات</button>
+
+        <button class="btn bg-danger btn-md fw-bold mt-4 text-white">حذف حساب کاربری</button>
+    </form>
+</div>

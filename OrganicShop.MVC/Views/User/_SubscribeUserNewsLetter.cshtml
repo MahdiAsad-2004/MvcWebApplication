@@ -1,0 +1,46 @@
+﻿@using OrganicShop.Domain.Dtos.NewsLetterMemberDtos
+@model CreateNewsLetterMemberDto
+
+@{
+    var isEmailVerified = ViewData["IsEmailVerified"] as bool? ?? false;
+}
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-fullscreen-sm-down">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel2"> عضویت خبرنامه</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="row g-4" id="subscribe-user-newsLetter-form" action="/profile/subscire-newsLetter" method="post" data-container-id="subscribe-user-newsLetter-modal">
+                <div class="col-xxl-12 mb-5">
+                    <div class="form-floating theme-form-floating">
+                        <input asp-for="Email" type="text" class="form-control" readonly>
+                        <label asp-for="Email"></label>
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger mt-2"></span>
+                </div>
+                @if (isEmailVerified == false)
+                {
+                    <div class="col-xxl-12">
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <div>
+                                ابتدا باید ایمیل خود را تایید کنید !
+                            </div>
+                            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                        </div>
+                    </div>
+                }
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">بستن</button>
+            <button type="button" data-bs-dismiss="modal" class="btn theme-bg-color btn-md fw-bold text-light" onclick="SubscribeUserNewsLetterSubmit('subscribe-user-newsLetter-form')"
+            @(isEmailVerified ? "" : "disabled")>
+                درخواست عضویت
+            </button>
+        </div>
+    </div>
+</div>

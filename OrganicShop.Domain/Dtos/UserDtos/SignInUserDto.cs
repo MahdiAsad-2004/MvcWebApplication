@@ -8,10 +8,9 @@ namespace OrganicShop.Domain.Dtos.UserDtos
 {
     public class SignInUserDto : BaseDto
     {
-        [DisplayName("شماره همراه")]
+        [DisplayName("شماره همراه یا ایمیل")]
         [Required(ErrorMessage = "{0} ضروری است")]
-        [StringLength(11, MinimumLength = 11, ErrorMessage = "{0} معتبر نیست")]
-        public string PhoneNumber { get; set; }
+        public string PhoneNumberOrEmail { get; set; }
 
 
         [DisplayName("رمز عبور")]

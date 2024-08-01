@@ -6,7 +6,7 @@ namespace OrganicShop.Domain.Dtos.BankCardDtos
     {
         public string Cvv2 { get; set; }
         public string Number { get; set; }
-        public DateTime ExpireDate { get; set; }
+        public string ExpireDate { get; set; }
         public string OwnerName { get; set; }
     }
 
