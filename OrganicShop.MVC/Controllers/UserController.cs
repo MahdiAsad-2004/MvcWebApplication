@@ -74,6 +74,8 @@ namespace OrganicShop.Mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> EditProductWishList(long productId, bool isDelete)
         {
+            Console.WriteLine($"--------- product id: {productId} ------------ is delete: {isDelete} -----------------");
+            
             if (User.Identity.IsAuthenticated == false)
             {
                 return _ClientHandleResult.Redirect(HttpContext, "Login", "Account", false);
@@ -81,6 +83,7 @@ namespace OrganicShop.Mvc.Controllers
             if (isDelete)
             {
                 var response = await _WishItemService.Delete(productId);
+                
                 if (response.Result == ResponseResult.Success)
                     return _ClientHandleResult.Empty(HttpContext);
 
@@ -89,6 +92,7 @@ namespace OrganicShop.Mvc.Controllers
             else
             {
                 var response = await _WishItemService.Create(new CreateWishItemDto { ProductId = productId });
+                
                 if (response.Result == ResponseResult.Success)
                     return _ClientHandleResult.Empty(HttpContext);
 

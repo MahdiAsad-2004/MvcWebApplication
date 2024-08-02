@@ -131,7 +131,7 @@ namespace OrganicShop.BLL.Services
             if (!validationResult.IsValid)
                 return new ServiceResponse<Empty>(create, validationResult);
 
-            ProductItem? ProductItem = new();
+            ProductItem? ProductItem = null;
 
             int? productStock = (await _ProductRepository.GetQueryable().FirstOrDefaultAsync(a => a.Id == create.ProductId))?.Stock;
 

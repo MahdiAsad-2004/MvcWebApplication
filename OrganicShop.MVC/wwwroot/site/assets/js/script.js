@@ -591,6 +591,7 @@ async function PreviewProductModalRequest(id) {
 // add product to wihslist
 
 const EditProductWishListForm = document.getElementById('edit-product-wishlist-form');
+
 let EditProductWishListProductIdInput;
 if (EditProductWishListForm) {
     EditProductWishListProductIdInput = EditProductWishListForm.querySelector("input[name = 'productId']");

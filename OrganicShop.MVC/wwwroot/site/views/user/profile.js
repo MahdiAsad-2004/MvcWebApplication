@@ -6,7 +6,10 @@ async function RemoveProductFromWishList(productId) {
     productId = +productId;
     if (productId > 0) {
         EditProductWishListForm.querySelector("input[name = 'productId']").value = productId;
-        EditProductWishListForm.querySelector("input[name = 'isDelete']").value = true;
+        EditProductWishListForm.querySelector("input[name = 'isDelete']").value = 'true';
+
+        console.log(EditProductWishListForm);
+
         var result = await FetchRequestForm(EditProductWishListForm);
         if (result == true) {
             document.getElementById(`product-wish-${productId}`).remove();
