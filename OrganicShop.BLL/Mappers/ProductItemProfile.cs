@@ -54,7 +54,6 @@ namespace OrganicShop.BLL.Mappers
                 Id = productItem.Id,
                 MainImageName = productItem.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,
                 Price = productItem.Price,
-                Title = productItem.Title,
                 VarientType = productVarient?.Type.ToStringValue() ?? null,
                 VarientValue = productVarient?.Value ?? null,
             };

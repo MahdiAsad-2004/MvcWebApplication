@@ -32,19 +32,14 @@ namespace OrganicShop.Mvc.Controllers.Base
         //    _ApplicationUserProvider = applicationUserProvider;
         //}
 
-        public BaseController()
-        {
-            AppUser = User.GetAppUser();
-            Console.WriteLine($"AppUser in BaseController : ${AppUser.Id} - {AppUser.UserName} - {AppUser.Email} - {AppUser.PhoneNumber}");
-        }
-
+       
         #endregion
 
 
         public ApplicationUser AppUser 
         {
-            get;
-            init; 
+            get { return User.GetAppUser(); }
+            init { }
         }
 
 

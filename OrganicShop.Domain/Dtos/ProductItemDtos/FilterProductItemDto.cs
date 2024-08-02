@@ -11,6 +11,7 @@ namespace OrganicShop.Domain.Dtos.ProductItemDtos
         public long? CartId { get; set; }
         public long? OrderId { get; set; }
         public bool? IsOrdered { get; set; }
+        public long? UserId { get; set; }
         public ProductItemSortType SortBy { get; set; } = ProductItemSortType.None;
 
 

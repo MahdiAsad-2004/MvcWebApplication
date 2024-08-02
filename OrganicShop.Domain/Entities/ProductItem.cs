@@ -11,7 +11,6 @@ namespace OrganicShop.Domain.Entities
     [DisplayName("محصول")]
     public class ProductItem : EntityId<long>
     {
-        public string Title { get; set; }
         public long ProductId { get; set; }
         public long? ProductVarientId { get; set; }
         public int Count { get; set; }

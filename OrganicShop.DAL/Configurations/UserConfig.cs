@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MD.PersianDateTime;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Entities.Base;
+using OrganicShop.Domain.Entities.ComplexTypes;
 using OrganicShop.Domain.Enums;
 namespace OrganicShop.DAL.Configurations
 {
@@ -25,13 +27,15 @@ namespace OrganicShop.DAL.Configurations
             builder.HasOne(a => a.Cart).WithOne(a => a.User).HasForeignKey<Cart>(a => a.UserId);
             builder.HasOne(a => a.NextCart).WithOne(a => a.User).HasForeignKey<NextCart>(a => a.UserId);
 
+            ;
+
 
 
 
             builder.HasQueryFilter(a => a.BaseEntity.IsDelete == false);
 
 
-            
+
 
 
             builder.HasData(
@@ -44,6 +48,7 @@ namespace OrganicShop.DAL.Configurations
                     Email = "mas1379as@gmail.com",
                     Role = Role.Manager,
                     IsEmailVerified = true,
+                    Gender = Gender.Man,
                 },
                 new User
                 {
@@ -54,7 +59,7 @@ namespace OrganicShop.DAL.Configurations
                     Email = "TestEmail@gmail.com",
                     Role = Role.Admin,
                     IsEmailVerified = false,
-
+                    Gender = Gender.Man,
                 });
 
             builder.OwnsOne(a => a.BaseEntity).HasData(new
@@ -73,6 +78,20 @@ namespace OrganicShop.DAL.Configurations
                 IsActive = true,
                 IsDelete = false,
 
+            });
+            builder.OwnsOne(a => a.Privacy).HasData(new
+            {
+                UserId = (long)1,
+                IsEmailVisible = false,
+                IsProfileImageVisible = false,
+                DeleteAccountAfterLogOut = false,
+            });
+            builder.OwnsOne(a => a.Privacy).HasData(new
+            {
+                UserId = (long)2,
+                IsEmailVisible = true,
+                IsProfileImageVisible = true,
+                DeleteAccountAfterLogOut = false,
             });
 
 

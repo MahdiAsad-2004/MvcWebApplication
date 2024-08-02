@@ -24,7 +24,7 @@
                 
                 <div class="col-xxl-6 mb-4">
                     <div class="form-floating theme-form-floating">
-                        <input asp-for="Cvv2" type="text" class="form-control" max="4"> 
+                        <input asp-for="Cvv2" type="text" class="form-control"> 
                         <label asp-for="Cvv2"></label>
                     </div>
                     <span asp-validation-for="Cvv2" class="text-danger mt-2"></span>
@@ -49,7 +49,7 @@
             </form>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">لغو</button>
+            <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal" id="edit-bankCard-modal-close-button">لغو</button>
             <button type="button" class="btn theme-bg-color btn-md fw-bold text-light" onclick="EditBankCardSubmit('edit-bankCard-form')">ویرایش کارت بانک</button>
         </div>
     </div>

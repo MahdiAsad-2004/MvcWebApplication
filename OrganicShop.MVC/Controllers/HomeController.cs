@@ -27,25 +27,27 @@ namespace OrganicShop.Mvc.Controllers
 
         private readonly IFaqService _FaqService;
         private readonly IArticleService _ArticleService;
+        private readonly IWishItemService _WishItemService;
         private readonly IContactUsService _ContactUsService;
         private readonly IUserMessageService _UserMessageService;
         private readonly INewsLetterMemberService _NewsLetterMemberService;
         public HomeController(INewsLetterMemberService newsLetterMemberService, IArticleService articleService,
-            IContactUsService contactUsService, IUserMessageService userMessageService, IFaqService faqService)
+            IContactUsService contactUsService, IUserMessageService userMessageService, IFaqService faqService, IWishItemService wishItemService)
         {
             _NewsLetterMemberService = newsLetterMemberService;
             _ArticleService = articleService;
             _ContactUsService = contactUsService;
             _UserMessageService = userMessageService;
             _FaqService = faqService;
+            _WishItemService = wishItemService;
         }
 
         #endregion
 
         public async Task<IActionResult> Index()
         {
-            ViewData["UserWishProductIds"] = new long[11] { 1, 3, 6, 9, 12, 15, 18, 21, 24, 28, 30 };
-            await Console.Out.WriteLineAsync($"AppUser in home => index: ${AppUser.Id} - {AppUser.UserName} - {AppUser.Email} - {AppUser.PhoneNumber}");
+            ViewData["UserWishProductIds"] = (await _WishItemService.GetUserWishProductIds()).Data;
+            Console.WriteLine($"AppUser in home => index: {AppUser.Id} - {AppUser.UserName} - {AppUser.Email} - {AppUser.PhoneNumber}");
             return View("Index");
         }
 

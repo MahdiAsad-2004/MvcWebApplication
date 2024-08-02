@@ -179,7 +179,7 @@ namespace OrganicShop.BLL.Services
             //    else
             //        user.Picture = await update.ProfileImage.SavePictureAsync(PathKey.UserImages, PictureType.User);
             //}
-            await _userRepository.Update(_Mapper.Map<User>(update), _AppUserProvider.User.Id);
+            await _userRepository.Update(_Mapper.Map(update,user), _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
         }
 
@@ -268,12 +268,12 @@ namespace OrganicShop.BLL.Services
             {
                 isSignInWithEmail = true;
                 user = await _userRepository.GetQueryable()
-                    .FirstOrDefaultAsync(a => a.Email == signInUser.PhoneNumberOrEmail && a.Password == signInUser.Password);
+                    .FirstOrDefaultAsync(a => a.Email == signInUser.PhoneNumberOrEmail && a.Password == signInUser.Password.ToSha256String());
             }
             else
             {
                 user = await _userRepository.GetQueryable()
-                    .FirstOrDefaultAsync(a => a.PhoneNumber == signInUser.PhoneNumberOrEmail && a.Password == signInUser.Password);
+                    .FirstOrDefaultAsync(a => a.PhoneNumber == signInUser.PhoneNumberOrEmail && a.Password == signInUser.Password.ToSha256String());
             }
 
 
@@ -291,7 +291,9 @@ namespace OrganicShop.BLL.Services
                     Email = user.Email,
                     Id = user.Id,
                     Role = user.Role,
-                    Name = user.Name
+                    Name = user.Name,
+                    PhoneNumber = user.PhoneNumber,
+                    
                 });
 
         }

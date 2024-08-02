@@ -49,13 +49,20 @@ namespace OrganicShop.Mvc.Controllers
         public async Task<IActionResult> Checkout(int discountPrice, byte deliveryId, bool freeDelivery)
         {
             long userId = User.GetAppUser().Id;
-            var cartId = HttpContext.GetAppUser().CartId;
 
-            if (userId < 1 || cartId < 1)
+            if (userId < 1)
                 return Redirect("/Error/404");
 
+            var productItems = (await _ProductItemService.GetAll(new FilterProductItemDto { UserId = userId }))?.Data ?? new List<ProductItemListDto>();
+            ViewData["ProductItems"] = productItems;
+            var cartId = productItems.FirstOrDefault()?.CartId;
+
+            if (cartId == null)
+            {
+                return Redirect("/Error/404");
+            }
+
             ViewData["UserAddresses"] = (await _AddressService.GetAll(new FilterAddressDto { UserId = userId })).Data?.List ?? new List<AddressListDto>();
-            ViewData["ProductItems"] = (await _ProductItemService.GetAll(new FilterProductItemDto { CartId = cartId }))?.Data ?? new List<ProductItemListDto>();
             var shippingMethod = (await _ShippingMethodService.Get(deliveryId)).Data;
             ViewBag.FreeDelivery = freeDelivery;
 
@@ -94,7 +101,7 @@ namespace OrganicShop.Mvc.Controllers
         public async Task<IActionResult> Success(string trackingCode)
         {
             var model = (await _OrderService.GetDetail(trackingCode)).Data;
-            return View("Success",model);
+            return View("Success", model);
         }
 
 

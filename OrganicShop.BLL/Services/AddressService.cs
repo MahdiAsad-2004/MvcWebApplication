@@ -122,7 +122,7 @@ namespace OrganicShop.BLL.Services
             if (Address.UserId != _AppUserProvider.User.Id)
                 return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NoAccess());
 
-            await _AddressRepository.Update(_Mapper.Map<Address>(update), _AppUserProvider.User.Id);
+            await _AddressRepository.Update(_Mapper.Map(update,Address), _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
         }
 

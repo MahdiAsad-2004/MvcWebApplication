@@ -13,9 +13,12 @@ namespace OrganicShop.Domain.Dtos.UserDtos
         public string Email { get; set; }
 
 
-        public string PhoneNumber { get; init; }
-        public bool IsEmailVerified { get; init; }
-        public PersianDateTime RegisterDate { get; init; }
+
+        /// only using for display data and not for update    
+
+        public string PhoneNumber_readonly { get; init; }
+        public bool IsEmailVerified_readonly { get; init; }
+        public PersianDateTime RegisterDate_readonly { get; init; }
 
 
     }

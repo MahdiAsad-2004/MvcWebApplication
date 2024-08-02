@@ -2,8 +2,10 @@
 using AutoMapper;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OrganicShop.BLL.Extensions;
 using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.Dtos.BankCardDtos;
 using OrganicShop.Domain.Dtos.NewsLetterMemberDtos;
@@ -20,6 +22,7 @@ using OrganicShop.Mvc.Controllers.Base;
 using OrganicShop.Mvc.Extensions;
 using OrganicShop.Mvc.Models.Toast;
 using OrganicShop.MVC.Attributes;
+using System.Security.Claims;
 
 namespace OrganicShop.Mvc.Controllers
 {
@@ -196,13 +199,38 @@ namespace OrganicShop.Mvc.Controllers
         [HttpPost("/profile/info")]
         public async Task<IActionResult> UpdateUser(UpdateUserDto updateUser)
         {
+
             if (AppUser.Id != updateUser.Id)
                 return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "شما به این بخش دسترسی ندارید "), responseResult: false);
+
+            updateUser.LogAsync();
+
+            return Empty;
 
             var response = await _UserService.Update(updateUser);
 
             if (response.Result == ResponseResult.Success)
-                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, ""));
+            {
+                #region edit user identity
+
+
+                var claims = new List<Claim>
+                {
+                    new(ClaimTypes.NameIdentifier,updateUser.Id.ToString()),
+                    new(ClaimTypes.Name,updateUser.Name),
+                    new(ClaimTypes.MobilePhone,updateUser.PhoneNumber_readonly),
+                    //new(ClaimTypes.Role , updateUser.rol.ToString()),
+                    new(ClaimTypes.Email , updateUser.Email),
+                };
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+                User.AddIdentity(identity);
+
+
+                #endregion
+
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, "اطلاعات شما با موفقیت ویرایش شد"));
+            }
 
             if (response.Result == ResponseResult.ValidationError)
             {
@@ -365,7 +393,7 @@ namespace OrganicShop.Mvc.Controllers
             var response = await _BankCardService.Delete(Id);
 
             if (response.Result == ResponseResult.Success)
-                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, "آدرس با موفقیت حذف شد"));
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, "کارت بانکی با موفقیت حذف شد"));
 
             return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
         }

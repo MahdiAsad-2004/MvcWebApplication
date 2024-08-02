@@ -30,7 +30,7 @@ namespace OrganicShop.BLL.Services
         private readonly IValidator<UpdateProductItemDto> _ValidatorUpdateProductItem;
 
         public ProductItemService(IApplicationUserProvider provider, IMapper mapper, IProductItemRepository ProductItemRepository,
-            ICartRepository CartRepository, IProductRepository productRepository, IValidator<CreateProductItemDto> validatorCreateProductItem, 
+            ICartRepository CartRepository, IProductRepository productRepository, IValidator<CreateProductItemDto> validatorCreateProductItem,
             IValidator<UpdateProductItemDto> validatorUpdateProductItem)
             : base(provider)
         {
@@ -49,7 +49,12 @@ namespace OrganicShop.BLL.Services
         {
             var query = _ProductItemRepository.GetQueryable();
 
+            if (filter == null) filter = new FilterProductItemDto();
+
             #region includes 
+
+            if (filter.UserId != null)
+                query = query.Include(q => q.Cart);
 
             query = query
                 .Include(a => a.Product)
@@ -61,28 +66,27 @@ namespace OrganicShop.BLL.Services
                         .ThenInclude(a => a.Discount)
                 .Include(a => a.Product)
                     .ThenInclude(a => a.ProductVarients)
-                .Select(a => new ProductItem
-                {
-                    Order = a.Order,
-                    BaseEntity = a.BaseEntity,
-                    IsOrdered = a.IsOrdered,
-                    Id = a.Id,
-                    Count = a.Count,
-                    Cart = a.Cart,
-                    CartId = a.CartId,
-                    OrderId = a.OrderId,
-                    Price = a.Price,
-                    //Product = a.Product.ToModel(),
-                    Product = a.Product,
-                    ProductId = a.ProductId,
-                    ProductVarientId = a.ProductVarientId,
-                    Title = a.Title,
-                })
+                //.Select(a => new ProductItem
+                //{
+                //    Order = a.Order,
+                //    BaseEntity = a.BaseEntity,
+                //    IsOrdered = a.IsOrdered,
+                //    Id = a.Id,
+                //    Count = a.Count,
+                //    Cart = a.Cart,
+                //    CartId = a.CartId,
+                //    OrderId = a.OrderId,
+                //    Price = a.Price,
+                //    //Product = a.Product.ToModel(),
+                //    Product = a.Product,
+                //    ProductId = a.ProductId,
+                //    ProductVarientId = a.ProductVarientId,
+                //    Title = a.Title,
+                //})
                 .AsQueryable();
 
             #endregion
 
-            if (filter == null) filter = new FilterProductItemDto();
 
             #region filter
 
@@ -93,6 +97,9 @@ namespace OrganicShop.BLL.Services
 
             if (filter.CartId > 0)
                 query = query.Where(q => q.CartId == filter.CartId);
+
+            if (filter.UserId > 0)
+                query = query.Where(q => q.Cart != null && q.Cart.UserId == filter.UserId);
 
             if (filter.OrderId > 0)
                 query = query.Where(q => q.OrderId == filter.OrderId);
@@ -126,23 +133,35 @@ namespace OrganicShop.BLL.Services
 
             ProductItem? ProductItem = new();
 
-            long? userCartId = _CartRepository.GetQueryable()
-                .FirstOrDefaultAsync(a => a.UserId.Equals(_AppUserProvider.User.Id)).Result?.UserId;
+            int? productStock = (await _ProductRepository.GetQueryable().FirstOrDefaultAsync(a => a.Id == create.ProductId))?.Stock;
 
-            if (userCartId == null)
+            if(productStock == null)
+                return new ServiceResponse<Empty>(ResponseResult.Failed , "محصول مورد نطر یافت نشد");
+
+            long? userCartId = _CartRepository.GetQueryable()
+                .FirstOrDefaultAsync(a => a.UserId == _AppUserProvider.User.Id).Result?.Id;
+
+            if (userCartId != null)
             {
                 ProductItem = await _ProductItemRepository.GetQueryable()
-                .AsTracking()
-                .Include(a => a.Product)
-                .FirstOrDefaultAsync(a => a.ProductId == create.ProductId && a.CartId == userCartId);
+                    .AsTracking()
+                    .FirstOrDefaultAsync(a => a.ProductId == create.ProductId && a.CartId == userCartId);
+            }
+            else
+            {
+                userCartId = await _CartRepository.Add(new Cart
+                {
+                    UserId = _AppUserProvider.User.Id,
+                    TotalPrice = 0,
+                }, _AppUserProvider.User.Id);
             }
 
             if (ProductItem != null)
             {
                 ProductItem.Count += create.Count;
-                if (ProductItem.Count > ProductItem.Product.Stock)
+                if (ProductItem.Count > productStock)
                 {
-                    ProductItem.Count = ProductItem.Product.Stock; ;
+                    ProductItem.Count = productStock.Value;
                 }
                 ProductItem.IsOrdered = false;
                 await _ProductItemRepository.Update(ProductItem, _AppUserProvider.User.Id);
@@ -150,7 +169,12 @@ namespace OrganicShop.BLL.Services
             else
             {
                 ProductItem = _Mapper.Map<ProductItem>(create);
+                if (ProductItem.Count > productStock)
+                {
+                    ProductItem.Count = productStock.Value;
+                }
                 ProductItem.IsOrdered = false;
+                ProductItem.CartId = userCartId;
                 await _ProductItemRepository.Add(ProductItem, _AppUserProvider.User.Id);
             }
 
@@ -257,7 +281,7 @@ namespace OrganicShop.BLL.Services
                     DiscountedPrice = product.DiscountedPrice,
                     Stock = product.Stock,
                     MainImageName = product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,
-                    Count = productItemCookieDto.Count > product.Stock ? product.Stock :productItemCookieDto.Count,
+                    Count = productItemCookieDto.Count > product.Stock ? product.Stock : productItemCookieDto.Count,
                     VarientType = productItemCookieDto.ProductVarientId > 0 ? product.ProductVarients.First(a => a.Id == productItemCookieDto.ProductVarientId).Type.ToStringValue() : null,
                     VarientValue = productItemCookieDto.ProductVarientId > 0 ? product.ProductVarients.First(a => a.Id == productItemCookieDto.ProductVarientId).Value : null,
                 });
@@ -315,17 +339,17 @@ namespace OrganicShop.BLL.Services
 
 
 
-        public async Task<ServiceResponse<List<ProductItemCookieDto>>> UpdateForCookie(long productId , int count, List<ProductItemCookieDto> previousProductItems)
+        public async Task<ServiceResponse<List<ProductItemCookieDto>>> UpdateForCookie(long productId, int count, List<ProductItemCookieDto> previousProductItems)
         {
             var productItem = previousProductItems.FirstOrDefault(a => a.ProductId == productId);
-            
+
             if (productItem == null)
                 return new ServiceResponse<List<ProductItemCookieDto>>(ResponseResult.NotFound, _Message.NotFound());
 
             var productStock = 0;
 
             #region get product stock
-            
+
             if (productItem.ProductVarientId > 0)
             {
                 productStock = _ProductRepository.GetQueryable()
@@ -342,11 +366,11 @@ namespace OrganicShop.BLL.Services
             #endregion
 
             productItem.Count = count;
-            if(productItem.Count > productStock)
+            if (productItem.Count > productStock)
             {
                 productItem.Count = productStock;
             }
-            if(productItem.Count < 1)
+            if (productItem.Count < 1)
             {
                 previousProductItems.Remove(productItem);
             }

@@ -3,6 +3,7 @@ using MD.PersianDateTime;
 using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Entities.Base;
+using OrganicShop.Domain.Entities.ComplexTypes;
 using OrganicShop.Domain.Entities.Relations;
 using OrganicShop.Domain.Enums;
 
@@ -72,7 +73,7 @@ namespace OrganicShop.DAL.SeedDatas
             user = new User()
             {
                 Name = $"{userFirstName} {userLastName}",
-                Password = userPassword,
+                Password = UserSeed.HasPassword(userPassword),
                 Email = $"{userPassword}@organicshop-seller.ir",
                 IsEmailVerified = false,
                 PhoneNumber = GeneratePhoneNumber(),
@@ -82,7 +83,7 @@ namespace OrganicShop.DAL.SeedDatas
                     {
                         new Address
                         {
-                            Title = $"{userLastName} {userFirstName} آدرس",
+                            Title = $"آدرس پیشفرض",
                             BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(userCreateDate)),
                             PhoneNumber = GeneratePhoneNumber(),
                             PostCode = Random.Shared.NextInt64(1_000_000_000, 9_999_999_999).ToString(),
@@ -99,18 +100,23 @@ namespace OrganicShop.DAL.SeedDatas
                             BaseEntity = new BaseEntity(UserSeed.GetRandomDateAfter(userCreateDate)),
                             Cvv2 = Random.Shared.Next(100, 10_000).ToString(),
                             ExpireDate = PersianDateTime.Now.AddMonths(Random.Shared.Next(1, 30)).ToString("yy/mm"),
-                            Number = $"{Random.Shared.Next(5000, 7000)}-{Random.Shared.Next(1000, 10_000)}-{Random.Shared.Next(1000, 10_000)}-{Random.Shared.Next(1000, 10_000)}",
+                            Number = $"{Random.Shared.Next(5000, 7000)}{Random.Shared.Next(1000, 10_000)}{Random.Shared.Next(1000, 10_000)}{Random.Shared.Next(1000, 10_000)}",
                         }
                     },
                 Picture = new Picture
                 {
                     BaseEntity = new BaseEntity(userCreateDate),
                     IsMain = true,
-                    Name = isMan ? $"man-{Random.Shared.Next(1, 60 + 1)}.jpg" : $"woman-{Random.Shared.Next(1, 50 + 1)}",
+                    Name = isMan ? $"man-{Random.Shared.Next(1, 60 + 1)}.jpg" : $"woman-{Random.Shared.Next(1, 50 + 1)}.jpg",
                     SizeMB = 0.5f,
                     Type = PictureType.User,
                 },
-
+                Privacy = new UserPrivacy
+                {
+                    DeleteAccountAfterLogOut = false,
+                    IsEmailVisible = Random.Shared.Next(1, 3) == 1,
+                    IsProfileImageVisible = Random.Shared.Next(1, 3) == 1,
+                },
             };
 
 

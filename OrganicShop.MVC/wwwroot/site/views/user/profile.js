@@ -1,8 +1,8 @@
 
 
-EditProductWishListForm = document.getElementById('edit-product-wishlist-form');
+//EditProductWishListForm = document.getElementById('edit-product-wishlist-form');
 
-function RemoveProductFromWishList(productId) {
+async function RemoveProductFromWishList(productId) {
     productId = +productId;
     if (productId > 0) {
         EditProductWishListForm.querySelector("input[name = 'productId']").value = productId;
@@ -31,16 +31,16 @@ async function AddAddressSubmit(formId) {
 async function EditAddressSubmit(formId) {
     var result = await FetchRequestForm(document.getElementById(formId));
     if (result) {
-        const editAddressModal = new bootstrap.Modal('#edit-address-modal');
-        editAddressModal.hide();
+        document.getElementById('edit-address-modal-close-button').click();
         await LoadAddressTab();
     }
 }
 async function DeleteAddressSubmit(formId) {
     var result = await FetchRequestForm(document.getElementById(formId));
     if (result) {
-        const removeAddressModal = new bootstrap.Modal('#delete-address-modal');
-        removeAddressModal.hide();
+        //const removeAddressModal = new bootstrap.Modal('#delete-address-modal');
+        //removeAddressModal.hide();
+        document.getElementById('delete-address-modal-close-button').click();
         await LoadAddressTab();
     }
 }
@@ -86,24 +86,27 @@ async function LoadBankCardTab() {
 async function AddBankCardSubmit(formId) {
     var result = await FetchRequestForm(document.getElementById(formId));
     if (result) {
-        const removeAddressModal = new bootstrap.Modal('#add-bankCard-modal');
-        removeAddressModal.hide();
+        //const removeAddressModal = new bootstrap.Modal('#add-bankCard-modal');
+        //removeAddressModal.hide();
+        document.getElementById('add-bankCard-modal-close-button').click();
         await LoadBankCardTab();
     }
 }
 async function EditBankCardSubmit(formId) {
     var result = await FetchRequestForm(document.getElementById(formId));
     if (result) {
-        const removeAddressModal = new bootstrap.Modal('#edit-bankCard-modal');
-        removeAddressModal.hide();
+        //const removeAddressModal = new bootstrap.Modal('#edit-bankCard-modal');
+        //removeAddressModal.hide();
+        document.getElementById('edit-bankCard-modal-close-button').click();
         await LoadBankCardTab();
     }
 }
 async function DeleteBankCardSubmit(formId) {
     var result = await FetchRequestForm(document.getElementById(formId));
     if (result) {
-        const removeBankCardModal = new bootstrap.Modal('#delete-bankCard-modal');
-        removeBankCardModal.hide();
+        //const removeBankCardModal = new bootstrap.Modal('#delete-bankCard-modal');
+        //removeBankCardModal.hide();
+        document.getElementById('delete-bankCard-modal-close-button').click();
         await LoadAddressTab();
     }
 }
@@ -135,8 +138,9 @@ async function LoadUserInfo() {
 async function EditUserInfoSubmit(formId) {
     var result = await FetchRequestForm(document.getElementById(formId));
     if (result) {
-        const editUserInoModal = new bootstrap.Modal('#edit-user-info-modal');
-        editUserInoModal.hide();
+        //const editUserInoModal = new bootstrap.Modal('#edit-user-info-modal');
+        //editUserInoModal.hide();
+        document.getElementById('edit-user-info-modal-close-button').click();
         await LoadUserInfo();
         UserInfoUpdated();
     }
@@ -150,15 +154,17 @@ async function EditUserInfoSubmit(formId) {
 async function ChangeUserPasswordSubmit(formId) {
     var result = await FetchRequestForm(document.getElementById(formId));
     if (result) {
-        const changeUserPasswordModal = new bootstrap.Modal('#change-user-password-modal');
-        changeUserPasswordModal.hide();
+        //const changeUserPasswordModal = new bootstrap.Modal('#change-user-password-modal');
+        //changeUserPasswordModal.hide();
+        document.getElementById('change-user-password-modal-close-button').click();
     }
 }
 async function DeleteAccountSubmit(formId) {
     var result = await FetchRequestForm(document.getElementById(formId));
     if (result) {
-        const deleteAccountodal = new bootstrap.Modal('#delete-account-modal');
-        deleteAccountodal.hide();
+        //const deleteAccountodal = new bootstrap.Modal('#delete-account-modal');
+        //deleteAccountodal.hide();
+        document.getElementById('delete-account-modal-close-button').click();
     }
 }
 
@@ -188,7 +194,9 @@ function UserInfoUpdated() {
 async function SubscribeUserNewsLetterSubmit(formId) {
     var result = await FetchRequestForm(document.getElementById(formId));
     if (result) {
-        const subscribeUserNewsLetterModal = new bootstrap.Modal('#subscribe-user-newsLetter-modal');
-        subscribeUserNewsLetterModal.hide();
+        //const subscribeUserNewsLetterModal = new bootstrap.Modal('#subscribe-user-newsLetter-modal');
+        //subscribeUserNewsLetterModal.hide();
+        document.getElementById('subscribe-user-newsLetter-modal-close-button').click();
+
     }
 }

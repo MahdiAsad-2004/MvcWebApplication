@@ -5,9 +5,9 @@
 @model UpdateUserDto
 
 @{
-    float registerYears = (float)((Model.RegisterDate - PersianDateTime.Now).TotalDays) / 360f;
-    float registerMonths = ((float)((Model.RegisterDate - PersianDateTime.Now).TotalDays) % 360f) / 30f;
-    float registerDays = ((float)((Model.RegisterDate - PersianDateTime.Now).TotalDays) % 30f);
+    int registerYears = (int)(Model.RegisterDate_readonly - PersianDateTime.Now).TotalDays / 360;
+    int registerMonths = ((int)(Model.RegisterDate_readonly - PersianDateTime.Now).TotalDays % 360) / 30;
+    int registerDays = (int)(Model.RegisterDate_readonly - PersianDateTime.Now).TotalDays % 30;
 }
 
 <span hidden id="profile-user-updated-name">@Model.Name</span>
@@ -32,7 +32,7 @@
                 <h3>@Model.Name</h3>
             </div>
 
-            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#editProfile">اطلاعات ویرایش</a>
+            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#edit-user-info-modal">ویرایش اطلاعات </a>
         </div>
 
         <div class="location-profile">
@@ -59,9 +59,13 @@
                         {
                             <h6>میزان فعالیت : @($"{registerYears} سال") </h6>
                         }
-                        @if (registerYears < 1 && registerMonths < 1)
+                        @if (registerYears < 1 && registerMonths < 1 && registerDays > 0)
                         {
                             <h6>میزان فعالیت : @($"{registerDays} روز") </h6>
+                        }
+                        @if (registerYears < 1 && registerMonths < 1 && registerDays < 1)
+                        {
+                            <h6>میزان فعالیت : @($"1 روز") </h6>
                         }
 
                     </div>
@@ -134,13 +138,13 @@
                                 <td>شماره همراه :</td>
                                 <td>
                                     <a href="javascript:void(0)">
-                                        @Model.PhoneNumber
+                                        @Model.PhoneNumber_readonly
                                     </a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>ایمیل :</td>
-                                @if (Model.IsEmailVerified)
+                                @if (Model.IsEmailVerified_readonly)
                                 {
                                     <td>
                                         <a href="javascript:void(0)">
@@ -163,9 +167,9 @@
                                 <td>
                                     <a href="javascript:void(0)">
 
-                                        @("●".PadRight(6))
+                                        ●●●●●●
 
-                                        <span data-bs-toggle="modal" data-bs-target="#editProfile">ویرایش رمز عبور</span>
+                                        <span data-bs-toggle="modal" data-bs-target="#change-user-password-modal">ویرایش رمز عبور</span>
                                     </a>
                                 </td>
                             </tr>

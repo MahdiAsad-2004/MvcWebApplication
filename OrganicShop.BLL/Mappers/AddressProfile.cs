@@ -21,6 +21,9 @@ namespace OrganicShop.BLL.Mappers
             CreateMap<UpdateAddressDto,Address>();
         
 
+            CreateMap<Address,UpdateAddressDto>();
+
+
             CreateMap<Address,OrderAddress>();
 
         }

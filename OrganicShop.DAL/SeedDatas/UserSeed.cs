@@ -2,13 +2,33 @@
 using MD.PersianDateTime;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Entities.Base;
+using OrganicShop.Domain.Entities.ComplexTypes;
 using OrganicShop.Domain.Entities.Relations;
 using OrganicShop.Domain.Enums;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace OrganicShop.DAL.SeedDatas
 {
     public static class UserSeed
     {
+        private static byte[] GetHash(this string inputString)
+        {
+            using (HashAlgorithm algorithm = SHA256.Create())
+                return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
+        }
+        public static string HasPassword(string inputString)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in GetHash(inputString))
+                sb.Append(b.ToString("X2"));
+
+            return sb.ToString();
+        }
+
+
+
+
         public static string GeneratePhoneNumber()
         {
             return $"09{Random.Shared.Next(10, 40)}{Random.Shared.Next(100, 999)}{Random.Shared.Next(Random.Shared.Next(1000, 9999))}";
@@ -36,7 +56,7 @@ namespace OrganicShop.DAL.SeedDatas
         {
             List<WishItem> wishItems = new();
             HashSet<int> productIds = new HashSet<int>();
-            for (int i = 1; i < Random.Shared.Next(1, 6); i++)
+            for (int i = 1; i < Random.Shared.Next(1, 8); i++)
             {
                 productIds.Add(Random.Shared.Next(1, ProductSeed.Products.Count + 1));
             }
@@ -237,7 +257,7 @@ namespace OrganicShop.DAL.SeedDatas
                     BaseEntity = new BaseEntity(true),
                     Cvv2 = Random.Shared.Next(100, 10_000).ToString(),
                     ExpireDate = PersianDateTime.Now.AddMonths(Random.Shared.Next(1, 30)).ToString("yy/mm"),
-                    Number = $"{Random.Shared.Next(5000, 7000)}-{Random.Shared.Next(1000, 10_000)}-{Random.Shared.Next(1000, 10_000)}-{Random.Shared.Next(1000, 10_000)}",
+                    Number = $"{Random.Shared.Next(5000, 7000)}{Random.Shared.Next(1000, 10_000)}{Random.Shared.Next(1000, 10_000)}{Random.Shared.Next(1000, 10_000)}",
                     OwnerName = "",
                 }
             },
@@ -249,7 +269,12 @@ namespace OrganicShop.DAL.SeedDatas
             //    SizeMB
             //},
             WishItems = GenerateWishItems(),
-
+            Privacy = new UserPrivacy
+            {
+                DeleteAccountAfterLogOut = false,
+                IsEmailVisible = Random.Shared.Next(1, 3) == 1,
+                IsProfileImageVisible = Random.Shared.Next(1, 3) == 1,
+            },
         };
 
 
@@ -282,7 +307,7 @@ namespace OrganicShop.DAL.SeedDatas
                 {
                     Name = $"{userFirstName} {userLastName}",
                     Email = $"{userPassword}@organicshop.ir",
-                    Password = userPassword,
+                    Password = UserSeed.HasPassword(userPassword),
                     IsEmailVerified = false,
                     PhoneNumber = GeneratePhoneNumber(),
                     Role = Role.Customer,
@@ -291,7 +316,7 @@ namespace OrganicShop.DAL.SeedDatas
                     {
                         new Address
                         {
-                            Title = $"{userLastName} {userFirstName} آدرس",
+                            Title = $"آدرس پیشفرض",
                             BaseEntity = new BaseEntity(GetRandomDateAfter(userCreateDate)),
                             PhoneNumber = GeneratePhoneNumber(),
                             PostCode = Random.Shared.NextInt64(1_000_000_000, 9_999_999_999).ToString(),
@@ -321,6 +346,12 @@ namespace OrganicShop.DAL.SeedDatas
                     },
                     WishItems = GenerateWishItems(),
                     Comments = GenerateComments(userCreateDate),
+                    Privacy = new UserPrivacy
+                    {
+                        DeleteAccountAfterLogOut = false,
+                        IsEmailVisible = Random.Shared.Next(1, 3) == 1,
+                        IsProfileImageVisible = Random.Shared.Next(1, 3) == 1,
+                    },
                 };
 
                 users.Add(user);

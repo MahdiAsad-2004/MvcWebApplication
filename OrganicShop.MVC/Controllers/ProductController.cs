@@ -57,7 +57,7 @@ namespace OrganicShop.Mvc.Controllers
             ViewData["FilterProductDto"] = filter;
             ViewData["PagingDto"] = paging;
             //ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
-            ViewData["UserWishProductIds"] = new long[11] { 1, 3, 6, 9, 12, 15, 18, 21, 24, 28, 30 };
+            ViewData["UserWishProductIds"] = (await _WishItemService.GetUserWishProductIds()).Data;
             paging.LogAsync();
             filter.LogAsync();
 
@@ -78,7 +78,7 @@ namespace OrganicShop.Mvc.Controllers
             ViewData["FilterProductDto"] = filter;
             ViewData["PagingDto"] = paging;
             ViewData["CategoryChilds"] = allCategories.Where(a => a.ParentId == null).ToList();
-            ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
+            ViewData["UserWishProductIds"] = (await _WishItemService.GetUserWishProductIds()).Data;
 
             return View("Index", response.Data);
         }
@@ -101,7 +101,7 @@ namespace OrganicShop.Mvc.Controllers
             ViewData["FilterProductDto"] = filter;
             ViewData["PagingDto"] = paging;
             ViewData["CategoryChilds"] = allCategories.Where(a => a.ParentId == filter.CategoryId).ToList();
-            ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
+            ViewData["UserWishProductIds"] = (await _WishItemService.GetUserWishProductIds()).Data;
             ViewBag.CategoryTitle = categoryTitle;
 
             return View("Index", response.Data);
@@ -142,7 +142,7 @@ namespace OrganicShop.Mvc.Controllers
 
                 ViewData["SimilarProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { CategoryId = response.Data.CategoryId })).Data!.List ?? new List<ProductSummaryDto>(); ;
                 //ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
-                ViewData["UserWishProductIds"] = new long[11] { 1, 3, 6, 9, 12, 15, 18, 21, 24, 28, 30 };
+                ViewData["UserWishProductIds"] = (await _WishItemService.GetUserWishProductIds()).Data;
                 return View("Product", response.Data);
             }
 
@@ -182,7 +182,7 @@ namespace OrganicShop.Mvc.Controllers
             var model = (await _ProductService.GetAllSummary
                 (new FilterProductDto { Title = searchText }, new PagingDto { PageItemsCount = 20 })).Data?.List ?? new List<ProductSummaryDto>();
 
-            ViewData["UserWishProductIds"] = await _WishItemService.GetUserWishProductIds();
+            ViewData["UserWishProductIds"] = (await _WishItemService.GetUserWishProductIds()).Data;
             ViewBag.SearchText = searchText;
 
             return View("Search", model);

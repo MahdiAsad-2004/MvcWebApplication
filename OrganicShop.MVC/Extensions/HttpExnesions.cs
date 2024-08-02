@@ -40,9 +40,10 @@ namespace OrganicShop.Mvc.Extensions
         {
             ApplicationUser currentUser = new ApplicationUser()
             {
-                Id = 1,
+                Id = 0,
                 UserName = "NULL",
                 Email = "NULL",
+                PhoneNumber = "NULL",
                 Role = null,
                 PermissionIds = new List<byte> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 },
             };
@@ -55,8 +56,12 @@ namespace OrganicShop.Mvc.Extensions
                         currentUser.Id = long.Parse(User.Claims.First(a => a.Type == ClaimTypes.NameIdentifier).Value);
                         currentUser.UserName = User.Claims.First(a => a.Type == ClaimTypes.Name).Value;
                         currentUser.Email = User.Claims.First(a => a.Type == ClaimTypes.Email).Value;
+                        currentUser.PhoneNumber = User.Claims.First(a => a.Type == ClaimTypes.MobilePhone).Value;
                         currentUser.Role = Enum.Parse<Role>(User.Claims.First(a => a.Type == ClaimTypes.Role).Value);
-                        Console.WriteLine($".......{currentUser.UserName}...........");
+                        //Console.WriteLine($".......{currentUser.Id}...........");
+                        //Console.WriteLine($".......{currentUser.UserName}...........");
+                        //Console.WriteLine($".......{currentUser.Email}...........");
+                        //Console.WriteLine($".......{currentUser.Role}...........");
                     }
                 }
             }

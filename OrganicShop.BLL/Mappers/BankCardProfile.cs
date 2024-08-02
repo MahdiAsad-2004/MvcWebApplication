@@ -17,6 +17,9 @@ namespace OrganicShop.BLL.Mappers
 
             CreateMap<UpdateBankCardDto, BankCard>();
 
+
+            CreateMap<BankCard,UpdateBankCardDto>();
+
         }
 
 

@@ -124,9 +124,9 @@
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="pills-setting-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-privacy" type="button" role="tab">
+                                    data-bs-target="#pills-setting" type="button" role="tab">
                                 <i data-feather="shield"></i>
-                                حریم خصوصی
+                                تنظیمات
                             </button>
                         </li>
                     </ul>
@@ -147,13 +147,13 @@
                                     <h2>داشبورد من</h2>
                                     <span class="title-leaf">
                                         <svg class="icon-width bg-gray">
-                                            <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
+                                            <use xlink:href="~/site/assets/svg/leaf.svg#leaf"></use>
                                         </svg>
                                     </span>
                                 </div>
 
                                 <div class="dashboard-user-name">
-                                    <h6 class="text-content">سلام, <b class="text-title profile-user-name">زینب احمدی</b></h6>
+                                    <h6 class="text-content">سلام, <b class="text-title profile-user-name">@Model.UpdateUser.Name</b></h6>
                                     <p class="text-content">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.</p>
                                 </div>
 
@@ -161,9 +161,9 @@
                                     <div class="row g-sm-4 g-3">
                                         <div class="col-xxl-4 col-lg-6 col-md-4 col-sm-6">
                                             <div class="total-contain">
-                                                <img src="../assets/images/svg/order.svg"
+                                                <img src="~/site/assets/images/svg/order.svg"
                                                      class="img-1 blur-up lazyload" alt="">
-                                                <img src="../assets/images/svg/order.svg" class="blur-up lazyload"
+                                                <img src="~/site/assets/images/svg/order.svg" class="blur-up lazyload"
                                                      alt="">
                                                 <div class="totle-detail">
                                                     <h5>مجموع سفارشات</h5>
@@ -174,9 +174,9 @@
 
                                         <div class="col-xxl-4 col-lg-6 col-md-4 col-sm-6">
                                             <div class="total-contain">
-                                                <img src="../assets/images/svg/pending.svg"
+                                                <img src="~/site/assets/images/svg/pending.svg"
                                                      class="img-1 blur-up lazyload" alt="">
-                                                <img src="../assets/images/svg/pending.svg" class="blur-up lazyload"
+                                                <img src="~/site/assets/images/svg/pending.svg" class="blur-up lazyload"
                                                      alt="">
                                                 <div class="totle-detail">
                                                     <h5>سفارشات در انتظار</h5>
@@ -187,9 +187,9 @@
 
                                         <div class="col-xxl-4 col-lg-6 col-md-4 col-sm-6">
                                             <div class="total-contain">
-                                                <img src="../assets/images/svg/wishlist.svg"
+                                                <img src="~/site/assets/images/svg/wishlist.svg"
                                                      class="img-1 blur-up lazyload" alt="">
-                                                <img src="../assets/images/svg/wishlist.svg"
+                                                <img src="~/site/assets/images/svg/wishlist.svg"
                                                      class="blur-up lazyload" alt="">
                                                 <div class="totle-detail">
                                                     <h5>مجموع علاقه‌مندی ها</h5>
@@ -207,14 +207,13 @@
                                 <div class="row g-4">
                                     <div class="col-xxl-6">
                                         <div class="dashboard-content-title">
-                                            @* <h4>
-                                            اطلاعات اولیه <a href="javascript:void(0)"
-                                            data-bs-toggle="modal" data-bs-target="#editProfile">ویرایش</a>
-                                            </h4> *@
+                                            <h4>
+                                                اطلاعات اولیه
+                                            </h4>
                                         </div>
                                         <div class="dashboard-detail">
                                             <h6 class="text-content profile-user-name">@Model.UpdateUser.Name</h6>
-                                            <h6 class="text-content">@Model.UpdateUser.PhoneNumber</h6>
+                                            <h6 class="text-content">@Model.UpdateUser.PhoneNumber_readonly</h6>
                                             <h6 class="text-content profile-user-email">@Model.UpdateUser.Email</h6>
                                         </div>
                                     </div>
@@ -250,7 +249,7 @@
                         </div>
 
                         <div class="tab-pane fade" id="pills-order" role="tabpanel">
-                            @await Html.PartialAsync("_Profile-AddressTab", Model.Orders.ToList())
+                            @await Html.PartialAsync("_Profile-OrderTab", Model.Orders.ToList())
                         </div>
 
                         <div class="tab-pane fade" id="pills-address" role="tabpanel">
@@ -282,7 +281,7 @@
 
 <form id="edit-product-wishlist-form" hidden action="/User/EditProductWishList" method="post">
     <input type="number" name="productId" hidden readonly value="0" />
-    <input type="number" name="isDelete" hidden readonly value="false" />
+    <input type="number" name="isDelete" hidden readonly value="true" />
 </form>
 @await Html.PartialAsync("_AddToCartForm", new CreateProductItemDto())
 
@@ -303,15 +302,15 @@
 
 @section Modals {
 
-    <div class="modal fade theme-modal show" id="add-address-modal" tabindex="-1" style="display: block; padding-right: 0px;" aria-modal="true" role="dialog">
+    <div class="modal fade theme-modal" id="add-address-modal" tabindex="-1" style=" padding-right: 0px;" aria-modal="true" role="dialog">
         @await Html.PartialAsync("_AddAddressModal", new CreateAddressDto())
     </div>
 
-    <div class="modal fade theme-modal show" id="edit-address-modal" tabindex="-1" style="display: block; padding-right: 0px;" aria-modal="true" role="dialog">
+    <div class="modal fade theme-modal" id="edit-address-modal" tabindex="-1" style=" padding-right: 0px;" aria-modal="true" role="dialog">
         @await Html.PartialAsync("_EditAddressModal", new UpdateAddressDto())
     </div>
 
-    <div class="modal fade theme-modal remove-profile show" id="delete-address-modal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+    <div class="modal fade theme-modal remove-profile" id="delete-address-modal" tabindex="-1" style="" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header d-block text-center">
@@ -325,30 +324,30 @@
                         <input hidden readonly id="delete-address-id-input" name="Id" value="0" />
                     </form>
                     <div class="remove-box">
-                        <p>آیا از حذف کردن آدرس با عنوان <span id="delete-address-modal-addressTitle"></span> اطمینان دارید ؟</p>
+                        <p>آیا از حذف کردن آدرس با عنوان ' <span id="delete-address-modal-addressTitle"></span> ' اطمینان دارید ؟</p>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">خیر</button>
+                    <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal" id="delete-address-modal-close-button">خیر</button>
                     <button type="button" class="btn theme-bg-color btn-md fw-bold text-light" onclick="DeleteAddressSubmit('delete-address-form')">بله</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade theme-modal show" id="add-bankCard-modal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+    <div class="modal fade theme-modal" id="add-bankCard-modal" tabindex="-1" style="" aria-modal="true" role="dialog">
         @await Html.PartialAsync("_AddBankCardModal", new CreateBankCardDto())
     </div>
 
-    <div class="modal fade theme-modal show" id="edit-bankCard-modal" tabindex="-1" style="display: block; padding-right: 0px;" aria-modal="true" role="dialog">
+    <div class="modal fade theme-modal" id="edit-bankCard-modal" tabindex="-1" style=" padding-right: 0px;" aria-modal="true" role="dialog">
         @await Html.PartialAsync("_EditBankCardModal", new UpdateBankCardDto())
     </div>
 
-    <div class="modal fade theme-modal remove-profile show" id="delete-bankCard-modal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+    <div class="modal fade theme-modal remove-profile" id="delete-bankCard-modal" tabindex="-1" style="" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header d-block text-center">
-                    <h5 class="modal-title w-100" id="exampleModalLabel22">خذف کارت بانکی</h5>
+                    <h5 class="modal-title w-100" id="exampleModalLabel22">حذف کارت بانکی</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
@@ -362,22 +361,22 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">خیر</button>
-                    <button type="button" class="btn theme-bg-color btn-md fw-bold text-light" onclick="DeleteBankCardSubmit('delete-address-form')">بله</button>
+                    <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal" id="delete-bankCard-modal-close-button">خیر</button>
+                    <button type="button" class="btn theme-bg-color btn-md fw-bold text-light" onclick="DeleteBankCardSubmit('delete-bankCard-form')">بله</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade theme-modal show" id="edit-user-info-modal" tabindex="-1" style="display: block; padding-right: 0px;" aria-modal="true" role="dialog">
+    <div class="modal fade theme-modal" id="edit-user-info-modal" tabindex="-1" style=" padding-right: 0px;" aria-modal="true" role="dialog">
         @await Html.PartialAsync("_EditUserInfoModal", Model.UpdateUser)
     </div>
 
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-fullscreen-sm-down" id="change-user-password-modal">
+    <div class="modal fade theme-modal" id="change-user-password-modal" tabindex="-1" style="padding-right: 0px;" aria-modal="true" role="dialog">
         @await Html.PartialAsync("_ChangePasswordModal", new ChangePasswordDto())
     </div>
 
-    <div class="modal fade theme-modal remove-profile show" id="delete-account-modal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+    <div class="modal fade theme-modal remove-profile" id="delete-account-modal" tabindex="-1" style="" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header d-block text-center">
@@ -394,22 +393,24 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">خیر</button>
+                    <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal" id="delete-account-modal-close-button">خیر</button>
                     <button type="button" class="btn theme-bg-color btn-md fw-bold text-light" onclick="DeleteAccountSubmit('delete-account-form')">بله</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade theme-modal show" id="subscribe-user-newsLetter-modal" tabindex="-1" style="display: block; padding-right: 0px;" aria-modal="true" role="dialog">
-        @* 
-        @await Html.PartialAsync("_SubscribeUserToNewsLetter", new CreateNewsLetterMemberDto())
-        *@
+    <div class="modal fade theme-modal" id="subscribe-user-newsLetter-modal" tabindex="-1" style=" padding-right: 0px;" aria-modal="true" role="dialog">
+        @*
+    @await Html.PartialAsync("_SubscribeUserToNewsLetter", new CreateNewsLetterMemberDto())
 
-        <partial name="_SubscribeUserToNewsLetter" model="new CreateNewsLetterMemberDto(){Email = Model.UpdateUser.Email}"
-            view-data="ViewData" view-data-IsEmailVerified="Model.UpdateUser.IsEmailVerified"/>
+    *@
+        <partial name="_SubscribeUserNewsLetter" model="new CreateNewsLetterMemberDto(){Email = Model.UpdateUser.Email}"
+                 view-data="ViewData" view-data-IsEmailVerified="Model.UpdateUser.IsEmailVerified_readonly" />
 
     </div>
+
+
 
 }
 

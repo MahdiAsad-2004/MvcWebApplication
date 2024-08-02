@@ -60,10 +60,10 @@ namespace OrganicShop.Mvc.Controllers
             List<ProductItemListDto> model = new();
             if (User.Identity.IsAuthenticated)
             {
-                var cartId = HttpContext.GetAppUser().CartId;
-                if (cartId > 0)
+                var userId = HttpContext.GetAppUser().Id;
+                if (userId > 0)
                 {
-                    model = (await _ProductItemService.GetAll(new FilterProductItemDto { CartId = cartId }))?.Data ?? new List<ProductItemListDto>();
+                    model = (await _ProductItemService.GetAll(new FilterProductItemDto { UserId = userId }))?.Data ?? new List<ProductItemListDto>();
                 }
             }
             else

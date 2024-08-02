@@ -117,7 +117,7 @@ namespace OrganicShop.BLL.Services
             if (BankCard.UserId != _AppUserProvider.User.Id)
                 return new ServiceResponse<Empty>(ResponseResult.Success, _Message.NoAccess());
 
-            await _BankCardRepository.Update(_Mapper.Map<BankCard>(update), _AppUserProvider.User.Id);
+            await _BankCardRepository.Update(_Mapper.Map(update,BankCard), _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
         }
 

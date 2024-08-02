@@ -1,4 +1,4 @@
-EditProductWishListForm = document.getElementById('edit-product-wishlist-form');
+//EditProductWishListForm = document.getElementById('edit-product-wishlist-form');
 
 var isInWishList = false;
 async function EditProductInWishList1(event, productId) {

@@ -57,9 +57,9 @@ namespace OrganicShop.BLL.Mappers
                 Id = user.Id,
                 Name = user.Name,
 
-                IsEmailVerified = user.IsEmailVerified,
-                PhoneNumber = user.PhoneNumber,
-                RegisterDate = user.BaseEntity.CreateDate.ToPersianDate(),
+               IsEmailVerified_readonly = user.IsEmailVerified,
+                PhoneNumber_readonly = user.PhoneNumber,
+                RegisterDate_readonly = user.BaseEntity.CreateDate.ToPersianDate(),
 
             };
         }

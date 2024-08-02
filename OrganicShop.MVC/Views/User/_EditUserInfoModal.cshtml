@@ -13,7 +13,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <form class="row g-4" id="edit-user-info-form" action="/prodfile/info" method="post" data-container-id="edit-user-info-modal">
+            <form class="row g-4" id="edit-user-info-form" action="/profile/info" method="post" data-container-id="edit-user-info-modal">
                 <input hidden readonly asp-for="Id"/>
 
                 <div class="col-xxl-12 mb-4">
@@ -24,7 +24,7 @@
                     <span asp-validation-for="Name" class="text-dange mt-2"></span>
                 </div>
 
-                @if (Model.IsEmailVerified == false)
+                @if (Model.IsEmailVerified_readonly == false)
                 {
                     <div class="col-xxl-12 mb-4">
                         <div class="form-floating theme-form-floating">
@@ -61,7 +61,7 @@
             </form>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">بستن</button>
+            <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal" id="edit-user-info-modal-close-button">بستن</button>
             <button type="button" class="btn theme-bg-color btn-md fw-bold text-light" onclick="EditUserInfoSubmit('edit-user-info-form')">ذخیره تغییرات</button>
         </div>
     </div>
