@@ -146,9 +146,9 @@
                                 <div class="title">
                                     <h2>داشبورد من</h2>
                                     <span class="title-leaf">
-                                        <svg class="icon-width bg-gray">
+                                        @*<svg class="icon-width bg-gray">
                                             <use xlink:href="~/site/assets/svg/leaf.svg#leaf"></use>
-                                        </svg>
+                                        </svg> *@
                                     </span>
                                 </div>
 
@@ -295,7 +295,10 @@
 <form hidden id="load-bankCard-edit-modal-form" action="/profile/bankCard/0" method="get" data-container-id="edit-bankCard-modal">
 </form>
 
-<form hidden id="load-user-info-tab-form" action="/profile/info" method="get" data-container-id="pills-card">
+<form hidden id="load-user-info-tab-form" action="/profile/info" method="get" data-container-id="pills-info">
+</form>
+
+<form hidden id="load-user-info-edit-modal" action="/profile/user" method="get" data-container-id="edit-user-info-modal">
 </form>
 
 @section Modals {

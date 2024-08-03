@@ -5,6 +5,7 @@ using OrganicShop.Domain.Dtos.UserDtos;
 using OrganicShop.BLL.Extensions;
 using DryIoc;
 using OrganicShop.Domain.Entities.ComplexTypes;
+using MD.PersianDateTime;
 
 namespace OrganicShop.BLL.Mappers
 {
@@ -32,7 +33,14 @@ namespace OrganicShop.BLL.Mappers
 
 
             CreateMap<UpdateUserDto, User>()
+                .ForMember(m => m.BirthDate, a => a.MapFrom(b => b.BirthDate != null ? new PersianDateTime(b.BirthDate.Value.Year,b.BirthDate.Value.Month,b.BirthDate.Value.Day).ToDateTime() : default(DateTime?)))
                 .ForMember(m => m.Email, a => a.AddTransform(b => b.ToLower()));
+            
+            
+            CreateMap<User,UpdateUserDto>()
+                .ForMember(m => m.RegisterDate_readonly, a => a.MapFrom(b => b.BaseEntity.CreateDate))
+                .ForMember(m => m.PhoneNumber_readonly, a => a.MapFrom(b => b.PhoneNumber))
+                .ForMember(m => m.IsEmailVerified_readonly, a => a.MapFrom(b => b.IsEmailVerified));
 
 
             CreateMap<UpdateUserPrivacyDto, User>()

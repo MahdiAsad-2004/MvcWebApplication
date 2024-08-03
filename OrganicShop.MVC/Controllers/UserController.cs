@@ -55,7 +55,8 @@ namespace OrganicShop.Mvc.Controllers
         [AuthorizeRole(Role.Customer, Role.Seller, Role.Admin, Role.Manager)]
         public async Task<IActionResult> Profile()
         {
-            var response = await _UserService.GetProfileDto();
+
+            var response = await _UserService.GetProfile();
 
             if (response.Result != ResponseResult.Success)
                 return Redirect("/error/403");
@@ -64,6 +65,7 @@ namespace OrganicShop.Mvc.Controllers
             ViewData["WishProducts"] = (await _ProductService.GetAllSummary(new FilterProductDto { Ids = wishProductIds })).Data?.List;
             ViewData["IsMemberOfNewsLetter"] = await _NewsLetterMemberService.IsMemberOfNewsLetter(AppUser.Id);
 
+            var x = User;
 
             return View(response.Data);
         }
@@ -75,7 +77,7 @@ namespace OrganicShop.Mvc.Controllers
         public async Task<IActionResult> EditProductWishList(long productId, bool isDelete)
         {
             Console.WriteLine($"--------- product id: {productId} ------------ is delete: {isDelete} -----------------");
-            
+
             if (User.Identity.IsAuthenticated == false)
             {
                 return _ClientHandleResult.Redirect(HttpContext, "Login", "Account", false);
@@ -83,7 +85,7 @@ namespace OrganicShop.Mvc.Controllers
             if (isDelete)
             {
                 var response = await _WishItemService.Delete(productId);
-                
+
                 if (response.Result == ResponseResult.Success)
                     return _ClientHandleResult.Empty(HttpContext);
 
@@ -92,7 +94,7 @@ namespace OrganicShop.Mvc.Controllers
             else
             {
                 var response = await _WishItemService.Create(new CreateWishItemDto { ProductId = productId });
-                
+
                 if (response.Result == ResponseResult.Success)
                     return _ClientHandleResult.Empty(HttpContext);
 
@@ -153,12 +155,12 @@ namespace OrganicShop.Mvc.Controllers
             var response = await _UserService.Delete(AppUser.Id);
 
             if (response.Result == ResponseResult.Success)
-                return _ClientHandleResult.RedirectThenToast(HttpContext, TempData ,"/home", new Toast(ToastType.Success, "حساب کاربری شما با موفقیت حذف شد"),true );
+                return _ClientHandleResult.RedirectThenToast(HttpContext, TempData, "/home", new Toast(ToastType.Success, "حساب کاربری شما با موفقیت حذف شد"), true);
 
-            return _ClientHandleResult.Toast(HttpContext , new Toast(ToastType.Error,response.Message) , responseResult:false);
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
         }
 
-        
+
 
         [HttpPost("/profile/subscire-newsLetter")]
         public async Task<IActionResult> SubscribeNewsLetter(CreateNewsLetterMemberDto createNewsLetter)
@@ -171,13 +173,13 @@ namespace OrganicShop.Mvc.Controllers
             if (response.Result == ResponseResult.Success)
                 return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, "عضویت شما در خبرنامه با موفقیت انجام شد"));
 
-            if(response.Result == ResponseResult.ValidationError)
+            if (response.Result == ResponseResult.ValidationError)
             {
-                AddErrorsToModelState(ModelState , response.ValidationFailures);
+                AddErrorsToModelState(ModelState, response.ValidationFailures);
                 return _ClientHandleResult.Partial(HttpContext, PartialView("_SubscribeUserNewsLetter", createNewsLetter), responseResult: false);
             }
 
-            return _ClientHandleResult.Toast(HttpContext , new Toast(ToastType.Error,response.Message) , responseResult:false);
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
         }
 
 
@@ -192,13 +194,18 @@ namespace OrganicShop.Mvc.Controllers
 
 
         [HttpGet("/profile/info")]
-        public async Task<IActionResult> UserInfo()
+        public async Task<IActionResult> UserInfoTab()
         {
-            var model = (await _UserService.GetUpdateDto(AppUser.Id)).Data;
+            var model = (await _UserService.GetUpdate(AppUser.Id)).Data;
             return _ClientHandleResult.Partial(HttpContext, PartialView("_Profile-InfoTab", model));
         }
 
-
+        [HttpGet("/profile/user")]
+        public async Task<IActionResult> UserUpdateModal()
+        {
+            var model = (await _UserService.GetUpdate(AppUser.Id)).Data;
+            return _ClientHandleResult.Partial(HttpContext, PartialView("_EditUserInfoModal", model));
+        }
 
         [HttpPost("/profile/info")]
         public async Task<IActionResult> UpdateUser(UpdateUserDto updateUser)
@@ -209,8 +216,6 @@ namespace OrganicShop.Mvc.Controllers
 
             updateUser.LogAsync();
 
-            return Empty;
-
             var response = await _UserService.Update(updateUser);
 
             if (response.Result == ResponseResult.Success)
@@ -218,17 +223,17 @@ namespace OrganicShop.Mvc.Controllers
                 #region edit user identity
 
 
-                var claims = new List<Claim>
-                {
-                    new(ClaimTypes.NameIdentifier,updateUser.Id.ToString()),
-                    new(ClaimTypes.Name,updateUser.Name),
-                    new(ClaimTypes.MobilePhone,updateUser.PhoneNumber_readonly),
-                    //new(ClaimTypes.Role , updateUser.rol.ToString()),
-                    new(ClaimTypes.Email , updateUser.Email),
-                };
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-                User.AddIdentity(identity);
+                //var claims = new List<Claim>
+                //{
+                //    new(ClaimTypes.NameIdentifier,updateUser.Id.ToString()),
+                //    new(ClaimTypes.Name,updateUser.Name),
+                //    new(ClaimTypes.MobilePhone,AppUser.PhoneNumber),
+                //    //new(ClaimTypes.Role , updateUser.rol.ToString()),
+                //    new(ClaimTypes.Email , updateUser.Email),
+                //};
+                //var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                //var principal = new ClaimsPrincipal(identity);
+                //User.AddIdentity(identity);
 
 
                 #endregion

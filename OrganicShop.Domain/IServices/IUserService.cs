@@ -13,9 +13,9 @@ namespace OrganicShop.Domain.IServices
         
         Task<UserListDto> Get(long id);
 
-        Task<ServiceResponse<UpdateUserDto>> GetUpdateDto(long Id);
+        Task<ServiceResponse<UpdateUserDto>> GetUpdate(long Id);
 
-        Task<ServiceResponse<UserProfileDto>> GetProfileDto();
+        Task<ServiceResponse<UserProfileDto>> GetProfile();
 
         Task<ServiceResponse<long>> Create(CreateUserDto create);
 

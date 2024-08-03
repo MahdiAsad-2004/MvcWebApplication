@@ -1,6 +1,7 @@
 ﻿using MD.PersianDateTime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using OrganicShop.DAL.SeedDatas;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Entities.Base;
 using OrganicShop.Domain.Entities.ComplexTypes;
@@ -43,7 +44,7 @@ namespace OrganicShop.DAL.Configurations
                 {
                     Id = 1,
                     Name = "Mahdi Asadi",
-                    Password = "123456",
+                    Password = UserSeed.HasPassword("123456"),
                     PhoneNumber = "09369753041",
                     Email = "mas1379as@gmail.com",
                     Role = Role.Manager,
@@ -54,7 +55,7 @@ namespace OrganicShop.DAL.Configurations
                 {
                     Id = 2,
                     Name = "AmirAli",
-                    Password = "1234",
+                    Password = UserSeed.HasPassword("123456"),
                     PhoneNumber = "09331234566",
                     Email = "TestEmail@gmail.com",
                     Role = Role.Admin,

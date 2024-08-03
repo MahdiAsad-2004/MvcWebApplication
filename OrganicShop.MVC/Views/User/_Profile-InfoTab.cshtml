@@ -1,13 +1,14 @@
 ﻿@using MD.PersianDateTime
+@using OrganicShop.BLL.Extensions
 @using OrganicShop.Domain.Dtos.UserDtos
 @using OrganicShop.Domain.Enums
 @using OrganicShop.Domain.Enums.EnumValues
 @model UpdateUserDto
 
 @{
-    int registerYears = (int)(Model.RegisterDate_readonly - PersianDateTime.Now).TotalDays / 360;
-    int registerMonths = ((int)(Model.RegisterDate_readonly - PersianDateTime.Now).TotalDays % 360) / 30;
-    int registerDays = (int)(Model.RegisterDate_readonly - PersianDateTime.Now).TotalDays % 30;
+    int registerYears = (int)(PersianDateTime.Now - Model.RegisterDate_readonly).TotalDays / 360;
+    int registerMonths = ((int)(PersianDateTime.Now - Model.RegisterDate_readonly).TotalDays % 360) / 30;
+    int registerDays = (int)(PersianDateTime.Now - Model.RegisterDate_readonly).TotalDays % 30;
 }
 
 <span hidden id="profile-user-updated-name">@Model.Name</span>
@@ -17,9 +18,12 @@
     <div class="title">
         <h2>پروفایل من</h2>
         <span class="title-leaf">
+            @*
             <svg class="icon-width bg-gray">
-                <use xlink:href="~/site/assets/svg/leaf.svg#leaf"></use>
+            <use xlink:href="~/site/assets/svg/leaf.svg#leaf"></use>
+            <use xlink:href="~/site/assets/svg/leaf.svg"></use>
             </svg>
+            *@
         </span>
     </div>
 
@@ -32,7 +36,7 @@
                 <h3>@Model.Name</h3>
             </div>
 
-            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#edit-user-info-modal">ویرایش اطلاعات </a>
+            <a href="javascript:void(0)" onclick="OpenEditUserInfoModal()">ویرایش اطلاعات </a>
         </div>
 
         <div class="location-profile">
@@ -99,7 +103,7 @@
                                 <td>تاریخ تولد :</td>
                                 @if (Model.BirthDate != null)
                                 {
-                                    <td>@Model.BirthDate.Value.ToShortDateString()</td>
+                                    <td>@Model.BirthDate.Value.ToPersianDate().ToShortDateString()</td>
                                 }
                                 else
                                 {

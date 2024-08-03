@@ -98,7 +98,7 @@ namespace OrganicShop.BLL.Services
         }
 
 
-        public async Task<ServiceResponse<UpdateUserDto>> GetUpdateDto(long Id)
+        public async Task<ServiceResponse<UpdateUserDto>> GetUpdate(long Id)
         {
             var user = await _userRepository.GetQueryable()
                 .FirstOrDefaultAsync(a => a.Id == Id);
@@ -110,7 +110,7 @@ namespace OrganicShop.BLL.Services
         }
 
 
-        public async Task<ServiceResponse<UserProfileDto>> GetProfileDto()
+        public async Task<ServiceResponse<UserProfileDto>> GetProfile()
         {
             var user = await _userRepository.GetQueryable()
                 .Include(a => a.Addresses)
@@ -179,6 +179,9 @@ namespace OrganicShop.BLL.Services
             //    else
             //        user.Picture = await update.ProfileImage.SavePictureAsync(PathKey.UserImages, PictureType.User);
             //}
+
+            var x = _Mapper.Map(update, user);
+
             await _userRepository.Update(_Mapper.Map(update,user), _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
         }
@@ -218,14 +221,14 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> ChangePassword(ChangePasswordDto changePassword)
         {
-            if (changePassword.UserId != _AppUserProvider.User.Id)
-                return new ServiceResponse<Empty>(ResponseResult.NoAccess);
+            //if (changePassword.UserId != _AppUserProvider.User.Id)
+            //    return new ServiceResponse<Empty>(ResponseResult.NoAccess);
 
             var validationResult = await _ValidatorChangePassword.ValidateAsync(changePassword);
             if (!validationResult.IsValid)
                 return new ServiceResponse<Empty>(changePassword, validationResult);
 
-            User? user = await _userRepository.GetAsNoTracking(changePassword.UserId);
+            User? user = await _userRepository.GetAsTracking(changePassword.UserId);
 
             if (user == null)
                 return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
@@ -233,7 +236,6 @@ namespace OrganicShop.BLL.Services
             if (user.Password != changePassword.Password.ToSha256String())
                 return new ServiceResponse<Empty>(ResponseResult.Failed, "رمز عبور نادرست است");
 
-            user = await _userRepository.GetAsTracking(changePassword.UserId);
             user!.Password = changePassword.NewPassword.ToSha256String();
             await _userRepository.Update(user, _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, "رمز عبور با موفقیت تغییر یافت");

@@ -134,15 +134,37 @@ async function OpenEditBankCardModal(id) {
 }
 
 
+//async function Load() {
+//    return new Promise(async (resolve) => {
+
+//        setTimeout(async () => {
+
+//            console.log('load');
+
+//            await FetchRequestFormWithId('load-user-info-tab-form');
+
+//            resolve();
+
+//        }, 4000);
+
+//    })
+//}
+async function OpenEditUserInfoModal() {
+    if (await FetchRequestFormWithId('load-user-info-edit-modal')) {
+        const editBankCardModal = new bootstrap.Modal('#edit-user-info-modal');
+        editBankCardModal.toggle();
+    }
+}
 
 async function LoadUserInfo() {
-    await FetchRequestFormWithId('load-user-info-tab-form');
+    return new Promise(async (resolve, reject) => {
+        await FetchRequestFormWithId('load-user-info-tab-form');
+        resolve();
+    });
 }
 async function EditUserInfoSubmit(formId) {
     var result = await FetchRequestForm(document.getElementById(formId));
     if (result) {
-        //const editUserInoModal = new bootstrap.Modal('#edit-user-info-modal');
-        //editUserInoModal.hide();
         document.getElementById('edit-user-info-modal-close-button').click();
         await LoadUserInfo();
         UserInfoUpdated();
@@ -175,17 +197,17 @@ async function DeleteAccountSubmit(formId) {
 
 
 function UserInfoUpdated() {
-    const userName = document.getElementById('profile-user-updated-name').innerText;
-    const userEmail = document.getElementById('profile-user-updated-email').innerText;    
+    const userName = document.getElementById('profile-user-updated-name').innerHTML;
+    const userEmail = document.getElementById('profile-user-updated-email').innerHTML;
 
-    console.log(`profile-user-updated-name: ${userName}`);
-    console.log(`profile-user-updated-email: ${userEmail}`);
+    //console.log(`profile-user-updated-name: ${userName}`);
+    //console.log(`profile-user-updated-email: ${userEmail}`);
 
     for (var userNameElem of document.querySelectorAll('.profile-user-name')) {
-        userNameElem.innerText = userName;
+        userNameElem.innerHTML = userName;
     }
     for (var userEmailElem of document.querySelectorAll('.profile-user-email')) {
-        userEmailElem.innerText = userEmail;
+        userEmailElem.innerHTML = userEmail;
     }
 }
 

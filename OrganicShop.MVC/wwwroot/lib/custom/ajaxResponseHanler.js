@@ -63,130 +63,158 @@ let MessageString = null;
 async function HandleFetchResponse(response, form) {
     let ResponseResult = true;
 
-    if (response.status < 400) {
-        ResponseDataType = response.headers.get('ResponseDataType');
-        ResponseResult = response.headers.get('ResponseResult') == 'True';
-        //console.log(`Response Result : ${ResponseResult}`);
-        //console.log(response.headers.get('ResponseResult'));
-        if (ResponseDataType == 'partial') {
-            await Partial(response, form);
-        }
-        else if (ResponseDataType == 'partial-toast') {
-            await PartialThenToast(response, form);
-        }
-        else if (ResponseDataType == 'redirect-toast') {
-            await RedirectThenToast(response);
-        }
-        else if (ResponseDataType == 'toast-redirect') {
-            await ToastThenRedirect(response);
-        }
-        else if (ResponseDataType == 'toast-refresh') {
-            await ToastThenRefresh(response);
-        }
-        else if (ResponseDataType == 'toast') {
-            await response.json().then(a => { HandleMessage(a) });
-        }
-        else if (ResponseDataType == 'json') {
-            await response.json().then(a => { console.log(a); });
-        }
-        else if (ResponseDataType == 'redirect') {
-            await RedirectThenToast(response);
-        }
-        else if (ResponseDataType == 'empty') {
-            // nothing to do
-        }
-        return ResponseResult;
-    }
-    else {
-        if (response.status == 500) {
-            Toast('Warning', 'Internal Server error', 2, 5000);
-        }
-        else if (response.status == 400) {
-            Toast('Warning', 'Bad Request', 2, 5000);
-        }
-        else if (response.status == 401) {
-            Toast('Warning', 'Unauthorized', 2, 5000);
-        }
-        else if (response.status == 403) {
-            Toast('Warning', 'Forbidden', 2, 5000);
-        }
-        else if (response.status == 404) {
-            Toast('Warning', 'Not Found', 2, 5000);
-        }
-        else if (response.status == 405) {
-            Toast('Warning', 'Not Allowed', 2, 5000);
-        }
-        else if (response.status == 503) {
-            Toast('Warning', 'Service Unavailable', 2, 5000);
-        }
-        console.log(response);
-        return false;
-    }
+    return new Promise(async (resolve, reject) => {
 
+        if (response.status < 400) {
+            ResponseDataType = response.headers.get('ResponseDataType');
+            ResponseResult = response.headers.get('ResponseResult') == 'True';
+            //console.log(`Response Result : ${ResponseResult}`);
+            //console.log(response.headers.get('ResponseResult'));
+            if (ResponseDataType == 'partial') {
+                await Partial(response, form);
+            }
+            else if (ResponseDataType == 'partial-toast') {
+                await PartialThenToast(response, form);
+            }
+            else if (ResponseDataType == 'redirect-toast') {
+                await RedirectThenToast(response);
+            }
+            else if (ResponseDataType == 'toast-redirect') {
+                await ToastThenRedirect(response);
+            }
+            else if (ResponseDataType == 'toast-refresh') {
+                await ToastThenRefresh(response);
+            }
+            else if (ResponseDataType == 'toast') {
+                await response.json().then(a => { HandleMessage(a) });
+            }
+            else if (ResponseDataType == 'json') {
+                await response.json().then(a => { console.log(a); });
+            }
+            else if (ResponseDataType == 'redirect') {
+                await RedirectThenToast(response);
+            }
+            else if (ResponseDataType == 'empty') {
+                // nothing to do
+            }
+
+            resolve(ResponseResult);
+            //return ResponseResult;
+        }
+        else {
+            if (response.status == 500) {
+                Toast('Warning', 'Internal Server error', 2, 5000);
+            }
+            else if (response.status == 400) {
+                Toast('Warning', 'Bad Request', 2, 5000);
+            }
+            else if (response.status == 401) {
+                Toast('Warning', 'Unauthorized', 2, 5000);
+            }
+            else if (response.status == 403) {
+                Toast('Warning', 'Forbidden', 2, 5000);
+            }
+            else if (response.status == 404) {
+                Toast('Warning', 'Not Found', 2, 5000);
+            }
+            else if (response.status == 405) {
+                Toast('Warning', 'Not Allowed', 2, 5000);
+            }
+            else if (response.status == 503) {
+                Toast('Warning', 'Service Unavailable', 2, 5000);
+            }
+            //console.log(response);
+            resolve(false);
+            //return false;
+        }
+    });
 }
 
 
 
 
 async function Partial(response, form) {
-    ContainerElementId = form.getAttribute('data-container-id');
-    TargetElementId = form.getAttribute('data-target-id');
-    response.text().then(partial => {
-        if (TargetElementId) {
-            //console.log(document.getElementById(TargetElementId));
-            //console.log(partial);
-
-            const deleteElement = document.getElementById(TargetElementId);
-            deleteElement.insertAdjacentHTML('afterend', partial);
-            deleteElement.remove();
-            //document.getElementById(TargetElementId).insertAdjacentElement('beforeend', document.createElement('h6'));
+    return new Promise((reslove) => {
 
 
-            //console.log(document.getElementById(TargetElementId));
+        ContainerElementId = form.getAttribute('data-container-id');
+        TargetElementId = form.getAttribute('data-target-id');
+        response.text().then(partial => {
+            if (TargetElementId) {
+                //console.log(document.getElementById(TargetElementId));
+                //console.log(partial);
 
-            //var template = document.createElement('div');
-            //template.append(partial);
-            //console.log(template);
-            //console.log(template.firstChild);
-            //console.log(String.toString(partial));
-            //document.getElementById(TargetElementId).replaceWith(document.createElement('h6'));
+                const deleteElement = document.getElementById(TargetElementId);
+                deleteElement.insertAdjacentHTML('afterend', partial);
+                deleteElement.remove();
+                //document.getElementById(TargetElementId).insertAdjacentElement('beforeend', document.createElement('h6'));
 
 
-            //document.getElementById(TargetElementId).remove();
-        }
-        else if (ContainerElementId) {
-            document.getElementById(ContainerElementId).innerHTML = partial;
-        }
-        else {
-            ViewContainer.innerHTML = partial;
-        }
-        
-    });
+                //console.log(document.getElementById(TargetElementId));
+
+                //var template = document.createElement('div');
+                //template.append(partial);
+                //console.log(template);
+                //console.log(template.firstChild);
+                //console.log(String.toString(partial));
+                //document.getElementById(TargetElementId).replaceWith(document.createElement('h6'));
+
+
+                //document.getElementById(TargetElementId).remove();
+            }
+            else if (ContainerElementId) {
+                document.getElementById(ContainerElementId).innerHTML = partial;
+            }
+            else {
+                ViewContainer.innerHTML = partial;
+            }
+
+        });
+
+
+        setTimeout(() => {
+
+            reslove();
+
+        }, 100)
+
+    })
 
 }
 
 function PartialThenToast(response, form) {
-    ContainerElementId = form.getAttribute('data-container-id');
-    TargetElementId = form.getAttribute('data-target-id');
-    MessageString = response.headers.get("Message");
-    Message = JSON.parse(MessageString);
-    response.text().then(partial => {
 
-        if (TargetElementId) {
-            console.log(document.getElementById(TargetElementId));
-            document.getElementById(TargetElementId).insertAdjacentHTML('beforebegin', partial);
-            document.getElementById(TargetElementId).remove();
-        }
-        else if (ContainerElementId) {
-            document.getElementById(ContainerElementId).innerHTML =partial;
-        }
-        else {
-            ViewContainer.innerHTML = partial;
+    return new Promise((resolve) => {
 
-        }
-    });
+        ContainerElementId = form.getAttribute('data-container-id');
+        TargetElementId = form.getAttribute('data-target-id');
+        MessageString = response.headers.get("Message");
+        Message = JSON.parse(MessageString);
+        response.text().then(partial => {
 
-    HandleMessage(Message);
+            if (TargetElementId) {
+                console.log(document.getElementById(TargetElementId));
+                document.getElementById(TargetElementId).insertAdjacentHTML('beforebegin', partial);
+                document.getElementById(TargetElementId).remove();
+            }
+            else if (ContainerElementId) {
+                document.getElementById(ContainerElementId).innerHTML = partial;
+            }
+            else {
+                ViewContainer.innerHTML = partial;
+
+            }
+        });
+
+        HandleMessage(Message);
+
+        setTimeout(() => {
+
+            reslove();
+
+        }, 100)
+
+    })
 }
 
 function ToastThenRedirect(response) {

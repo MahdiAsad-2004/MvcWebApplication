@@ -9,7 +9,7 @@ namespace OrganicShop.Domain.Dtos.UserDtos
     {
         public string Name { get; set; }
         public Gender? Gender { get; set; }
-        public PersianDateTime? BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
         public string Email { get; set; }
 
 

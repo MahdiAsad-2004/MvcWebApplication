@@ -51,8 +51,17 @@
 
                 <div class="col-xxl-6 mb-4">
                     <div class="form-floating theme-form-floating">
-                        <input type="text" class="form-control" asp-for="BirthDate">
-                        <label asp-for="BirthDate"></label>
+                        @if(Model.BirthDate != null)
+                        {
+                            <input type="text" class="form-control" asp-for="BirthDate" value="@Model.BirthDate.Value.ToPersianDate().ToShortDateString()">
+                            <label asp-for="BirthDate"></label>
+                        }
+                        else
+                        {
+                            <input type="text" class="form-control" asp-for="BirthDate" >
+                            <label asp-for="BirthDate"></label>
+                        }
+                  
                     </div>
                     <span asp-validation-for="BirthDate" class="text-dange mt-2"></span>
                 </div>

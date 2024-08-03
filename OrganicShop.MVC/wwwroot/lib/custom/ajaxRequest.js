@@ -38,16 +38,35 @@ let loadingSvg = document.getElementById('loading-svg');
 
 
 function ShowLoading() {
-    loadingBackground.style.height = '' + document.body.clientHeight + 'px';
-    loadingBackground.style.display = 'block';
-    loadingSvg.style.display = 'block';
-    console.log('show');
+
+    return new Promise((resolve, reject) => {
+
+        loadingBackground.style.height = '' + document.body.clientHeight + 'px';
+        loadingBackground.style.display = 'block';
+        loadingSvg.style.display = 'block';
+
+        //console.log('show');
+
+        resolve();
+
+    });
+
+
 }
 
 function HideLoading() {
-    loadingBackground.style.display = 'none';
-    loadingSvg.style.display = 'none';
-    console.log('hide');
+
+    return new Promise((resolve, reject) => {
+
+        loadingBackground.style.display = 'none';
+        loadingSvg.style.display = 'none';
+
+        //console.log('hide');
+
+        resolve();
+
+    });
+
 }
 
 //let myPromise = new Promise(ShowLoading);
@@ -170,34 +189,44 @@ async function FetchRequest(e) {
 let RequestResult = false;
 async function FetchRequestForm(form) {
     RequestResult = false;
-    form.onsubmit = () => false;
-    form.requestSubmit();
-    //console.log(form);
-    //console.log(new FormData(form));
-    CkEditorElement = form.querySelector('#ckeditor');
-    console.log(`Is Form Valid: ${$(form).valid()}`)
-    if ($(form).valid()) {
-        ShowLoading();
-        try {
-            formData = new FormData(form);
-            if (CkEditorElement) {
-                formData.set(CkEditorElement.name, `${CkEditor.getData()}`);
+
+    return new Promise(async (resolve, reject) => {
+
+        form.onsubmit = () => false;
+        form.requestSubmit();
+        //console.log(form);
+        //console.log(new FormData(form));
+        CkEditorElement = form.querySelector('#ckeditor');
+        console.log(`Is Form Valid: ${$(form).valid()}`)
+        if ($(form).valid()) {
+            ShowLoading();
+            try {
+                formData = new FormData(form);
+                if (CkEditorElement) {
+                    formData.set(CkEditorElement.name, `${CkEditor.getData()}`);
+                }
+                formMethod = form.getAttribute('method').toLowerCase();
+                fetchResponse = await fetch(form.action, {
+                    method: formMethod,
+                    body: formMethod == 'get' ? null : formData,
+                });
+                RequestResult = await HandleFetchResponse(fetchResponse, form);
+                form.reset();
             }
-            formMethod = form.getAttribute('method').toLowerCase();
-            fetchResponse = await fetch(form.action, {
-                method: formMethod,
-                body: formMethod == 'get' ? null : formData,
-            });
-            RequestResult = await HandleFetchResponse(fetchResponse, form);
-            form.reset();
+            catch (er) {
+                Toast('Warning', 'An error was thrown from client', 2, 5000);
+                console.log(er);
+            }
+            await HideLoading();
         }
-        catch (er) {
-            Toast('Warning', 'An error was thrown from client', 2, 5000);
-            console.log(er);
-        }
-        await HideLoading();
-    }
-    return RequestResult;
+
+        resolve(RequestResult);
+
+        //return RequestResult;
+
+    });
+
+
     //return new Promise((resolve, reject) => {
     //    resolve(RequestResult);
     //});
@@ -206,13 +235,21 @@ async function FetchRequestForm(form) {
 
 
 async function FetchRequestFormWithId(formId) {
-    var form = document.getElementById(formId);
-    if (form) {
-        await FetchRequestForm(form);
-    }
-    else {
-        console.log('FetchRequestFormWithId => form not found');
-    }
+
+    return new Promise(async (reslove, reject) => {
+        var result = false;
+
+        var form = document.getElementById(formId);
+        if (form) {
+            result = await FetchRequestForm(form);
+        }
+        else {
+            console.log('FetchRequestFormWithId => form not found');
+        }
+
+        reslove(result);
+    })
+
 }
 
 

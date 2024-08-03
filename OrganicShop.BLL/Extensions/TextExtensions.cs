@@ -66,6 +66,12 @@ namespace OrganicShop.BLL.Extensions
         {
             return new PersianDateTime(dateTime);
         }
+        
+        public static PersianDateTime NewPersianDate(int year , int month , int day)
+        {
+            return new PersianDateTime(year,month,day);
+        }
+        
         public static PersianDateTime ToPersianDate(this DateTime? dateTime)
         {
             return new PersianDateTime(dateTime);
