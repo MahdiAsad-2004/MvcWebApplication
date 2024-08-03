@@ -106,6 +106,28 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
+        [HttpPost("/profile/image")]
+        public async Task<IActionResult> UpdateProfileImage(IFormFile profileImage)
+        {
+            if (profileImage == null)
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "profile image is null !!"), responseResult: false);
+
+            UpdateProfileImageDto updateProfileImage = new UpdateProfileImageDto
+            {
+                UserId = AppUser.Id,
+                ImageFile = profileImage,
+            };
+
+            var response = await _UserService.UpdateProfileImage(updateProfileImage);
+
+            if (response.Result == ResponseResult.Success)
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, response.Message));
+
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
+        }
+
+
+
 
         [HttpPost("/profile/setting")]
         public async Task<IActionResult> UpdateUserPrivacy(UpdateUserPrivacyDto updateUserPrivacy)
@@ -210,7 +232,6 @@ namespace OrganicShop.Mvc.Controllers
         [HttpPost("/profile/info")]
         public async Task<IActionResult> UpdateUser(UpdateUserDto updateUser)
         {
-
             if (AppUser.Id != updateUser.Id)
                 return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "شما به این بخش دسترسی ندارید "), responseResult: false);
 

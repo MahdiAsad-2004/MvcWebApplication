@@ -52,7 +52,6 @@ namespace OrganicShop.BLL.Extensions
 
         public static async Task<Picture> SavePictureAsync(this IFormFile file,Picture picture,PathKey pathKey)
         {
-
             var fileName = $"{Guid.NewGuid().ToString().Replace("-", "").Substring(1, 16)}{Path.GetExtension(file.FileName)}";
 
             string filePath = Path.Combine(pathKey.GetPath(), fileName);
@@ -131,5 +130,15 @@ namespace OrganicShop.BLL.Extensions
 
 
 
+        public static string GenerateFileName(this IFormFile file)
+        {
+            return $"{Guid.NewGuid().ToString().Replace("-", "").Substring(1, 16)}{Path.GetExtension(file.FileName)}";
+        }
+
+
+        public static float GetSizeMB(this IFormFile file)
+        {
+            return (float)file.Length / 1024 / 1000;
+        }
     }
 }

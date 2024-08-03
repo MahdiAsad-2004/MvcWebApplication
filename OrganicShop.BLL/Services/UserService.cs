@@ -17,6 +17,7 @@ using OrganicShop.Domain.Dtos.TagDtos;
 using OrganicShop.Domain.Dtos.WishItemDtos;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
+using OrganicShop.Domain.Dtos.PictureDtos;
 
 namespace OrganicShop.BLL.Services
 {
@@ -26,18 +27,20 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly IUserRepository _userRepository;
+        private readonly IPictureRepository _PictureRepository;
         private readonly IValidator<CreateUserDto> _ValidatorCreateUser;
         private readonly IValidator<UpdateUserDto> _ValidatorUpdateUser;
         private readonly IValidator<ChangePasswordDto> _ValidatorChangePassword;
         public UserService(IApplicationUserProvider provider, IMapper mapper, IUserRepository userRepository,
             IValidator<CreateUserDto> validator1CreateUser, IValidator<UpdateUserDto> validator1UpdateUser,
-            IValidator<ChangePasswordDto> validatorChangePassword) : base(provider)
+            IValidator<ChangePasswordDto> validatorChangePassword, IPictureRepository pictureRepository) : base(provider)
         {
             _Mapper = mapper;
             _userRepository = userRepository;
             _ValidatorCreateUser = validator1CreateUser;
             _ValidatorUpdateUser = validator1UpdateUser;
             _ValidatorChangePassword = validatorChangePassword;
+            _PictureRepository = pictureRepository;
         }
 
         #endregion
@@ -172,18 +175,30 @@ namespace OrganicShop.BLL.Services
             if (user == null)
                 return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
 
-            //if (update.ProfileImage != null)
-            //{
-            //    if (user.Picture != null)
-            //        user.Picture = await update.ProfileImage.SavePictureAsync(user.Picture, PathKey.UserImages);
-            //    else
-            //        user.Picture = await update.ProfileImage.SavePictureAsync(PathKey.UserImages, PictureType.User);
-            //}
-
             var x = _Mapper.Map(update, user);
 
-            await _userRepository.Update(_Mapper.Map(update,user), _AppUserProvider.User.Id);
+            await _userRepository.Update(_Mapper.Map(update, user), _AppUserProvider.User.Id);
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
+        }
+
+        public async Task<ServiceResponse<Empty>> UpdateProfileImage(UpdateProfileImageDto updateImage)
+        {
+            // validate object
+
+            var oldPicture = await _PictureRepository.GetQueryableTracking()
+                .FirstOrDefaultAsync(a => a.UserId == updateImage.UserId);
+
+            if (oldPicture != null)
+            {
+                oldPicture.UserId = null;
+                await _PictureRepository.Update(oldPicture, _AppUserProvider.User.Id);
+            }
+
+            var newPicture = await updateImage.ImageFile.SavePictureAsync(PathKey.UserImages, PictureType.User);
+            newPicture.UserId = updateImage.UserId;
+            await _PictureRepository.Add(newPicture, _AppUserProvider.User.Id);
+
+            return new ServiceResponse<Empty>(ResponseResult.Success, "تصویر پروفایل شما با موفقیت ویرایش شد");
         }
 
 
@@ -295,7 +310,7 @@ namespace OrganicShop.BLL.Services
                     Role = user.Role,
                     Name = user.Name,
                     PhoneNumber = user.PhoneNumber,
-                    
+
                 });
 
         }

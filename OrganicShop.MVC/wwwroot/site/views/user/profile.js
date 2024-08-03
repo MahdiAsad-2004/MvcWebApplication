@@ -213,9 +213,6 @@ function UserInfoUpdated() {
 
 
 
-
-
-
 async function SubscribeUserNewsLetterSubmit(formId) {
     var result = await FetchRequestForm(document.getElementById(formId));
     if (result) {
@@ -225,3 +222,25 @@ async function SubscribeUserNewsLetterSubmit(formId) {
 
     }
 }
+
+
+
+
+async function EditProfileImage(input) {
+    //window.URL.createObjectURL(uploader.files[0]));
+    let imgUrl = null;
+    const imgFile = input.files[0];
+    const profileImage = document.getElementById('profile-image');
+    if (imgFile) {
+        if (await FetchRequestFormWithId('edit-profile-image-form')) {
+            imgUrl = window.URL.createObjectURL(imgFile);
+            profileImage.src = imgUrl;
+            profileImage.onload = () => {
+                URL.revokeObjectURL(imgUrl);
+            }
+        }
+    }
+}
+
+
+

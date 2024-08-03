@@ -11,8 +11,13 @@ namespace OrganicShop.Domain.Dtos.PictureDtos
 {
     public class UpdatePictureDto : BaseListDto<long>
     {
-        public string Name { get; set; }
-
+        public long? UserId { get; set; }
+        public long? ProductId { get; set; }
+        public int? CategoryId { get; set; }
+        public int? ArticleId { get; set; }
+        public int? SellerId { get; set; }
+        public IFormFile? ImageFIle { get; set; }
+        public bool IsMain { get; set; }
 
 
     }

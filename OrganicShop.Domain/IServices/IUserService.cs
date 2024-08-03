@@ -23,6 +23,8 @@ namespace OrganicShop.Domain.IServices
 
         Task<ServiceResponse<Empty>> UpdatePrivacy(UpdateUserPrivacyDto updatePrivacy);
 
+        Task<ServiceResponse<Empty>> UpdateProfileImage(UpdateProfileImageDto updateImage);
+
         Task<ServiceResponse<Empty>> Delete(long Id);
 
         Task<ServiceResponse<Empty>> ChangePassword(ChangePasswordDto changePassword);

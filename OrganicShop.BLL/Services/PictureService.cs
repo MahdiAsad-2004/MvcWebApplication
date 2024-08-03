@@ -23,7 +23,7 @@ namespace OrganicShop.BLL.Services
         private readonly IPictureRepository _PictureRepository;
 
 
-        public PictureService(IApplicationUserProvider provider,IMapper mapper,IPictureRepository PictureRepository) : base(provider)
+        public PictureService(IApplicationUserProvider provider, IMapper mapper, IPictureRepository PictureRepository) : base(provider)
         {
             _Mapper = mapper;
             _PictureRepository = PictureRepository;
@@ -33,7 +33,7 @@ namespace OrganicShop.BLL.Services
 
 
 
-        public async Task<ServiceResponse<PageDto<Picture, PictureListDto, long>>> GetAll(FilterPictureDto? filter = null ,PagingDto? paging = null)
+        public async Task<ServiceResponse<PageDto<Picture, PictureListDto, long>>> GetAll(FilterPictureDto? filter = null, PagingDto? paging = null)
         {
             var query = _PictureRepository.GetQueryable();
 
@@ -46,7 +46,7 @@ namespace OrganicShop.BLL.Services
             if (filter.Name != null)
                 query = query.Where(q => EF.Functions.Like(q.Name, $"%{filter.Name}%"));
 
-            if(filter.MinSize != null)
+            if (filter.MinSize != null)
                 query = query.Where(a => a.SizeMB >= filter.MinSize);
 
             if (filter.MaxSize != null)
@@ -60,27 +60,17 @@ namespace OrganicShop.BLL.Services
 
             #endregion
 
-            PageDto<Picture, PictureListDto,long> pageDto = new();
+            PageDto<Picture, PictureListDto, long> pageDto = new();
             pageDto.List = pageDto.SetPaging(query, paging).Select(a => _Mapper.Map<PictureListDto>(a)).ToList();
             pageDto.Pager = pageDto.SetPager(query, paging);
 
-            return new ServiceResponse<PageDto<Picture, PictureListDto, long>>(ResponseResult.Success,pageDto);
+            return new ServiceResponse<PageDto<Picture, PictureListDto, long>>(ResponseResult.Success, pageDto);
         }
 
 
 
         public async Task<ServiceResponse<Empty>> Create(CreatePictureDto create)
         {
-            //Picture Picture = create.ToModel();
-
-            //if (await _PictureRepository.GetQueryable().AnyAsync(a => a.Title.Contains(create.Title, StringComparison.OrdinalIgnoreCase)))
-            //    return ResponseResult.EntityExist;
-
-            //await _PictureRepository.Add(Picture, _AppUserProvider.User.Id);
-            //return ResponseResult.success;
-
-
-
 
             throw new NotImplementedException();
         }
@@ -89,21 +79,27 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<Empty>> Update(UpdatePictureDto update)
         {
-            //Picture? Picture = await _PictureRepository.GetAsTracking(update.Id);
+            // validate object
 
-            //if (Picture == null)
-            //    return ResponseResult.NotFound;
+            var picture = await _PictureRepository.GetAsTracking(update.Id);
 
-            //if (await _PictureRepository.GetQueryable().AnyAsync(a => a.Title.Contains(update.Title, StringComparison.OrdinalIgnoreCase) && a.Id != update.Id))
-            //    return ResponseResult.EntityExist;
+            //await _PictureRepository.Update(_Mapper.Map(update, picture));
+            
 
-            //await _PictureRepository.Update(update.ToModel(Picture), _AppUserProvider.User.Id);
-            //return ResponseResult.success;
-
-
-
-            throw new NotImplementedException();
+                throw new NotImplementedException();
         }
+
+
+
+
+        //public async Task<ServiceResponse<Empty>> Upsert(UpdatePictureDto updatePicture)
+        //{
+        //    // validate object
+
+        //    var picture = await _PictureRepository.GetAsTracking();
+
+        //    await _PictureRepository.Update(_Mapper.Map(updatePicture , ))
+        //}
 
 
 
@@ -115,7 +111,7 @@ namespace OrganicShop.BLL.Services
                 return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.SuccessDelete());
 
             //await _PictureRepository.SoftDelete(Picture, _AppUserProvider.User.Id);
-            if(await Picture.DeletePictureFile())
+            if (await Picture.DeletePictureFile())
             {
                 await _PictureRepository.Delete(Picture, _AppUserProvider.User.Id);
                 return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessDelete());

@@ -65,13 +65,13 @@
                         <div class="profile-contain">
                             <div class="profile-image">
                                 <div class="position-relative">
-                                    <img src="~/media/images/user/@Model.ProfileImage"
+                                    <img src="~/media/images/user/@Model.ProfileImage" id="profile-image"
                                          class="blur-up lazyload update_img" alt="">
-                                    <div class="cover-icon">
+                                    <form id="edit-profile-image-form" action="/profile/image" method="post" class="cover-icon">
                                         <i class="fa-solid fa-pen">
-                                            <input type="file" onchange="readURL(this,0)">
+                                            <input type="file" onchange="EditProfileImage(this)" name="profileImage">
                                         </i>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
 

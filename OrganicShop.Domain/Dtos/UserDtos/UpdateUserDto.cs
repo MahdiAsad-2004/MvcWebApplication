@@ -13,7 +13,6 @@ namespace OrganicShop.Domain.Dtos.UserDtos
         public string Email { get; set; }
 
 
-
         /// only using for display data and not for update    
 
         public string PhoneNumber_readonly { get; init; }
