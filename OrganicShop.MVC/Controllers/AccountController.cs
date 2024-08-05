@@ -90,14 +90,15 @@ namespace OrganicShop.Mvc.Controllers
 
 
         [HttpGet("/account/sign-in")]
-        public async Task<IActionResult> SignIn()
+        public async Task<IActionResult> SignIn(string ReturnUrl)
         {
+            ViewBag.ReturnUrl = ReturnUrl;
             return View(new SignInUserDto());
         }
 
 
         [HttpPost("/account/sign-in")]
-        public async Task<IActionResult> SignIn_Post(SignInUserDto signInUser)
+        public async Task<IActionResult> SignIn_Post(SignInUserDto signInUser,string ReturnUrl)
         {
             var response = await _UserService.SignIn(signInUser);
             if (response.Result == ResponseResult.Success)
@@ -119,7 +120,8 @@ namespace OrganicShop.Mvc.Controllers
                 };
                 await HttpContext.SignInAsync(principal, properties);
 
-                return _ClientHandleResult.RedirectThenToast(HttpContext, TempData, "/home", new Toast(ToastType.Success, response.Message), true);
+                string url = string.IsNullOrWhiteSpace(ReturnUrl) ? "/Home" : ReturnUrl;
+                return _ClientHandleResult.RedirectThenToast(HttpContext, TempData,url , new Toast(ToastType.Success, response.Message), true);
             }
 
             return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);

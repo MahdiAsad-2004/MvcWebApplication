@@ -26,6 +26,7 @@ using System.Security.Claims;
 
 namespace OrganicShop.Mvc.Controllers
 {
+    [Authorize]
     public class UserController : BaseController<UserController>
     {
         #region ctor
@@ -52,7 +53,6 @@ namespace OrganicShop.Mvc.Controllers
 
 
         [HttpGet("/profile")]
-        [AuthorizeRole(Role.Customer, Role.Seller, Role.Admin, Role.Manager)]
         public async Task<IActionResult> Profile()
         {
 

@@ -82,7 +82,7 @@
                                     <div class="qty-left-minus" data-type="minus" data-field="">
                                         <i class="fa-solid fa-minus"></i>
                                     </div>
-                                    <input id="product-@item.Id-quantity-3" class="form-control input-number qty-input" min="1" max="@item.Stock" type="text"
+                                    <input id="product-@item.Id-quantity-three" class="form-control input-number qty-input" min="1" max="@item.Stock" type="text"
                                            name="quantity" value="0">
                                     <div class="qty-right-plus" data-type="plus" data-field="" max="">
                                         <i class="fa-solid fa-plus"></i>
@@ -90,7 +90,7 @@
                                 </div>
                             </div>
 
-                            <button class="buy-button buy-button-2 btn btn-cart" onclick="AddProductToCart('@(item.Id)' , null , 0 , 'product-@item.Id-quantity-3');">
+                            <button class="buy-button buy-button-2 btn btn-cart" onclick="AddProductToCart('@(item.Id)', 0 , 'product-@item.Id-quantity-three');">
                                 <i class="iconly-Buy icli text-white m-0"></i>
                             </button>
                         </div>
@@ -161,7 +161,7 @@
                                         <div class="qty-left-minus" data-type="minus" data-field="">
                                             <i class="fa-solid fa-minus"></i>
                                         </div>
-                                        <input id="product-@item.Id-quantity-1" class="form-control input-number qty-input" min="1" max="@item.Stock" type="text"
+                                        <input id="product-@item.Id-quantity-one" class="form-control input-number qty-input" min="1" max="@item.Stock" type="text"
                                                name="quantity" value="0">
                                         <div class="qty-right-plus" data-type="plus" data-field="" max="">
                                             <i class="fa-solid fa-plus"></i>
@@ -169,7 +169,7 @@
                                     </div>
                                 </div>
 
-                                <button class="buy-button buy-button-2 btn btn-cart" onclick="AddProductToCart('@(item.Id)' , null , 0, 'product-@item.Id-quantity-1');">
+                                <button class="buy-button buy-button-2 btn btn-cart" onclick="AddProductToCart('@(item.Id)' , 0, 'product-@item.Id-quantity-one');">
                                     <i class="iconly-Buy icli text-white m-0"></i>
                                 </button>
                             </div>

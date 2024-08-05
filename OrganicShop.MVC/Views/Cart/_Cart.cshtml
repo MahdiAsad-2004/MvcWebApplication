@@ -5,7 +5,6 @@
 @{
     int cartTotal = 0;
     int productTotal = 0;
-    int deliveryPrice = 50_000;
 }
 
 <!-- Cart Section Start -->
@@ -32,13 +31,6 @@
                                                         <li class="name">
                                                             <a href="/Product/@item.Barcode" style="width:100px !important; display:block; font-size:12px; text-overflow:ellipsis !important; ">@item.Title</a>
                                                         </li>
-
-                                                        @if (item.VarientType != null && item.VarientValue != null)
-                                                        {
-                                                            <li class="text-content">
-                                                                <span class="text-title">@item.VarientType </span> : @item.VarientValue
-                                                            </li>
-                                                        }
 
                                                     </ul>
                                                 </div>
@@ -86,7 +78,7 @@
 
                                         <td class="save-remove">
                                             <h4 class="table-title text-content">عملیات</h4>
-                                            <a class="save notifi-wishlist">
+                                            <a role="button" class="save notifi-wishlist" onclick="AddProductItemToNextCart()">
                                                 افزودن به سبد خرید بعدی
                                             </a>
                                             <a role="button" class="remove" onclick="RemoveProductItem('@item.Id')">
@@ -129,8 +121,8 @@
                             </li>
 
                             <li class="align-items-start">
-                                <h4>هزینه پست</h4>
-                                <h4 class="price text-end">@deliveryPrice.ToToman()</h4>
+                                <h4>هزینه ارسال</h4>
+                                <h4 class="price text-end">مشخص نشده</h4>
                             </li>
                         </ul>
                     </div>
@@ -138,7 +130,7 @@
                     <ul class="summery-total">
                         <li class="list-total border-top-0">
                             <h4>جمع نهایی</h4>
-                            <h4 class="price theme-color">@((cartTotal + deliveryPrice).ToToman())</h4>
+                            <h4 class="price theme-color">@(cartTotal.ToToman())</h4>
                         </li>
                     </ul>
 
@@ -147,9 +139,9 @@
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <li>
-                                    <button onclick="" class="btn btn-animation proceed-btn fw-bold">
-                                        پرداخت
-                                    </button>
+                                    <a href="/checkout" class="btn btn-animation proceed-btn fw-bold">
+                                        ثبت سفارش
+                                    </a>
                                 </li>
 
                             }

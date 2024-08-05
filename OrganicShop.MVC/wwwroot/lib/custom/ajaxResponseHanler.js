@@ -136,7 +136,6 @@ async function HandleFetchResponse(response, form) {
 async function Partial(response, form) {
     return new Promise((reslove) => {
 
-
         ContainerElementId = form.getAttribute('data-container-id');
         TargetElementId = form.getAttribute('data-target-id');
         response.text().then(partial => {
@@ -168,18 +167,14 @@ async function Partial(response, form) {
             else {
                 ViewContainer.innerHTML = partial;
             }
-
         });
-
 
         setTimeout(() => {
 
             reslove();
 
-        }, 100)
-
-    })
-
+        }, 100);
+    });
 }
 
 function PartialThenToast(response, form) {
@@ -213,38 +208,44 @@ function PartialThenToast(response, form) {
             reslove();
 
         }, 100)
-
     })
 }
 
 function ToastThenRedirect(response) {
-    MessageString = response.headers.get("Message");
-    Message = JSON.parse(MessageString);
-    response.json().then(redirect => {
-        HandleMessage(Message);
-        setTimeout(function () {
-            if (redirect.IsReplace == true) {
-                location.replace(redirect.Url);
+    return new Promise((resolve, reject) => {
 
-            }
-            else {
-                location.assign(redirect.Url);
-            }
-        }, Message.TimeMs)
-    })
-
+        MessageString = response.headers.get("Message");
+        Message = JSON.parse(MessageString);
+        response.json().then(redirect => {
+            HandleMessage(Message);
+            console.log(redirect.Url);
+            setTimeout(function () {
+                if (redirect.IsReplace == true) {
+                    location.replace(redirect.Url);
+                }
+                else {
+                    location.assign(redirect.Url);
+                }
+            }, Message.TimeMs)
+        })
+        resolve();
+    });
 }
 
 
 function RedirectThenToast(response) {
-    response.json().then(redirect => {
-        if (redirect.IsReplace == true) {
-            console.log("replace action");
-            location.replace(redirect.Url);
-        }
-        else {
-            location.assign(redirect.Url);
-        }
+    return new Promise((resolve, reject) => {
+
+        response.json().then(redirect => {
+            if (redirect.IsReplace == true) {
+                console.log("replace action");
+                location.replace(redirect.Url);
+            }
+            else {
+                location.assign(redirect.Url);
+            }
+        });
+        resolve();
     });
 }
 
@@ -263,11 +264,15 @@ function RedirectThenToast(response) {
 
 
 function ToastThenRefresh(response) {
-    response.json().then(message => {
-        HandleMessage(message);
-        setTimeout(function () {
-            location.reload();
-        }, message.TimeMs)
+    return new Promise((resolve, reject) => {
+
+        response.json().then(message => {
+            HandleMessage(message);
+            setTimeout(function () {
+                location.reload();
+            }, message.TimeMs)
+        });
+        resolve();
     });
 }
 

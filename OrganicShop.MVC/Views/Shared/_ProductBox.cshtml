@@ -3,11 +3,6 @@
 @using OrganicShop.Domain.Entities
 @model ProductSummaryDto
 @{
-    if (Model.Varients != null)
-    {
-        Model.Varients = Model.Varients.OrderByDescending(a => a.Stock).ToArray();
-    }
-    var firstProductVarient = Model.Varients != null ? Model.Varients.FirstOrDefault() : null;
     var userWihsIds = ViewData["UserWishProductIds"] as long[] ?? new long[0];
     bool? removeButton = ViewData["RemoveButton"] as bool?;
     // int? boxMode = ViewData["ProductBox-Mode"] as int?;
@@ -86,10 +81,6 @@
                     <span>(@Model.CommentsRate.ToString("0.0"))</span>
                 </div>
 
-                @if (firstProductVarient != null)
-                {
-                    <h6 class="unit">@firstProductVarient.Value</h6>
-                }
                 @if (Model.DiscountedPrice != null)
                 {
                     <h5 class="price">
@@ -104,7 +95,7 @@
                 }
                 <div class="add-to-cart-box bg-white">
                     <button class="btn btn-add-cart addcart-button"
-                            onclick="AddProductToCartWithCount('@(Model.Id)' , null , 1 , 0)">
+                            onclick="AddProductToCartWithCount('@(Model.Id)' , 1 , 0)">
                         افزودن
                         <span class="add-icon bg-light-gray">
                             <i class="fa-solid fa-plus"></i>

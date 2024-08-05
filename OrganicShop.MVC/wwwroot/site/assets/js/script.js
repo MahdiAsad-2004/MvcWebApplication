@@ -490,26 +490,22 @@ Number.prototype.formatMoney = function (s, type) {
 
 let AddToCartForm = document.getElementById('add-to-cart-form');
 var count = 0;
-async function AddProductToCart(productId, productVarientId, timeOut, inputId) {
+async function AddProductToCart(productId, timeOut, inputId) {
     var result = false;
     count = +document.getElementById(inputId).value;
-    if (Boolean(productVarientId) == false || productVarientId < 1) {
-        productVarientId = null;
-    }
-    //console.log(`${productId} - ${productVarientId} - ${count} - ${timeOut}`);
+  
+    //console.log(`${productId} - ${count} - ${timeOut}`);
     if (productId > 0 && count > 0) {
         //console.log('add to cart');
         if (timeOut && timeOut > 100) {
             setTimeout(async () => {
                 AddToCartForm.querySelector('#add-to-cart-form-productId').value = productId;
-                AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
                 AddToCartForm.querySelector('#add-to-cart-form-count').value = count;
                 result = await FetchRequestForm(AddToCartForm);
             }, timeOut);
         }
         else {
             AddToCartForm.querySelector('#add-to-cart-form-productId').value = productId;
-            AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
             AddToCartForm.querySelector('#add-to-cart-form-count').value = count;
             result = await FetchRequestForm(AddToCartForm);
         }
@@ -519,25 +515,20 @@ async function AddProductToCart(productId, productVarientId, timeOut, inputId) {
     }
 
 }
-async function AddProductToCartWithCount(productId, productVarientId, count, timeOut) {
+async function AddProductToCartWithCount(productId, count, timeOut) {
     var result = false;
-    if (Boolean(productVarientId) == false || productVarientId < 1) {
-        productVarientId = null;
-    }
-    //console.log(`${productId} - ${productVarientId} - ${count} - ${timeOut}`);
+    //console.log(`${productId} - ${count} - ${timeOut}`);
     if (productId > 0 && count > 0) {
         //console.log('add to cart');
         if (timeOut && timeOut > 100) {
             setTimeout(async () => {
                 AddToCartForm.querySelector('#add-to-cart-form-productId').value = productId;
-                AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
                 AddToCartForm.querySelector('#add-to-cart-form-count').value = count;
                 result = await FetchRequestForm(AddToCartForm);
             }, timeOut);
         }
         else {
             AddToCartForm.querySelector('#add-to-cart-form-productId').value = productId;
-            AddToCartForm.querySelector('#add-to-cart-form-productVarientId').value = productVarientId;
             AddToCartForm.querySelector('#add-to-cart-form-count').value = count;
             result = await FetchRequestForm(AddToCartForm);
         }
@@ -548,22 +539,6 @@ async function AddProductToCartWithCount(productId, productVarientId, count, tim
 }
 
 
-
-
-//preview product modal add to cart
-
-const PreviewProductVarientSelect = document.getElementById('preview-product-varient-select');
-const PreviewProductAddToCartButton = document.getElementById('preview-product-add-to-cart-button');
-if (PreviewProductVarientSelect) {
-    PreviewProductVarientSelect.addEventListener('change', (e) => {
-        var option = PreviewProductVarientSelect.options[PreviewProductVarientSelect.selectedIndex];
-        if (option.disabled == false) {
-            PreviewProductAddToCartButton.onclick = (e) => {
-                AddProductToCart(PreviewProductAddToCartButton.getAttribute('data-product-id'), option.value, 1);
-            }
-        }
-    })
-}
 
 
 

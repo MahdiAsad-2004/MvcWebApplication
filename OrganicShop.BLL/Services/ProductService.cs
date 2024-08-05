@@ -142,7 +142,6 @@ namespace OrganicShop.BLL.Services
                 .Include(a => a.Comments)
                 .Include(a => a.Properties)
                  .ThenInclude(a => a.PropertyType)
-                .Include(a => a.ProductVarients)
                 //.AsParallel();
                 .AsQueryable();
 
@@ -203,7 +202,6 @@ namespace OrganicShop.BLL.Services
                         .ThenInclude(a => a.Picture)
                 .Include(a => a.Properties)
                     .ThenInclude(a => a.PropertyType)
-                .Include(a => a.ProductVarients)
                 .Include(a => a.Seller)
                     .ThenInclude(a => a.Address)
                 .Include(a => a.Seller)
@@ -584,7 +582,6 @@ namespace OrganicShop.BLL.Services
                     .Include(a => a.Comments)
                     .Include(a => a.Properties)
                      .ThenInclude(a => a.PropertyType)
-                    .Include(a => a.ProductVarients)
                     .Where(a => a.DiscountedPrice != null);
 
             var productSummaryDtos = await productsQuery

@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Http;
 using OrganicShop.Domain.Dtos.CommentDtos;
+using OrganicShop.Domain.Dtos.OrderDtos;
 using OrganicShop.Domain.Dtos.ProductDtos;
 using OrganicShop.Domain.Dtos.ProductItemDtos;
 using OrganicShop.Domain.Models;
@@ -17,6 +18,9 @@ namespace OrganicShop.BLL.Utils
 
         public static readonly CookieItem<CredentialForCommentDto> NameAndEmailForComment = 
             new () { Key = "OrganicShopUserNameAndEmailForComment" , Options = new CookieOptions {Expires = DateTime.UtcNow.AddMonths(2)}};
+        
+        public static readonly CookieItem<CreateOrderDto> CreateOrder = 
+            new () { Key = "OrganicShopUserCreateOrder" , Options = new CookieOptions {Expires = DateTime.UtcNow.AddDays(1)}};
 
       
 

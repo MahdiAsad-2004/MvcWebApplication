@@ -28,7 +28,6 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
             SellerInfo { get; set; }
         
         public List<CommentListDto> Comments { get; set; }
-        public ProductVarient[] Varients { get; set; }
         public Discount? Discount { get; set; }
         public PropertyListDto[] Properties { get; set; }
 

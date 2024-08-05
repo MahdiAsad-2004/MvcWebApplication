@@ -18,14 +18,6 @@
     {
         Model.Properties = new PropertyListDto[0];
     }
-    if (Model.Varients != null)
-    {
-        Model.Varients = Model.Varients.OrderByDescending(a => a.Stock).ToArray();
-    }
-    else
-    {
-        Model.Varients = new ProductVarient[0];
-    }
 }
 
 
@@ -73,24 +65,10 @@
                             }
                         </ul>
 
-                        @if (Model.Varients.Any())
-                        {
-                            <div class="select-size">
-                                <h4>اندازه کیک :</h4>
-                                <select id="preview-product-varient-select" class="form-select select-form-size" disabled="@(!IsAvalable)">
-                                    <option selected="">انتخاب @(Model.Varients[0].Type.ToStringValue())</option>
-                                    @foreach (var productVarient in Model.Varients)
-                                    {
-                                        <option value="@productVarient.Id" disabled="@(productVarient.Stock < 1)">@productVarient.Value</option>
-                                    }
-                                </select>
-                            </div>
-                        }
-
                         <div class="modal-button">
                             <button id="preview-product-add-to-cart-button" data-product-id="@Model.Id" class="btn btn-md add-cart-button icon ml-2"
                                     disabled="@(!IsAvalable)"
-                                    onclick="AddProductToCart('@Model.Id' , '@(Model.Varients.Any() ? Model.Varients[0].Id : 0)' , '1')">
+                                    onclick="AddProductToCartWithCount('@Model.Id' , 1 , 0)">
                                 افزودن به سبد خرید
                             </button>
 

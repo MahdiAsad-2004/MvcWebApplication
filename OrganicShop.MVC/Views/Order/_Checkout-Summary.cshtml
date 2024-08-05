@@ -1,0 +1,28 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.OrderDtos
+@model CreateOrderDto
+
+<ul class="summery-total">
+    <li>
+        <h4>جمع</h4>
+        <h4 class="price">@Model.TotalPrice.ToToman()</h4>
+    </li>
+
+    <li>
+        <h4>هزینه ارسال</h4>
+        <h4 class="price">@(Model.IsFreeDelivery ? "رایگان" : Model.ShippingPrice.ToToman())</h4>
+    </li>
+
+    @if (Model.DiscountPrice > 0 && Model.IsFreeDelivery == false)
+    {
+        <li>
+            <h4>تخفیف</h4>
+            <h4 class="price"> - @Model.DiscountPrice.ToToman()</h4>
+        </li>
+    }
+
+    <li class="list-total">
+        <h4>جمع کل</h4>
+        <h4 class="price">@Model.FinalPrice.ToToman()</h4>
+    </li>
+</ul>

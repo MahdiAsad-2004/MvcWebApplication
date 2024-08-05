@@ -28,12 +28,13 @@ namespace OrganicShop.BLL.Services
         private readonly IAddressRepository _AddressRepository;
         private readonly IProductItemRepository _ProductItemRepository;
         private readonly INextCartRepository _NextCartRepository;
+        private readonly ICartRepository _CartRepository;
         private readonly IValidator<CreateOrderDto> _ValidatorCreateOrder;
         private readonly IValidator<UpdateOrderDto> _ValidatorUpdateOrder;
 
         public OrderService(IApplicationUserProvider provider, IMapper mapper, IOrderRepository OrderRepository, IAddressRepository AddressRepository,
             IProductItemRepository ProductItemRepository, INextCartRepository nextCartRepository, IValidator<CreateOrderDto> validatorCreateOrder,
-            IValidator<UpdateOrderDto> validatorUpdateOrder) : base(provider)
+            IValidator<UpdateOrderDto> validatorUpdateOrder, ICartRepository cartRepository) : base(provider)
         {
             _Mapper = mapper;
             _OrderRepository = OrderRepository;
@@ -42,6 +43,7 @@ namespace OrganicShop.BLL.Services
             _NextCartRepository = nextCartRepository;
             _ValidatorCreateOrder = validatorCreateOrder;
             _ValidatorUpdateOrder = validatorUpdateOrder;
+            _CartRepository = cartRepository;
         }
 
         #endregion
@@ -106,7 +108,6 @@ namespace OrganicShop.BLL.Services
                         .ThenInclude(a => a.Pictures)
                 .Include(a => a.ProductItems)
                     .ThenInclude(a => a.Product)
-                        .ThenInclude(a => a.ProductVarients)
                 .AsQueryable();
 
             #endregion
@@ -164,23 +165,16 @@ namespace OrganicShop.BLL.Services
 
             if (Address == null)
                 return new ServiceResponse<string>(ResponseResult.NotFound, _Message.NotFound(), string.Empty);
+           
+            if(Address.UserId != create.UserId)
+                return new ServiceResponse<string>(ResponseResult.Failed, "آدرس انتخاب شده نادرست میباشد !" , string.Empty);
 
-            Order.OrderAddress = Address.ToOrderAddress();
-            long orderId = await _OrderRepository.Add(Order, _AppUserProvider.User.Id);
+            #region create trackingCode
 
-            #region productItems
-
-            // set productItems to ordered and remove from cart
-            // decrease products stock
-            await _ProductItemRepository.SetOrdered(create.CartId, orderId);
-
-            // add nextCart productItems to Cart
-            var nextCartId = (await _NextCartRepository.GetQueryable().FirstOrDefaultAsync(a => a.UserId == create.UserId))?.Id;
-            if (nextCartId != null)
-            {
-                await _ProductItemRepository.TransferFromNextCartToCart(nextCartId.Value, create.CartId);
-            }
-
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append(Guid.NewGuid());
+            stringBuilder = stringBuilder.Replace("-", "");
+            Order.TrackingCode = stringBuilder.ToString().Substring(0, 12);
 
             #endregion
 
@@ -195,7 +189,6 @@ namespace OrganicShop.BLL.Services
                     Step = orderStep,
                     DoneStatus = DoneStatus.Waiting,
                     DoneDate = null,
-                    OrderId = Order.Id,
                     BaseEntity = new BaseEntity(true),
                 });
             }
@@ -204,18 +197,28 @@ namespace OrganicShop.BLL.Services
             #endregion
 
 
-            #region create trackingCode
+            Order.OrderStatus = Order.IsPaid ? OrderStatus.Success : OrderStatus.Waiting;
 
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append(Guid.NewGuid());
-            stringBuilder = stringBuilder.Replace("-", "");
-            Order.TrackingCode = stringBuilder.ToString()[0..12];
+            Order.OrderAddress = Address.ToOrderAddress();
+            long orderId = await _OrderRepository.Add(Order, _AppUserProvider.User.Id);
+
+
+            #region productItems
+
+            // set productItems to ordered and remove from cart
+            // decrease products stock
+            await _ProductItemRepository.SetOrdered(create.CartId, orderId);
+
+            // add nextCart productItems to Cart
+            var nextCartId = (await _NextCartRepository.GetQueryable().FirstOrDefaultAsync(a => a.UserId == create.UserId))?.Id;
+            if (nextCartId != null)
+            {
+                await _ProductItemRepository.TransferFromNextCartToCart(nextCartId.Value, create.CartId);
+            }
 
             #endregion
 
-            Order.OrderStatus = OrderStatus.Success;
-
-            return new ServiceResponse<string>(ResponseResult.NotFound, _Message.SuccessUpdate(), Order.TrackingCode);
+            return new ServiceResponse<string>(ResponseResult.Success, _Message.SuccessCreate(), Order.TrackingCode);
         }
 
 

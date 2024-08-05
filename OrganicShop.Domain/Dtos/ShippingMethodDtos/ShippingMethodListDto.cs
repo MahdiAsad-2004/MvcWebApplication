@@ -5,7 +5,7 @@ namespace OrganicShop.Domain.Dtos.ShippingMethodDtos
 {
     public class ShippingMethodListDto : BaseListDto<byte>
     {
-        public string Type { get; set; }
+        public string Name { get; set; }
         public int Price { get; set; }
 
 

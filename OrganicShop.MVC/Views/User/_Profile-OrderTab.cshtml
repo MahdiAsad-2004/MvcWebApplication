@@ -23,6 +23,7 @@
                     <th rowspan="1" colspan="1" style="width: 170px;">تاریخ</th>
                     <th rowspan="1" colspan="1" style="width: 170px;">وضعیت سفارش</th>
                     <th rowspan="1" colspan="1" style="width: 170px;">قیمت</th>
+                    <th rowspan="1" colspan="1" style="width: 170px;">هزینع ارسال</th>
                     <th rowspan="1" colspan="1" style="width: 170px;">کد رهگیری</th>
                     <th rowspan="1" colspan="1" style="width: 170px;">نحوه پرداخت</th>
                     <th rowspan="1" colspan="1" style="width: 170px;">عملیات</th>
@@ -40,21 +41,29 @@
                         <td> @item.CreateDate.ToLongDateString() </td>
 
                         <td>
-                            @if (item.OrderStatus == OrderStatus.Waiting)
+                            @if (item.OrderStatus == OrderStatus.AwaitingPayment)
                             {
-                                <span style="background:linear-gradient(-90deg, #706bff 0%, #504bef 100%); color:white; padding:8px; border-radius:3px;">در انتظار</span>
+                                <span style="background:linear-gradient(-90deg, #706bff 0%, #504bef 100%); color:white; padding:8px; border-radius:3px;">
+                                    @item.OrderStatus.ToStringValue()
+                                </span>
                             }
                             else if (item.OrderStatus == OrderStatus.Success)
                             {
-                                <span style="background:var(--theme-color2); color:white; padding:8px; border-radius:3px;">موفق</span>
+                                <span style="background:var(--theme-color2); color:white; padding:8px; border-radius:3px;">
+                                    @item.OrderStatus.ToStringValue()
+                                </span>
                             }
                             else
                             {
-                                <span style="background:linear-gradient(-90deg, #ff6b6b 0%, #ff4f4f 100%); color:white; padding:8px; border-radius:3px;">نا موفق</span>
+                                <span style="background:linear-gradient(-90deg, #ff6b6b 0%, #ff4f4f 100%); color:white; padding:8px; border-radius:3px;">
+                                    @item.OrderStatus.ToStringValue()
+                                </span>
                             }
                         </td>
 
                         <td>@item.TotalPrice.ToToman()</td>
+
+                        <td>@item.ShippingPrice.ToToman()</td>
 
                         <td>@item.TrackingCode</td>
 

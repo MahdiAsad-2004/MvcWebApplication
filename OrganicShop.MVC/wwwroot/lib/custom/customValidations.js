@@ -143,7 +143,7 @@ $.validator.addMethod('lowerThan', function (value, element, params) {
 
 $.validator.unobtrusive.adapters.add(
     'lowerThan',
-    ['indicatorName','type'],
+    ['indicatorName', 'type'],
     function (options) {
         options.rules['lowerThan'] = options.params;
         options.messages['lowerThan'] = options.message;
@@ -172,7 +172,7 @@ $.validator.addMethod('greaterThan', function (value, element, params) {
 
 $.validator.unobtrusive.adapters.add(
     'greaterThan',
-    ['indicatorName' , 'type'],
+    ['indicatorName', 'type'],
     function (options) {
         options.rules['greaterThan'] = options.params;
         options.messages['greaterThan'] = options.message;
@@ -192,13 +192,13 @@ $.validator.addMethod('filesCount', function (value, element, params) {
             }
         }
     }
-   
+
     return true;
 });
 
 $.validator.unobtrusive.adapters.add(
     'filesCount',
-    ['min','max'],
+    ['min', 'max'],
     function (options) {
         options.rules['filesCount'] = options.params;
         options.messages['filesCount'] = options.message;
@@ -208,6 +208,65 @@ $.validator.unobtrusive.adapters.add(
 
 //------------------------------------------------------------------------------------------------------------------------
 
+
+$.validator.addMethod('date', function (value, element, params) {
+
+    const dateRegex = new RegExp('[1,2][0-9][0-9]{2}[/,-,-,.][0-9]{1,2}[/,-,-,.][0-9]{1,2}');
+
+    if (dateRegex.test(value) == false)
+        return false;
+
+    if (new Date(value) == 'Invalid Date')
+        return false;
+
+    if (value.search(/\D00\D*/gm) > 0)
+        return false;
+
+    return true;
+});
+
+$.validator.unobtrusive.adapters.add(
+    'date',
+    [],
+    function (options) {
+        options.rules['date'] = options.params;
+        options.messages['date'] = options.message;
+    }
+);
+
+
+//------------------------------------------------------------------------------------------------------------------------
+
+
+$.validator.addMethod('PersianDate', function (value, element, params) {
+
+    value = value.trim()
+    const dateRegex = new RegExp('1[3,4][0-9]{2}[/,-,-,.][0-9]{1,2}[/,-,-,.][0-9]{1,2}');
+
+    if (dateRegex.test(value) == false)
+        return false;
+
+    var p = new PersianDate();
+    if (p.fromJalali(value)['error'])
+        return false;
+
+    if (value.search(/\D00\D*/gm) > 0)
+        return false;
+
+    return true;
+});
+
+$.validator.unobtrusive.adapters.add(
+    'PersianDate',
+    [],
+    function (options) {
+        options.rules['PersianDate'] = options.params;
+        options.messages['PersianDate'] = options.message;
+    }
+);
+
+
+//------------------------------------------------------------------------------------------------------------------------
 
 
 

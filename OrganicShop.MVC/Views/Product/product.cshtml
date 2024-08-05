@@ -7,17 +7,8 @@
 @model ProductDetailDto
 @{
     var similarProducts = ViewData["SimilarProducts"] as List<ProductSummaryDto>;
-    if (Model.Varients != null)
-    {
-        Model.Varients = Model.Varients.OrderByDescending(a => a.Stock).ToArray();
-    }
-    else
-    {
-        Model.Varients = new ProductVarient[0];
-    }
     float commentsRatingAverage = Model.Comments.Any() ? (float)Model.Comments.Sum(a => a.Rate) / (float)Model.Comments.Count : 0;
     float commentsCount = Model.Comments.Count;
-    var firstProductVarient = Model.Varients.FirstOrDefault();
     var IsAvailable = Model.Stock > 0;
     var userWihsIds = ViewData["UserWishProductIds"] as long[];
 }
@@ -188,56 +179,6 @@
                                 <p class="w-100">@Model.ShortDescription</p>
                             </div>
 
-                            @if (Model.Varients.Any())
-                            {
-                                @if (IsAvailable)
-                                {
-                                    <div class="product-package">
-                                        <div class="product-title">
-                                            <h4>@Model.Varients[0].Type.ToStringValue()</h4>
-                                        </div>
-
-                                        <ul class="rectangle select-package">
-
-                                            @if (firstProductVarient != null)
-                                            {
-                                                <li class="form-check">
-                                                    <input class="form-check-input product-varient-radio" type="radio" disabled="@(firstProductVarient.Stock < 1)" checked
-                                                           data-product-varient-id="@firstProductVarient.Id" data-product-varient-stock="@firstProductVarient.Stock">
-                                                    <label class="form-check-label" for="small">
-                                                        <span>@firstProductVarient.Value</span>
-                                                    </label>
-                                                </li>
-                                            }
-                                            @foreach (var productVarient in Model.Varients.Skip(1))
-                                            {
-                                                <li class="form-check">
-                                                    <input class="form-check-input product-varient-radio" type="radio" disabled="@(productVarient.Stock < 1)"
-                                                           data-product-varient-id="@productVarient.Id" data-product-varient-stock="@productVarient.Stock">
-                                                    <label class="form-check-label" for="small">
-                                                        <span>@productVarient.Value</span>
-                                                    </label>
-                                                </li>
-                                            }
-
-                                        </ul>
-                                    </div>
-                                }
-                                else
-                                {
-                                    @foreach (var productVarient in Model.Varients)
-                                    {
-                                        <li class="form-check disabled">
-                                            <input class="form-check-input product-varient-radio" type="radio" disabled
-                                                   data-product-varient-id="@productVarient.Id" data-product-varient-stock="@productVarient.Stock">
-                                            <label class="form-check-label" for="small">
-                                                <span>@productVarient.Value</span>
-                                            </label>
-                                        </li>
-                                    }
-                                }
-                            }
-
                             @if (Model.Discount != null)
                             {
                                 if (Model.Discount.StartDate > DateTime.Now && Model.Discount.EndDate > DateTime.Now && IsAvailable == true)
@@ -292,33 +233,14 @@
                                         <button type="button" class="qty-left-minus" data-type="minus" data-field="">
                                             <i class="fa fa-minus"></i>
                                         </button>
-                                        <input id="product-main-quantity-0" class="form-control input-number qty-input" type="text" value="0" max="@Model.Stock">
+                                        <input id="product-main-quantity-zero" class="form-control input-number qty-input" type="text" value="0" max="@Model.Stock">
                                         <button type="button" class="qty-right-plus" data-type="plus" data-field="">
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </div>
                                 </div>
-                                @*
-                                <form id="add-product-to-cart-form" class="cart_qty qty-box product-qty" action="/Product/AddToCart"
-                                method="post" onsubmit="FetchRequest(event)">
-                                <input name="createProductItem.ProductId" value="@Model.Id" hidden readonly />
-                                <input name="createProductItem.ProductVarientId" value="@(firstProductVarient != null ? firstProductVarient.Id : null)" hidden readonly />
-                                <div class="input-group">
-                                <div class="input-group">
-                                <button type="button" id="product-cart-count-minus" disabled="@(!IsAvailable)">
-                                <i class="fa fa-minus"></i>
-                                </button>
-                                <input class="form-control" name="createProductItem.Count" type="text" value="1"
-                                max="@(firstProductVarient == null ? Model.Stock : firstProductVarient.Stock)">
-                                <button type="button" id="product-cart-count-plus" disabled="@(!IsAvailable)">
-                                <i class="fa fa-plus"></i>
-                                </button>
-                                </div>
-                                </div>
-                                <button type="submit" hidden></button>
-                                </form>
-                                *@
-                                <button type="button" id="add-product-to-cart-button" onclick="AddProductToCart('@Model.Id' , null , 0 , 'product-main-quantity-0')"
+                            
+                                <button type="button" id="add-product-to-cart-button" onclick="AddProductToCart('@Model.Id' , 0 , 'product-main-quantity-zero')"
                                         class="btn btn-md bg-dark cart-button text-white w-100" disabled="@(!IsAvailable)">
                                     افزودن به سبد خرید
                                 </button>
@@ -696,49 +618,22 @@
                         </div>
                     </div>
                     <div class="selection-section">
-                        @if (Model.Varients.Any())
-                        {
-                            <div class="form-group mb-0">
-                                <select id="product-varient-select" required class="form-control form-select" disabled="@(!IsAvailable)">
-                                    <option selected disabled>انتخاب @(firstProductVarient.Type.ToStringValue()) ...</option>
-                                    @foreach (var productVarient in Model.Varients)
-                                    {
-                                        <option value="@productVarient.Id" data-product-varient-stock="@productVarient.Stock">@productVarient.Value</option>
-                                    }
-                                </select>
-                            </div>
-                        }
-
+                    
                         <div class="cart_qty qty-box product-qty m-0">
                             <div class="input-group h-100">
                                 <button type="button" class="qty-left-minus" data-type="minus" data-field="">
                                     <i class="fa fa-minus"></i>
                                 </button>
-                                <input id="product-main-quantity-1" class="form-control input-number qty-input" max="@Model.Stock" type="text" value="0">
+                                <input id="product-main-quantity-one" class="form-control input-number qty-input" max="@Model.Stock" type="text" value="0">
                                 <button type="button" class="qty-right-plus" data-type="plus" data-field="">
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </div>
                         </div>
 
-                        @*   <form id="stick-add-product-to-cart-form" class="cart_qty qty-box product-qty m-0">
-                        <input name="createProductItem.ProductId" value="@Model.Id" hidden readonly />
-                        <input name="createProductItem.ProductVarientId" value="@(firstProductVarient != null ? firstProductVarient.Id : null)" hidden readonly />
-                        <div class="input-group h-100">
-                        <button type="button" class="qty-left-minus" id="stick-product-cart-count-minus" disabled="@(!IsAvailable)">
-                        <i class="fa fa-minus"></i>
-                        </button>
-                        <input class="form-control" name="createProductItem.Count" type="text" value="1" min="0"
-                        max="@(firstProductVarient == null ? Model.Stock : firstProductVarient.Stock)">
-                        <button type="button" class="qty-right-plus" id="stick-product-cart-count-plus" disabled="@(!IsAvailable)">
-                        <i class="fa fa-plus"></i>
-                        </button>
-                        </div>
-                        <button type="submit" hidden></button>
-                        </form> *@
                     </div>
                     <div class="add-btn">
-                        <button class="btn theme-bg-color text-white" onclick="AddProductToCart('@Model.Id' , null , 0 , 'product-main-quantity-1')" disabled="@(!IsAvailable)">
+                        <button class="btn theme-bg-color text-white" onclick="AddProductToCart('@Model.Id' , 0 , 'product-main-quantity-one')" disabled="@(!IsAvailable)">
                             <i class="fas fa-shopping-cart"></i> افزودن به سبد خرید
                         </button>
                     </div>

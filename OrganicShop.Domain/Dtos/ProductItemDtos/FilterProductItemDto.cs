@@ -11,7 +11,7 @@ namespace OrganicShop.Domain.Dtos.ProductItemDtos
         public long? CartId { get; set; }
         public long? OrderId { get; set; }
         public bool? IsOrdered { get; set; }
-        public long? UserId { get; set; }
+        public long? CartUserId { get; set; }
         public ProductItemSortType SortBy { get; set; } = ProductItemSortType.None;
 
 
@@ -36,11 +36,11 @@ namespace OrganicShop.Domain.Dtos.ProductItemDtos
                     break;
 
                 case ProductItemSortType.Price:
-                    query = query.OrderBy(a => a.Price);
+                    query = query.OrderBy(a => a.ProductPrice);
                     break;
 
                 case ProductItemSortType.PriceDesc:
-                    query = query.OrderByDescending(a => a.Price);
+                    query = query.OrderByDescending(a => a.ProductPrice);
                     break;
 
                 case ProductItemSortType.Count:

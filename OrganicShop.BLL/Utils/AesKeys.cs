@@ -11,6 +11,8 @@ namespace OrganicShop.BLL.Utils
         public string Cookie { get; set; }
 
         public string VerficationEmail { get; set; }
+        
+        public string Checkout { get; set; }
 
     }
 }

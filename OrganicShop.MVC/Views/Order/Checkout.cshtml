@@ -6,11 +6,13 @@
 @using OrganicShop.Domain.Dtos.ShippingMethodDtos
 @using OrganicShop.Domain.Dtos.OrderDtos
 @using OrganicShop.Domain.Dtos.ProductItemDtos
+@using OrganicShop.Domain.Enums
+@using OrganicShop.Domain.Enums.EnumValues
 @model CreateOrderDto
 @{
     var userAddresses = ViewData["UserAddresses"] as List<AddressListDto>;
     var productItems = ViewData["ProductItems"] as List<ProductItemListDto>;
-    bool IsFreeDelivery = ViewBag.FreeDelivery;
+    var shippingMethods = ViewData["ShippingMethods"] as List<ShippingMethodListDto>;
     int totalPrice = 0;
 }
 @section Breadcrumb {
@@ -48,7 +50,7 @@
 <!-- Checkout section Start -->
 <section class="checkout-section-2 section-b-space">
     <div class="container-fluid-lg">
-        <form class="row g-sm-4 g-3" method="post" action="/Order/Create" onsubmit="FetchRequest(event)">
+        <form class="row g-sm-4 g-3" id="create-order-form" method="post" action="/checkout" date-container-id="view-container">
             <div class="col-lg-8">
                 <div class="left-sidebar-checkout">
                     <div class="checkout-detail-box">
@@ -66,61 +68,56 @@
                                         <h4>آدرس پستی</h4>
                                     </div>
 
+                                    <div class="checkout-detail" id="checkout-addresses">
+                                        @await Html.PartialAsync("_Checkout-Addresses", userAddresses)
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="checkout-icon">
+                                    <lord-icon target=".nav-item" trigger="loop-on-hover" src="https://media.lordicon.com/icons/wired/outline/757-delivery.json"
+                                               colors="primary:#0baf9a,secondary:#0baf9a" class="lord-icon">
+                                        @*
+                                        <img alt="" loading="eager" src="https://media.lordicon.com/icons/wired/outline/757-delivery.svg">
+
+                                        <img alt="" loading="eager" src="~/site/assets/svg/757-delivery.svg">
+                                        *@
+
+                                    </lord-icon>
+                                </div>
+                                <div class="checkout-box">
+                                    <div class="checkout-title">
+                                        <h4>روش ارسال</h4>
+                                    </div>
+
                                     <div class="checkout-detail">
                                         <div class="row g-4">
-                                            @if (userAddresses.Any())
+
+                                            @foreach (var shippingMethod in shippingMethods)
                                             {
-                                                @foreach (var address in userAddresses)
-                                                {
-                                                    <div class="col-xxl-6 col-lg-12 col-md-6">
-                                                        <div class="delivery-address-box">
-                                                            <div>
-                                                                <div class="form-check">
-                                                                    <input asp-for="AddressId" value="@address.Id" class="form-check-input" type="radio" id="flexRadioDefault1">
+                                                <div class="col-xxl-6">
+                                                    <div class="delivery-option">
+                                                        <div class="delivery-category">
+                                                            <div class="shipment-detail">
+                                                                <div class="form-check custom-form-check hide-check-box">
+                                                                    @if (shippingMethod.Id == Model.ShippingMethodId)
+                                                                    {
+                                                                        <input class="form-check-input" asp-for="ShippingMethodId" value="@shippingMethod.Id" type="radio"
+                                                                               onchange="ShippingMethodChange(this)" checked>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <input class="form-check-input" asp-for="ShippingMethodId" value="@shippingMethod.Id" type="radio"
+                                                                               onchange="ShippingMethodChange(this)">
+                                                                    }
+                                                                    <label class="form-check-label" for="standard">@shippingMethod.Name (@shippingMethod.Price.ToMoney())</label>
                                                                 </div>
-
-                                                                <div class="label">
-                                                                    <label>@address.Title</label>
-                                                                </div>
-
-                                                                <ul class="delivery-address-detail">
-                                                                    <li>
-                                                                        <h4 class="fw-500">@address.ReceiverName</h4>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <p class="text-content">
-                                                                            <span class="text-title">آدرس : </span> @address.Text
-                                                                        </p>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <h6 class="text-content">
-                                                                            <span class="text-title">کد پستی : </span> @address.PostCode
-                                                                        </h6>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <h6 class="text-content mb-0">
-                                                                            <span class="text-title">شماره تماس : </span> @address.PhoneNumber
-                                                                        </h6>
-                                                                    </li>
-                                                                </ul>
                                                             </div>
                                                         </div>
                                                     </div>
-
-                                                }
-                                            }
-                                            else
-                                            {
-                                                <div class="col-xxl-2 col-lg-4 col-md-2">
-                                                    <button class="btn theme-bg-color text-white btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#add-address-modal-from">
-                                                        <i data-feather="plus"class="me-2"></i> افزودن آدرس جدید
-                                                    </button>
                                                 </div>
                                             }
-
 
                                         </div>
                                     </div>
@@ -149,10 +146,10 @@
                                                                     <h5 class="items text-content">
                                                                         <span>@productItems.Sum(a => a.Count) مورد </span>
                                                                     </h5>
-                                                                    @if (IsFreeDelivery == false)
+                                                                    @if (Model.IsFreeDelivery == false)
                                                                     {
                                                                         <h5 class="charge text-content">
-                                                                            @(IsFreeDelivery ? $"" : "")
+                                                                            @(Model.IsFreeDelivery ? $"" : "")
                                                                             هزینه ارسال
                                                                             @Model.ShippingPrice.ToToman()
                                                                             <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Extra Charge">
@@ -166,9 +163,8 @@
 
                                                         <div class="col-md-6">
                                                             <div class="form-floating theme-form-floating date-box">
-                                                                <label>انتخاب زمان </label>
-                                                                <input asp-for="ShippingPrice" class="form-control p-date-picker" type="text" autocomplete="off">
-                                                                <span asp-validation-for="ShippingPrice" class="mt-1 text-danger"></span>
+                                                                <input asp-for="SendDate" class="form-control p-date-picker" autocomplete="off">
+                                                                <span asp-validation-for="SendDate" class="mt-2 text-danger"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -193,22 +189,22 @@
                                     </div>
 
                                     <div class="checkout-detail">
-                                        <div class="accordion accordion-flush custom-accordion"
-                                             id="accordionFlushExample">
+                                        <div class="accordion accordion-flush custom-accordion" id="accordionFlushExample">
+
                                             <div class="accordion-item">
-                                                <div class="accordion-header" id="flush-headingFour">
+                                                <div class="accordion-header" id="flush-headingOne">
                                                     <div class="accordion-button collapsed"
                                                          data-bs-toggle="collapse"
-                                                         data-bs-target="#flush-collapseFour">
+                                                         data-bs-target="#flush-collapseOne">
                                                         <div class="custom-form-check form-check mb-0">
                                                             <label class="form-check-label" for="cash">
-                                                                <input class="form-check-input mt-0" type="radio"
-                                                                       name="flexRadioDefault" id="cash" checked> پرداخت نقدی
+                                                                <input asp-for="PaymentMethod" value="@((int)PaymentMethod.Cash)"
+                                                                       class="form-check-input mt-0" type="radio" id="cash" checked> پرداخت نقدی
                                                             </label>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div id="flush-collapseFour"
+                                                <div id="flush-collapseOne"
                                                      class="accordion-collapse collapse show"
                                                      data-bs-parent="#accordionFlushExample">
                                                     <div class="accordion-body">
@@ -218,6 +214,116 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <div class="accordion-item">
+                                                <div class="accordion-header" id="flush-headingTwo">
+                                                    <div class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false">
+                                                        <div class="custom-form-check form-check mb-0">
+                                                            <label class="form-check-label" for="credit">
+                                                                <input class="form-check-input mt-0" asp-for="PaymentMethod" value="@((int)PaymentMethod.PaymentGeteway)"
+                                                                       type="radio" id="credit">
+                                                                پرداخت اینترنتی
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample" style="">
+                                                    <div class="accordion-body">
+                                                        <div class="row g-2">
+                                                            <div class="col-12">
+                                                                <div class="payment-method">
+                                                                    <div class="form-floating mb-lg-3 mb-2 theme-form-floating">
+                                                                        <input type="text" class="form-control" id="credit2" placeholder="Enter Credit &amp; Debit Card Number">
+                                                                        <label for="credit2">اطلاعات کارت خود را وارد کنید</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-xxl-4">
+                                                                <div class="form-floating mb-lg-3 mb-2 theme-form-floating">
+                                                                    <input type="text" class="form-control" id="expiry" placeholder="Enter Expiry Date">
+                                                                    <label for="expiry">تاریخ انقضا</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-xxl-4">
+                                                                <div class="form-floating mb-lg-3 mb-2 theme-form-floating">
+                                                                    <input type="text" class="form-control" id="cvv" placeholder="Enter CVV Number">
+                                                                    <label for="cvv">CVV</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-xxl-4">
+                                                                <div class="form-floating mb-lg-3 mb-2 theme-form-floating">
+                                                                    <input type="password" class="form-control" id="password" placeholder="Enter Password">
+                                                                    <label for="password">رمز</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="button-group mt-0">
+                                                                <ul>
+                                                                    <li>
+                                                                        <button class="btn btn-light shopping-button">لغو</button>
+                                                                    </li>
+
+                                                                    <li>
+                                                                        <button class="btn btn-animation">استفاده از این کارت</button>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="accordion-item">
+                                                <div class="accordion-header" id="flush-headingFour">
+                                                    <div class="accordion-button collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         data-bs-target="#flush-collapseFour">
+                                                        <div class="custom-form-check form-check mb-0">
+                                                            <label class="form-check-label" for="cash">
+                                                                <input asp-for="PaymentMethod" value="@((int)PaymentMethod.Wallet)"
+                                                                       class="form-check-input mt-0" type="radio" id="credit3"> کیف پول
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="flush-collapseFour"
+                                                     class="accordion-collapse collapse"
+                                                     data-bs-parent="#accordionFlushExample">
+                                                    <div class="accordion-body">
+                                                        <p class="cod-review">
+                                                            با لینک پرداخت پیامک به صورت دیجیتال پرداخت کنید. در مناطق ممنوعه کووید ممکن است پول نقد پذیرفته نشود. <a href="javascript:void(0)">بیشتر بدانید.</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="accordion-item">
+                                                <div class="accordion-header" id="flush-headingThree">
+                                                    <div class="accordion-button collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         data-bs-target="#flush-collapseThree">
+                                                        <div class="custom-form-check form-check mb-0">
+                                                            <label class="form-check-label" for="cash">
+                                                                <input asp-for="PaymentMethod" value="@((int)(PaymentMethod.CartToCart))"
+                                                                       class="form-check-input mt-0" type="radio" id="cash"> @PaymentMethod.CartToCart.ToStringValue()
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="flush-collapseThree"
+                                                     class="accordion-collapse collapse"
+                                                     data-bs-parent="#accordionFlushExample">
+                                                    <div class="accordion-body">
+                                                        <p class="cod-review">
+                                                            با لینک پرداخت پیامک به صورت دیجیتال پرداخت کنید. در مناطق ممنوعه کووید ممکن است پول نقد پذیرفته نشود. <a href="javascript:void(0)">بیشتر بدانید.</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -250,58 +356,48 @@
                                         @productItemTotalPrice.ToToman()
                                     </h4>
                                 </li>
-
-                                totalPrice += productItemTotalPrice;
                             }
 
                         </ul>
-                        @{
-                            int finalPrice = totalPrice + Model.ShippingPrice - Model.DiscountPrice;
-                        }
-                        <ul class="summery-total">
-                            <li>
-                                <h4>جمع</h4>
-                                <h4 class="price">@totalPrice.ToToman()</h4>
-                            </li>
-
-                            <li>
-                                <h4>هزینه ارسال</h4>
-                                <h4 class="price">@(IsFreeDelivery ? "رایگان" : Model.ShippingPrice.ToToman())</h4>
-                            </li>
-
-                            @if (Model.DiscountPrice > 0)
-                            {
-                                <li>
-                                    <h4>تخفیف</h4>
-                                    <h4 class="price"> - @Model.DiscountPrice.ToToman()</h4>
-                                </li>
-                            }
-
-                            <li class="list-total">
-                                <h4>جمع کل</h4>
-                                <h4 class="price">@finalPrice.ToToman()</h4>
-                            </li>
+                      
+                        <ul class="summery-total" id="checkout-summary">
+                            @await Html.PartialAsync("_Checkout-Summary", Model)
                         </ul>
                     </div>
 
-                    <button class="btn theme-bg-color text-white btn-md w-100 mt-4 fw-bold">ثبت سفارش</button>
+                    <button type="button" onclick="FetchRequestFormWithId('create-order-form')"
+                            class="btn theme-bg-color text-white btn-md w-100 mt-4 fw-bold">
+                        ثبت سفارش
+                    </button>
                 </div>
             </div>
             <input hidden readonly asp-for="UserId" />
             <input hidden readonly asp-for="CartId" />
-            <input hidden readonly asp-for="PaymentMethod" />
             <input hidden readonly asp-for="ShippingMethodName" />
             <input hidden readonly asp-for="TotalPrice" value="@totalPrice" />
             <input hidden readonly asp-for="DiscountPrice" value="@Model.DiscountPrice" />
-            <input hidden readonly asp-for="ShippingPrice" value="@(IsFreeDelivery ? 0 : Model.ShippingPrice)" />
-            <input hidden readonly asp-for="FinalPrice" value="@finalPrice" />
+            <input hidden readonly asp-for="ShippingPrice" value="@(Model.IsFreeDelivery ? 0 : Model.ShippingPrice)" />
+            <input hidden readonly asp-for="FinalPrice" value="@Model.FinalPrice" />
         </form>
     </div>
 </section>
 <!-- Checkout section End -->
-@section Modals{
 
-    @await Html.PartialAsync("_AddAddressModal" , new CreateAddressDto{UserId = Model.UserId}); 
+
+
+<form id="load-checkout-addresses-form" action="/Checkout/Addresses" method="get" data-container-id="checkout-addresses">
+</form>
+
+<form id="load-checkout-form" action="/Checkout" method="put" data-container-id="checkout-summary">
+    <input name="shippingMethodId" hidden readonly />
+</form>
+
+
+@section Modals {
+
+    <div class="modal fade theme-modal" id="add-address-modal" tabindex="-1" aria-modal="true" role="dialog">
+        @await Html.PartialAsync("_AddAddressModal", new CreateAddressDto());
+    </div>
 }
 
 @section Scripts {
@@ -310,6 +406,11 @@
 
     <script src="~/lib/datePicker/behzadi-persianDatepicker/js/persianDatepicker.min.js"></script>
 
-    <script src="~/site/views/cart/checkout.js"></script>
+    <script src="~/site/views/order/checkout.js"></script>
+
+
 
 }
+
+
+

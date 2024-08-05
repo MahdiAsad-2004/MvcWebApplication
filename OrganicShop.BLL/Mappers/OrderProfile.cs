@@ -58,6 +58,7 @@ namespace OrganicShop.BLL.Mappers
                 TrackingCode = order.TrackingCode,
                 UserName = order.Receiver.Name,
                 UserPhoneNumber = order.Receiver.PhoneNumber,
+                ShippingPrice = order.ShippingPrice,
             };
         }
 

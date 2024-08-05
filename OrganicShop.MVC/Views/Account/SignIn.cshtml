@@ -47,6 +47,9 @@
 
                     <div class="input-box">
                         <form class="row g-4" id="sign-in-form" action="/account/sign-in" method="post">
+
+                            <input name="ReturnUrl" value="@ViewBag.ReturnUrl" hidden readonly/>
+
                             <div class="col-12 mb-2">
                                 <div class="form-floating theme-form-floating log-in-form">
                                     <input asp-for="PhoneNumberOrEmail" type="text" class="form-control" id="phoneNumber" placeholder="آدرس ایمیل خود را وارد کنید">

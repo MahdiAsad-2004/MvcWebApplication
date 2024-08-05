@@ -18,10 +18,6 @@ namespace OrganicShop.BLL.Mappers
                 .ForMember(m => m.Price, a => a.MapFrom(b => b.Product.Price))
                 .ForMember(m => m.Stock, a => a.MapFrom(b => b.Product.Stock))
                 .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
-                .ForMember(m => m.VarientValue, a => a.MapFrom(b =>
-                    b.ProductVarientId > 0 ? b.Product.ProductVarients.First(p => p.Id == b.ProductVarientId).Value : null))
-                .ForMember(m => m.VarientType, a => a.MapFrom(b =>
-                    b.ProductVarientId > 0 ? b.Product.ProductVarients.First(p => p.Id == b.ProductVarientId).Type.ToStringValue() : null))
                 //.ForMember(m => m.DiscountedPrice , a => a.MapFrom(b => b.Product.ToModel().DiscountedPrice))
                 .ForMember(m => m.DiscountedPrice , a => a.MapFrom(b => b.Product.DiscountedPrice))
                 .ForMember(m => m.Barcode, a => a.MapFrom(b => b.Product.Barcode));
@@ -46,16 +42,14 @@ namespace OrganicShop.BLL.Mappers
     {
         public static OrderItemDto ToOrderItemDto(this ProductItem productItem)
         {
-            var productVarient = productItem.Product.ProductVarients.FirstOrDefault(a => a.Id == productItem.ProductVarientId);
             return new OrderItemDto
             {
                 Barcode = productItem.Product.Barcode,
                 Count = productItem.Count,
                 Id = productItem.Id,
                 MainImageName = productItem.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,
-                Price = productItem.Price,
-                VarientType = productVarient?.Type.ToStringValue() ?? null,
-                VarientValue = productVarient?.Value ?? null,
+                Price = productItem.ProductPrice,
+                Title = productItem.Product.Title,
             };
         }
 

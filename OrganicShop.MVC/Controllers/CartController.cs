@@ -63,7 +63,7 @@ namespace OrganicShop.Mvc.Controllers
                 var userId = HttpContext.GetAppUser().Id;
                 if (userId > 0)
                 {
-                    model = (await _ProductItemService.GetAll(new FilterProductItemDto { UserId = userId }))?.Data ?? new List<ProductItemListDto>();
+                    model = (await _ProductItemService.GetAll(new FilterProductItemDto { CartUserId = userId }))?.Data ?? new List<ProductItemListDto>();
                 }
             }
             else
@@ -104,9 +104,6 @@ namespace OrganicShop.Mvc.Controllers
         [HttpPost("/Cart/AddProduct")]
         public async Task<IActionResult> AddProductItem(CreateProductItemDto createProductItem)
         {
-            if (createProductItem.ProductVarientId < 1)
-                createProductItem.ProductVarientId = null;
-
             var successToast = new Toast(ToastType.Success, "محصول با موفقیت به سبد خربد افزوده شد", 3000);
             if (User.Identity.IsAuthenticated)
             {

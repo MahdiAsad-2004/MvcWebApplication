@@ -25,22 +25,20 @@ namespace OrganicShop.DAL.Repositories
 
             //await _context.Database.ExecuteSqlInterpolatedAsync($"UPDATE ProductItems SET IsOrdred = true, CartId = NULL , OrderId = {orderId} WHERE CartId = {cartId};");
 
-            string x = $"BEGIN TRANSACTION;" +
-                    
-                    $"UPDATE Products SET Products.Stock -= ProductItems.Count" +
-                    $"FROM Products , ProductItems" +
-                    $"WHERE ProductItems.ProductVarientId IS NULL AND ProductItems.ProductId = Products.Id AND ProductItems.CartId = ${cartId};" +
+            string command =
 
-                    $"UPDATE ProductVarients SET ProductVarients.Stock -= ProductItems.Count" +
-                    $"FROM ProductVarients , ProductItems" +
-                    $"WHERE ProductItems.ProductVarientId IS NOT NULL AND ProductItems.ProductVarientId = ProductVarients.Id AND ProdutcItems.CartId = ${cartId};" +
+                $"BEGIN TRANSACTION; \t" +
 
-                    $"UPDATE ProductItems SET IsOrdred = true, CartId = NULL , OrderId = {orderId}," +
-                    $"WHERE CartId = {cartId};" +
-                    
-                    $"COMMIT;";
+                $"UPDATE Products SET Products.Stock -= ProductItems.Count FROM Products , ProductItems \t" +
+                $"WHERE ProductItems.ProductId = Products.Id AND ProductItems.CartId = {cartId}; \t" +
 
-            await _context.Database.ExecuteSqlRawAsync(x);
+                $"UPDATE ProductItems SET IsOrdered = 'true', CartId = NULL , OrderId = {orderId} \t" +
+                $"WHERE CartId = {cartId}; \t" +
+
+                $"COMMIT;";
+
+
+            await _context.Database.ExecuteSqlRawAsync(command);
 
             await _context.SaveChangesAsync();
 
@@ -53,7 +51,7 @@ namespace OrganicShop.DAL.Repositories
 
         public async Task TransferFromNextCartToCart(long nextCartId, long cartId)
         {
-            string command = $"UPDATE ProductItems SET NextCartId = ${cartId}" +
+            string command = $"UPDATE ProductItems SET NextCartId = ${cartId} \t" +
                              $"WHERE NextCartId = ${nextCartId}";
 
             await _context.Database.ExecuteSqlRawAsync(command);

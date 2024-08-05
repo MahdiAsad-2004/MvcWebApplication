@@ -3,6 +3,7 @@ using OrganicShop.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using OrganicShop.Domain.Validation.Attributes;
+using OrganicShop.Domain.Entities.ComplexTypes;
 
 namespace OrganicShop.Domain.Dtos.OrderDtos
 {
@@ -15,13 +16,15 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
 
         [DisplayName("روش پرداهت")]
         [Required(ErrorMessage = "{0} ضروری است")]
+        [Range(1,(int)PaymentMethod.CartToCart, ErrorMessage = "{0} معتبر نیست")]
         public PaymentMethod PaymentMethod { get; set; }
 
 
         [DisplayName("تاریخ ارسال")]
         [Required(ErrorMessage = "{0} ضروری است")]
-        [MinDateNowShamsi]
-        public DateTime SendDate { get; set; }
+        //[MinDateNowShamsi]
+        [PersianDateValidation]
+        public string SendDate { get; set; }
 
 
         [DisplayName("مجموع هزینه محصولات")]
@@ -67,6 +70,14 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
 
 
 
+        [DisplayName("روش ارسال")]
+        [Required(ErrorMessage = "{0} ضروری است")]
+        [Range(0, byte.MaxValue, ErrorMessage = "{0} معتبر نیست")]
+        public byte ShippingMethodId { get; set; }
+
+
+
+        public bool IsFreeDelivery { get; set; }
 
     }
 

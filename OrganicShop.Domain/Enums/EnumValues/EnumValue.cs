@@ -455,6 +455,24 @@ namespace OrganicShop.Domain.Enums.EnumValues
                     throw new Exception("Enum value not found");
             }
         }
+        
+        public static string ToStringValue(this OrderStatus orderStatus)
+        {
+            switch (orderStatus)
+            {
+                case OrderStatus.Success:
+                    return "موفق";
+
+                case OrderStatus.AwaitingPayment:
+                    return "در انتظار پرداخت";
+
+                case OrderStatus.Unsuccessful:
+                    return "نا موفق";
+
+                default:
+                    throw new Exception("Enum value not found");
+            }
+        }
 
 
         public static string ToStringValue(this TagSortType sortType)

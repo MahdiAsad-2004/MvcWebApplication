@@ -13,6 +13,7 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
         public DateTime DeliveryDatePredicate { get; set; }
         public string TrackingCode { get; set; }
         public string ShippingMethodName { get; set; }
+        public int ShippingPrice { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public PersianDateTime CreateDate { get; set; }
         public PaymentMethod PaymentMethod { get; set; }

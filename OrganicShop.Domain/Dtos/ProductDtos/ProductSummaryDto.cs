@@ -22,7 +22,6 @@ namespace OrganicShop.Domain.Dtos.ProductDtos
         public Discount? Discount { get; set; }
         public Category[] Categories { get; set; }
         public PropertyListDto[] Properties { get; set; }
-        public ProductVarient[] Varients { get; set; }
         
     
 

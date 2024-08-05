@@ -32,8 +32,7 @@ namespace OrganicShop.BLL.Mappers
                     ((float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Sum(c => c.Rate) /(float)b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()) : 0))
                .ForMember(m => m.CommentsCount, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Count()))
                .ForMember(m => m.Properties, a => a.MapFrom(b => b.Properties.Select(p => p.ToListDto()).OrderBy(o => o.Priority).ToArray()))
-               .ForMember(m => m.IsActive, a => a.MapFrom(b => b.BaseEntity.IsActive))
-               .ForMember(m => m.Varients, a => a.MapFrom(b => b.ProductVarients.ToArray()));
+               .ForMember(m => m.IsActive, a => a.MapFrom(b => b.BaseEntity.IsActive));
 
 
             CreateMap<Product, ProductDetailDto>()
@@ -53,8 +52,7 @@ namespace OrganicShop.BLL.Mappers
                         b.Seller.Address.PhoneNumber,
                         b.Seller.Comments.Count,
                         b.Seller.Comments.Any() ? (float)b.Seller.Comments.Sum(a => a.Rate) / (float)b.Seller.Comments.Count() : 0
-                        )))
-               .ForMember(m => m.Varients, a => a.MapFrom(b => b.ProductVarients.ToArray()));
+                        )));
 
 
             CreateMap<CreateProductDto, Product>()
@@ -105,7 +103,6 @@ namespace OrganicShop.BLL.Mappers
         //        Properties = product.Properties,
         //        ShortDescription = product.ShortDescription,
         //        SoldCount = product.SoldCount,
-        //        Stock = product.ProductVarients.Any() ? product.ProductVarients.Sum(b => b.Stock) : product.Stock,
         //        TagProducts = product.TagProducts,
         //        Title = product.Title,
         //        //DiscountedPrice = product.GetDefaultDiscountedPrice(),
@@ -113,7 +110,6 @@ namespace OrganicShop.BLL.Mappers
         //        DiscountedPrice = product.DiscountedPrice,
         //        Barcode = product.Barcode,
         //        CouponProducts = product.CouponProducts,
-        //        ProductVarients = product.ProductVarients,
         //        Seller = product.Seller,
         //        SellerId = product.SellerId,
         //        WishItems = product.WishItems,

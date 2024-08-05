@@ -14,8 +14,7 @@ namespace OrganicShop.Domain.Dtos.ProductItemDtos
         public int Price { get; set; }
         public int? DiscountedPrice { get; set; }
         public long? CartId { get; set; }
-        public string? VarientType { get; set; }
-        public string? VarientValue { get; set; }
+   
     }
 
 }

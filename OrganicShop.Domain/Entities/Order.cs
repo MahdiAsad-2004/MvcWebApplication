@@ -23,6 +23,7 @@ namespace OrganicShop.Domain.Entities
         public DateTime DeliveryDateEstimated { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
+        public bool IsPaid { get; set; }
         public OrderAddress OrderAddress { get; set; }
         public long UserId { get; set; }
 

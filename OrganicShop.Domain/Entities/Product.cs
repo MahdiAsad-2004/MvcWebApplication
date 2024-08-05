@@ -35,26 +35,7 @@ namespace OrganicShop.Domain.Entities
         }
 
 
-
-        private int _Stock;
-        public int Stock
-        {
-            get
-            {
-                if (ProductVarients != null)
-                {
-                    if (ProductVarients.Any())
-                    {
-                        return ProductVarients.Sum(a => a.Stock);
-                    }
-                }
-                return _Stock;
-            }
-            set 
-            {
-                _Stock = value; 
-            }
-        }
+        public int Stock { get; set; }
 
 
         public string Barcode { get; set; }
@@ -75,7 +56,6 @@ namespace OrganicShop.Domain.Entities
         public ICollection<TagProducts> TagProducts { get; set; }
         public ICollection<Property> Properties { get; set; }
         public ICollection<Comment> Comments { get; set; }
-        public ICollection<ProductVarient> ProductVarients { get; set; }
         public Seller? Seller { get; set; }
         public ICollection<WishItem> WishItems { get; set; }
 
