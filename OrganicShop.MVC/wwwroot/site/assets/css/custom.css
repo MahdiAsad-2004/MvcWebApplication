@@ -584,5 +584,10 @@ header .navbar-nav .dropdown-menu .sub-dropdown-hover .sub-menu {
             cursor:pointer;
         }
 
-
-
+input.hide{
+    visibility:hidden;
+    display:inline;
+    width:1px;
+    height:1px;
+    margin:0px 0px;
+}

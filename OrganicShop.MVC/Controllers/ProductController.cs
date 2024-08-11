@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.BLL.Providers;
 using OrganicShop.BLL.Utils;
@@ -196,6 +197,26 @@ namespace OrganicShop.Mvc.Controllers
         {
             return _ClientHandleResult.Redirect(HttpContext, $"search/{searchText}", "products", true);
         }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddComment(CreateCommentFeedbackUserDto createComment)
+        {
+            string? productImageName = ViewData["ProductImageName"] as string;
+            string? productTitle = ViewData["ProductTitle"] as string;
+
+            createComment.UserId = AppUser.Id;
+            var response = await _CommentService.Create(createForUser: createComment);
+
+            if (response.Result == ResponseResult.Success)
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, "دیدگاه شما با موفقیت ارسال شد"));
+
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
+
+        }
+
+
 
 
 

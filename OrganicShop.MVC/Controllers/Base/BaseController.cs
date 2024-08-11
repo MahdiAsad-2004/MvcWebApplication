@@ -6,6 +6,7 @@ using OrganicShop.DAL.Repositories;
 using OrganicShop.Domain.Enums.Response;
 using OrganicShop.Domain.IProviders;
 using OrganicShop.Domain.Models;
+using OrganicShop.Domain.Response;
 using OrganicShop.Mvc.Controllers.Base.Result;
 using OrganicShop.Mvc.Extensions;
 using OrganicShop.Mvc.Models.Redirect;
@@ -93,9 +94,9 @@ namespace OrganicShop.Mvc.Controllers.Base
         }
 
 
-        public void AddErrorsToModelState(ModelStateDictionary modelState , List<ValidationFailure> validationFailures)
+        public void AddErrorsToModelState(ModelStateDictionary modelState , List<ValidationError> validationErrors)
         {
-            foreach (var item in validationFailures)
+            foreach (var item in validationErrors)
             {
                 modelState.AddModelError(item.PropertyName, item.ErrorMessage);
             }

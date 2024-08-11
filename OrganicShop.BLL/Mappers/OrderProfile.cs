@@ -5,6 +5,7 @@ using OrganicShop.BLL.Extensions;
 using OrganicShop.Domain.Enums.EnumValues;
 using OrganicShop.Domain.Dtos.ProductItemDtos;
 using DryIoc.ImTools;
+using MD.PersianDateTime;
 
 namespace OrganicShop.BLL.Mappers
 {
@@ -19,7 +20,8 @@ namespace OrganicShop.BLL.Mappers
 
 
             CreateMap<Order, OrderDetailDto>()
-                .ForMember(m => m.CreateDate, a => a.MapFrom(b => b.BaseEntity.CreateDate))
+                .ForMember(m => m.CreateDate, a => a.MapFrom(b => b.BaseEntity.CreateDate.ToPersianDate()))
+                .ForMember(m => m.SendDate, a => a.MapFrom(b => b.SendDate.ToPersianDate()))
                 .ForMember(m => m.OrderItems, a => a.MapFrom(b => b.ProductItems.Select(p => p.ToOrderItemDto()).ToArray()));
 
 
@@ -33,7 +35,9 @@ namespace OrganicShop.BLL.Mappers
 
 
 
-            CreateMap<CreateOrderDto, Order>();
+            CreateMap<CreateOrderDto, Order>()
+                //.ForMember(m => m.DiscountPrice , a => a.MapFrom(b => PersianDateTime.Parse(b.SendDate , ))
+                .ForMember(m => m.SendDate , a => a.MapFrom(b => PersianDateTime.Parse(b.SendDate , "/").ToDateTime()));
 
 
             CreateMap<UpdateOrderDto, Order>();

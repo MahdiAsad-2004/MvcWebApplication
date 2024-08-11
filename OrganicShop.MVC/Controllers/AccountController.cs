@@ -76,10 +76,7 @@ namespace OrganicShop.Mvc.Controllers
 
             if (response.Result == ResponseResult.ValidationError)
             {
-                foreach (var item in response.ValidationFailures)
-                {
-                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
-                }
+                AddErrorsToModelState(ModelState, response.ValidationErrors);
                 return _ClientHandleResult.Partial(HttpContext, PartialView("SignUp", createUser), responseResult: false);
             }
 

@@ -10,7 +10,7 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
     {
         public string TrackingCode { get; set; }
         public int TotalPrice { get; set; }
-        public int DiscountPrice { get; set; }
+        public int CouponAmount { get; set; }
         public int ShippingPrice { get; set; }
         public int FinalPrice { get; set; }
         public string ShippingMethodName { get; set; }

@@ -22,7 +22,7 @@ namespace OrganicShop.BLL.Mappers
             CreateMap<CreateCommentDto, Comment>();
 
 
-            CreateMap<CreateCommentUserDto, Comment>();
+            CreateMap<CreateCommentFeedbackUserDto, Comment>();
 
 
             CreateMap<UpdateCommentDto, Comment>();

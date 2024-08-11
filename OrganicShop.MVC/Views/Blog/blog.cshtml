@@ -241,11 +241,11 @@
 
                 @if (User.Identity.IsAuthenticated)
                 {
-                    await Html.PartialAsync("_SendCommentUserSection", new CreateCommentUserDto { ArticleId = Model.Id });
+                    //await Html.PartialAsync("_SendCommentUserSection", new CreateCommentFeedbackUserDto { ArticleId = Model.Id });
                 }
                 else
                 {
-                    await Component.InvokeAsync("SendCommentSection", new { ProductId = default(int?), ArticleId = Model.Id });
+                    //await Component.InvokeAsync("SendCommentSection", new { ProductId = default(int?), ArticleId = Model.Id });
                 }
 
 

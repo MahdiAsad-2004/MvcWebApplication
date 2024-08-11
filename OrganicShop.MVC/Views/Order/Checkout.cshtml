@@ -10,9 +10,7 @@
 @using OrganicShop.Domain.Enums.EnumValues
 @model CreateOrderDto
 @{
-    var userAddresses = ViewData["UserAddresses"] as List<AddressListDto>;
     var productItems = ViewData["ProductItems"] as List<ProductItemListDto>;
-    var shippingMethods = ViewData["ShippingMethods"] as List<ShippingMethodListDto>;
     int totalPrice = 0;
 }
 @section Breadcrumb {
@@ -50,287 +48,10 @@
 <!-- Checkout section Start -->
 <section class="checkout-section-2 section-b-space">
     <div class="container-fluid-lg">
-        <form class="row g-sm-4 g-3" id="create-order-form" method="post" action="/checkout" date-container-id="view-container">
-            <div class="col-lg-8">
-                <div class="left-sidebar-checkout">
-                    <div class="checkout-detail-box">
-                        <ul>
-                            <li>
-                                <div class="checkout-icon">
-                                    <lord-icon target=".nav-item" src="https://cdn.lordicon.com/ggihhudh.json"
-                                               trigger="loop-on-hover"
-                                               colors="primary:#121331,secondary:#646e78,tertiary:#0baf9a"
-                                               class="lord-icon">
-                                    </lord-icon>
-                                </div>
-                                <div class="checkout-box">
-                                    <div class="checkout-title">
-                                        <h4>آدرس پستی</h4>
-                                    </div>
+        <div class="row g-sm-4 g-3" >
 
-                                    <div class="checkout-detail" id="checkout-addresses">
-                                        @await Html.PartialAsync("_Checkout-Addresses", userAddresses)
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li>
-                                <div class="checkout-icon">
-                                    <lord-icon target=".nav-item" trigger="loop-on-hover" src="https://media.lordicon.com/icons/wired/outline/757-delivery.json"
-                                               colors="primary:#0baf9a,secondary:#0baf9a" class="lord-icon">
-                                        @*
-                                        <img alt="" loading="eager" src="https://media.lordicon.com/icons/wired/outline/757-delivery.svg">
-
-                                        <img alt="" loading="eager" src="~/site/assets/svg/757-delivery.svg">
-                                        *@
-
-                                    </lord-icon>
-                                </div>
-                                <div class="checkout-box">
-                                    <div class="checkout-title">
-                                        <h4>روش ارسال</h4>
-                                    </div>
-
-                                    <div class="checkout-detail">
-                                        <div class="row g-4">
-
-                                            @foreach (var shippingMethod in shippingMethods)
-                                            {
-                                                <div class="col-xxl-6">
-                                                    <div class="delivery-option">
-                                                        <div class="delivery-category">
-                                                            <div class="shipment-detail">
-                                                                <div class="form-check custom-form-check hide-check-box">
-                                                                    @if (shippingMethod.Id == Model.ShippingMethodId)
-                                                                    {
-                                                                        <input class="form-check-input" asp-for="ShippingMethodId" value="@shippingMethod.Id" type="radio"
-                                                                               onchange="ShippingMethodChange(this)" checked>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <input class="form-check-input" asp-for="ShippingMethodId" value="@shippingMethod.Id" type="radio"
-                                                                               onchange="ShippingMethodChange(this)">
-                                                                    }
-                                                                    <label class="form-check-label" for="standard">@shippingMethod.Name (@shippingMethod.Price.ToMoney())</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            }
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li>
-                                <div class="checkout-icon">
-                                    <lord-icon target=".nav-item" src="https://cdn.lordicon.com/oaflahpk.json"
-                                               trigger="loop-on-hover" colors="primary:#0baf9a" class="lord-icon">
-                                    </lord-icon>
-                                </div>
-                                <div class="checkout-box">
-                                    <div class="checkout-title">
-                                        <h4>زمان ارسال</h4>
-                                    </div>
-
-                                    <div class="checkout-detail">
-                                        <div class="row g-4">
-                                            <div class="col-12 future-box show">
-                                                <div class="future-option">
-                                                    <div class="row g-md-0 gy-4">
-                                                        <div class="col-md-6">
-                                                            <div class="delivery-items">
-                                                                <div>
-                                                                    <h5 class="items text-content">
-                                                                        <span>@productItems.Sum(a => a.Count) مورد </span>
-                                                                    </h5>
-                                                                    @if (Model.IsFreeDelivery == false)
-                                                                    {
-                                                                        <h5 class="charge text-content">
-                                                                            @(Model.IsFreeDelivery ? $"" : "")
-                                                                            هزینه ارسال
-                                                                            @Model.ShippingPrice.ToToman()
-                                                                            <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Extra Charge">
-                                                                                <i class="fa-solid fa-circle-exclamation"></i>
-                                                                            </button>
-                                                                        </h5>
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-md-6">
-                                                            <div class="form-floating theme-form-floating date-box">
-                                                                <input asp-for="SendDate" class="form-control p-date-picker" autocomplete="off">
-                                                                <span asp-validation-for="SendDate" class="mt-2 text-danger"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li>
-                                <div class="checkout-icon">
-                                    <lord-icon target=".nav-item" src="https://cdn.lordicon.com/qmcsqnle.json"
-                                               trigger="loop-on-hover" colors="primary:#0baf9a,secondary:#0baf9a"
-                                               class="lord-icon">
-                                    </lord-icon>
-                                </div>
-                                <div class="checkout-box">
-                                    <div class="checkout-title">
-                                        <h4>پرداخت</h4>
-                                    </div>
-
-                                    <div class="checkout-detail">
-                                        <div class="accordion accordion-flush custom-accordion" id="accordionFlushExample">
-
-                                            <div class="accordion-item">
-                                                <div class="accordion-header" id="flush-headingOne">
-                                                    <div class="accordion-button collapsed"
-                                                         data-bs-toggle="collapse"
-                                                         data-bs-target="#flush-collapseOne">
-                                                        <div class="custom-form-check form-check mb-0">
-                                                            <label class="form-check-label" for="cash">
-                                                                <input asp-for="PaymentMethod" value="@((int)PaymentMethod.Cash)"
-                                                                       class="form-check-input mt-0" type="radio" id="cash" checked> پرداخت نقدی
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div id="flush-collapseOne"
-                                                     class="accordion-collapse collapse show"
-                                                     data-bs-parent="#accordionFlushExample">
-                                                    <div class="accordion-body">
-                                                        <p class="cod-review">
-                                                            با لینک پرداخت پیامک به صورت دیجیتال پرداخت کنید. در مناطق ممنوعه کووید ممکن است پول نقد پذیرفته نشود. <a href="javascript:void(0)">بیشتر بدانید.</a>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="accordion-item">
-                                                <div class="accordion-header" id="flush-headingTwo">
-                                                    <div class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false">
-                                                        <div class="custom-form-check form-check mb-0">
-                                                            <label class="form-check-label" for="credit">
-                                                                <input class="form-check-input mt-0" asp-for="PaymentMethod" value="@((int)PaymentMethod.PaymentGeteway)"
-                                                                       type="radio" id="credit">
-                                                                پرداخت اینترنتی
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample" style="">
-                                                    <div class="accordion-body">
-                                                        <div class="row g-2">
-                                                            <div class="col-12">
-                                                                <div class="payment-method">
-                                                                    <div class="form-floating mb-lg-3 mb-2 theme-form-floating">
-                                                                        <input type="text" class="form-control" id="credit2" placeholder="Enter Credit &amp; Debit Card Number">
-                                                                        <label for="credit2">اطلاعات کارت خود را وارد کنید</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-xxl-4">
-                                                                <div class="form-floating mb-lg-3 mb-2 theme-form-floating">
-                                                                    <input type="text" class="form-control" id="expiry" placeholder="Enter Expiry Date">
-                                                                    <label for="expiry">تاریخ انقضا</label>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-xxl-4">
-                                                                <div class="form-floating mb-lg-3 mb-2 theme-form-floating">
-                                                                    <input type="text" class="form-control" id="cvv" placeholder="Enter CVV Number">
-                                                                    <label for="cvv">CVV</label>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-xxl-4">
-                                                                <div class="form-floating mb-lg-3 mb-2 theme-form-floating">
-                                                                    <input type="password" class="form-control" id="password" placeholder="Enter Password">
-                                                                    <label for="password">رمز</label>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="button-group mt-0">
-                                                                <ul>
-                                                                    <li>
-                                                                        <button class="btn btn-light shopping-button">لغو</button>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <button class="btn btn-animation">استفاده از این کارت</button>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="accordion-item">
-                                                <div class="accordion-header" id="flush-headingFour">
-                                                    <div class="accordion-button collapsed"
-                                                         data-bs-toggle="collapse"
-                                                         data-bs-target="#flush-collapseFour">
-                                                        <div class="custom-form-check form-check mb-0">
-                                                            <label class="form-check-label" for="cash">
-                                                                <input asp-for="PaymentMethod" value="@((int)PaymentMethod.Wallet)"
-                                                                       class="form-check-input mt-0" type="radio" id="credit3"> کیف پول
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div id="flush-collapseFour"
-                                                     class="accordion-collapse collapse"
-                                                     data-bs-parent="#accordionFlushExample">
-                                                    <div class="accordion-body">
-                                                        <p class="cod-review">
-                                                            با لینک پرداخت پیامک به صورت دیجیتال پرداخت کنید. در مناطق ممنوعه کووید ممکن است پول نقد پذیرفته نشود. <a href="javascript:void(0)">بیشتر بدانید.</a>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="accordion-item">
-                                                <div class="accordion-header" id="flush-headingThree">
-                                                    <div class="accordion-button collapsed"
-                                                         data-bs-toggle="collapse"
-                                                         data-bs-target="#flush-collapseThree">
-                                                        <div class="custom-form-check form-check mb-0">
-                                                            <label class="form-check-label" for="cash">
-                                                                <input asp-for="PaymentMethod" value="@((int)(PaymentMethod.CartToCart))"
-                                                                       class="form-check-input mt-0" type="radio" id="cash"> @PaymentMethod.CartToCart.ToStringValue()
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div id="flush-collapseThree"
-                                                     class="accordion-collapse collapse"
-                                                     data-bs-parent="#accordionFlushExample">
-                                                    <div class="accordion-body">
-                                                        <p class="cod-review">
-                                                            با لینک پرداخت پیامک به صورت دیجیتال پرداخت کنید. در مناطق ممنوعه کووید ممکن است پول نقد پذیرفته نشود. <a href="javascript:void(0)">بیشتر بدانید.</a>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+            <div class="col-lg-8" id="create-order-form-container">
+                @await Html.PartialAsync("_Checkout-CreateOrderForm", Model)
             </div>
 
             <div class="col-lg-4">
@@ -346,12 +67,13 @@
                             }
                             @foreach (var productItem in productItems)
                             {
-                                productItemTotalPrice = productItem.DiscountedPrice == null ?
-                                (productItem.Price * productItem.Count) : (productItem.DiscountedPrice.Value * productItem.Count);
+                                productItemTotalPrice = productItem.ProductDiscountedPrice == null ?
+                                (productItem.ProductPrice * productItem.Count) : (productItem.ProductDiscountedPrice.Value * productItem.Count);
 
                                 <li>
-                                    <img src="~/media/images/product/@productItem.MainImageName" class="img-fluid blur-up lazyloaded checkout-image" alt="@productItem.Title">
-                                    <h4>@productItem.Title<span> (@productItem.Count) </span></h4>
+                                    <img src="~/media/images/product/@productItem.ProductMainImageName" class="img-fluid blur-up lazyloaded checkout-image"
+                                         alt="@productItem.ProductTitle">
+                                    <h4>@productItem.ProductTitle<span> (@productItem.Count) </span></h4>
                                     <h4 class="price">
                                         @productItemTotalPrice.ToToman()
                                     </h4>
@@ -359,7 +81,7 @@
                             }
 
                         </ul>
-                      
+
                         <ul class="summery-total" id="checkout-summary">
                             @await Html.PartialAsync("_Checkout-Summary", Model)
                         </ul>
@@ -371,14 +93,14 @@
                     </button>
                 </div>
             </div>
-            <input hidden readonly asp-for="UserId" />
+         @*    <input hidden readonly asp-for="UserId" />
             <input hidden readonly asp-for="CartId" />
             <input hidden readonly asp-for="ShippingMethodName" />
-            <input hidden readonly asp-for="TotalPrice" value="@totalPrice" />
-            <input hidden readonly asp-for="DiscountPrice" value="@Model.DiscountPrice" />
-            <input hidden readonly asp-for="ShippingPrice" value="@(Model.IsFreeDelivery ? 0 : Model.ShippingPrice)" />
-            <input hidden readonly asp-for="FinalPrice" value="@Model.FinalPrice" />
-        </form>
+            <input hidden readonly asp-for="TotalPrice" value="@totalPrice"/>
+            <input hidden readonly asp-for="CouponAmount"/>
+            <input hidden readonly asp-for="ShippingPrice"/>
+            <input hidden readonly asp-for="FinalPrice" /> *@
+        </div>
     </div>
 </section>
 <!-- Checkout section End -->

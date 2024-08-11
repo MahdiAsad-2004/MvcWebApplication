@@ -15,6 +15,7 @@ using OrganicShop.Domain.Entities.Base;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.Domain.Enums.EnumValues;
 using FluentValidation;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace OrganicShop.BLL.Services
 {
@@ -24,14 +25,16 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly ICartRepository _CartRepository;
+        private readonly ICouponRepository _CouponRepository;
         private readonly IProductRepository _ProductRepository;
+        private readonly INextCartRepository _NextCartRepository;
         private readonly IProductItemRepository _ProductItemRepository;
         private readonly IValidator<CreateProductItemDto> _ValidatorCreateProductItem;
         private readonly IValidator<UpdateProductItemDto> _ValidatorUpdateProductItem;
 
         public ProductItemService(IApplicationUserProvider provider, IMapper mapper, IProductItemRepository ProductItemRepository,
             ICartRepository CartRepository, IProductRepository productRepository, IValidator<CreateProductItemDto> validatorCreateProductItem,
-            IValidator<UpdateProductItemDto> validatorUpdateProductItem)
+            IValidator<UpdateProductItemDto> validatorUpdateProductItem, INextCartRepository nextCartRepository, ICouponRepository couponRepository)
             : base(provider)
         {
             _Mapper = mapper;
@@ -40,6 +43,8 @@ namespace OrganicShop.BLL.Services
             _ProductRepository = productRepository;
             _ValidatorCreateProductItem = validatorCreateProductItem;
             _ValidatorUpdateProductItem = validatorUpdateProductItem;
+            _NextCartRepository = nextCartRepository;
+            _CouponRepository = couponRepository;
         }
 
         #endregion
@@ -191,19 +196,7 @@ namespace OrganicShop.BLL.Services
             if (ProductItem == null)
                 return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
 
-            if (update.OrderId != null && update.CartId == null)
-            {
-                update.IsOrdered = true;
-            }
-            else if (update.CartId != null && update.OrderId == null)
-            {
-                update.IsOrdered = false;
-            }
-            else
-            {
-                throw new Exception("Change ProductItem Cart And Order State Exception");
-            }
-            await _ProductItemRepository.Update(_Mapper.Map<ProductItem>(update), _AppUserProvider.User.Id);
+            await _ProductItemRepository.Update(_Mapper.Map(update,ProductItem), _AppUserProvider.User.Id);
 
             return new ServiceResponse<Empty>(ResponseResult.Success, _Message.SuccessUpdate());
         }
@@ -252,18 +245,7 @@ namespace OrganicShop.BLL.Services
             foreach (var productItemCookieDto in productItemCookieDtos)
             {
                 product = products.First(a => a.Id == productItemCookieDto.ProductId);
-                list.Add(new ProductItemListDto
-                {
-                    Id = product.Id,
-                    Barcode = product.Barcode,
-                    Title = product.Title,
-                    Price = product.Price,
-                    ProductId = product.Id,
-                    DiscountedPrice = product.DiscountedPrice,
-                    Stock = product.Stock,
-                    MainImageName = product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,
-                    Count = productItemCookieDto.Count > product.Stock ? product.Stock : productItemCookieDto.Count,
-                });
+                list.Add(productItemCookieDto.ToListDto(product));
             }
             return new ServiceResponse<List<ProductItemListDto>>(ResponseResult.Success, list);
         }
@@ -303,9 +285,6 @@ namespace OrganicShop.BLL.Services
 
 
 
-
-
-
         public async Task<ServiceResponse<List<ProductItemCookieDto>>> UpdateForCookie(long productId, int count, List<ProductItemCookieDto> previousProductItems)
         {
             var productItem = previousProductItems.FirstOrDefault(a => a.ProductId == productId);
@@ -328,6 +307,57 @@ namespace OrganicShop.BLL.Services
 
             return new ServiceResponse<List<ProductItemCookieDto>>(ResponseResult.Success, _Message.SuccessUpdate(), previousProductItems);
         }
+
+
+
+
+
+        public async Task<ServiceResponse<Empty>> AddToNextCart(long Id)
+        {
+            long? nextCartId = (await _NextCartRepository.GetQueryable()
+                .FirstOrDefaultAsync(a => a.UserId == _AppUserProvider.User.Id))?.Id;
+
+            long? cartId = (await _CartRepository.GetQueryable()
+                .FirstOrDefaultAsync(a => a.UserId == _AppUserProvider.User.Id))?.Id;
+
+            ProductItem? productItem = await _ProductItemRepository.GetAsTracking(Id);
+
+            if (productItem == null)
+                return new ServiceResponse<Empty>(ResponseResult.NotFound, _Message.NotFound());
+
+            if (productItem.CartId != cartId)
+                return new ServiceResponse<Empty>(ResponseResult.Failed, "محصول در سبد خرید شما وجود ندارد !");
+
+            if (nextCartId == null)
+            {
+                nextCartId = await _NextCartRepository.Add(
+                    new NextCart
+                    {
+                        UserId = _AppUserProvider.User.Id
+                    }, _AppUserProvider.User.Id);
+            }
+
+            productItem.CartId = null;
+            productItem.NextCartId = nextCartId.Value;
+
+            await _ProductItemRepository.Update(productItem, _AppUserProvider.User.Id);
+
+            return new ServiceResponse<Empty>(ResponseResult.Success, "محصول به سبد خرید بعدی منتقل شد");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MD.PersianDateTime;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using OrganicShop.BLL.Extensions;
@@ -51,83 +52,25 @@ namespace OrganicShop.Mvc.Controllers
         #endregion
 
 
-
-
-        //[Authorize]
-        //[HttpGet("/Checkout")]
-        //public async Task<IActionResult> Checkout(string discount , int shippingMethod)
-        //{
-        //    string? discountPriceStr = string.IsNullOrWhiteSpace(discount) ? null : AesOperation.Decrypt(discount, _AesKeys.CheckoutUrl);
-        //    bool freeDelivery = false;
-        //    int discountPrice = 0;
-        //    if(discountPriceStr != null)
-        //    {
-        //        freeDelivery = discountPriceStr.Equals("freeDelivery" , StringComparison.OrdinalIgnoreCase);
-        //        int.TryParse(discountPriceStr, out discountPrice);
-        //        ViewBag.Discount = discount;
-        //    }
-        //    shippingMethod = shippingMethod < 1 ? 1 : shippingMethod;
-
-        //    long userId = User.GetAppUser().Id;
-
-        //    if (userId < 1)
-        //        return Redirect("/Error/404");
-
-        //    var productItems = (await _ProductItemService.GetAll(new FilterProductItemDto { UserId = userId }))?.Data ?? new List<ProductItemListDto>();
-        //    ViewData["ProductItems"] = productItems;
-        //    var cartId = productItems.FirstOrDefault()?.CartId;
-
-        //    if (cartId == null)
-        //    {
-        //        return Redirect("/Error/404");
-        //    }
-
-        //    ViewData["UserAddresses"] = (await _AddressService.GetAll(new FilterAddressDto { UserId = userId })).Data?.List ?? new List<AddressListDto>();
-
-        //    var shippingMethods = (await _ShippingMethodService.GetAll()).Data; 
-        //    ViewBag.FreeDelivery = freeDelivery;
-
-        //    var create = new CreateOrderDto
-        //    {
-        //        DiscountPrice = discountPrice,
-        //        CartId = cartId.Value,
-        //        UserId = userId,
-        //        PaymentMethod = PaymentMethod.Cash,
-        //    };
-
-        //    return View("Checkout", create);
-        //}
-
-
-
-
         [Authorize]
         [HttpGet("/Checkout")]
-        public async Task<IActionResult> Checkout(string discount)
+        public async Task<IActionResult> Checkout(string couponCode)
         {
-            string? discountPriceStr = string.IsNullOrWhiteSpace(discount) ? null : AesOperation.Decrypt(discount, _AesKeys.Checkout);
-            bool freeDelivery = false;
-            int discountPrice = 0;
-            if (discountPriceStr != null)
-            {
-                freeDelivery = discountPriceStr.Equals("freeDelivery", StringComparison.OrdinalIgnoreCase);
-                int.TryParse(discountPriceStr, out discountPrice);
-                ViewBag.Discount = discount;
-            }
-
-            long userId = User.GetAppUser().Id;
+            long userId = AppUser.Id;
 
             if (userId < 1)
                 return Redirect("/Error/404");
 
-            var productItems = (await _ProductItemService.GetAll(new FilterProductItemDto { CartUserId = userId }))?.Data ?? new List<ProductItemListDto>();
-            ViewData["ProductItems"] = productItems;
-            var cartId = productItems.FirstOrDefault()?.CartId;
+            var cartDetailDto = (await _CartService.GetDetail(userId, couponCode)).Data;
+
+            if(cartDetailDto == null)
+                return Redirect("/Error/404");
+
+            ViewData["ProductItems"] = cartDetailDto.ProductItems.ToList();
+            var cartId = cartDetailDto.ProductItems.FirstOrDefault()?.CartId;
 
             if (cartId == null)
-            {
                 return Redirect("/Error/404");
-            }
 
             var userAddresses = (await _AddressService.GetAll(new FilterAddressDto { UserId = userId })).Data?.List ?? new List<AddressListDto>(); ;
             ViewData["UserAddresses"] = userAddresses;
@@ -137,24 +80,32 @@ namespace OrganicShop.Mvc.Controllers
             var shippingMethods = (await _ShippingMethodService.GetAll()).Data;
             var shippingMethod = shippingMethods.First(a => a.Id == 1);
             ViewData["ShippingMethods"] = shippingMethods;
-            
+
             CreateOrderDto createOrder = new CreateOrderDto()
             {
                 AddressId = addressId,
                 CartId = cartId.Value,
+                OrderStatus = OrderStatus.AwaitingPayment,
                 PaymentMethod = PaymentMethod.PaymentGeteway,
-                //SendDate = DateTime.Now.AddDays(3),
+                SendDate = PersianDateTime.Now.AddDays(3).ToString("yyyy/MM/dd"),
                 ShippingMethodName = shippingMethod.Name,
                 ShippingPrice = shippingMethod.Price,
-                TotalPrice = productItems.Sum(a => (a.DiscountedPrice != null ? a.DiscountedPrice.Value : a.Price) * a.Count),
+                TotalPrice = cartDetailDto.Bill.TotalPrice,
                 UserId = userId,
-                IsFreeDelivery = freeDelivery,
-                ShippingMethodId = 1
+                ShippingMethodId = 1,
+                CouponAmount = cartDetailDto.Bill.CouponAmount,
+                CouponId = cartDetailDto.Bill.CouponId,
+                ProductItemIdAndPrice = cartDetailDto.ProductItems
+                    .ToDictionary(a => a.Id , a => a.ProductDiscountedPrice != null ? a.ProductDiscountedPrice.Value : a.ProductPrice),
+                DiscountIdAndProductCount = cartDetailDto.ProductItems
+                    .Where(a => a.ProductDiscounteId != null)
+                    .ToDictionary(a => a.ProductDiscounteId.Value, b => b.Count),
             };
-            createOrder.DiscountPrice = freeDelivery ? shippingMethod.Price : discountPrice;
-            createOrder.FinalPrice = createOrder.TotalPrice - createOrder.DiscountPrice + createOrder.ShippingPrice;
+            createOrder.FinalPrice = createOrder.TotalPrice - createOrder.CouponAmount + createOrder.ShippingPrice;
 
-            Response.Cookies.Append(AppCookies.CreateOrder.Key, AesOperation.Encrypt(AppCookies.CreateOrder.GenerateJsonValue(createOrder), _AesKeys.Checkout));
+            Response.Cookies.Append(AppCookies.CreateOrder.Key,
+                AesOperation.Encrypt(AppCookies.CreateOrder.GenerateJsonValue(createOrder), _AesKeys.Checkout),
+                AppCookies.CreateOrder.Options);
 
             return View("Checkout", createOrder);
         }
@@ -179,9 +130,11 @@ namespace OrganicShop.Mvc.Controllers
             createOrder.ShippingPrice = shippingMehod.Price;
             createOrder.ShippingMethodId = (byte)shippingMethodId;
 
-            createOrder.FinalPrice = createOrder.TotalPrice + createOrder.ShippingPrice - createOrder.DiscountPrice;
+            createOrder.FinalPrice = createOrder.TotalPrice + createOrder.ShippingPrice - createOrder.CouponAmount;
 
-            Response.Cookies.Append(AppCookies.CreateOrder.Key, AesOperation.Encrypt(AppCookies.CreateOrder.GenerateJsonValue(createOrder), _AesKeys.Checkout));
+            Response.Cookies.Append(AppCookies.CreateOrder.Key,
+                            AesOperation.Encrypt(AppCookies.CreateOrder.GenerateJsonValue(createOrder), _AesKeys.Checkout),
+                            AppCookies.CreateOrder.Options);
 
             return _ClientHandleResult.Partial(HttpContext, PartialView("_Checkout-Summary", createOrder));
         }
@@ -194,27 +147,30 @@ namespace OrganicShop.Mvc.Controllers
         [HttpPost("/Checkout")]
         public async Task<IActionResult> Checkout_Post(CreateOrderDto create)
         {
-            create.LogAsync();
-
             CreateOrderDto? createOrder = AppCookies.CreateOrder.GetModel(AesOperation.Decrypt(Request.Cookies[AppCookies.CreateOrder.Key], _AesKeys.Checkout));
 
             if (createOrder == null)
                 _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "سفارش شما ثبت نشد !"), responseResult: false);
 
-            createOrder.LogAsync();
-
             createOrder.AddressId = create.AddressId;
             createOrder.SendDate = create.SendDate;
             createOrder.PaymentMethod = create.PaymentMethod;
-
-            //return _ClientHandleResult.Empty(HttpContext);
+            createOrder.OrderStatus = create.PaymentMethod != PaymentMethod.CartToCart ? OrderStatus.Success : OrderStatus.AwaitingPayment;
 
             var response = await _OrderService.Create(createOrder);
 
             if (response.Result == ResponseResult.Success)
             {
                 Response.Cookies.Delete(AppCookies.CreateOrder.Key);
-                return _ClientHandleResult.ToastThenRedirect(HttpContext, $"/order/success/{response.Data}", new Toast(ToastType.Success, response.Message), true);
+                return _ClientHandleResult.ToastThenRedirect(HttpContext, $"/order/success/{response.Data}", new Toast(ToastType.Success, response.Message,3000), true);
+            }
+
+            if(response.Result == ResponseResult.ValidationError)
+            {
+                ViewData["UserAddresses"] = (await _AddressService.GetAll(new FilterAddressDto { UserId = AppUser.Id })).Data?.List ?? new List<AddressListDto>();
+                ViewData["ShippingMethods"] = (await _ShippingMethodService.GetAll()).Data;
+                AddErrorsToModelState(ModelState,response.ValidationErrors);
+                return _ClientHandleResult.Partial(HttpContext, PartialView("_Checkout-CreateOrderForm", createOrder));
             }
 
             return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult:false);
@@ -234,20 +190,6 @@ namespace OrganicShop.Mvc.Controllers
         }
 
 
-
-
-
-        //    [HttpPost("/order/create")]
-        //public async Task<IActionResult> Create(CreateOrderDto create)
-        //{
-        //    var response = await _OrderService.Create(create);
-        //    if (response.Result == ResponseResult.Success)
-        //    {
-        //        var trackingCode = response.Data;
-        //        return _ClientHandleResult.ToastThenRedirect(HttpContext, $"/OrderSuccess/{trackingCode}", new Toast(ToastType.Success, response.Message), false);
-        //    }
-        //    return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
-        //}
 
 
 

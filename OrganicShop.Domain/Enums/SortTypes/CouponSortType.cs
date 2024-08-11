@@ -1,7 +1,7 @@
 ﻿
 namespace OrganicShop.Domain.Enums.SortTypes
 {
-    public enum DiscountSortType
+    public enum CouponSortType
     {
         None,
 

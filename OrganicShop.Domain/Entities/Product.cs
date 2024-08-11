@@ -70,6 +70,12 @@ namespace OrganicShop.Domain.Entities
 
         public int? GetDiscountedPrice()
         {
+            Discount? discount = this.GetDiscount();
+            return discount?.CalculateDiscountedPrice(this.Price);
+        }
+
+        public Discount? GetDiscount()
+        {
             Discount? discount;
             discount = this.DiscountProducts
                 .Select(a => a.Discount)
@@ -77,11 +83,19 @@ namespace OrganicShop.Domain.Entities
                 .OrderBy(a => a.Priority)
                 .FirstOrDefault(a => true);
 
-            if (discount != null)
-                return discount.CalculateDiscountedPrice(this.Price);
-
-            return null;
+            return discount;
         }
+
+        public int? GetDiscountId()
+        {
+            Discount? discount = this.GetDiscount();
+            return discount?.Id;
+        }
+
+        //public List<Category> AllCategories()
+        //{
+        //    this.
+        //}
 
 
         #endregion

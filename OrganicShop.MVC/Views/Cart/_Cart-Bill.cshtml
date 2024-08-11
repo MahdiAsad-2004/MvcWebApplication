@@ -1,0 +1,77 @@
+﻿@using OrganicShop.BLL.Extensions
+@using OrganicShop.Domain.Dtos.CartDtos
+@using OrganicShop.Domain.Dtos.CouponDtos
+@using OrganicShop.Domain.Dtos.ProductItemDtos
+@model BillDto
+
+<div class="summery-box p-sticky">
+    <div class="summery-header">
+        <h3>صورت حساب</h3>
+    </div>
+
+    <div class="summery-contain">
+        <div id="cart-apply-coupon">
+            @await Html.PartialAsync("_Cart-ApplyCoupon", new CouponApplyingDto())
+        </div>
+        <ul>
+            <li>
+                <h4>جمع کل</h4>
+                <h4 class="price">@Model.TotalPrice.ToToman()</h4>
+            </li>
+
+            <li>
+                <h4>کد تخفیف</h4>
+                @if (Model.CouponAmount > 0 && Model.CouponId > 0)
+                {
+                    <h4 class="price">(-) @Model.CouponAmount.ToToman()</h4>
+                }
+                else
+                {
+                    <h4 class="price">(-) 0.00</h4>
+                }
+            </li>
+
+            <li class="align-items-start">
+                <h4>هزینه ارسال</h4>
+                <h4 class="price text-end">مشخص نشده</h4>
+            </li>
+        </ul>
+    </div>
+
+    <ul class="summery-total">
+        <li class="list-total border-top-0">
+            <h4>جمع نهایی</h4>
+            <h4 class="price theme-color">@((Model.TotalPrice - Model.CouponAmount).ToMoney())</h4>
+        </li>
+    </ul>
+
+    <div class="button-group cart-button">
+        <ul>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li>
+                    <a href="/checkout@(Model.CouponId > 0 ? $"?couponCode={Model.CouponCode}" : "")" class="btn btn-animation proceed-btn fw-bold">
+                        ثبت سفارش
+                    </a>
+                </li>
+
+            }
+            else
+            {
+                <li>
+                    <button onclick="location.href = '/Account/Register" class="btn btn-animation proceed-btn fw-bold">
+                        ثبت نام و ادامه
+                    </button>
+                </li>
+
+            }
+
+            <li>
+                <button onclick="location.href = 'index.html';"
+                        class="btn btn-light shopping-button text-dark">
+                    <i class="fa-solid fa-arrow-right-long"></i>بازگشت به فروشگاه
+                </button>
+            </li>
+        </ul>
+    </div>
+</div>

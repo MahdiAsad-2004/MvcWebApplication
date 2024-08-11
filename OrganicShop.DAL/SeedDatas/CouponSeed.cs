@@ -27,7 +27,6 @@ namespace OrganicShop.DAL.SeedDatas
             bool hasEndDate = false;
             bool hasMinCost = false;
             bool hasMaxCost = false;
-            bool isFreeDelivery = false;
 
             for (int i = 1; i <= couponsCount; i++)
             {
@@ -38,7 +37,6 @@ namespace OrganicShop.DAL.SeedDatas
                 hasEndDate = Random.Shared.Next(1, 6) >= 3;
                 hasMinCost = Random.Shared.Next(1, 6) >= 3;
                 hasMaxCost = Random.Shared.Next(1, 6) >= 3;
-                isFreeDelivery = Random.Shared.Next(1, 6) == 5;
                 HashSet<int> categoryIds = new HashSet<int>();
 
                 coupon = new Coupon
@@ -47,13 +45,6 @@ namespace OrganicShop.DAL.SeedDatas
                     Code = Guid.NewGuid().ToString().Substring(0, 6),
                     Title = "Coupon",
                 };
-
-                if (isFreeDelivery)
-                {
-                    coupon.Title = $"{coupon.Title}-FreeDelivery";
-                    coupons.Add(coupon);
-                    continue;
-                }
 
                 if (isPercent)
                 {

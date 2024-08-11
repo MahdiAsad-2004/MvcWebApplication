@@ -10,14 +10,14 @@
 
     <li>
         <h4>هزینه ارسال</h4>
-        <h4 class="price">@(Model.IsFreeDelivery ? "رایگان" : Model.ShippingPrice.ToToman())</h4>
+        <h4 class="price">@(Model.ShippingPrice.ToToman())</h4>
     </li>
 
-    @if (Model.DiscountPrice > 0 && Model.IsFreeDelivery == false)
+    @if (Model.CouponAmount > 0)
     {
         <li>
             <h4>تخفیف</h4>
-            <h4 class="price"> - @Model.DiscountPrice.ToToman()</h4>
+            <h4 class="price"> - @Model.CouponAmount.ToToman()</h4>
         </li>
     }
 

@@ -1,9 +1,4 @@
-﻿
-using AutoMapper;
-using DryIoc;
-using DryIoc.Microsoft.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.Domain.Dtos.AddressDtos;
@@ -141,7 +136,7 @@ namespace OrganicShop.Mvc.Controllers
 
             if (response.Result == ResponseResult.ValidationError)
             {
-                AddErrorsToModelState(ModelState, response.ValidationFailures);
+                AddErrorsToModelState(ModelState, response.ValidationErrors);
                 return _ClientHandleResult.Partial(HttpContext, PartialView("_Profile-SettingTab", updateUserPrivacy), responseResult: false);
             }
 
@@ -162,7 +157,7 @@ namespace OrganicShop.Mvc.Controllers
 
             if (response.Result == ResponseResult.ValidationError)
             {
-                AddErrorsToModelState(ModelState, response.ValidationFailures);
+                AddErrorsToModelState(ModelState, response.ValidationErrors);
                 return _ClientHandleResult.Partial(HttpContext, PartialView("_ChangePasswordModal", changePassword), responseResult: false);
             }
 
@@ -197,7 +192,7 @@ namespace OrganicShop.Mvc.Controllers
 
             if (response.Result == ResponseResult.ValidationError)
             {
-                AddErrorsToModelState(ModelState, response.ValidationFailures);
+                AddErrorsToModelState(ModelState, response.ValidationErrors);
                 return _ClientHandleResult.Partial(HttpContext, PartialView("_SubscribeUserNewsLetter", createNewsLetter), responseResult: false);
             }
 
@@ -264,7 +259,7 @@ namespace OrganicShop.Mvc.Controllers
 
             if (response.Result == ResponseResult.ValidationError)
             {
-                foreach (var item in response.ValidationFailures)
+                foreach (var item in response.ValidationErrors)
                 {
                     ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
                 }
@@ -296,7 +291,7 @@ namespace OrganicShop.Mvc.Controllers
 
             if (response.Result == ResponseResult.ValidationError)
             {
-                foreach (var item in response.ValidationFailures)
+                foreach (var item in response.ValidationErrors)
                 {
                     ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
                 }
@@ -319,7 +314,7 @@ namespace OrganicShop.Mvc.Controllers
 
             if (response.Result == ResponseResult.ValidationError)
             {
-                foreach (var item in response.ValidationFailures)
+                foreach (var item in response.ValidationErrors)
                 {
                     ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
                 }
@@ -385,7 +380,7 @@ namespace OrganicShop.Mvc.Controllers
 
             if (response.Result == ResponseResult.ValidationError)
             {
-                foreach (var item in response.ValidationFailures)
+                foreach (var item in response.ValidationErrors)
                 {
                     ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
                 }
@@ -406,7 +401,7 @@ namespace OrganicShop.Mvc.Controllers
 
             if (response.Result == ResponseResult.ValidationError)
             {
-                foreach (var item in response.ValidationFailures)
+                foreach (var item in response.ValidationErrors)
                 {
                     ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
                 }

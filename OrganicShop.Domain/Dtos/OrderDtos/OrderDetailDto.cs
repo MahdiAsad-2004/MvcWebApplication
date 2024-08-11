@@ -1,4 +1,5 @@
-﻿using OrganicShop.Domain.Dtos.Base;
+﻿using MD.PersianDateTime;
+using OrganicShop.Domain.Dtos.Base;
 using OrganicShop.Domain.Dtos.ProductItemDtos;
 using OrganicShop.Domain.Entities;
 using OrganicShop.Domain.Entities.ComplexTypes;
@@ -10,12 +11,12 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
     {
         public string TrackingCode { get; set; }
         public int TotalPrice { get; set; }
-        public int DiscountPrice { get; set; }
+        public int CouponAmount { get; set; }
         public int ShippingPrice { get; set; }
         public int FinalPrice { get; set; }
         public string ShippingMethodName { get; set; }
-        public DateTime SendDate { get; set; }
-        public DateTime CreateDate { get; set; }
+        public PersianDateTime SendDate { get; set; }
+        public PersianDateTime CreateDate { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public OrderAddress OrderAddress { get; set; }

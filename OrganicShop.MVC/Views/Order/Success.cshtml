@@ -102,7 +102,7 @@
 
                                         <td class="price">
                                             <h4 class="table-title text-content">قیمت</h4>
-                                            <h6 class="theme-color">@orderItem.Price.ToToman()</h6>
+                                            <h6 class="theme-color">@orderItem.PurchasedPrice.ToToman()</h6>
                                         </td>
 
                                         <td class="quantity">
@@ -112,7 +112,7 @@
 
                                         <td class="subtotal">
                                             <h4 class="table-title text-content">جمع کل</h4>
-                                            <h5>@((orderItem.Price * orderItem.Count).ToToman())</h5>
+                                            <h5>@((orderItem.PurchasedPrice * orderItem.Count).ToToman())</h5>
                                         </td>
                                     </tr>
 
@@ -141,7 +141,7 @@
                                 </li>
                                 <li>
                                     <h4>کد تخفیف</h4>
-                                    <h4 class="price text-danger">@Model.DiscountPrice.ToToman()</h4>
+                                    <h4 class="price text-danger">@Model.CouponAmount.ToToman()</h4>
                                 </li>
                                 <li>
                                     <h4>هزینه حمل و نقل</h4>
@@ -179,7 +179,7 @@
                                 <li class="pb-0">
                                     <h4>تاریخ ارسال :</h4>
                                     <h4 class="price theme-color">
-                                        @Model.SendDate.ToPersianDate()
+                                        @Model.SendDate.ToLongDateString()
                                     </h4>
                                 </li>
 
@@ -208,10 +208,8 @@
 
                             <ul class="summery-contain pb-0 border-bottom-0">
 
-                                @Model.PaymentMethod
-
                                 <li class="d-block pt-0">
-                                    @Model.PaymentMethod
+                                    @Model.PaymentMethod.ToStringValue()
                                 </li>
                             </ul>
                         </div>

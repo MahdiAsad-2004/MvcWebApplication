@@ -17,7 +17,7 @@ namespace OrganicShop.DAL.Repositories
 
 
 
-        public async Task SetOrdered(long cartId,long orderId)
+        public async Task SetOrdered(long cartId, long orderId)
         {
             //await _dbSet.Where(a => a.CartId == cartId).ExecuteUpdateAsync(a => a.SetProperty(p => p.IsOrdered, true));
             //await _dbSet.Where(a => a.CartId == cartId).ExecuteUpdateAsync(a => a.SetProperty(p => p.OrderId, orderId));
@@ -51,11 +51,19 @@ namespace OrganicShop.DAL.Repositories
 
         public async Task TransferFromNextCartToCart(long nextCartId, long cartId)
         {
-            string command = $"UPDATE ProductItems SET NextCartId = ${cartId} \t" +
-                             $"WHERE NextCartId = ${nextCartId}";
+            string command =
+                $"""
+                    UPDATE ProductItems SET NextCartId = NULL ,CartId = ${cartId}
+                    WHERE NextCartId = ${nextCartId}
+                """;
 
             await _context.Database.ExecuteSqlRawAsync(command);
             await _context.SaveChangesAsync();
+
+
+
+
+
         }
 
 

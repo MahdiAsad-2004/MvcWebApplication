@@ -662,7 +662,7 @@
         @await Html.PartialAsync("_PreviewProductModal", new ProductSummaryDto())
     </div>
 
-    <partial name="_AddCommentModal" model="new CreateCommentUserDto(){ProductId = Model.Id}" view-data="ViewData"
+    <partial name="_AddCommentModal" model="new CreateCommentFeedbackUserDto(){ProductId = Model.Id}" view-data="ViewData"
              view-data-ProductImageName="Model.MainImageName" view-data-ProductTitle="Model.Title" />
 }
 

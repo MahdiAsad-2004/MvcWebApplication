@@ -86,7 +86,7 @@ namespace OrganicShop.BLL.Services
         }
 
 
-        public async Task<ServiceResponse<Empty>> Create(CreateCommentDto? create = null , CreateCommentUserDto? createForUser = null)
+        public async Task<ServiceResponse<Empty>> Create(CreateCommentDto? create = null , CreateCommentFeedbackUserDto? createForUser = null)
         {
             var validationResult = await _ValidatorCreateComment.ValidateAsync(create);
             if (!validationResult.IsValid)

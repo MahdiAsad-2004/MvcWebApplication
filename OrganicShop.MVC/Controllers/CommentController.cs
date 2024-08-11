@@ -17,7 +17,7 @@ using Microsoft.Extensions.Options;
 
 namespace OrganicShop.Mvc.Controllers
 {
-    public class CommentController : BaseController<ProductController>
+    public class CommentController : BaseController<CommentController>
     {
         #region ctor
 
@@ -34,8 +34,9 @@ namespace OrganicShop.Mvc.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateForUser(CreateCommentUserDto create)
+        public async Task<IActionResult> CreateForUser(CreateCommentFeedbackUserDto create)
         {
+            create.UserId = AppUser.Id;
             var response = await _CommentService.Create(createForUser: create);
 
             if(response.Result == ResponseResult.Success)

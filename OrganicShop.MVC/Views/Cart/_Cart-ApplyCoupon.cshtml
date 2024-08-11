@@ -1,0 +1,12 @@
+﻿@using OrganicShop.Domain.Dtos.CouponDtos
+@model CouponApplyingDto
+
+<form class="coupon-cart" id="apply-coupon-form" action="/cart/apply-coupon" data-container-id="cart-apply-coupon" data-container-success-id="cart-bill" method="post">
+    <h6 class="text-content mb-2">کد تخفیف</h6>
+    <div class="mb-2 coupon-box input-group" >
+        <input asp-for="Code" class="form-control" placeholder="کد تخفیف را وارد کنید">
+        <button id="apply-coupon-button" type="button" onclick="ApplyCouponSubmit()" class="btn-apply">ثبت</button>
+        <button id="remove-coupon-button" type="button" onclick="RemoveCoupon()" class="btn-apply" style="background-color:#dc2626;" hidden>حذف</button>
+    </div>
+    <span class="text-danger mb-2" asp-validation-for="Code"></span>
+</form>

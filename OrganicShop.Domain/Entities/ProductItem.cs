@@ -13,7 +13,7 @@ namespace OrganicShop.Domain.Entities
     {
         public long ProductId { get; set; }
         public int Count { get; set; }
-        public int ProductPrice { get; set; }
+        public int PurchasedPrice { get; set; }
         public long? CartId { get; set; }
         public long? NextCartId { get; set; }
         public long? OrderId { get; set; }

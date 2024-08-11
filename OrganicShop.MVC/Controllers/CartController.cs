@@ -4,9 +4,12 @@ using Microsoft.Extensions.Options;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.BLL.Providers;
 using OrganicShop.BLL.Utils;
+using OrganicShop.Domain.Dtos.CartDtos;
+using OrganicShop.Domain.Dtos.CouponDtos;
 using OrganicShop.Domain.Dtos.ProductItemDtos;
 using OrganicShop.Domain.Enums.Response;
 using OrganicShop.Domain.IServices;
+using OrganicShop.Domain.Response;
 using OrganicShop.Mvc.Controllers.Base;
 using OrganicShop.Mvc.Extensions;
 using OrganicShop.Mvc.Models.Toast;
@@ -85,10 +88,14 @@ namespace OrganicShop.Mvc.Controllers
         [HttpGet("/Cart")]
         public async Task<IActionResult> Index()
         {
-            List<ProductItemListDto> model = await GetProductItemListDtos();
-            return View("Cart", model);
+            if (User.Identity.IsAuthenticated)
+            {
+                CartDetailDto model = (await _CartService.GetDetail(AppUser.Id)).Data;
+                return View("Cart", model);
+            }
+            return View("Cart", new CartDetailDto { ProductItems = (await GetProductItemListDtos()).ToArray() });
         }
-
+        
 
 
         [HttpGet("/CartSummary")]
@@ -134,8 +141,8 @@ namespace OrganicShop.Mvc.Controllers
                 var response = await _ProductItemService.Update(new UpdateProductItemDto { Id = productItemId, Count = count });
                 if (response.Result == ResponseResult.Success)
                 {
-                    var model = await GetProductItemListDtos();
-                    return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart", model));
+                    var model = (await _CartService.GetDetail(AppUser.Id)).Data;
+                    return _ClientHandleResult.Partial(HttpContext, PartialView("Cart", model));
                 }
                 return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
             }
@@ -150,9 +157,8 @@ namespace OrganicShop.Mvc.Controllers
                             AesOperation.Encrypt(AppCookies.UnknownUserCartItems.GenerateJsonValue(newProductItemCookieDtos), _AesKeys.Cookie),
                             AppCookies.UnknownUserCartItems.Options);
 
-                    var model = (await _ProductItemService.GetAll(newProductItemCookieDtos))?.Data ?? new List<ProductItemListDto>();
-                    
-                    return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart", model));
+                    var model = (await _CartService.GetDetail(GetCookieProductItems())).Data;
+                    return _ClientHandleResult.Partial(HttpContext, PartialView("Cart", model));
                 }
                 return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message));
             }
@@ -166,8 +172,8 @@ namespace OrganicShop.Mvc.Controllers
                 var response = await _ProductItemService.Delete(productItemId);
                 if (response.Result == ResponseResult.Success)
                 {
-                    var model = await GetProductItemListDtos();
-                    return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart", model));
+                    var model = (await _CartService.GetDetail(AppUser.Id)).Data;    
+                    return _ClientHandleResult.Partial(HttpContext, PartialView("Cart", model));
                 }
                 return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
             }
@@ -175,22 +181,21 @@ namespace OrganicShop.Mvc.Controllers
             {
                 var productItemCookieDtos = GetCookieProductItems();
                 var removeItem = productItemCookieDtos.FirstOrDefault(a => a.ProductId == productItemId);
-                if(removeItem != null)
+                if (removeItem != null)
                 {
-                    if(productItemCookieDtos.Remove(removeItem))
+                    if (productItemCookieDtos.Remove(removeItem))
                     {
                         Response.Cookies.Append(
                             AppCookies.UnknownUserCartItems.Key,
                             AesOperation.Encrypt(AppCookies.UnknownUserCartItems.GenerateJsonValue(productItemCookieDtos), _AesKeys.Cookie),
                             AppCookies.UnknownUserCartItems.Options);
-                        var model = (await _ProductItemService.GetAll(productItemCookieDtos))?.Data ?? new List<ProductItemListDto>();
-                        return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart", model));
+                        var model = (await _CartService.GetDetail(GetCookieProductItems())).Data;
+                        return _ClientHandleResult.Partial(HttpContext, PartialView("Cart", model));
                     }
                 }
-                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "محصول در سبد خرید وجود نداشت !"),responseResult:false);
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "محصول در سبد خرید وجود نداشت !"), responseResult: false);
             }
         }
-
 
 
         [HttpPost("/CartSummary/RemoveProductItem")]
@@ -210,9 +215,9 @@ namespace OrganicShop.Mvc.Controllers
             {
                 var productItemCookieDtos = GetCookieProductItems();
                 var removeItem = productItemCookieDtos.FirstOrDefault(a => a.ProductId == productItemId);
-                if(removeItem != null)
+                if (removeItem != null)
                 {
-                    if(productItemCookieDtos.Remove(removeItem))
+                    if (productItemCookieDtos.Remove(removeItem))
                     {
                         Response.Cookies.Append(
                             AppCookies.UnknownUserCartItems.Key,
@@ -222,9 +227,82 @@ namespace OrganicShop.Mvc.Controllers
                         return _ClientHandleResult.Partial(HttpContext, PartialView("_CartSummary", model));
                     }
                 }
-                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "محصول در سبد خرید وجود نداشت !"),responseResult:false);
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, "محصول در سبد خرید وجود نداشت !"), responseResult: false);
             }
         }
+
+
+        [Authorize]
+        [HttpPost("/cart/productItem/add-to-next-cart")]
+        public async Task<IActionResult> AddToNextCart(long productItemId)
+        {
+            var response = await _ProductItemService.AddToNextCart(productItemId);
+
+            if (response.Result == ResponseResult.Success)
+            {
+                var model = (await _CartService.GetDetail(AppUser.Id)).Data;
+                return _ClientHandleResult.Partial(HttpContext, PartialView("Cart", model));
+            }
+
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
+        }
+
+
+
+
+        [HttpPost("/cart/apply-coupon")]
+        public async Task<IActionResult> ApplyCoupon(CouponApplyingDto couponApplyingDto)
+        {
+            ServiceResponse<CartDetailDto>? response = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                couponApplyingDto.UserId = AppUser.Id;
+                response = await _CartService.ApplyCoupon(couponApplyingDto);
+            }
+            else
+            {
+                response = await _CartService.ApplyCoupon(GetCookieProductItems(), couponApplyingDto);
+            }
+
+            if (response.Result == ResponseResult.Success)
+                return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart-Bill", response.Data.Bill));
+            
+            if (response.Result == ResponseResult.ValidationError)
+            {
+                AddErrorsToModelState(ModelState, response.ValidationErrors);
+                return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart-ApplyCoupon", couponApplyingDto), responseResult: false);
+            }
+
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
+
+        }
+
+
+        
+        [HttpGet("/cart-bill")]
+        public async Task<IActionResult> CartBill()
+        {
+            ServiceResponse<BillDto>? response = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                response = await _CartService.GetBill(AppUser.Id);
+            }
+            else
+            {
+                response = await _CartService.GetBill(GetCookieProductItems());
+            }
+
+            if (response.Result == ResponseResult.Success)
+                return _ClientHandleResult.Partial(HttpContext, PartialView("_Cart-Bill", response.Data));
+            
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
+
+        }
+
+
+
+
+
 
 
 

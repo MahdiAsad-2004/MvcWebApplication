@@ -14,7 +14,7 @@
     var isMemberOfNewsLetter = ViewData["IsMemberOfNewsLetter"] as bool? ?? false;
 
     int totalOrdersCount = Model.Orders.Count();
-    int totalOrdersWaitingCount = Model.Orders.Count(a => a.OrderStatus == OrderStatus.Waiting);
+    int totalOrdersWaitingCount = Model.Orders.Count(a => a.OrderStatus == OrderStatus.AwaitingPayment);
     int wishProductsCount = wishProducts.Count;
 }
 

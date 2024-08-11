@@ -35,12 +35,12 @@ namespace OrganicShop.Domain.Dtos.ProductItemDtos
                     query = query.OrderBy(a => a.Id);
                     break;
 
-                case ProductItemSortType.Price:
-                    query = query.OrderBy(a => a.ProductPrice);
+                case ProductItemSortType.PurchasedPrice:
+                    query = query.OrderBy(a => a.PurchasedPrice);
                     break;
 
-                case ProductItemSortType.PriceDesc:
-                    query = query.OrderByDescending(a => a.ProductPrice);
+                case ProductItemSortType.PurchasedPriceDesc:
+                    query = query.OrderByDescending(a => a.PurchasedPrice);
                     break;
 
                 case ProductItemSortType.Count:

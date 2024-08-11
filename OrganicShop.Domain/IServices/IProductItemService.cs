@@ -21,5 +21,8 @@ namespace OrganicShop.Domain.IServices
 
         Task<ServiceResponse<List<ProductItemCookieDto>>> UpdateForCookie(long productItemId, int count, List<ProductItemCookieDto> previousProductItems);
 
+        Task<ServiceResponse<Empty>> AddToNextCart(long Id);
+
+
     }
 }

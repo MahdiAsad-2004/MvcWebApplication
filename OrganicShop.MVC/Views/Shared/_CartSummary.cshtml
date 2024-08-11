@@ -17,23 +17,23 @@
             {
                 <li id="cart-summary-productItem-@item.Id">
                     <div class="drop-cart">
-                        <a href="/product/@item.Barcode" class="drop-image">
-                            <img src="~/media/images/product/@item.MainImageName"
-                                 class="blur-up lazyload" alt="@item.Title">
+                        <a href="/product/@item.ProductBarcode" class="drop-image">
+                            <img src="~/media/images/product/@item.ProductMainImageName"
+                                 class="blur-up lazyload" alt="@item.ProductTitle">
                         </a>
 
                         <div class="drop-contain">
-                            <a href="product/@item.Barcode">
-                                <h5>@item.Title</h5>
+                            <a href="product/@item.ProductBarcode">
+                                <h5>@item.ProductTitle</h5>
                             </a>
-                            <h6><span>@item.Count x</span>@(item.DiscountedPrice == null ? item.Price.ToToman() : item.DiscountedPrice.Value.ToToman())</h6>
+                            <h6><span>@item.Count x</span>@(item.ProductDiscountedPrice == null ? item.ProductPrice.ToToman() : item.ProductDiscountedPrice.Value.ToToman())</h6>
                             <button class="close-button" onclick="RemoveCartSummaryProductItem('@item.Id' , 'cart-summary-productItem-@item.Id')">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
                     </div>
                 </li>
-                cartTotal += item.DiscountedPrice == null ? (item.Price * item.Count) : (item.DiscountedPrice.Value * item.Count);
+                cartTotal += item.ProductDiscountedPrice == null ? (item.ProductPrice * item.Count) : (item.ProductDiscountedPrice.Value * item.Count);
             }
 
             

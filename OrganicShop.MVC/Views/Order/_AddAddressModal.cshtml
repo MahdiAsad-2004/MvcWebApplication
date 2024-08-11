@@ -14,31 +14,33 @@
         </div>
         <form class="modal-body" id="add-address-form" action="/profile/address/add" method="post" data-container-id="add-address-modal">
 
-            <div class="form-floating mb-5 theme-form-floating">
+            <input name="asd.myinput" hidden value="123" type="number" readonly/>
+
+            <div class="form-floating mb-4 theme-form-floating">
                 <input asp-for="Title" type="text" class="form-control" id="name" placeholder="عنوان آدرس خود را وارد کنید">
                 <label asp-for="Title"></label>
                 <span asp-validation-for="Title" class="text-danger mt-2"></span>
             </div>
 
-            <div class="form-floating mb-5 theme-form-floating">
+            <div class="form-floating mb-4 theme-form-floating">
                 <input asp-for="ReceiverName" type="text" class="form-control" id="name" placeholder="نام و نام خانوادگی خود را وارد کنید">
                 <label for="name">نام و نام خانوادگی</label>
                 <span asp-validation-for="ReceiverName" class="text-danger mt-2"></span>
             </div>
 
-            <div class="form-floating mb-5 theme-form-floating">
+            <div class="form-floating mb-4 theme-form-floating">
                 <input asp-for="PhoneNumber" type="text" class="form-control" id="phoneNumber" placeholder="ایمیل خود را وارد کنید">
                 <label asp-for="PhoneNumber" for="phoneNumber"></label>
                 <span asp-validation-for="PhoneNumber" class="text-danger mt-2"></span>
             </div>
 
-            <div class="form-floating mb-5 theme-form-floating">
+            <div class="form-floating mb-4 theme-form-floating">
                 <input asp-for="PostCode" type="text" class="form-control" id="postCode" placeholder="کد پستی خود را وارد کنید">
                 <label asp-for="PostCode" for="postCode"></label>
                 <span asp-validation-for="PostCode" class="text-danger mt-2"></span>
             </div>
 
-            <div class="form-floating mb-5 theme-form-floating">
+            <div class="form-floating mb-4 theme-form-floating">
                 <select class="select-2 form-control" asp-for="Province">
                     <option disabled>--استان خود را انتخاب کنید--</option>
                     @foreach (var province in EnumExtensions.GetArray<Province>())
@@ -50,15 +52,15 @@
                 <span asp-validation-for="Province" class="text-danger mt-2"></span>
             </div>
 
-            <div class="form-floating mb-5 theme-form-floating">
-                <textarea asp-for="Text" class="form-control" placeholder="آدرس خود را وارد کنید" id="text" rows="3"></textarea>
+            <div class="form-floating mb-4 theme-form-floating">
+                <textarea asp-for="Text" class="form-control" placeholder="آدرس خود را وارد کنید" id="text" rows="5"></textarea>
                 <label asp-for="Text" for="text"></label>
                 <span asp-validation-for="Text" class="text-danger mt-2"></span>
             </div>
         </form>
         <div class="modal-footer">
             <button type="button" id="add-address-modal-from-close-button" class="btn btn-secondary btn-md" data-bs-dismiss="modal">بستن</button>
-            <button type="button" class="btn theme-bg-color btn-md text-white" onclick="">افزودن آدرس</button>
+            <button type="button" class="btn theme-bg-color btn-md text-white" onclick="AddAddressSubmit()">افزودن آدرس</button>
         </div>
     </div>
 </div>

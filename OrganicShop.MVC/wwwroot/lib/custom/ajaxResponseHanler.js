@@ -71,10 +71,10 @@ async function HandleFetchResponse(response, form) {
             //console.log(`Response Result : ${ResponseResult}`);
             //console.log(response.headers.get('ResponseResult'));
             if (ResponseDataType == 'partial') {
-                await Partial(response, form);
+                await Partial(response, form, ResponseResult);
             }
             else if (ResponseDataType == 'partial-toast') {
-                await PartialThenToast(response, form);
+                await PartialThenToast(response, form, ResponseResult);
             }
             else if (ResponseDataType == 'redirect-toast') {
                 await RedirectThenToast(response);
@@ -133,10 +133,11 @@ async function HandleFetchResponse(response, form) {
 
 
 
-async function Partial(response, form) {
+async function Partial(response, form, responseResult) {
     return new Promise((reslove) => {
 
         ContainerElementId = form.getAttribute('data-container-id');
+        ContainerSuccessElementId = form.getAttribute('data-container-success-id');
         TargetElementId = form.getAttribute('data-target-id');
         response.text().then(partial => {
             if (TargetElementId) {
@@ -161,6 +162,14 @@ async function Partial(response, form) {
 
                 //document.getElementById(TargetElementId).remove();
             }
+            else if (responseResult) {
+                if (ContainerSuccessElementId) {
+                    document.getElementById(ContainerSuccessElementId).innerHTML = partial;
+                }
+                else {
+                    document.getElementById(ContainerElementId).innerHTML = partial;
+                }
+            }
             else if (ContainerElementId) {
                 document.getElementById(ContainerElementId).innerHTML = partial;
             }
@@ -177,11 +186,12 @@ async function Partial(response, form) {
     });
 }
 
-function PartialThenToast(response, form) {
+function PartialThenToast(response, form, responseResult) {
 
     return new Promise((resolve) => {
 
         ContainerElementId = form.getAttribute('data-container-id');
+        ContainerSuccessElementId = form.getAttribute('data-container-success-id');
         TargetElementId = form.getAttribute('data-target-id');
         MessageString = response.headers.get("Message");
         Message = JSON.parse(MessageString);
@@ -194,6 +204,11 @@ function PartialThenToast(response, form) {
             }
             else if (ContainerElementId) {
                 document.getElementById(ContainerElementId).innerHTML = partial;
+            }
+            else if (responseResult) {
+                if (ContainerSuccessElementId) {
+                    document.getElementById(ContainerSuccessElementId).innerHTML = partial;
+                }
             }
             else {
                 ViewContainer.innerHTML = partial;

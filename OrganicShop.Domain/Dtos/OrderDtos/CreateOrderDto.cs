@@ -14,7 +14,7 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
         public string ShippingMethodName { get; set; }
 
 
-        [DisplayName("روش پرداهت")]
+        [DisplayName("روش پرداخت")]
         [Required(ErrorMessage = "{0} ضروری است")]
         [Range(1,(int)PaymentMethod.CartToCart, ErrorMessage = "{0} معتبر نیست")]
         public PaymentMethod PaymentMethod { get; set; }
@@ -22,8 +22,8 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
 
         [DisplayName("تاریخ ارسال")]
         [Required(ErrorMessage = "{0} ضروری است")]
-        //[MinDateNowShamsi]
         [PersianDateValidation]
+        [MinDateNowShamsi]
         public string SendDate { get; set; }
 
 
@@ -33,10 +33,16 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
         public int TotalPrice { get; set; }
 
 
-        [DisplayName("مقدار تخفیف")]
+        [DisplayName("مقدار کوپن")]
         [Required(ErrorMessage = "{0} ضروری است")]
         [Range(1000, int.MaxValue, ErrorMessage = "{0} باید حداقل {2} و حداکثر {1} باشد")]
-        public int DiscountPrice { get; set; }
+        public int CouponAmount { get; set; }
+        
+
+        [DisplayName("کوپن")]
+        [Required(ErrorMessage = "{0} ضروری است")]
+        [Range(1, int.MaxValue, ErrorMessage = "{0} معتبر نیست")]
+        public int CouponId { get; set; }
 
 
         [DisplayName("هزینه حمل و نقل")]
@@ -53,31 +59,38 @@ namespace OrganicShop.Domain.Dtos.OrderDtos
 
         [DisplayName("کاربر")]
         [Required(ErrorMessage = "{0} ضروری است")]
-        [Range(0, long.MaxValue, ErrorMessage = "{0} معتبر نیست")]
+        [Range(1, long.MaxValue, ErrorMessage = "{0} معتبر نیست")]
         public long UserId { get; set; }
 
 
         [DisplayName("آدرس")]
         [Required(ErrorMessage = "{0} ضروری است")]
-        [Range(0, long.MaxValue, ErrorMessage = "{0} معتبر نیست")]
+        [Range(1, long.MaxValue, ErrorMessage = "{0} معتبر نیست")]
         public long AddressId { get; set; }
 
 
         [DisplayName("سبد خرید")]
         [Required(ErrorMessage = "{0} ضروری است")]
-        [Range(0, long.MaxValue, ErrorMessage = "{0} معتبر نیست")]
+        [Range(1, long.MaxValue, ErrorMessage = "{0} معتبر نیست")]
         public long CartId { get; set; }
 
 
 
         [DisplayName("روش ارسال")]
         [Required(ErrorMessage = "{0} ضروری است")]
-        [Range(0, byte.MaxValue, ErrorMessage = "{0} معتبر نیست")]
+        [Range(1, byte.MaxValue, ErrorMessage = "{0} معتبر نیست")]
         public byte ShippingMethodId { get; set; }
 
 
 
-        public bool IsFreeDelivery { get; set; }
+        public Dictionary<int, int> DiscountIdAndProductCount { get; set; } = new Dictionary<int, int>();
+
+
+        public Dictionary<long, int> ProductItemIdAndPrice { get; set; } = new Dictionary<long, int>();
+
+
+        public OrderStatus OrderStatus { get; set; } = OrderStatus.AwaitingPayment;
+
 
     }
 

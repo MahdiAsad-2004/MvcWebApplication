@@ -1,13 +1,15 @@
 ﻿using OrganicShop.Domain.Dtos.Base;
+using OrganicShop.Domain.Dtos.ProductItemDtos;
 using OrganicShop.Domain.Entities;
 
 namespace OrganicShop.Domain.Dtos.CartDtos
 {
     public class CartDetailDto : BaseListDto<long>
     {
-        public int TotalPrice { get; set; }
-        public long UserId { get; set; }
-        public List<ProductItem> ProductItems { get; set; }
+        public ProductItemListDto[] ProductItems { get; set; }
+        public BillDto Bill { get; set; }
+       
+
     }
 
 

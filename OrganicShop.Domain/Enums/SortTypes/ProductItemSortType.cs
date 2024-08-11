@@ -19,9 +19,9 @@ namespace OrganicShop.Domain.Enums.SortTypes
         Oldest,
 
 
-        Price,
+        PurchasedPrice,
 
-        PriceDesc,
+        PurchasedPriceDesc,
 
         Count,
 

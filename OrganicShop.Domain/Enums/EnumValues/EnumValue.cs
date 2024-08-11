@@ -213,10 +213,10 @@ namespace OrganicShop.Domain.Enums.EnumValues
                 case ProductItemSortType.Oldest:
                     return "قدیمی ترین";
 
-                case ProductItemSortType.Price:
+                case ProductItemSortType.PurchasedPrice:
                     return "قیمت کمترین";
 
-                case ProductItemSortType.PriceDesc:
+                case ProductItemSortType.PurchasedPriceDesc:
                     return "قیمت بیشترین";
 
                 case ProductItemSortType.Count:

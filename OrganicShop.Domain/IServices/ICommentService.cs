@@ -11,7 +11,7 @@ namespace OrganicShop.Domain.IServices
 
         Task<ServiceResponse<CommentListDto>> Get(long Id);
 
-        Task<ServiceResponse<Empty>> Create(CreateCommentDto? create = null, CreateCommentUserDto? createForUser = null);
+        Task<ServiceResponse<Empty>> Create(CreateCommentDto? create = null, CreateCommentFeedbackUserDto? createForUser = null);
 
         Task<ServiceResponse<Empty>> Update(UpdateCommentDto update);
         

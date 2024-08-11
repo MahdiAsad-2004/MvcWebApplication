@@ -16,6 +16,7 @@ using System.Text;
 using OrganicShop.BLL.Extensions;
 using OrganicShop.Domain.Entities.Base;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 
 namespace OrganicShop.BLL.Services
 {
@@ -29,12 +30,14 @@ namespace OrganicShop.BLL.Services
         private readonly IProductItemRepository _ProductItemRepository;
         private readonly INextCartRepository _NextCartRepository;
         private readonly ICartRepository _CartRepository;
+        private readonly IDiscountRepository _DiscountRepository;
+        private readonly ICouponRepository _CouponRepository;
         private readonly IValidator<CreateOrderDto> _ValidatorCreateOrder;
         private readonly IValidator<UpdateOrderDto> _ValidatorUpdateOrder;
 
         public OrderService(IApplicationUserProvider provider, IMapper mapper, IOrderRepository OrderRepository, IAddressRepository AddressRepository,
             IProductItemRepository ProductItemRepository, INextCartRepository nextCartRepository, IValidator<CreateOrderDto> validatorCreateOrder,
-            IValidator<UpdateOrderDto> validatorUpdateOrder, ICartRepository cartRepository) : base(provider)
+            IValidator<UpdateOrderDto> validatorUpdateOrder, ICartRepository cartRepository, IDiscountRepository discountRepository, ICouponRepository couponRepository) : base(provider)
         {
             _Mapper = mapper;
             _OrderRepository = OrderRepository;
@@ -44,6 +47,8 @@ namespace OrganicShop.BLL.Services
             _ValidatorCreateOrder = validatorCreateOrder;
             _ValidatorUpdateOrder = validatorUpdateOrder;
             _CartRepository = cartRepository;
+            _DiscountRepository = discountRepository;
+            _CouponRepository = couponRepository;
         }
 
         #endregion
@@ -164,10 +169,10 @@ namespace OrganicShop.BLL.Services
             var Address = await _AddressRepository.GetAsNoTracking(create.AddressId);
 
             if (Address == null)
-                return new ServiceResponse<string>(ResponseResult.NotFound, _Message.NotFound(), string.Empty);
-           
-            if(Address.UserId != create.UserId)
-                return new ServiceResponse<string>(ResponseResult.Failed, "آدرس انتخاب شده نادرست میباشد !" , string.Empty);
+                return new ServiceResponse<string>(nameof(create.AddressId), "آدرس مورد نطر یافت نشد");
+
+            if (Address.UserId != create.UserId)
+                return new ServiceResponse<string>(nameof(create.AddressId), "آدرس انتخاب شده نادرست میباشد !");
 
             #region create trackingCode
 
@@ -178,8 +183,7 @@ namespace OrganicShop.BLL.Services
 
             #endregion
 
-
-            #region create tracking statuses
+            #region add tracking statusess
 
             var TrackingStatuses = new List<TrackingStatus>();
             foreach (var orderStep in EnumExtensions.GetArray<OrderStep>())
@@ -196,12 +200,8 @@ namespace OrganicShop.BLL.Services
 
             #endregion
 
-
-            Order.OrderStatus = Order.IsPaid ? OrderStatus.Success : OrderStatus.Waiting;
-
             Order.OrderAddress = Address.ToOrderAddress();
             long orderId = await _OrderRepository.Add(Order, _AppUserProvider.User.Id);
-
 
             #region productItems
 
@@ -217,6 +217,50 @@ namespace OrganicShop.BLL.Services
             }
 
             #endregion
+
+            #region update discount and coupon usedCount
+
+            if (create.DiscountIdAndProductCount != null)
+            {
+                if (create.DiscountIdAndProductCount.Any())
+                {
+                    var discounts = _DiscountRepository.GetQueryableTracking()
+                        .Where(a => create.DiscountIdAndProductCount.Select(b => b.Key).Contains(a.Id))
+                        .ToList();
+                    foreach (var discountIdAndProductCount in create.DiscountIdAndProductCount)
+                    {
+                        discounts.First(a => a.Id == discountIdAndProductCount.Key).UsedCount += discountIdAndProductCount.Value;
+                    }
+                    await _DiscountRepository.Update(discounts, _AppUserProvider.User.Id);
+                }
+            }
+
+            if (create.CouponId > 0)
+            {
+                Coupon coupon = await _CouponRepository.GetAsTracking(create.CouponId);
+                coupon.UsedCount++;
+                await _CouponRepository.Update(coupon, _AppUserProvider.User.Id);
+            }
+
+            #endregion
+
+            #region update productItem purchasedPrice
+
+            if (create.ProductItemIdAndPrice.Any())
+            {
+                var productItemIds = create.ProductItemIdAndPrice.Select(a => a.Key);
+                var productIems = await _ProductItemRepository.GetQueryableTracking()
+                    .Where(a => productItemIds.Contains(a.Id))
+                    .ToListAsync();
+                foreach (var productItem in productIems)
+                {
+                    productItem.PurchasedPrice = create.ProductItemIdAndPrice[productItem.Id];
+                }
+                await _ProductItemRepository.Update(productIems,_AppUserProvider.User.Id);
+            }
+
+            #endregion
+
 
             return new ServiceResponse<string>(ResponseResult.Success, _Message.SuccessCreate(), Order.TrackingCode);
         }

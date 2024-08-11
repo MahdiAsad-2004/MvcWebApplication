@@ -15,7 +15,7 @@ namespace OrganicShop.Domain.Entities
     {
         public string TrackingCode { get; set; }
         public int TotalPrice { get; set; }
-        public int DiscountPrice { get; set; }
+        public int CouponAmount { get; set; }
         public int FinalPrice { get; set; }
         public int ShippingPrice { get; set; }
         public string ShippingMethodName { get; set; }
@@ -23,7 +23,6 @@ namespace OrganicShop.Domain.Entities
         public DateTime DeliveryDateEstimated { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
-        public bool IsPaid { get; set; }
         public OrderAddress OrderAddress { get; set; }
         public long UserId { get; set; }
 
