@@ -24,7 +24,7 @@ namespace OrganicShop.BLL.Mappers
                     (float)b.Comments.Where(a => a.IsAccepted()).Sum(c => c.Rate)/(float)b.Comments.Count(a => a.IsAccepted()) : 0))
                 .ForMember(m => m.AddressProvince, a => a.MapFrom(b => b.Address.Province.ToStringValue()))
                 .ForMember(m => m.AddressPhone, a => a.MapFrom(b => b.Address.PhoneNumber))
-                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Picture != null ? b.Picture.Name : PathExtensions.SellerDefaultImage))
+                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Picture != null ? b.Picture.Name : PathExtensions.SellerDefaultImageName))
                 .ForMember(m => m.AddressText, a => a.MapFrom(b => b.Address.Text));
 
 
@@ -33,7 +33,7 @@ namespace OrganicShop.BLL.Mappers
                 .ForMember(m => m.AddressProvince, a => a.MapFrom(b => b.Address.Province.ToStringValue()))
                 .ForMember(m => m.AddressPhone, a => a.MapFrom(b => b.Address.PhoneNumber))
                 .ForMember(m => m.AddressText, a => a.MapFrom(b => b.Address.Text))
-                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Picture != null ? b.Picture.Name : PathExtensions.SellerDefaultImage))
+                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Picture != null ? b.Picture.Name : PathExtensions.SellerDefaultImageName))
                 .ForMember(m => m.Comments, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Select(c => c.ToListDto()).ToArray()));
 
 

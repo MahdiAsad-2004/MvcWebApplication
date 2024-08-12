@@ -241,13 +241,12 @@
 
                 @if (User.Identity.IsAuthenticated)
                 {
-                    //await Html.PartialAsync("_SendCommentUserSection", new CreateCommentFeedbackUserDto { ArticleId = Model.Id });
+                    <partial name="_SendCommentUserSection" model="new CreateCommentDto { ArticleId = Model.Id }"/>
                 }
                 else
                 {
-                    //await Component.InvokeAsync("SendCommentSection", new { ProductId = default(int?), ArticleId = Model.Id });
+                    <partial name="_SendCommentUnknownSection" model="new CreateCommentDto { ArticleId = Model.Id }" />
                 }
-
 
                 <div class="comment-box overflow-hidden">
                     <div class="leave-title">

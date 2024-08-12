@@ -22,6 +22,16 @@ namespace OrganicShop.Domain.Validation.CommentValidators
 
         }
     }
+    
+
+    public class CreateCommentFeedbackUserValidator : BaseValidator<CreateCommentFeedbackUserDto>
+    {
+        public CreateCommentFeedbackUserValidator()
+        {
+            
+
+        }
+    }
 
 
 

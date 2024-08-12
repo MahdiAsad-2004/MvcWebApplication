@@ -10,8 +10,9 @@ namespace OrganicShop.Domain.IServices
         Task<ServiceResponse<PageDto<Comment, CommentListDto, long>>> GetAll(FilterCommentDto? filter = null,PagingDto? paging = null);
 
         Task<ServiceResponse<CommentListDto>> Get(long Id);
+        Task<ServiceResponse<Empty>> Create(CreateCommentDto create);
 
-        Task<ServiceResponse<Empty>> Create(CreateCommentDto? create = null, CreateCommentFeedbackUserDto? createForUser = null);
+        Task<ServiceResponse<Empty>> Create(CreateCommentFeedbackUserDto createForUser);
 
         Task<ServiceResponse<Empty>> Update(UpdateCommentDto update);
         

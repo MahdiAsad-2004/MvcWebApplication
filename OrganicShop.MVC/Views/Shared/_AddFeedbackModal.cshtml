@@ -1,0 +1,39 @@
+﻿@using OrganicShop.Domain.Dtos.CommentDtos
+@model CreateCommentFeedbackUserDto
+@{
+    string? productImageName = ViewData["PurposeImageName"] as string;
+    string? productTitle = ViewData["PurposeTitle"] as string;
+}
+
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">بازخورد خود را بنویسید</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body pt-0">
+            <div>
+                <div class="product-wrapper">
+                    <div class="product-image">
+                        <img class="img-fluid" alt="Solid Collared Tshirts"
+                             src="~/media/images/product/@productImageName">
+                    </div>
+                    <div class="product-content">
+                        <h5 class="name">@productTitle</h5>
+                    </div>
+                </div>
+                
+                @await Html.PartialAsync("_AddFeedbackModalForm" , Model)
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="add-feedback-modal-close-button" class="btn btn-md btn-theme-outline fw-bold" data-bs-dismiss="modal">
+                بستن
+            </button>
+            <button type="button" class="btn btn-md fw-bold text-light theme-bg-color" onclick="SubmitAddFeedback()">ثبت</button>
+        </div>
+    </div>
+</div>

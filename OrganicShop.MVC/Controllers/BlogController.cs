@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OrganicShop.BLL.Extensions;
+using OrganicShop.BLL.Providers;
+using OrganicShop.BLL.Services;
+using OrganicShop.BLL.Utils;
 using OrganicShop.Domain.Dtos.ArticleDtos;
 using OrganicShop.Domain.Dtos.CategoryDtos;
+using OrganicShop.Domain.Dtos.CommentDtos;
 using OrganicShop.Domain.Dtos.Page;
 using OrganicShop.Domain.Dtos.ProductDtos;
 using OrganicShop.Domain.Enums;
@@ -76,7 +81,7 @@ namespace OrganicShop.Mvc.Controllers
         public async Task<IActionResult> Blog(string title)
         {
             title = TextExtensions.DecodePersianString(title);
-            var response = await _ArticleService.GetDetail(title: title);
+            var response = await _ArticleService.GetDetail(title:title);
             if(response.Result == ResponseResult.Success)
             {
                 ViewData["Categories"] = (await _CategoryService.GetAllSummary(new FilterCategoryDto { Type = CategoryType.Article})).Data!.List;
@@ -90,13 +95,12 @@ namespace OrganicShop.Mvc.Controllers
         }
 
 
-
-
         [HttpGet("/Blog1")]
         public async Task<IActionResult> Blog()
         {
             return View("blog1");
         }
+
 
 
 

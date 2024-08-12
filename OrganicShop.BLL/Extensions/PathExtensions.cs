@@ -11,19 +11,27 @@ namespace OrganicShop.BLL.Extensions
 
         public static readonly string UserImages = Path.Combine(CurrentDirectory, "wwwroot\\media\\images\\user\\");
                       
-        public static readonly string UserDefaultImage = Path.Combine(CurrentDirectory, "wwwroot\\media\\images\\user\\user.png");
+        public static readonly string UserDefaultImagePath = Path.Combine(CurrentDirectory, "wwwroot\\media\\images\\user\\user.png");
+        
+        public static readonly string UserDefaultImageName = "user.png";
 
         public static readonly string ProductImages = Path.Combine(CurrentDirectory, "wwwroot\\media\\images\\product\\");
         
-        public static readonly string ProductDefaultImage = Path.Combine(CurrentDirectory, "wwwroot\\media\\images\\product\\product-icon.png");
+        public static readonly string ProductDefaultImagePath = Path.Combine(CurrentDirectory, "wwwroot\\media\\images\\product\\product-icon.png");
+        
+        public static readonly string ProductDefaultImageName = "product-icon.png";
 
         public static readonly string ArticleImages = Path.Combine(CurrentDirectory, "wwwroot\\media\\images\\article\\");
         
-        public static readonly string ArticleDefaultImage = Path.Combine(CurrentDirectory, "wwwroot\\media\\images\\article\\article-icon.png");
+        public static readonly string ArticleDefaultImagePath = Path.Combine(CurrentDirectory, "wwwroot\\media\\images\\article\\article-icon.png");
+
+        public static readonly string ArticleDefaultImageName = "article-icon.png";
         
         public static readonly string SellerImages = Path.Combine(CurrentDirectory, "wwwroot\\media\\images\\seller\\");
 
-        public static readonly string SellerDefaultImage = Path.Combine(CurrentDirectory, "wwwroot\\media\\images\\seller\\seller-icon.png");
+        public static readonly string SellerDefaultImagePath = Path.Combine(CurrentDirectory, "wwwroot\\media\\images\\seller\\seller-icon.png");
+        
+        public static readonly string SellerDefaultImageName = "seller-icon.png";
         
         
 

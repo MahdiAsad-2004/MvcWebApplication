@@ -1,8 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using OrganicShop.BLL.Extensions;
+using OrganicShop.BLL.Providers;
+using OrganicShop.BLL.Services;
+using OrganicShop.BLL.Utils;
 using OrganicShop.Domain.Dtos.AddressDtos;
 using OrganicShop.Domain.Dtos.BankCardDtos;
+using OrganicShop.Domain.Dtos.CommentDtos;
 using OrganicShop.Domain.Dtos.NewsLetterMemberDtos;
 using OrganicShop.Domain.Dtos.ProductDtos;
 using OrganicShop.Domain.Dtos.PropertyDtos;
@@ -26,15 +31,17 @@ namespace OrganicShop.Mvc.Controllers
     {
         #region ctor
 
+        private readonly AesKeys _AesKeys;
         private readonly IUserService _UserService;
         private readonly IProductService _ProductService;
         private readonly IAddressService _AddressService;
         private readonly IWishItemService _WishItemService;
         private readonly IBankCardService _BankCardService;
         private readonly INewsLetterMemberService _NewsLetterMemberService;
-        public UserController(IUserService userService, IWishItemService wishItemService, IProductService productService,
-            IAddressService adressService, IBankCardService bankCardService, INewsLetterMemberService newsLetterMemberService)
+        public UserController(IUserService userService, IWishItemService wishItemService, IProductService productService, IAddressService adressService,
+            IBankCardService bankCardService, INewsLetterMemberService newsLetterMemberService, IOptions<AesKeys> aesKeys)
         {
+            _AesKeys = aesKeys.Value;
             _UserService = userService;
             _WishItemService = wishItemService;
             _ProductService = productService;
@@ -445,7 +452,6 @@ namespace OrganicShop.Mvc.Controllers
         }
 
         #endregion
-
 
 
 

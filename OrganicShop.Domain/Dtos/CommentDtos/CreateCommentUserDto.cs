@@ -41,9 +41,6 @@ namespace OrganicShop.Domain.Dtos.CommentDtos
         public long? SellerId { get; set; }
 
 
-        [DisplayName("مطلب")]
-        [Range(1, int.MaxValue, ErrorMessage = "{0} معتبر نیست")]
-        public int? ArticleId { get; set; }
 
     }
 

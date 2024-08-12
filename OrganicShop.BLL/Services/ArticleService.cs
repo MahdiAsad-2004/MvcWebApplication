@@ -120,7 +120,7 @@ namespace OrganicShop.BLL.Services
         public async Task<ServiceResponse<ArticleDetailDto>> GetDetail(int? id = null, string? title = null)
         {
             Article article;
-            if (id != null && string.IsNullOrEmpty(title))
+            if (id == null && string.IsNullOrEmpty(title))
                 throw new ArgumentNullException("Article Id and Article Title");
             var query = _ArticleRepository.GetQueryable();
 
@@ -143,7 +143,7 @@ namespace OrganicShop.BLL.Services
                 if (id < 1)
                     return new ServiceResponse<ArticleDetailDto>(ResponseResult.NotFound, null);
 
-                article = await query.FirstOrDefaultAsync(a => a.Id.Equals(id));
+                article = await query.FirstOrDefaultAsync(a => a.Id == id);
             }
             else
             {

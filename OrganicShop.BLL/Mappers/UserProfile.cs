@@ -25,7 +25,7 @@ namespace OrganicShop.BLL.Mappers
                 .ForMember(m => m.Addresses, a => a.MapFrom(b => b.Addresses.Select(a => a.ToListDto()).ToArray()))
                 .ForMember(m => m.BankCards, a => a.MapFrom(b => b.BankCards.Select(a => a.ToListDto()).ToArray()))
                 .ForMember(m => m.Orders, a => a.MapFrom(b => b.Orders.Select(a => a.ToListDto()).ToArray()))
-                .ForMember(m => m.ProfileImage, a => a.MapFrom(b => b.Picture != null ? b.Picture.Name : PathExtensions.UserDefaultImage));
+                .ForMember(m => m.ProfileImage, a => a.MapFrom(b => b.Picture != null ? b.Picture.Name : PathExtensions.UserDefaultImageName));
 
 
             CreateMap<CreateUserDto, User>()

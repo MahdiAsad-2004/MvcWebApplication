@@ -239,7 +239,7 @@
                                         </button>
                                     </div>
                                 </div>
-                            
+
                                 <button type="button" id="add-product-to-cart-button" onclick="AddProductToCart('@Model.Id' , 0 , 'product-main-quantity-zero')"
                                         class="btn btn-md bg-dark cart-button text-white w-100" disabled="@(!IsAvailable)">
                                     افزودن به سبد خرید
@@ -508,8 +508,8 @@
                                                             <h4 class="fw-bold">بازخورد این محصول</h4>
                                                             <p>با ثبت بازخورد خود در خرید دیگران راهنمایی خوبی باشید</p>
                                                             <button class="btn" type="button" data-bs-toggle="modal"
-                                                                    data-bs-target="#writereview">
-                                                                ثبت دیدگاه جدید
+                                                                    data-bs-target="#add-feedback-modal">
+                                                                ثبت بازخورد جدید
                                                             </button>
                                                         </div>
                                                     }
@@ -618,7 +618,7 @@
                         </div>
                     </div>
                     <div class="selection-section">
-                    
+
                         <div class="cart_qty qty-box product-qty m-0">
                             <div class="input-group h-100">
                                 <button type="button" class="qty-left-minus" data-type="minus" data-field="">
@@ -662,8 +662,10 @@
         @await Html.PartialAsync("_PreviewProductModal", new ProductSummaryDto())
     </div>
 
-    <partial name="_AddCommentModal" model="new CreateCommentFeedbackUserDto(){ProductId = Model.Id}" view-data="ViewData"
-             view-data-ProductImageName="Model.MainImageName" view-data-ProductTitle="Model.Title" />
+    <div class="modal fade theme-modal question-modal" id="add-feedback-modal" tabindex="-1">
+        <partial name="_AddFeedbackModal" model="new CreateCommentFeedbackUserDto(){ProductId = Model.Id}" view-data="ViewData"
+                 view-data-PurposeImageName="Model.MainImageName" view-data-PurposeTitle="Model.Title" />
+    </div>
 }
 
 @section Scripts {

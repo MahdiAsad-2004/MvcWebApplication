@@ -17,14 +17,14 @@ namespace OrganicShop.BLL.Mappers
 
             CreateMap<Product, ProductListDto>()
                 .ForMember(m => m.CategoryTitle, a => a.MapFrom(b => b.Categories.Last().Title))
-                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
+                .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImageName))
                 .ForMember(m => m.IsActive, a => a.MapFrom(b => b.BaseEntity.IsActive));
 
 
             CreateMap<Product, ProductSummaryDto>()
                .ForMember(m => m.DiscountedPrice, a => a.MapFrom(b => b.DiscountedPrice))
                .ForMember(m => m.Categories, a => a.MapFrom(b => b.Categories.OrderBy(a => a.Id).ToArray()))
-               .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
+               .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImageName))
                .ForMember(m => m.Discount, a => a.MapFrom(b => b.GetDiscount()))
                //.ForMember(m => m.ImageNames, a => a.MapFrom(b => b.Pictures.Select(p => p.Name).ToArray()))
                .ForMember(m => m.CommentsRate, a => a.MapFrom(b =>
@@ -37,7 +37,7 @@ namespace OrganicShop.BLL.Mappers
 
             CreateMap<Product, ProductDetailDto>()
                .ForMember(m => m.DiscountedPrice, a => a.MapFrom(b => b.DiscountedPrice))
-               .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
+               .ForMember(m => m.MainImageName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImageName))
                .ForMember(m => m.ImageNames, a => a.MapFrom(b => b.Pictures.Select(p => p.Name).ToArray()))
                .ForMember(m => m.Properties, a => a.MapFrom(b => b.Properties.Select(p => p.ToListDto()).OrderBy(o => o.Priority).ToArray()))
                .ForMember(m => m.Comments, a => a.MapFrom(b => b.Comments.Where(c => c.Status == CommentStatus.Accepted).Select(c => c.ToListDto()).ToList()))
@@ -47,7 +47,7 @@ namespace OrganicShop.BLL.Mappers
                     ValueTuple.Create(
                         b.Seller.Title,
                         b.Seller.Description,
-                        b.Seller.Picture != null ? b.Seller.Picture.Name:PathExtensions.SellerDefaultImage,
+                        b.Seller.Picture != null ? b.Seller.Picture.Name:PathExtensions.SellerDefaultImageName,
                         b.Seller.Address.Text,
                         b.Seller.Address.PhoneNumber,
                         b.Seller.Comments.Count,
@@ -70,7 +70,7 @@ namespace OrganicShop.BLL.Mappers
                 .ForMember(m => m.DiscountCount, a => a.MapFrom(b => b.GetDiscount() != null ? b.GetDiscount().Count : null))
                 .ForMember(m => m.DiscountId, a => a.MapFrom(b => b.GetDiscount() != null ? b.GetDiscount().Id : default(int?)))
                 //.ForMember(m => m.PropertiesDic, a => a.MapFrom(b => b.Properties.ToDictionary(k => k.BaseId.Value,v => new EditPropertyDto {Id = v.Id ,Value = v.Value})))
-                .ForMember(m => m.MainPictureName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
+                .ForMember(m => m.MainPictureName, a => a.MapFrom(b => b.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImageName))
                 .ForMember(m => m.CategoryId, a => a.MapFrom(b => b.Categories.Last().Id))
                 .ForMember(m => m.OldPicturesDic, a => a.MapFrom(b => b.Pictures.Where(a => a.IsMain == false).ToDictionary(k => k.Id , v => v.Name)));
 

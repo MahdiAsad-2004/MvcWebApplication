@@ -29,7 +29,7 @@ namespace OrganicShop.BLL.Mappers
             CreateMap<Order, OrderTrackDto>()
                 .ForMember(m => m.CreateDate, a => a.MapFrom(b => b.BaseEntity.CreateDate))
                 .ForMember(m => m.UserName, a => a.MapFrom(b => b.Receiver.Name))
-                .ForMember(m => m.UserName, a => a.MapFrom(b => b.Receiver.Picture != null ? b.Receiver.Picture.Name : PathExtensions.UserDefaultImage))
+                .ForMember(m => m.UserName, a => a.MapFrom(b => b.Receiver.Picture != null ? b.Receiver.Picture.Name : PathExtensions.UserDefaultImageName))
                 .ForMember(m => m.TrackingStatuses, a => a.MapFrom(b => b.TrackingStatuses.ToArray()))
                 .ForMember(m => m.TrackingDescriptions, a => a.MapFrom(b => b.TrackingDescriptions.ToArray()));
 

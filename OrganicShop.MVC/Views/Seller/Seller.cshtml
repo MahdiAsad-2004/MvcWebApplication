@@ -285,7 +285,9 @@
 </section>
 @section Modals{
 
-    <partial name="_AddCommentModal" model="new CreateCommentFeedbackUserDto(){SellerId = Model.Id}" view-data="ViewData"
-             view-data-SellerImageName="Model.MainImageName" view-data-SellerTitle="Model.Title" />
+    <div class="modal fade theme-modal question-modal" id="add-feedback-modal" tabindex="-1">
+        <partial name="_AddFeedbackModal" model="new CreateCommentFeedbackUserDto(){SellerId = Model.Id}" view-data="ViewData"
+                 view-data-PurposeImageName="Model.MainImageName" view-data-PurposeTitle="Model.Title" />
+    </div>
 
 }

@@ -17,7 +17,7 @@ namespace OrganicShop.BLL.Mappers
                 .ForMember(m => m.ProductTitle, a => a.MapFrom(b => b.Product.Title))
                 .ForMember(m => m.ProductPrice, a => a.MapFrom(b => b.Product.Price))
                 .ForMember(m => m.ProductStock, a => a.MapFrom(b => b.Product.Stock))
-                .ForMember(m => m.ProductMainImageName, a => a.MapFrom(b => b.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage))
+                .ForMember(m => m.ProductMainImageName, a => a.MapFrom(b => b.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImageName))
                 //.ForMember(m => m.DiscountedPrice , a => a.MapFrom(b => b.Product.ToModel().DiscountedPrice))
                 .ForMember(m => m.ProductDiscountedPrice, a => a.MapFrom(b => b.Product.DiscountedPrice))
                 .ForMember(m => m.ProductBarcode, a => a.MapFrom(b => b.Product.Barcode));
@@ -47,7 +47,7 @@ namespace OrganicShop.BLL.Mappers
                 Barcode = productItem.Product.Barcode,
                 Count = productItem.Count,
                 Id = productItem.Id,
-                MainImageName = productItem.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,
+                MainImageName = productItem.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImageName,
                 PurchasedPrice = productItem.PurchasedPrice,
                 Title = productItem.Product.Title,
             };
@@ -60,7 +60,7 @@ namespace OrganicShop.BLL.Mappers
                 ProductBarcode = productItem.Product.Barcode,
                 Count = productItem.Count,
                 Id = productItem.Id,
-                ProductMainImageName = productItem.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage,
+                ProductMainImageName = productItem.Product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImageName,
                 ProductPrice = productItem.Product.Price,
                 ProductTitle = productItem.Product.Title,
                 CartId = productItem.CartId,
@@ -85,7 +85,7 @@ namespace OrganicShop.BLL.Mappers
                 ProductDiscounteId = product.GetDiscountId(),
                 ProductDiscountedPrice = product.DiscountedPrice,
                 ProductMainImageName = product.Pictures != null ? 
-                    (product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImage) : PathExtensions.ProductDefaultImage,
+                    (product.Pictures.GetMainPictureName() ?? PathExtensions.ProductDefaultImageName) : PathExtensions.ProductDefaultImageName,
                 CartId = 0,
             };
         }

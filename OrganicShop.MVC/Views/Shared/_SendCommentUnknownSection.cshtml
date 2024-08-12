@@ -1,0 +1,61 @@
+﻿@using Microsoft.Extensions.Options
+@using OrganicShop.BLL.Providers
+@using OrganicShop.BLL.Utils
+@using OrganicShop.Domain.Dtos.CommentDtos
+@model CreateCommentDto
+@inject IOptions<AesKeys> aesKeys;
+
+@{
+    AesKeys _aesKeys = aesKeys.Value;
+    CredentialForCommentDto? credentialForComment = AppCookies.NameAndEmailForComment.GetModel
+        (AesOperation.Decrypt(Context.Request.Cookies[AppCookies.NameAndEmailForComment.Key], _aesKeys.Cookie));
+}
+
+<form class="leave-box" method="post" action="/comment/unknown/add" id="add-comment-unknown-form" data-target-id="add-comment-unknown-form">
+    <input readonly asp-for="ArticleId" class="hide" />
+    <span asp-validation-for="ArticleId" class="text-danger mb-1 mt-1"></span>
+    <div class="leave-title mt-0">
+        <h3>ارسال دیدگاه</h3>
+    </div>
+    <div class="leave-comment">
+        <div class="comment-notes">
+            <p class="text-content mb-4">آدرس ایمیل شما منتشر نخواهد شد!</p>
+        </div>
+        <div class="row g-3">
+            <div class="col-xxl-6 col-lg-12 col-sm-6 mb-2">
+                <div class="blog-input">
+                    <input asp-for=AuthorName class="form-control" placeholder="نام شما" value="@(credentialForComment != null ? credentialForComment.AuthorName : "")">
+                    <span asp-validation-for="AuthorName" class="mt-2 text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-xxl-6 col-lg-12 col-sm-6 mb-2">
+                <div class="blog-input">
+                    <input asp-for="Email" class="form-control" placeholder="آدرس ایمیل" value="@(credentialForComment != null ? credentialForComment.Email : "")">
+                    <span asp-validation-for="Email" class="mt-2 text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-12 mb-4">
+                <div class="blog-input">
+                    <textarea asp-for="Text" class="form-control" id="exampleFormControlTextarea1" rows="4" placeholder="دیدگاه شما"></textarea>
+                    <span asp-validation-for="Text" class="mt-2 text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-check d-flex p-0 mb-4">
+            <input asp-for="SaveNameAndEmail" class="checkbox_animated" type="checkbox">
+            <label class="form-check-label text-content" for="flexCheckDefault">
+                <span class="color color-1"> نام و ایمیل من را برای دفعات بعدی ذخیره کن!</span>
+            </label>
+        </div>
+        <button type="button" class="btn btn-animation ms-xxl-auto mt-xxl-0 mt-3 btn-md fw-bold" onclick="FetchRequestFormWithId('add-comment-unknown-form')">
+            ارسال دیدگاه
+        </button>
+    </div>
+</form>
+
+
+
+

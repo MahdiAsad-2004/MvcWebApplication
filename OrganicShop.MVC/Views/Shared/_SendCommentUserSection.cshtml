@@ -1,24 +1,12 @@
 ﻿@using OrganicShop.Domain.Dtos.CommentDtos
-@model CreateCommentFeedbackUserDto
+@model CreateCommentDto
 
-<form class="leave-box" method="post" onsubmit="FetchRequest(event)" action="/Comment/Create" id="create-comment-form">
-    @if(Model.ProductId != null)
-    {
-        <input asp-for="ProductId" hidden readonly/>
-    }
-    else if(Model.ArticleId != null)
-    {
-        <input asp-for="ArticleId" hidden readonly/>
-    }
-    else
-    {
-        throw new Exception("productId and articleId are null in send comment partial !");
-    }
-    <input hidden readonly asp-for="Rate" value="1" />
+<form class="leave-box" method="post" action="/comment/user/add" id="add-comment-user-form" data-target-id="add-comment-user-form">
+    <input readonly asp-for="ArticleId" class="hide" />
+    <span asp-validation-for="ArticleId" class="text-danger mb-1 mt-1"></span>
     <div class="leave-title mt-0">
         <h3>ارسال دیدگاه</h3>
     </div>
-
     <div class="leave-comment">
         <div class="comment-notes">
             <p class="text-content mb-4">آدرس ایمیل شما منتشر نخواهد شد!</p>
@@ -32,6 +20,8 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-animation ms-xxl-auto mt-xxl-0 mt-3 btn-md fw-bold">ارسال دیدگاه</button>
+        <button type="button" class="btn btn-animation ms-xxl-auto mt-xxl-0 mt-1 btn-md fw-bold" onclick="FetchRequestFormWithId('add-comment-user-form')">
+            ارسال دیدگاه
+        </button>
     </div>
 </form>

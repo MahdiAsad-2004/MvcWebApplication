@@ -664,3 +664,31 @@ async function RemoveCartSummaryProductItem(productItemId, elementId) {
     }
 }
 
+
+
+
+
+// add feedback modal 
+
+const commentStarFillHtml = `<li><i style="color:#ffb321; font-size:15px;" class="fa-light fa-star"></i></li>`;
+const commentStarEmptyHtml = '<li><i style="color:#ffb321; font-size:15px;" class="fa-solid fa-star"></i></li>';
+function ChangeCommentRateStars(select) {
+    console.log(select.value);
+    const commentRateStarsContainer = document.getElementById('comment-rate-stars');
+    let rate = +select.value;
+    if (rate) {
+        commentRateStarsContainer.innerHTML = '';
+        for (var i = 1; i <= rate; i++) {
+            commentRateStarsContainer.insertAdjacentHTML('beforeend', commentStarEmptyHtml);
+        }
+        for (var i = 1; i <= 5 - rate; i++) {
+            commentRateStarsContainer.insertAdjacentHTML('beforeend', commentStarFillHtml);
+        }
+    }
+}
+async function SubmitAddFeedback() {
+    if (await FetchRequestFormWithId('add-feedback-form')) {
+        document.getElementById('add-feedback-modal-close-button').click();
+    }
+}
+

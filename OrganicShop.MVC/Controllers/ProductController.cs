@@ -200,21 +200,7 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
-        [HttpPost]
-        public async Task<IActionResult> AddComment(CreateCommentFeedbackUserDto createComment)
-        {
-            string? productImageName = ViewData["ProductImageName"] as string;
-            string? productTitle = ViewData["ProductTitle"] as string;
-
-            createComment.UserId = AppUser.Id;
-            var response = await _CommentService.Create(createForUser: createComment);
-
-            if (response.Result == ResponseResult.Success)
-                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, "دیدگاه شما با موفقیت ارسال شد"));
-
-            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message), responseResult: false);
-
-        }
+       
 
 
 
