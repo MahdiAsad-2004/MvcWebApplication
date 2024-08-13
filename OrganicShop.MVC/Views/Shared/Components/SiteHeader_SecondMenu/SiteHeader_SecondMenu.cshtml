@@ -33,7 +33,7 @@
                                 if(categories.Where(a => a.ParentId == item.Id).Any())
                                 {
                                     <li class="onhover-category-list">
-                                        <a href="/products/category/@item.Title.EncodePersian()" class="category-name">
+                                        <a href="/products/category/@item.Title.EncodeUrl()" class="category-name">
                                             @*<img src="" alt="">*@
                                             <h6>@item.Title</h6>
                                             <i class="fa-solid fa-angle-left"></i>
@@ -43,13 +43,13 @@
                                             {
                                                 <div class="list-1">
                                                     <div class="category-title-box">
-                                                        <a class="h5" href="/products/category/@item1.Title.EncodePersian()">@item1.Title</a>
+                                                        <a class="h5" href="/products/category/@item1.Title.EncodeUrl()">@item1.Title</a>
                                                     </div>
                                                     <ul>
                                                         @foreach (var item2 in categories.Where(a => a.ParentId == item1.Id))
                                                         {
                                                             <li>
-                                                                <a href="/products/category/@item2.Title.EncodePersian()">@item2.Title</a>
+                                                                <a href="/products/category/@item2.Title.EncodeUrl()">@item2.Title</a>
                                                             </li>
                                                         }
                                                     </ul>
@@ -61,7 +61,7 @@
                                 else
                                 {
                                     <li class="onhover-category-list">
-                                        <a href="/products/category/@item.Title.EncodePersian()" class="category-name">
+                                        <a href="/products/category/@item.Title.EncodeUrl()" class="category-name">
                                             @*<img src="" alt="">*@
                                             <h6>@item.Title</h6>
                                             <i class="fa-solid fa-angle-left"></i>

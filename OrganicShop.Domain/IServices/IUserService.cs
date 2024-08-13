@@ -35,6 +35,12 @@ namespace OrganicShop.Domain.IServices
 
         Task<ServiceResponse<UserSignInDto>> SignIn(SignInUserDto signInUser);
 
+        Task<ServiceResponse<Empty>> SendEmailVerification();
+        
+        Task<ServiceResponse<EmailVerificationDto>> VeifyEmail(string cryptedToken);
+
+
+
 
 
     }

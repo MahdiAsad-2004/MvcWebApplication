@@ -1,0 +1,316 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+
+    <title>ایمیل خوش آمد گویی</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <style type="text/css">
+        @font-face {
+            font-family: IRANSans;
+            font-style: normal;
+            font-weight: 300;
+            src: url('fonts/IRANSansWeb(FaNum)_Light.eot');
+            src: url('fonts/IRANSansWeb(FaNum)_Light.eot?#iefix') format('embedded-opentype'), /* IE6-8 */
+            url('fonts/IRANSansWeb(FaNum)_Light.woff2') format('woff2'), /* FF39+,Chrome36+, Opera24+*/
+            url('fonts/IRANSansWeb(FaNum)_Light.woff') format('woff'), /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+            url('fonts/IRANSansWeb(FaNum)_Light.ttf') format('truetype');
+        }
+
+        body {
+            text-align: center;
+            margin: 0 auto;
+            width: 650px;
+            font-family: IRANSans;
+            background-color: #e2e2e2;
+            display: block;
+        }
+
+        .mb-3 {
+            margin-bottom: 30px;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            display: inline-block;
+            text-decoration: unset;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        h5 {
+            margin: 10px;
+            color: #777;
+        }
+
+        .text-center {
+            text-align: center
+        }
+
+        .header-menu ul li + li {
+            margin-right: 20px;
+        }
+
+        .header-menu ul li a {
+            font-size: 14px;
+            color: #252525;
+            font-weight: 500;
+        }
+
+        .password-button {
+            background-color: #0DA487;
+            border: none;
+            color: #fff;
+            padding: 14px 26px;
+            font-size: 18px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-family: 'Nunito Sans', sans-serif;
+        }
+
+        .footer-table {
+            position: relative;
+        }
+
+            .footer-table::before {
+                position: absolute;
+                content: "";
+                background-image: url(images/footer-left.svg);
+                background-position: top right;
+                top: 0;
+                left: -71%;
+                width: 100%;
+                height: 100%;
+                background-repeat: no-repeat;
+                z-index: -1;
+                background-size: contain;
+                opacity: 0.3;
+            }
+
+            .footer-table::after {
+                position: absolute;
+                content: "";
+                background-image: url(images/footer-right.svg);
+                background-position: top right;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                background-repeat: no-repeat;
+                z-index: -1;
+                background-size: contain;
+                opacity: 0.3;
+            }
+
+        .theme-color {
+            color: #0DA487;
+        }
+    </style>
+</head>
+
+<body style="margin: 20px auto;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0"
+           style="background-color: white; width: 100%; box-shadow: 0px 0px 14px -4px rgba(0, 0, 0, 0.2705882353);-webkit-box-shadow: 0px 0px 14px -4px rgba(0, 0, 0, 0.2705882353);">
+        <tbody>
+            <tr>
+                <td>
+                    <table class="header-table" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tr class="header"
+                            style="background-color: #f7f7f7;display: flex;align-items: center;justify-content: space-between;width: 100%;">
+                            <td class="header-logo" style="padding: 10px 32px;">
+                                <a href="https://localhost:7196/" style="display: block; text-align: left;">
+                                    <img src="images/logo.png" class="main-logo" alt="logo">
+                                </a>
+                            </td>
+                            <td class="header-menu" style="display: block; padding: 10px 32px;text-align: right;">
+                                <ul>
+                                    <li>
+                                        <a href="https://localhost:7196/home;">خانه</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://localhost:7196/profile;">لیست علاقه‌مندی ها</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://localhost:7196/cart;">سبد خرید</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://localhost:7196/contact-us;">تماس با ما</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="contant-table" style="margin-bottom: -6px;" align="center" border="0" cellpadding="0"
+                           cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <td>
+                                    <img src="~/email-templete/images/welcome-poster.jpg" />
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    <table class="contant-table" style="margin-top: 40px;" align="center" border="0" cellpadding="0"
+                           cellspacing="0" width="100%">
+                        <thead>
+                            <tr style="display: block;">
+                                <td style="display: block;">
+                                    <h3 style="font-weight: 700; font-size: 20px; margin: 0; text-transform: uppercase;">
+                                        سلام @Param.UserName !
+                                    </h3>
+                                </td>
+
+                                <td>
+                                    <p style="font-size: 14px;font-weight: 500;width: 82%;margin: 8px auto 0;line-height: 1.5;color: #939393;font-family: iransans;">
+                                        ما امیدواریم که محصول ما شما را مانند بسیاری دیگر از قبل از شما هدایت کند. به جایی که
+                                        ایده های شما که در آن ایده های شما می توانند جرقه بزنند و رشد کنند. جایی که همه چیز را در آن پیدا خواهید کرد
+                                        به الهام شما نیاز دارد قبل از شروع، باید ایمیل شما را تأیید کنیم.
+                                    </p>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    <table class="button-table" style="margin: 34px 0;" align="center" border="0" cellpadding="0"
+                           cellspacing="0" width="100%">
+                        <thead>
+                            <tr style="display: block;">
+                                <td style="display: block;">
+                                    <a href="@Param.UrlVerify" class="password-button" style="font-family: iransans;">تایید ایمیل</a>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    <table class="contant-table" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <thead>
+                            <tr style="display: block;">
+                                <td style="display: block;">
+                                    <p style="font-size: 14px; font-weight: 600; width: 82%; margin: 0 auto; line-height: 1.5; color: #939393; font-family: iransans;">
+                                        اگر سوالی دارید، لطفا به ما ایمیل بزنید
+                                        <span class="theme-color">OrganicShop@exapmle.com</span> یا به ما مراجعه کنید
+                                        <a href="https://localhost:7196/faq" class="theme-color">سوالات متداول.</a>
+                                        شما همچنین می توانید با یک انسان زنده واقعی چت کنید
+                                        در ساعات کاری ما آنها می توانند به سؤالات مربوط به حساب پاسخ دهند یا به شما کمک کنند
+                                        با تمرین مدیتیشن شما
+                                    </p>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    <table class="text-center footer-table" align="center" border="0" cellpadding="0" cellspacing="0"
+                           width="100%"
+                           style="background-color: #282834; color: white; padding: 24px; overflow: hidden; z-index: 0; margin-top: 30px;">
+                        <tr>
+                            <td>
+                                <table border="0" cellpadding="0" cellspacing="0" class="footer-social-icon text-center"
+                                       align="center" style="margin: 8px auto 11px;">
+                                    <tr>
+                                        <td>
+                                            <h4 style="font-size: 19px; font-weight: 700; margin: 0;">
+                                                فروشگاه
+                                                <span href="https://localhost:7196/" class="theme-color"> فست کارت </span>
+                                            </h4>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table border="0" cellpadding="0" cellspacing="0" class="footer-social-icon text-center"
+                                       align="center" style="margin: 8px auto 20px;">
+                                    <tr>
+                                        <td>
+                                            <a href="https://localhost:7196/contact-us"
+                                               style="font-size: 14px; font-weight: 600; color: #fff; text-decoration: underline; text-transform: capitalize;">
+                                                تماس با ما
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0)"
+                                               style="font-size: 14px; font-weight: 600; color: #fff; text-decoration: underline; text-transform: capitalize; margin-right: 20px;">
+                                                قوانین
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table border="0" cellpadding="0" cellspacing="0" class="footer-social-icon text-center"
+                                       align="center" style="margin: 23px auto;">
+                                    <tr>
+                                        <td>
+                                            <a href="www.facebook.com">
+                                                <img src="images/fb.png"
+                                                     style="font-size: 25px; margin: 0 0 0 18px;width: 22px;filter: invert(1);"
+                                                     alt="">
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="www.twitter.com">
+                                                <img src="images/twitter.png"
+                                                     style="font-size: 25px; margin: 0 0 0 18px;width: 22px;filter: invert(1);"
+                                                     alt="">
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="www.instagram.com">
+                                                <img src="images/insta.png"
+                                                     style="font-size: 25px; margin: 0 0 0 18px;width: 22px;filter: invert(1);"
+                                                     alt="">
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="www.pinterest.com">
+                                                <img src="images/pinterest.png"
+                                                     style="font-size: 25px; margin: 0 0 0 18px;width: 22px;filter: invert(1);"
+                                                     alt="">
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td>
+                                            <h5 style="font-size: 13px; text-transform: uppercase; margin: 0; color:#ddd;
+                                 font-weight: 500;">
+                                                آیا می خواهید نحوه دریافت این ایمیل ها را تغییر دهید؟
+                                            </h5>
+                                            <h5 style="font-size: 13px; text-transform: uppercase; margin: 10px 0 0; color:#ddd;
+                                 font-weight: 500;">
+                                                فارسی و راست چین شده توسط فارس کد
+                                            </h5>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

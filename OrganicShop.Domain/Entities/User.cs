@@ -18,6 +18,7 @@ namespace OrganicShop.Domain.Entities
         public Gender? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
         public UserPrivacy Privacy { get; set; }
+        public DateTime? EmailVerificationSendDate { get; set; }
 
 
 

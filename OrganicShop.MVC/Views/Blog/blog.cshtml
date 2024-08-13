@@ -77,13 +77,13 @@
                                         @foreach (var blog in lastBlogs)
                                         {
                                             <div class="recent-box">
-                                                <a href="/Blogs/@TextExtensions.EncodePersianString(blog.Title)" class="recent-image">
+                                                <a href="/Blogs/@TextExtensions.EncodeUrlString(blog.Title)" class="recent-image">
                                                     <img src="~/media/images/article/@blog.MainImageName"
                                                          class="img-fluid blur-up lazyload" alt="">
                                                 </a>
 
                                                 <div class="recent-detail">
-                                                    <a href="/Blog/@TextExtensions.EncodePersianString(blog.Title)">
+                                                    <a href="/Blog/@TextExtensions.EncodeUrlString(blog.Title)">
                                                         <h5 class="recent-name">@blog.Title</h5>
                                                     </a>
                                                     <h6>@blog.CreateDate.ToString("yyyy  MMMMM  dd")<i data-feather="thumbs-up"></i></h6>
@@ -110,7 +110,7 @@
                                             @foreach (var item in categories)
                                             {
                                                 <li>
-                                                    <a href="/Blogs/Category/@TextExtensions.EncodePersianString(item.Title)">
+                                                    <a href="/Blogs/Category/@TextExtensions.EncodeUrlString(item.Title)">
                                                         <div class="category-name">
                                                             <h5>@item.Title</h5>
                                                             <span>@item.ArticlesCount</span>
@@ -233,7 +233,7 @@
                         @foreach (var tagCombo in tagCombos.IntersectBy(Model.TagIds, a => int.Parse(a.Value)))
                         {
                             <li style="cursor:pointer; padding:5px 12px; margin:5px; color:var(--theme-color); border-radius:3px; overflow:hidden; background-color:rgba(var(--theme-color-rgb), 0.1);">
-                                <a class="fw-bold" style="font-size:13px;" href="/tag/@TextExtensions.EncodePersian(tagCombo.Text)">@tagCombo.Text</a>
+                                <a class="fw-bold" style="font-size:13px;" href="/tag/@TextExtensions.EncodeUrl(tagCombo.Text)">@tagCombo.Text</a>
                             </li>
                         }
                     </ul>

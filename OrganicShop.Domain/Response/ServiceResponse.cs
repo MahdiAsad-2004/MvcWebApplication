@@ -20,7 +20,7 @@ namespace OrganicShop.Domain.Response
         public ServiceResponse(ResponseResult result, TData? data = default(TData))
         {
             Result = result;
-            Data = result != ResponseResult.Success ? default(TData) : data;
+            Data = data;
         }
 
         public ServiceResponse(ResponseResult result, string message, TData? data = default(TData))

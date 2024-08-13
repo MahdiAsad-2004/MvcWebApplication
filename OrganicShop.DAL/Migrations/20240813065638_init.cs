@@ -274,6 +274,7 @@ namespace OrganicShop.DAL.Migrations
                     Privacy_IsProfileImageVisible = table.Column<bool>(type: "bit", nullable: false),
                     Privacy_IsEmailVisible = table.Column<bool>(type: "bit", nullable: false),
                     Privacy_DeleteAccountAfterLogOut = table.Column<bool>(type: "bit", nullable: false),
+                    EmailVerificationSendDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
@@ -1048,60 +1049,60 @@ namespace OrganicShop.DAL.Migrations
             migrationBuilder.InsertData(
                 table: "ContactUs",
                 columns: new[] { "Id", "Address", "Description", "Email1", "Email2", "Office1", "Office2", "Office3", "Phone1", "Phone2", "Phone3", "PhoneNumber1", "PhoneNumber2", "PhoneNumber3", "ShortDescription", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { (byte)1, "Address", "Descriptions", "OrganicShop@gmail.com", null, "Tehran", null, null, "02134658899", null, null, "09121234455", null, null, "ShorDescriptions", new DateTime(2024, 8, 11, 2, 7, 20, 979, DateTimeKind.Local).AddTicks(9236), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 979, DateTimeKind.Local).AddTicks(9294) });
+                values: new object[] { (byte)1, "Address", "Descriptions", "OrganicShop@gmail.com", null, "Tehran", null, null, "02134658899", null, null, "09121234455", null, null, "ShorDescriptions", new DateTime(2024, 8, 12, 23, 56, 36, 86, DateTimeKind.Local).AddTicks(806), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 86, DateTimeKind.Local).AddTicks(866) });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "EnTitle", "ParentId", "Title", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { (byte)1, "Main Admin", null, "مدیر سایت", new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5662), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5726) });
+                values: new object[] { (byte)1, "Main Admin", null, "مدیر سایت", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(471), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(532) });
 
             migrationBuilder.InsertData(
                 table: "ShippingMethods",
                 columns: new[] { "Id", "Name", "Price", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
                 values: new object[,]
                 {
-                    { (byte)1, "پست پیشتاز", 30000, new DateTime(2024, 8, 11, 2, 7, 20, 993, DateTimeKind.Local).AddTicks(2549), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 993, DateTimeKind.Local).AddTicks(2591) },
-                    { (byte)2, "پست سفارشی", 50000, new DateTime(2024, 8, 11, 2, 7, 20, 993, DateTimeKind.Local).AddTicks(2758), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 993, DateTimeKind.Local).AddTicks(2765) },
-                    { (byte)3, "تیپاکس", 100000, new DateTime(2024, 8, 11, 2, 7, 20, 993, DateTimeKind.Local).AddTicks(2903), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 993, DateTimeKind.Local).AddTicks(2909) },
-                    { (byte)4, "پیک موتوری", 120000, new DateTime(2024, 8, 11, 2, 7, 20, 993, DateTimeKind.Local).AddTicks(3039), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 993, DateTimeKind.Local).AddTicks(3050) }
+                    { (byte)1, "پست پیشتاز", 30000, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3016), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3060) },
+                    { (byte)2, "پست سفارشی", 50000, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3284), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3294) },
+                    { (byte)3, "تیپاکس", 100000, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3449), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3456) },
+                    { (byte)4, "پیک موتوری", 120000, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3610), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3626) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Privacy_DeleteAccountAfterLogOut", "Privacy_IsEmailVisible", "Privacy_IsProfileImageVisible", "BirthDate", "Email", "Gender", "IsEmailVerified", "Name", "Password", "PhoneNumber", "Role", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
+                columns: new[] { "Id", "Privacy_DeleteAccountAfterLogOut", "Privacy_IsEmailVisible", "Privacy_IsProfileImageVisible", "BirthDate", "Email", "EmailVerificationSendDate", "Gender", "IsEmailVerified", "Name", "Password", "PhoneNumber", "Role", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
                 values: new object[,]
                 {
-                    { 1L, false, false, false, null, "mas1379as@gmail.com", 1, true, "Mahdi Asadi", "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", "09369753041", 1, new DateTime(2024, 8, 11, 2, 7, 20, 996, DateTimeKind.Local).AddTicks(4076), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 996, DateTimeKind.Local).AddTicks(4115) },
-                    { 2L, false, true, true, null, "TestEmail@gmail.com", 1, false, "AmirAli", "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", "09331234566", 2, new DateTime(2024, 8, 11, 2, 7, 20, 996, DateTimeKind.Local).AddTicks(4271), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 996, DateTimeKind.Local).AddTicks(4280) }
+                    { 1L, false, false, false, null, "mas1379as@gmail.com", null, 1, true, "Mahdi Asadi", "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", "09369753041", 1, new DateTime(2024, 8, 12, 23, 56, 36, 103, DateTimeKind.Local).AddTicks(8585), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 103, DateTimeKind.Local).AddTicks(8626) },
+                    { 2L, false, true, true, null, "TestEmail@gmail.com", null, 1, false, "AmirAli", "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", "09331234566", 2, new DateTime(2024, 8, 12, 23, 56, 36, 103, DateTimeKind.Local).AddTicks(8822), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 103, DateTimeKind.Local).AddTicks(8830) }
                 });
 
             migrationBuilder.InsertData(
                 table: "PermissionUsers",
                 columns: new[] { "Id", "PermissionId", "UserId", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { 1, (byte)1, 1L, new DateTime(2024, 8, 11, 2, 7, 20, 988, DateTimeKind.Local).AddTicks(991), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 988, DateTimeKind.Local).AddTicks(1021) });
+                values: new object[] { 1, (byte)1, 1L, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(6408), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(6442) });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "EnTitle", "ParentId", "Title", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
                 values: new object[,]
                 {
-                    { (byte)2, "Users Admin", (byte)1, "مدیریت کاربران", new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5730), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5738) },
-                    { (byte)3, "Products Admin", (byte)1, "مدیریت محصولات", new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5744), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5747) },
-                    { (byte)4, "Permissions Admin", (byte)1, "مدیریت مجوز ها", new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5750), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5752) },
-                    { (byte)5, "Comments Admin", (byte)1, "مدیریت نظرات", new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5757), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5759) },
-                    { (byte)6, "Discounts Admin", (byte)1, "مدیریت تخفیف ها", new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5763), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5765) },
-                    { (byte)7, "Categories Admin", (byte)1, "مدیریت دسته ها", new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5767), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5789) }
+                    { (byte)2, "Users Admin", (byte)1, "مدیریت کاربران", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(538), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(549) },
+                    { (byte)3, "Products Admin", (byte)1, "مدیریت محصولات", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(562), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(565) },
+                    { (byte)4, "Permissions Admin", (byte)1, "مدیریت مجوز ها", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(569), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(572) },
+                    { (byte)5, "Comments Admin", (byte)1, "مدیریت نظرات", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(582), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(586) },
+                    { (byte)6, "Discounts Admin", (byte)1, "مدیریت تخفیف ها", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(590), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(593) },
+                    { (byte)7, "Categories Admin", (byte)1, "مدیریت دسته ها", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(597), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(618) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Picture",
                 columns: new[] { "Id", "ArticleId", "CategoryId", "IsMain", "Name", "ProductId", "SellerId", "SizeMB", "Type", "UserId", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { 1L, null, null, true, "joker.png", null, null, 0.5f, 0, 1L, new DateTime(2024, 8, 11, 2, 7, 20, 989, DateTimeKind.Local).AddTicks(1617), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 989, DateTimeKind.Local).AddTicks(1648) });
+                values: new object[] { 1L, null, null, true, "joker.png", null, null, 0.5f, 0, 1L, new DateTime(2024, 8, 12, 23, 56, 36, 95, DateTimeKind.Local).AddTicks(8270), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 95, DateTimeKind.Local).AddTicks(8302) });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "EnTitle", "ParentId", "Title", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { (byte)8, "Giving Permission", (byte)4, "صدور مجوز", new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5792), null, true, false, new DateTime(2024, 8, 11, 2, 7, 20, 987, DateTimeKind.Local).AddTicks(5794) });
+                values: new object[] { (byte)8, "Giving Permission", (byte)4, "صدور مجوز", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(621), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(624) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_SellerId",

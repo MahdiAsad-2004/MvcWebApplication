@@ -56,7 +56,7 @@ namespace OrganicShop.Mvc.Controllers
         [HttpGet("Blogs/Category/{categoryTitle}")]
         public async Task<IActionResult> Index1(FilterArticleDto filter,[FromRoute]string categoryTitle)
         {
-            categoryTitle = TextExtensions.DecodePersianString(categoryTitle);
+            categoryTitle = TextExtensions.DecodeUrlString(categoryTitle);
             var allCategories = (await _CategoryService.GetAllSummary(new FilterCategoryDto { Type = CategoryType.Article })).Data!.List;
             int? categoryId = allCategories.FirstOrDefault(a => a.Title == categoryTitle)?.Id;
             
@@ -80,7 +80,7 @@ namespace OrganicShop.Mvc.Controllers
         [HttpGet("/Blog/{title}")]
         public async Task<IActionResult> Blog(string title)
         {
-            title = TextExtensions.DecodePersianString(title);
+            title = TextExtensions.DecodeUrlString(title);
             var response = await _ArticleService.GetDetail(title:title);
             if(response.Result == ResponseResult.Success)
             {

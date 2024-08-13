@@ -70,7 +70,7 @@
                         {
                             <div>
                                 <div class="shop-category-box">
-                                    <a href="/Products/Category/@TextExtensions.EncodePersianString(categoryChild.Title)">
+                                    <a href="/Products/Category/@TextExtensions.EncodeUrlString(categoryChild.Title)">
                                         <div class="shop-category-image">
                                             <img src="~/media//images/category/@categoryChild.ImageName" class="rounded-2"/>
                                            @* <i class="@categoryChild.IconClass"
@@ -100,7 +100,7 @@
             <div class="col-custom-3">
                 <div class="left-box wow fadeInUp">
                     <form id="filter-products-form" class="shop-left-sidebar" method="get"
-                          action="/Products/@(IsPageWithCategory ? $"Category/{TextExtensions.EncodePersianString(categoryTitle)}" : "")">
+                          action="/Products/@(IsPageWithCategory ? $"Category/{TextExtensions.EncodeUrlString(categoryTitle)}" : "")">
                         <input id="pageNumber-input" value="1" type="number" hidden name="paging.PageNumber" />
 
                         <div class="back-button">

@@ -36,7 +36,7 @@ namespace OrganicShop.BLL.Services
                     smptClient.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.Auto);
                     // ========>>>>> 587 with Tls && 465 with ssl 
 
-                    smptClient.Authenticate("ShopProviderr@gmail.com", "qrir ajfm ylpe esru");
+                    smptClient.Authenticate(_emailSetting.EmailAddress, _emailSetting.Password);
                     await smptClient.SendAsync(email);
                     smptClient.Disconnect(true);
                 }
@@ -68,7 +68,8 @@ namespace OrganicShop.BLL.Services
                     smptClient.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.Auto);
                     // ========>>>>> 587 with Tls && 465 with ssl 
 
-                    smptClient.Authenticate("ShopProviderr@gmail.com", "qrir ajfm ylpe esru");
+                    smptClient.Authenticate(_emailSetting.EmailAddress, _emailSetting.Password);
+                    //smptClient.Authenticate("ShopProviderr@gmail.com", "qrir ajfm ylpe esru");
                     await smptClient.SendAsync(email);
                     smptClient.Disconnect(true);
                 }

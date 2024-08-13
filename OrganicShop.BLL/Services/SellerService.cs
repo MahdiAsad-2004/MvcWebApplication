@@ -119,7 +119,7 @@ namespace OrganicShop.BLL.Services
 
         public async Task<ServiceResponse<SellerDetailDto>> GetDetail(string codedTitle)
         {
-            string title = TextExtensions.DecodePersianString(codedTitle);
+            string title = TextExtensions.DecodeUrlString(codedTitle);
             
             if(string.IsNullOrWhiteSpace(title))
                 return new ServiceResponse<SellerDetailDto>(ResponseResult.NotFound,null);

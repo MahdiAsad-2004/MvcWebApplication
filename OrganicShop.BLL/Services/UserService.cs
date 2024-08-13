@@ -18,6 +18,11 @@ using OrganicShop.Domain.Dtos.WishItemDtos;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using OrganicShop.Domain.Dtos.PictureDtos;
+using Microsoft.AspNetCore.Identity;
+using OrganicShop.BLL.Utils;
+using OrganicShop.BLL.Providers;
+using System.Text.Json;
+using Microsoft.Extensions.Options;
 
 namespace OrganicShop.BLL.Services
 {
@@ -27,13 +32,15 @@ namespace OrganicShop.BLL.Services
 
         private readonly IMapper _Mapper;
         private readonly IUserRepository _userRepository;
+        private readonly AesKeys _AesKeys;
+        private readonly IEmailSenderService _EmailSenderService;
         private readonly IPictureRepository _PictureRepository;
         private readonly IValidator<CreateUserDto> _ValidatorCreateUser;
         private readonly IValidator<UpdateUserDto> _ValidatorUpdateUser;
         private readonly IValidator<ChangePasswordDto> _ValidatorChangePassword;
         public UserService(IApplicationUserProvider provider, IMapper mapper, IUserRepository userRepository,
-            IValidator<CreateUserDto> validator1CreateUser, IValidator<UpdateUserDto> validator1UpdateUser,
-            IValidator<ChangePasswordDto> validatorChangePassword, IPictureRepository pictureRepository) : base(provider)
+            IValidator<CreateUserDto> validator1CreateUser, IValidator<UpdateUserDto> validator1UpdateUser, IOptions<AesKeys> aesKeys,
+            IValidator<ChangePasswordDto> validatorChangePassword, IPictureRepository pictureRepository, IEmailSenderService emailSenderService) : base(provider)
         {
             _Mapper = mapper;
             _userRepository = userRepository;
@@ -41,6 +48,8 @@ namespace OrganicShop.BLL.Services
             _ValidatorUpdateUser = validator1UpdateUser;
             _ValidatorChangePassword = validatorChangePassword;
             _PictureRepository = pictureRepository;
+            _EmailSenderService = emailSenderService;
+            _AesKeys = aesKeys.Value;
         }
 
         #endregion
@@ -314,6 +323,93 @@ namespace OrganicShop.BLL.Services
                 });
 
         }
+
+
+
+
+
+
+
+
+
+
+
+
+        public async Task<ServiceResponse<Empty>> SendEmailVerification()
+        {
+            User? user = await _userRepository.GetAsTracking(_AppUserProvider.User.Id);
+
+            if (user == null)
+                return new ServiceResponse<Empty>(ResponseResult.NotFound, "حساب کاربری شما یافت نشد");
+
+            if (user.IsEmailVerified)
+                return new ServiceResponse<Empty>(ResponseResult.Failed, "ایمیل شما قبلا تایید شده است");
+
+            if (user.EmailVerificationSendDate != null)
+            {
+                int minutesPassedFromLastSend = (DateTime.Now - user.EmailVerificationSendDate.Value).Minutes;
+                minutesPassedFromLastSend = minutesPassedFromLastSend == 0 ? 1 : minutesPassedFromLastSend;
+                if (minutesPassedFromLastSend < 30 && minutesPassedFromLastSend > 0)
+                    return new ServiceResponse<Empty>(ResponseResult.Failed, $"ایمیل فعالسازی {minutesPassedFromLastSend} دقیقه قبل برای شما ارسال شده است");
+            }
+
+            VerifyEmailToken verifyEmailToken = new VerifyEmailToken
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                ExpireDate = DateTime.Now.AddMinutes(30),
+            };
+
+            var token = AesOperation.Encrypt(JsonSerializer.Serialize(verifyEmailToken), _AesKeys.VerficationEmail);
+
+            string url = $"https://localhost:7196/user/email-verification?Token={TextExtensions.EncodeUrlString(token)}";
+
+            var x = VerifyEmailToken.GetVerifyEmailToken(AesOperation.Decrypt(token, _AesKeys.VerficationEmail));
+            
+            VerifyEmailTemplate verifyEmailTemplate = new VerifyEmailTemplate(user.Name, url);
+            string htmlBody = await verifyEmailTemplate.GetHtml();
+
+            if (await _EmailSenderService.Send(user.Email, "ارگانیک شاپ : تایید ایمیل", htmlBody))
+            {
+                user.EmailVerificationSendDate = DateTime.Now;
+                await _userRepository.Update(user, _AppUserProvider.User.Id);
+                return new ServiceResponse<Empty>(ResponseResult.Success , "ایمیل فعالسازی با موفقیت برای شما ارسال شد");
+            }
+
+            return new ServiceResponse<Empty>(ResponseResult.Failed, "ارسال ایمیل با مشکل مواجه شد");
+        }
+
+
+
+
+
+        public async Task<ServiceResponse<EmailVerificationDto>> VeifyEmail(string cryptedToken)
+        {
+            //cryptedToken = TextExtensions.DecodeUrlString(cryptedToken);
+            VerifyEmailToken? verifyEmailToken = VerifyEmailToken.GetVerifyEmailToken(AesOperation.Decrypt(cryptedToken, _AesKeys.VerficationEmail));
+
+            if (verifyEmailToken == null)
+                return new ServiceResponse<EmailVerificationDto>(ResponseResult.Failed, new EmailVerificationDto(false, "توکن ارسال شده نادرست است"));
+
+            if (verifyEmailToken.ExpireDate < DateTime.Now)
+                return new ServiceResponse<EmailVerificationDto>(ResponseResult.Failed, new EmailVerificationDto(false, "انقضای توکن به پایان رسیده است"));
+
+            User? user = await _userRepository.GetAsTracking(verifyEmailToken.UserId);
+
+            if (user == null)
+                return new ServiceResponse<EmailVerificationDto>(ResponseResult.Failed, new EmailVerificationDto(false, "حساب کاربری شما یافت نشد"));
+
+            if (user.Email != verifyEmailToken.Email)
+                return new ServiceResponse<EmailVerificationDto>(ResponseResult.Failed, new EmailVerificationDto(false, "ایمیل شما نامعتبر است"));
+
+            user.IsEmailVerified = true;
+            await _userRepository.Update(user, _AppUserProvider.User.Id);
+
+            return new ServiceResponse<EmailVerificationDto>(ResponseResult.Success, new EmailVerificationDto(true, "ایمیل شما با موفقیت تایید شد"));
+        }
+
+
+
 
 
 

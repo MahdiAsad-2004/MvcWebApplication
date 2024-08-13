@@ -89,7 +89,7 @@ namespace OrganicShop.Mvc.Controllers
         [HttpGet("/Products/Category/{categoryTitle}")]
         public async Task<IActionResult> Index2(FilterProductDto filter, PagingDto paging, string categoryTitle)
         {
-            categoryTitle = TextExtensions.DecodePersianString(categoryTitle);
+            categoryTitle = TextExtensions.DecodeUrlString(categoryTitle);
             var allCategories = (await _CategoryService.GetAllSummary(new FilterCategoryDto { Type = CategoryType.Product })).Data.List;
             filter.CategoryId = allCategories.FirstOrDefault(c => c.Title == categoryTitle)?.Id;
 

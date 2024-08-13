@@ -210,10 +210,6 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
-
-
-
-
         #region profile => info tab
 
 
@@ -455,6 +451,34 @@ namespace OrganicShop.Mvc.Controllers
 
 
 
+        [Authorize]
+        [HttpGet("/user/email-verify")]
+        public async Task<IActionResult> EmailVerification()
+        {
+            return View("VerifyEmail", new VerifyEmailToken());
+        }
+
+
+        [Authorize]
+        [HttpPost("/user/email-verify")]
+        public async Task<IActionResult> EmailVerification_Post()
+        {
+            var response = await _UserService.SendEmailVerification();
+
+            if (response.Result == ResponseResult.Success)
+                return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Success, response.Message));
+
+            return _ClientHandleResult.Toast(HttpContext, new Toast(ToastType.Error, response.Message) , responseResult:false);
+        }
+
+        
+        [Authorize]
+        [HttpGet("/user/email-verification")]
+        public async Task<IActionResult> EmailVerify(string Token)
+        {
+            var response = await _UserService.VeifyEmail(Token);
+            return View("EmailVerification", response.Data);        
+        }
 
 
 

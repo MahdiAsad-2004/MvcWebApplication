@@ -205,6 +205,12 @@
 	  <None Include="wwwroot\admin\assets\svg\vegetable.svg" />
 	  <None Include="wwwroot\admin\views\product\create.js" />
 	  <None Include="wwwroot\admin\views\product\edit.js" />
+	  <None Include="wwwroot\email-templete\fonts\IRANSansWeb%28FaNum%29_Light.woff2" />
+	  <None Include="wwwroot\email-templete\images\arrow.svg" />
+	  <None Include="wwwroot\email-templete\images\footer-left.svg" />
+	  <None Include="wwwroot\email-templete\images\footer-right.svg" />
+	  <None Include="wwwroot\email-templete\images\leaf.svg" />
+	  <None Include="wwwroot\email-templete\images\star.svg" />
 	  <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
 	  <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
 	  <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css.map" />
