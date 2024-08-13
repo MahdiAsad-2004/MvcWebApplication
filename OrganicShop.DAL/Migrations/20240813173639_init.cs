@@ -25,10 +25,10 @@ namespace OrganicShop.DAL.Migrations
                     Type = table.Column<int>(type: "int", nullable: false),
                     ParentId = table.Column<int>(type: "int", nullable: true),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -87,10 +87,10 @@ namespace OrganicShop.DAL.Migrations
                     MaxCost = table.Column<int>(type: "int", nullable: true),
                     MinCost = table.Column<int>(type: "int", nullable: true),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -112,10 +112,10 @@ namespace OrganicShop.DAL.Migrations
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Priority = table.Column<int>(type: "int", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -130,10 +130,10 @@ namespace OrganicShop.DAL.Migrations
                     QuestionText = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AnswerText = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -150,10 +150,10 @@ namespace OrganicShop.DAL.Migrations
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SendDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -168,10 +168,10 @@ namespace OrganicShop.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TextHtml = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -211,10 +211,10 @@ namespace OrganicShop.DAL.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Priority = table.Column<int>(type: "int", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -247,10 +247,10 @@ namespace OrganicShop.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -295,10 +295,10 @@ namespace OrganicShop.DAL.Migrations
                     CouponId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -329,10 +329,10 @@ namespace OrganicShop.DAL.Migrations
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -363,10 +363,10 @@ namespace OrganicShop.DAL.Migrations
                     OwnerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -388,10 +388,10 @@ namespace OrganicShop.DAL.Migrations
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     TotalPrice = table.Column<int>(type: "int", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -413,10 +413,10 @@ namespace OrganicShop.DAL.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<long>(type: "bigint", nullable: true),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -436,10 +436,10 @@ namespace OrganicShop.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -494,17 +494,17 @@ namespace OrganicShop.DAL.Migrations
                     OrderStatus = table.Column<int>(type: "int", nullable: false),
                     PaymentMethod = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
+                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OrderAddress_AddressId = table.Column<long>(type: "bigint", nullable: false),
                     OrderAddress_PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderAddress_PostCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderAddress_Province = table.Column<int>(type: "int", nullable: false),
                     OrderAddress_ReceiverName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrderAddress_Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    OrderAddress_Text = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -557,10 +557,10 @@ namespace OrganicShop.DAL.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -586,10 +586,10 @@ namespace OrganicShop.DAL.Migrations
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<long>(type: "bigint", nullable: true),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -610,10 +610,10 @@ namespace OrganicShop.DAL.Migrations
                     TagId = table.Column<int>(type: "int", nullable: false),
                     ArticleId = table.Column<int>(type: "int", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -643,10 +643,10 @@ namespace OrganicShop.DAL.Migrations
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderId = table.Column<long>(type: "bigint", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -670,10 +670,10 @@ namespace OrganicShop.DAL.Migrations
                     Step = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<long>(type: "bigint", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -701,10 +701,10 @@ namespace OrganicShop.DAL.Migrations
                     UserId = table.Column<long>(type: "bigint", nullable: true),
                     SellerId = table.Column<int>(type: "int", nullable: true),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -737,10 +737,10 @@ namespace OrganicShop.DAL.Migrations
                     Barcode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SellerId = table.Column<int>(type: "int", nullable: true),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -794,10 +794,10 @@ namespace OrganicShop.DAL.Migrations
                     ArticleId = table.Column<int>(type: "int", nullable: true),
                     SellerId = table.Column<int>(type: "int", nullable: true),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -833,10 +833,10 @@ namespace OrganicShop.DAL.Migrations
                     DiscountId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<long>(type: "bigint", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -922,10 +922,10 @@ namespace OrganicShop.DAL.Migrations
                     OrderId = table.Column<long>(type: "bigint", nullable: true),
                     IsOrdered = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -963,10 +963,10 @@ namespace OrganicShop.DAL.Migrations
                     TypeId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<long>(type: "bigint", nullable: true),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -993,10 +993,10 @@ namespace OrganicShop.DAL.Migrations
                     TagId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<long>(type: "bigint", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1024,10 +1024,10 @@ namespace OrganicShop.DAL.Migrations
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     ProductId = table.Column<long>(type: "bigint", nullable: false),
                     BaseEntity_CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BaseEntity_IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BaseEntity_IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    BaseEntity_DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BaseEntity_LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1049,22 +1049,22 @@ namespace OrganicShop.DAL.Migrations
             migrationBuilder.InsertData(
                 table: "ContactUs",
                 columns: new[] { "Id", "Address", "Description", "Email1", "Email2", "Office1", "Office2", "Office3", "Phone1", "Phone2", "Phone3", "PhoneNumber1", "PhoneNumber2", "PhoneNumber3", "ShortDescription", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { (byte)1, "Address", "Descriptions", "OrganicShop@gmail.com", null, "Tehran", null, null, "02134658899", null, null, "09121234455", null, null, "ShorDescriptions", new DateTime(2024, 8, 12, 23, 56, 36, 86, DateTimeKind.Local).AddTicks(806), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 86, DateTimeKind.Local).AddTicks(866) });
+                values: new object[] { (byte)1, "Address", "Descriptions", "OrganicShop@gmail.com", null, "Tehran", null, null, "02134658899", null, null, "09121234455", null, null, "ShorDescriptions", new DateTime(2024, 8, 13, 10, 36, 38, 96, DateTimeKind.Local).AddTicks(4082), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 96, DateTimeKind.Local).AddTicks(4134) });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "EnTitle", "ParentId", "Title", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { (byte)1, "Main Admin", null, "مدیر سایت", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(471), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(532) });
+                values: new object[] { (byte)1, "Main Admin", null, "مدیر سایت", new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(705), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(760) });
 
             migrationBuilder.InsertData(
                 table: "ShippingMethods",
                 columns: new[] { "Id", "Name", "Price", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
                 values: new object[,]
                 {
-                    { (byte)1, "پست پیشتاز", 30000, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3016), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3060) },
-                    { (byte)2, "پست سفارشی", 50000, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3284), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3294) },
-                    { (byte)3, "تیپاکس", 100000, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3449), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3456) },
-                    { (byte)4, "پیک موتوری", 120000, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3610), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 100, DateTimeKind.Local).AddTicks(3626) }
+                    { (byte)1, "پست پیشتاز", 30000, new DateTime(2024, 8, 13, 10, 36, 38, 195, DateTimeKind.Local).AddTicks(334), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 195, DateTimeKind.Local).AddTicks(386) },
+                    { (byte)2, "پست سفارشی", 50000, new DateTime(2024, 8, 13, 10, 36, 38, 195, DateTimeKind.Local).AddTicks(887), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 195, DateTimeKind.Local).AddTicks(896) },
+                    { (byte)3, "تیپاکس", 100000, new DateTime(2024, 8, 13, 10, 36, 38, 195, DateTimeKind.Local).AddTicks(1098), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 195, DateTimeKind.Local).AddTicks(1105) },
+                    { (byte)4, "پیک موتوری", 120000, new DateTime(2024, 8, 13, 10, 36, 38, 195, DateTimeKind.Local).AddTicks(1273), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 195, DateTimeKind.Local).AddTicks(1287) }
                 });
 
             migrationBuilder.InsertData(
@@ -1072,37 +1072,37 @@ namespace OrganicShop.DAL.Migrations
                 columns: new[] { "Id", "Privacy_DeleteAccountAfterLogOut", "Privacy_IsEmailVisible", "Privacy_IsProfileImageVisible", "BirthDate", "Email", "EmailVerificationSendDate", "Gender", "IsEmailVerified", "Name", "Password", "PhoneNumber", "Role", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
                 values: new object[,]
                 {
-                    { 1L, false, false, false, null, "mas1379as@gmail.com", null, 1, true, "Mahdi Asadi", "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", "09369753041", 1, new DateTime(2024, 8, 12, 23, 56, 36, 103, DateTimeKind.Local).AddTicks(8585), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 103, DateTimeKind.Local).AddTicks(8626) },
-                    { 2L, false, true, true, null, "TestEmail@gmail.com", null, 1, false, "AmirAli", "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", "09331234566", 2, new DateTime(2024, 8, 12, 23, 56, 36, 103, DateTimeKind.Local).AddTicks(8822), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 103, DateTimeKind.Local).AddTicks(8830) }
+                    { 1L, false, false, false, null, "mas1379as@gmail.com", null, 1, true, "Mahdi Asadi", "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", "09369753041", 1, new DateTime(2024, 8, 13, 10, 36, 38, 215, DateTimeKind.Local).AddTicks(8869), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 215, DateTimeKind.Local).AddTicks(8914) },
+                    { 2L, false, true, true, null, "TestEmail@gmail.com", null, 1, false, "AmirAli", "8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92", "09331234566", 2, new DateTime(2024, 8, 13, 10, 36, 38, 215, DateTimeKind.Local).AddTicks(9587), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 215, DateTimeKind.Local).AddTicks(9596) }
                 });
 
             migrationBuilder.InsertData(
                 table: "PermissionUsers",
                 columns: new[] { "Id", "PermissionId", "UserId", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { 1, (byte)1, 1L, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(6408), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(6442) });
+                values: new object[] { 1, (byte)1, 1L, new DateTime(2024, 8, 13, 10, 36, 38, 152, DateTimeKind.Local).AddTicks(6159), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 152, DateTimeKind.Local).AddTicks(6211) });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "EnTitle", "ParentId", "Title", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
                 values: new object[,]
                 {
-                    { (byte)2, "Users Admin", (byte)1, "مدیریت کاربران", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(538), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(549) },
-                    { (byte)3, "Products Admin", (byte)1, "مدیریت محصولات", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(562), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(565) },
-                    { (byte)4, "Permissions Admin", (byte)1, "مدیریت مجوز ها", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(569), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(572) },
-                    { (byte)5, "Comments Admin", (byte)1, "مدیریت نظرات", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(582), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(586) },
-                    { (byte)6, "Discounts Admin", (byte)1, "مدیریت تخفیف ها", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(590), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(593) },
-                    { (byte)7, "Categories Admin", (byte)1, "مدیریت دسته ها", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(597), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(618) }
+                    { (byte)2, "Users Admin", (byte)1, "مدیریت کاربران", new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(764), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(776) },
+                    { (byte)3, "Products Admin", (byte)1, "مدیریت محصولات", new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(786), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(788) },
+                    { (byte)4, "Permissions Admin", (byte)1, "مدیریت مجوز ها", new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(791), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(793) },
+                    { (byte)5, "Comments Admin", (byte)1, "مدیریت نظرات", new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(801), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(803) },
+                    { (byte)6, "Discounts Admin", (byte)1, "مدیریت تخفیف ها", new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(808), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(810) },
+                    { (byte)7, "Categories Admin", (byte)1, "مدیریت دسته ها", new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(813), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(838) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Picture",
                 columns: new[] { "Id", "ArticleId", "CategoryId", "IsMain", "Name", "ProductId", "SellerId", "SizeMB", "Type", "UserId", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { 1L, null, null, true, "joker.png", null, null, 0.5f, 0, 1L, new DateTime(2024, 8, 12, 23, 56, 36, 95, DateTimeKind.Local).AddTicks(8270), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 95, DateTimeKind.Local).AddTicks(8302) });
+                values: new object[] { 1L, null, null, true, "joker.png", null, null, 0.5f, 0, 1L, new DateTime(2024, 8, 13, 10, 36, 38, 176, DateTimeKind.Local).AddTicks(3718), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 176, DateTimeKind.Local).AddTicks(3773) });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "EnTitle", "ParentId", "Title", "BaseEntity_CreateDate", "BaseEntity_DeleteDate", "BaseEntity_IsActive", "BaseEntity_IsDelete", "BaseEntity_LastModified" },
-                values: new object[] { (byte)8, "Giving Permission", (byte)4, "صدور مجوز", new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(621), null, true, false, new DateTime(2024, 8, 12, 23, 56, 36, 94, DateTimeKind.Local).AddTicks(624) });
+                values: new object[] { (byte)8, "Giving Permission", (byte)4, "صدور مجوز", new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(841), null, true, false, new DateTime(2024, 8, 13, 10, 36, 38, 107, DateTimeKind.Local).AddTicks(844) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_SellerId",
